@@ -3,7 +3,7 @@
 \begin{tikzpicture}
 \begin{axis}[
   width=0.9\linewidth, height=0.5\linewidth,
-  xlabel={BPGD iteration},
+  xlabel={GD iteration},
   ylabel={Average $\Delta$ marginal (before $-$ after)},
   xmin=1, xmax=25,
   xtick={1,5,10,15,20,25},
@@ -47,8 +47,7 @@
   \addlegendentry{Ground truth = 0}
 \end{axis}
 \end{tikzpicture}
-\caption{Average per-step change in marginals when clamping evidence during BPGD.
-Positive values mean the marginal decreased after the update (since $\Delta=\text{before}-\text{after}$).
-Curves are averaged over the test set.}
+
+\caption{\bpgdDeltaMarginalsCaption}
 \label{fig:bpgd_delta_marginals}
 \end{figure}

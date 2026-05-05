@@ -1,0 +1,242 @@
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[
+    font=\small,
+    >=Latex,
+    panel/.style={
+        rounded corners=8pt,
+        draw=#1,
+        fill=#1!6,
+        line width=0.9pt,
+        inner sep=6pt
+    },
+    stagecircle/.style={
+        circle,
+        fill=#1,
+        text=white,
+        font=\bfseries,
+        minimum size=7mm,
+        inner sep=0pt
+    },
+    arrow/.style={
+        -{Latex[length=3mm,width=2mm]},
+        line width=1.1pt,
+        draw=blue!55!black
+    },
+    dottedarrow/.style={
+        -{Latex[length=3mm,width=2mm]},
+        line width=1.1pt,
+        draw=blue!55!black,
+        dotted
+    },
+    itemrow/.style={
+        rounded corners=3pt,
+        draw=gray!30,
+        fill=white,
+        minimum height=6mm,
+        inner sep=2pt
+    },
+    probbar/.style={
+        draw=none,
+        fill=green!60!black,
+        rounded corners=1pt
+    },
+    nodecircle/.style={
+        circle,
+        draw=blue!50!black,
+        fill=blue!15,
+        minimum size=3.5mm,
+        inner sep=0pt
+    },
+    hiddennode/.style={
+        circle,
+        draw=green!50!black,
+        fill=green!25,
+        minimum size=3.5mm,
+        inner sep=0pt
+    },
+    outputnode/.style={
+        circle,
+        draw=purple!60!black,
+        fill=purple!20,
+        minimum size=3.5mm,
+        inner sep=0pt
+    }
+]
+
+% =========================================================
+% Colors
+% =========================================================
+\definecolor{TitleColor}{RGB}{10,25,70}
+\definecolor{PurplePanel}{RGB}{130,100,200}
+\definecolor{BluePanel}{RGB}{65,130,200}
+\definecolor{GreenPanel}{RGB}{40,135,85}
+\definecolor{OrangePanel}{RGB}{220,145,25}
+
+\definecolor{NodeA}{RGB}{220,50,47}
+\definecolor{NodeB}{RGB}{38,139,210}
+\definecolor{NodeC}{RGB}{133,153,0}
+\definecolor{NodeD}{RGB}{181,137,0}
+\definecolor{NodeE}{RGB}{108,113,196}
+
+% =========================================================
+% Panel coordinates
+% =========================================================
+\coordinate (P1) at (-6.0,0);
+\coordinate (P2) at (-2.0,0);
+\coordinate (P3) at ( 2.1,0);
+\coordinate (P4) at ( 6.1,0);
+
+% =========================================================
+% Stage badges and headings (moved higher)
+% =========================================================
+% \node[stagecircle=PurplePanel] at ($(P1)+(0,2.65)$) {1};
+% \node[font=\bfseries\large, text=TitleColor] at ($(P1)+(0,2.25)$) {Input};
+
+% \node[stagecircle=BluePanel] at ($(P2)+(0,2.65)$) {2};
+% \node[font=\bfseries\large, text=TitleColor] at ($(P2)+(0,2.25)$) {Model};
+
+% \node[stagecircle=GreenPanel] at ($(P3)+(0,2.65)$) {3};
+% \node[font=\bfseries\large, text=TitleColor] at ($(P3)+(0,2.25)$) {Distribution};
+
+% \node[stagecircle=OrangePanel] at ($(P4)+(0,2.65)$) {4};
+% \node[font=\bfseries\large, text=TitleColor] at ($(P4)+(0,2.25)$) {Sample};
+
+% =========================================================
+% Stage 1: Input graph
+% =========================================================
+\node[panel=PurplePanel, minimum width=3.0cm, minimum height=4.3cm, anchor=center] (inputpanel) at (P1) {};
+\node[font=\bfseries, text=TitleColor] at ($(P1)+(0,1.75)$) {Input};
+
+\begin{scope}[shift={(P1)}, scale=0.92]
+    % Graph nodes
+    \node[circle, draw=black, fill=NodeA!75, minimum size=7mm, inner sep=0pt] (gA) at (-0.55,0.95) {};
+    \node[circle, draw=black, fill=NodeB!75, minimum size=7mm, inner sep=0pt] (gB) at (0.55,1.05) {};
+    \node[circle, draw=black, fill=NodeC!75, minimum size=7mm, inner sep=0pt] (gC) at (-0.95,-0.05) {};
+    \node[circle, draw=black, fill=NodeD!75, minimum size=7mm, inner sep=0pt] (gD) at (0.05,-0.15) {};
+    \node[circle, draw=black, fill=NodeE!75, minimum size=7mm, inner sep=0pt] (gE) at (0.95,-0.85) {};
+
+    % Graph edges
+    \draw[thick, gray!70] (gA) -- (gB);
+    \draw[thick, gray!70] (gA) -- (gC);
+    \draw[thick, gray!70] (gA) -- (gD);
+    \draw[thick, gray!70] (gB) -- (gD);
+    \draw[thick, gray!70] (gC) -- (gD);
+    \draw[thick, gray!70] (gD) -- (gE);
+
+    % Labels
+    \node[font=\scriptsize] at (gA) {$1$};
+    \node[font=\scriptsize] at (gB) {$2$};
+    \node[font=\scriptsize] at (gC) {$3$};
+    \node[font=\scriptsize] at (gD) {$4$};
+    \node[font=\scriptsize] at (gE) {$5$};
+\end{scope}
+
+\node[font=\Large] at ($(P1)+(0,-1.5)$) {$x$};
+
+% =========================================================
+% Stage 2: Model panel
+% =========================================================
+\node[panel=BluePanel, minimum width=3.5cm, minimum height=4.3cm] (modelpanel) at (P2) {};
+\node[font=\bfseries, text=TitleColor] at ($(P2)+(0,1.75)$) {Neural network};
+
+\begin{scope}[shift={(P2)}, scale=0.88]
+    % Neural network nodes
+    \foreach \i/\yy in {1/0.78,2/0.33,3/-0.12,4/-0.57}{
+        \node[nodecircle] (in\i) at (-0.95,\yy) {};
+    }
+    \foreach \i/\yy in {1/0.82,2/0.37,3/-0.08,4/-0.53}{
+        \node[hiddennode] (hA\i) at (-0.25,\yy) {};
+        \node[hiddennode] (hB\i) at (0.42,\yy) {};
+    }
+    \foreach \i/\yy in {1/0.58,2/0.02,3/-0.54}{
+        \node[outputnode] (out\i) at (1.02,\yy) {};
+    }
+
+    \foreach \i in {1,2,3,4}{
+        \foreach \j in {1,2,3,4}{
+            \draw[blue!45!black, line width=0.35pt] (in\i) -- (hA\j);
+            \draw[blue!45!black, line width=0.35pt] (hA\i) -- (hB\j);
+        }
+    }
+    \foreach \i in {1,2,3,4}{
+        \foreach \j in {1,2,3}{
+            \draw[blue!45!black, line width=0.35pt] (hB\i) -- (out\j);
+        }
+    }
+\end{scope}
+
+\node[font=\Large] at ($(P2)+(0,-1.45)$) {$p_\theta(y \mid x)$};
+
+% =========================================================
+% Stage 3: Distribution panel
+% =========================================================
+\node[panel=GreenPanel, minimum width=3.25cm, minimum height=4.3cm] (distpanel) at (P3) {};
+\node[font=\bfseries, text=TitleColor, align=center] at ($(P3)+(0,1.48)$) {Node selection\\probabilities};
+
+\begin{scope}[shift={(P3)}, scale=0.88]
+    \foreach \y/\name/\col/\prob/\barlen in {
+        0.82/Node 1/NodeA/0.82/1.05,
+        0.35/Node 2/NodeB/0.21/0.27,
+        -0.12/Node 3/NodeC/0.73/0.92,
+        -0.59/Node 4/NodeD/0.15/0.20,
+        -1.06/Node 5/NodeE/0.78/0.98
+    }{
+        \node[itemrow, minimum width=2.65cm, minimum height=3.8mm] at (0,\y) {};
+        \node[circle, draw=black, fill=\col!75, minimum size=2.8mm, inner sep=0pt] at (-1.02,\y) {};
+        %\node[anchor=west, font=\scriptsize] at (-0.82,\y) {\name};
+        \draw[probbar] (0.08,\y-0.08) rectangle ++(\barlen,0.16);
+        %\node[anchor=east, font=\scriptsize, text=GreenPanel!80!black] at (1.25,\y) {\prob};
+    }
+\end{scope}
+
+%\node[font=\large] at ($(P3)+(0,-1.55)$) {$y \sim p_\theta(\cdot \mid x)$};
+
+% =========================================================
+% Stage 4: Sampled solution graph
+% =========================================================
+\node[panel=OrangePanel, minimum width=3.0cm, minimum height=4.3cm] (samplepanel) at (P4) {};
+\node[font=\bfseries, text=TitleColor] at ($(P4)+(0,1.75)$) {Sample};
+
+\begin{scope}[shift={(P4)}, scale=0.92]
+    % Faded original graph
+    \node[circle, draw=gray!60, fill=NodeA!20, minimum size=7mm, inner sep=0pt] (sA) at (-0.55,0.95) {};
+    \node[circle, draw=gray!60, fill=gray!15, minimum size=7mm, inner sep=0pt] (sB) at (0.55,1.05) {};
+    \node[circle, draw=gray!60, fill=NodeC!25, minimum size=7mm, inner sep=0pt] (sC) at (-0.95,-0.05) {};
+    \node[circle, draw=gray!60, fill=gray!15, minimum size=7mm, inner sep=0pt] (sD) at (0.05,-0.15) {};
+    \node[circle, draw=gray!60, fill=NodeE!25, minimum size=7mm, inner sep=0pt] (sE) at (0.95,-0.85) {};
+
+    \draw[thick, gray!35] (sA) -- (sB);
+    \draw[thick, gray!35] (sA) -- (sC);
+    \draw[thick, gray!35] (sA) -- (sD);
+    \draw[thick, gray!35] (sB) -- (sD);
+    \draw[thick, gray!35] (sC) -- (sD);
+    \draw[thick, gray!35] (sD) -- (sE);
+
+    % Highlight sampled nodes only
+    \draw[line width=1.2pt, black] (sA) circle (3.6mm);
+    \draw[line width=1.2pt, black] (sC) circle (3.6mm);
+    \draw[line width=1.2pt, black] (sE) circle (3.6mm);
+
+    \node[font=\scriptsize] at (sA) {$1$};
+    \node[font=\scriptsize, text=gray!60] at (sB) {$2$};
+    \node[font=\scriptsize] at (sC) {$3$};
+    \node[font=\scriptsize, text=gray!60] at (sD) {$4$};
+    \node[font=\scriptsize] at (sE) {$5$};
+\end{scope}
+
+\node[font=\large] at ($(P4)+(0,-1.5)$)
+{$\{1,3,5\}$};
+
+% =========================================================
+% Arrows between stages
+% =========================================================
+\draw[arrow] ($(inputpanel.east)+(0.10,0)$) -- ($(modelpanel.west)+(-0.10,0)$);
+\draw[arrow] ($(modelpanel.east)+(0.10,0)$) -- ($(distpanel.west)+(-0.10,0)$);
+\draw[dottedarrow] ($(distpanel.east)+(0.10,0)$) -- ($(samplepanel.west)+(-0.10,0)$)
+    node[midway, above, font=\scriptsize\itshape, text=blue!55!black] {};
+
+\end{tikzpicture}
+\caption{Illustration of conditional generative modeling for a combinatorial optimization problem. A graph-structured input instance is processed by a neural network, which predicts selection probabilities for the nodes. A candidate solution is then obtained by sampling a subset of nodes from the predicted distribution.}
+\label{fig:conditional_generative_graph}
+\end{figure}

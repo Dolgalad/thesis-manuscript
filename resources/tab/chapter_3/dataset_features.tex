@@ -1,0 +1,106 @@
+\begin{table}[htbp]
+
+\centering
+
+\resizebox{\linewidth}{!}{
+\begin{tabular}{llll}
+\toprule
+Feature source & Entity & Feature & Description \\
+\midrule
+\multicolumn{4}{l}{\textbf{LP-relaxation features}} \\
+\midrule
+LP solver
+& Variable $i$
+& $c_i$
+& Objective coefficient / variable weight. \\
+
+LP solver
+& Variable $i$
+& $\mathbbm{1}\{x_i^{\mathrm{LP}}=0\}$
+& Indicator that the LP relaxation assigns variable $i$ to zero. \\
+
+LP solver
+& Variable $i$
+& $\mathbbm{1}\{x_i^{\mathrm{LP}}=1\}$
+& Indicator that the LP relaxation assigns variable $i$ to one. \\
+
+LP solver
+& Variable $i$
+& $\mathbbm{1}\{0 < x_i^{\mathrm{LP}} < 1\}$
+& Indicator that variable $i$ is fractional in the LP relaxation. \\
+
+LP solver
+& Variable $i$
+& $\operatorname{basis}_i$
+& One-hot encoding of the LP simplex basis status. \\
+
+LP solver
+& Variable $i$
+& $\bar{c}_i$
+& Reduced cost of variable $i$ in the LP relaxation. \\
+
+LP solver
+& Variable $i$
+& $x_i^{\mathrm{LP}}$
+& Value of variable $i$ in the LP relaxation. \\
+
+LP solver
+& Constraint/factor $F$
+& $s_F$
+& Slack of the corresponding LP constraint. \\
+
+LP solver
+& Constraint/factor $F$
+& $\mathbbm{1}\{s_F=0\}$
+& Indicator that the constraint is active in the LP relaxation. \\
+
+LP solver
+& Constraint/factor $F$
+& $\lambda_F$
+& Dual value associated with the constraint. \\
+
+\midrule
+\multicolumn{4}{l}{\textbf{Problem and incidence-graph features}} \\
+\midrule
+% Problem data
+% & Variable $i$
+% & $w_i$
+% & Objective coefficient, also available directly from the problem instance. \\
+
+Problem data
+& Constraint/factor $F$
+& $\cos(2)$
+& Constant factor-type feature. \\
+
+Incidence graph
+& Edge $(i,\FACTOR)$
+& $a_{i,\FACTOR}$
+& Constraint coefficient, normalized per constraint. \\
+
+Incidence graph
+& Node $v$
+& $\log(1+\deg(v))$
+& Log-transformed degree in the variable--constraint graph. \\
+
+Incidence graph
+& Node $v$
+& $\operatorname{RWPE}_{16}(v)$
+& Random-walk positional encoding with 16 dimensions. \\
+
+Incidence graph
+& Node $v$
+& $\operatorname{LapPE}_{16}(v)$
+& Laplacian eigenvector positional encoding with 16 dimensions. \\
+
+Random initialization
+& Node $v$
+& $\xi_v \in \mathbb{R}^{10}$
+& Random node features concatenated to the GNN input. \\
+
+\bottomrule
+\end{tabular}
+}
+
+\caption{Input features used by the learning models, separated by source: original problem data, LP-relaxation information, and structural features of the variable--constraint graph.}
+\label{tab:dataset_features}
+\end{table}

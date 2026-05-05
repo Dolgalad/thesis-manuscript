@@ -1,0 +1,43 @@
+\begin{table}[htbp]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.08}
+\begin{tabular}{|p{2.6cm}|p{4.2cm}|p{2.8cm}|p{4.6cm}|}
+\hline
+\textbf{Authors / Year} & \textbf{Method} & \textbf{Problem Focus} & \textbf{Inference / Gradient Strategy} \\
+\hline
+
+\multicolumn{4}{|l|}{\textbf{GNN-based Heuristics}} \\
+\hline
+\cite{dai_learning_2017} & GNN + RL for heuristic construction & TSP, MVC, MIS & Policy-gradient learning; solver-free rollouts \\
+\cite{gasse_exact_2019} & Graph representation of LP + ML for Branch-and-Bound & General ILPs & GNN-learned branching policies \\
+\cite{nair_solving_2020} & Neural-guided search for MIP solving & General MIPs / CO & Learned branching and exploration policies; end-to-end reinforcement learning with solver feedback \\
+\hline
+
+\multicolumn{4}{|l|}{\textbf{Generative / Energy-based}} \\
+\hline
+\cite{caramanis_optimizing_2023} & Generative / score-based CO models & General CO & Diffusion or score-based inference \\
+\cite{grathwohl_oops_nodate} & Energy-based discrete optimization & General CO & Gradients via contrastive / MCMC estimation \\
+\cite{sun_difusco_2023} & Diffusion-guided optimization (DiFusCO) & General CO & Denoising score matching; sampling-based inference \\
+\cite{dalle_learning_2022} & Learning distributions over solutions & General CO & Likelihood-based; solver-guided sampling \\
+\cite{berthet_learning_2020} & MAP-and-perturb & General CO & Randomized solver perturbations for gradients \\
+\hline
+
+\multicolumn{4}{|l|}{\textbf{Learned Belief Propagation}} \\
+\hline
+\cite{park_max-product_2017} & Max-product BP for LP relaxations & MIS, MVC, matchings & BP convergence and CO equivalence analysis \\
+\cite{kuck_belief_2020} & Learned message passing & Graphical models & Trainable damping / message weights \\
+\cite{deng_deep_2022} & Deep / neural BP & Discrete models & Unrolled differentiable BP layers \\
+\cite{wiseman_amortized_2019} & Amortized inference with BP & Structured prediction & Learned initialization / unrolled inference \\
+\hline
+
+% \multicolumn{4}{|l|}{\textbf{Proposed Framework}} \\
+% \hline
+% \textbf{Schulz (2025)} & \textbf{MRF-based CO with differentiable BP inference} & \textbf{MIS, SC} & \textbf{Fixed-iteration LBP/NMF; differentiable marginal-based training; structured decoding} \\
+% \hline
+
+\end{tabular}
+\caption{Taxonomy of related approaches for learning to solve discrete optimization problems.}
+\label{tab:lit_review_co_mrf_merged}
+\end{table}

@@ -16,20 +16,21 @@
 		%width=150mm,
 		top=25mm,
 		bottom=25mm,
-            right=25mm,
-            left=25mm,
-            % Offset to bind pages
-            bindingoffset=6mm,  
-            % To make room for the header
-            headheight=20mm,    
-           ]{geometry}
+    right=25mm,
+    left=25mm,
+    % Offset to bind pages
+    bindingoffset=6mm,  
+    % To make room for the header
+    headheight=20mm,    
+    ]{geometry}
            
-\usepackage[english, french]{babel}
+\usepackage[main=english,french]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 % Fonts and symbols
 \usepackage{amsmath,amssymb}
+\usepackage{adjustbox}
 \usepackage{dsfont}
 \usepackage{algorithm2e}
 \usepackage{multirow}
@@ -91,7 +92,6 @@
 \linespread{1}
 
 % Highlight stuff for revisions + colors and units
-\usepackage{color}
 \usepackage[dvipsnames,x11names]{xcolor}
 \definecolor{darkgreen}{rgb}{0.1,0.7,0.07}
 \definecolor{mypink1}{RGB}{111,174,208}
@@ -105,6 +105,9 @@
 \newcommand\todog[1]{\todo[inline,color=green!20]{#1}}
 
 \usepackage{tikz}
+
+\usetikzlibrary{external}
+\tikzexternalize[prefix=tikz-cache/]
 \usetikzlibrary{graphs,graphs.standard,fit}
 \usetikzlibrary{positioning} 
 \usetikzlibrary{calc}
@@ -113,17 +116,17 @@
 \usetikzlibrary{shapes}
 \usetikzlibrary{matrix}
 \usetikzlibrary{plotmarks}
+\usetikzlibrary{patterns}
 
 
 \usepackage{pgfplots}
-\pgfplotsset{compat=1.18}
+\pgfplotsset{width=10cm,compat=1.18}
 \usepgfplotslibrary{groupplots}
 \usepgfplotslibrary{statistics} % <-- provides 'violin'
 \usepgfplotslibrary{fillbetween}
 
 %\usepackage{pgfplotstable}
 \usepackage{csvsimple}
-\pgfplotsset{width=10cm,compat=1.9}
 
 %%% Change titles & stuff
 %\makeatletter
@@ -175,6 +178,8 @@
 \renewcommand{\headrulewidth}{0.4pt}
 \renewcommand{\footrulewidth}{0.4pt}
 
+\usepackage{bbm}
+
 % To include pdfs, like articles, directly
 %\usepackage{pdfpages}            
 
@@ -214,9 +219,7 @@
 % Add quotes
 %\usepackage{dirtytalk}
 
-% Fancy tables
-\usepackage{booktabs}
-\usepackage{multirow}
+
 \usepackage{array}
 
 \usepackage{tabularx}
@@ -225,16 +228,10 @@
 \newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
 \newcolumntype{Y}{>{\raggedright\arraybackslash\hspace{0pt}}X}
 
-% Urls
-\usepackage{url}
-
 % for pdf docs to read on computers
 % use this when compiling the pdf version (to send by mail)
 % comment it when you want to print it
 \usepackage{hyperref}
-
-% Package only for the template
-\usepackage{lipsum}
 
 % index
 \usepackage{makeidx}
@@ -242,14 +239,13 @@
 
 % to comment whole passages
 \usepackage{comment}
-\usepackage{todonotes}
 
 
 
 % style dans tout le document
 \usepackage{setspace}
 \onehalfspacing
-\everymath{\displaystyle}
+%\everymath{\displaystyle}
 
 % math notations
 \newcommand{\N}{\mathbb{N}}
@@ -356,21 +352,15 @@
 % crossed text, if you need it
 %\usepackage[normalem]{ulem}
 
-\usepackage{chronology}
-\usepackage{pgf}
-
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
 
 %% Macros
-\input{macros}
+\input{misc/macros}
 
 %% Title pages
 \input{misc/titleLIPN}
-%\input{misc/titleUQAM}
 
 %\addcontentsline{toc}{chapter}{Thanks}
 %\input{misc/remerciements}
@@ -386,6 +376,12 @@
 \addcontentsline{toc}{chapter}{Abbreviations}
 \input{misc/abbrev}
 
+% colors
+\input{misc/colors.tex}
+
+% captions
+\input{misc/captions.tex}
+
 % %%% Abstract
 %\input{misc/abstract}
 
@@ -400,10 +396,10 @@
 %% The chaptermark is the name of the chapter in the footer
 %%% You want a small enough chaptermark or it will overflow to the sides
 
-\addcontentsline{toc}{chapter}{Introduction}
-\chapter*{Introduction}\label{chap0:intro}
-\chaptermark{Introduction}
-\input{chapters/0-intro}
+% \addcontentsline{toc}{chapter}{Introduction}
+% \chapter*{Introduction}\label{chap0:intro}
+% \chaptermark{Introduction}
+% \input{chapters/0-intro}
 
 \chapter{Background}\label{chap1:background}
 \chaptermark{Background}
@@ -413,21 +409,18 @@
 \chaptermark{Related Work}
 \input{chapters/2-related_work}
 
-% \chapter{Differentiable MRF Inference for Training CO Solution Predictors}\label{chap3:differentiable_mrf}
-% \chaptermark{Differentiable MRF Inference}
-% \input{chapters/3-nair_mrf}
 
-\chapter{Denoising and MRF inference}\label{chap4:denoising}
-\chaptermark{Denoising and MRF inference}
-\input{chapters/4-denoising}
+\input{chapters/3-nair_mrf}
+
+% \chapter{Denoising and MRF inference}\label{chap4:denoising}
+% \chaptermark{Denoising and MRF inference}
+% \input{chapters/4-denoising}
 
 % \chapter{Feature-to-Factor Mappings for Approximate MRF inference}\label{chap5:f2f_mapping}
 % \chaptermark{Feature-to-Factor Mappings}
 % \input{chapters/5-feature-to-factor_mappings}
 
-
-
-% \chapter*{Conclusion}
+% \chapter*{Conclusion}\label{chap6:conclusion}
 % \addcontentsline{toc}{chapter}{Conclusion}
 % \input{chapters/6-conclusion}
 

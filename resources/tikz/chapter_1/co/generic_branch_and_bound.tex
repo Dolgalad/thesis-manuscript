@@ -1,6 +1,6 @@
 % \begin{figure}[h!]
 % \centering
-% \begin{forest}{
+% \begin{forest}
 % for tree={
 %     draw,
 %     rounded corners,
@@ -10,30 +10,20 @@
 %     inner sep=2pt,
 %     font=\small
 % },
-% % --- Colors ---
 % good/.style={fill=green!20},
 % bad/.style={fill=red!20},
-% neutral/.style={fill=blue!10},
-% % --- Global B&B styling ---
-% edge label/.style={midway, sloped, font=\scriptsize},
-% }
-% % ---------------- TREE ----------------
+% neutral/.style={fill=blue!10}
 % [P$_0$\\(root)\\{\color{blue}select $x_1$}, neutral
 %     [P$_1$\\{\color{blue}$x_1 \le 0$}, good,
-%         edge label={node[midway,above]{\scriptsize branch}}
+%         edge label={node[midway,above,font=\scriptsize]{branch}}
 %     ]
-%     [P$_2$\\{\color{blue}$x_1 \ge 1$}, neutral,
-%         edge label={node[midway,above]{\scriptsize branch}}
-%         [P$_3$\\{\color{blue}select $x_2$}, neutral
-%             [P$_5$\\{\color{blue}$x_2 \le 0$}, bad,
-%                 edge label={node[midway,above]{\scriptsize prune}}
-%             ]
-%             [P$_6$\\{\color{blue}$x_2 \ge 1$}, good,
-%                 edge label={node[midway,above]{\scriptsize feasible}}
-%             ]
+%     [P$_2$\\{\color{blue}$x_1 \ge 1$}\\{\color{blue}select $x_2$}, neutral,
+%         edge label={node[midway,above,font=\scriptsize]{branch}}
+%         [P$_5$\\{\color{blue}$x_2 \le 0$}, bad,
+%             edge label={node[midway,above,font=\scriptsize]{prune}}
 %         ]
-%         [P$_4$\\{\color{blue}$x_2 \ge 1$}, bad,
-%             edge label={node[midway,above]{\scriptsize prune}}
+%         [P$_6$\\{\color{blue}$x_2 \ge 1$}, good,
+%             edge label={node[midway,above,font=\scriptsize]{feasible}}
 %         ]
 %     ]
 % ]
@@ -43,36 +33,67 @@
 % \end{figure}
 
 
-\begin{figure}[h!]
+\begin{figure}[htbp]
 \centering
+
+\definecolor{bbActive}{RGB}{225,225,248}
+\definecolor{bbFeasible}{RGB}{210,245,210}
+\definecolor{bbPruned}{RGB}{255,215,215}
+\definecolor{bbBlue}{RGB}{40,80,200}
+
+\tikzset{
+    branchlabel/.style={
+        midway,
+        fill=white,
+        inner sep=1pt,
+        font=\scriptsize,
+        text=black!75
+    }
+}
+
 \begin{forest}
 for tree={
-    draw,
-    rounded corners,
+    draw=black!75,
+    rounded corners=3pt,
+    line width=0.45pt,
     align=center,
-    minimum width=2.2cm,
-    minimum height=1cm,
-    inner sep=2pt,
-    font=\small
+    font=\small,
+    inner sep=3pt,
+    minimum width=2.1cm,
+    minimum height=0.85cm,
+    edge={-latex, line width=0.45pt, draw=black!70},
+    l sep=9mm,
+    s sep=10mm,
 },
-good/.style={fill=green!20},
-bad/.style={fill=red!20},
-neutral/.style={fill=blue!10}
-[P$_0$\\(root)\\{\color{blue}select $x_1$}, neutral
-    [P$_1$\\{\color{blue}$x_1 \le 0$}, good,
-        edge label={node[midway,above,font=\scriptsize]{branch}}
+active/.style={fill=bbActive},
+feasible/.style={fill=bbFeasible},
+pruned/.style={fill=bbPruned}
+[
+    {$P_0$\\[-1pt]\footnotesize root\\[-1pt]\textcolor{bbBlue}{select $x_1$}},
+    active
+    [
+        {$P_1$\\[-1pt]\textcolor{bbBlue}{$x_1 \le 0$}},
+        feasible,
+        edge label={node[branchlabel, above left]{branch}}
     ]
-    [P$_2$\\{\color{blue}$x_1 \ge 1$}\\{\color{blue}select $x_2$}, neutral,
-        edge label={node[midway,above,font=\scriptsize]{branch}}
-        [P$_5$\\{\color{blue}$x_2 \le 0$}, bad,
-            edge label={node[midway,above,font=\scriptsize]{prune}}
+    [
+        {$P_2$\\[-1pt]\textcolor{bbBlue}{$x_1 \ge 1$}\\[-1pt]\textcolor{bbBlue}{select $x_2$}},
+        active,
+        edge label={node[branchlabel, above right]{branch}}
+        [
+            {$P_5$\\[-1pt]\textcolor{bbBlue}{$x_2 \le 0$}},
+            pruned,
+            edge label={node[branchlabel, above left]{prune}}
         ]
-        [P$_6$\\{\color{blue}$x_2 \ge 1$}, good,
-            edge label={node[midway,above,font=\scriptsize]{feasible}}
+        [
+            {$P_6$\\[-1pt]\textcolor{bbBlue}{$x_2 \ge 1$}},
+            feasible,
+            edge label={node[branchlabel, above right]{feasible}}
         ]
     ]
 ]
 \end{forest}
-\caption{Illustration of Branch-and-Bound showing variable selection, branching, and bounding/pruning.}
+
+\caption{Illustration of a branch-and-bound search tree. At each branching node, a variable is selected and the current subproblem is split into child subproblems. Nodes can then be pruned by bounding or retained when they yield feasible incumbent solutions.}
 \label{fig:branch_and_bound_tree}
 \end{figure}

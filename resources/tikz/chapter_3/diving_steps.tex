@@ -59,9 +59,9 @@
   \node[above=2pt of i2, text=green!60!black] {\small \checkmark};
 
   % Sets (bottom row)
-  \node[set,fill=gray!10]  (S1) at (-1.2,0.0) {\small $\SET_1$};
-  \node[set,fill=green!20] (S2) at ( 0.0,0.0) {\small $\SET_2$};
-  \node[set,fill=gray!10]  (S3) at ( 1.2,0.0) {\small $\SET_3$};
+  \node[set,fill=gray!10]  (S1) at (-1.2,0.0) {\small $\SCSET_1$};
+  \node[set,fill=green!20] (S2) at ( 0.0,0.0) {\small $\SCSET_2$};
+  \node[set,fill=gray!10]  (S3) at ( 1.2,0.0) {\small $\SCSET_3$};
 
   % Incidence edges
   \draw (S1.north) -- (i1.south);
@@ -77,8 +77,8 @@
   \begin{scope}[yshift=-2.0cm]
     \node[draw,rounded corners,inner sep=3pt,fill=white] (leg) at (0,0) {
       \begin{tabular}{@{}l@{}}
-        \tikz{\node[align=left,anchor=west] at (2.0,0.0) {\small \textbf{add} $\SET_2$  \small (unique cover of $e_5$)};} \\
-        \tikz{\node[align=left,anchor=east] at (-2.0,0.0) {\small \textbf{discard} $\SET_1$  \small (no new items)};}
+        \tikz{\node[align=left,anchor=west] at (2.0,0.0) {\small \textbf{add} $\SCSET_2$  \small (unique cover of $e_5$)};} \\
+        \tikz{\node[align=left,anchor=east] at (-2.0,0.0) {\small \textbf{discard} $\SCSET_1$  \small (no new items)};}
       \end{tabular}
     };
   \end{scope}

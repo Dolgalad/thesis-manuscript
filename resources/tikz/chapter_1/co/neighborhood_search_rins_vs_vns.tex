@@ -1,0 +1,253 @@
+\begin{figure}[t]
+\centering
+
+% --------------------------------------------------
+% Shared styles
+% --------------------------------------------------
+\tikzset{
+    nbhfig/.style={
+        >=Latex,
+        line cap=round,
+        line join=round,
+        every node/.style={font=\small},
+        lattice/.style={circle, fill=black!30, inner sep=1.05pt},
+        feasiblept/.style={circle, fill=black, inner sep=1.45pt},
+        lpregion/.style={draw=none, fill=blue!8},
+        constraint/.style={blue!70!black, line width=1.0pt},
+        solLP/.style={circle, fill=blue!80!black, inner sep=2pt},
+        incpt/.style={circle, fill=red!70!black, inner sep=2pt},
+        rinspt/.style={circle, fill=orange!80!black, inner sep=2pt},
+        vnspt/.style={circle, fill=green!55!black, inner sep=2pt},
+        shakept/.style={circle, fill=purple!80!black, inner sep=2pt},
+        rinsband/.style={fill=orange!18, draw=orange!70!black, line width=0.8pt},
+        nbhone/.style={draw=purple!70!black, dashed, line width=0.9pt},
+        nbhtwo/.style={draw=green!60!black, dashed, line width=0.9pt}
+    }
+}
+
+% --------------------------------------------------
+% Shared zoom window
+% --------------------------------------------------
+\def\zxmin{2.45}
+\def\zxmax{5.15}
+\def\zymin{-0.0}
+\def\zymax{2.55}
+
+% --------------------------------------------------
+% Shared geometry
+% --------------------------------------------------
+\newcommand{\DefineNeighborhoodGeometry}{%
+    \def\eps{0.20}%
+    \pgfmathsetmacro{\aone}{(-1 - 2*\eps)/4}%
+    \pgfmathsetmacro{\bone}{3 + \eps}%
+    \pgfmathsetmacro{\atwo}{(-3 + 2*\eps)/2}%
+    \pgfmathsetmacro{\btwo}{-\atwo*(5+\eps)}%
+    \pgfmathsetmacro{\xLP}{(\btwo-\bone)/(\aone-\atwo)}%
+    \pgfmathsetmacro{\yLP}{\aone*\xLP+\bone}%
+    \pgfmathsetmacro{\xD}{-\btwo/\atwo}%
+    \pgfmathsetmacro{\rinsAymax}{3.87*\atwo+\btwo}%
+    \pgfmathsetmacro{\rinsBymax}{4.13*\atwo+\btwo}%
+
+
+    % Points used in the illustration
+    \coordinate (xbar)  at (\xLP,\yLP);   % fractional LP solution
+    \coordinate (xinc)  at (4,0);         % incumbent
+    \coordinate (xrins) at (4,1);         % RINS improved solution
+    \coordinate (xshake) at (4,1);        % VNS shaking point
+    \coordinate (xvns)  at (3,2);         % VNS improved solution
+    \coordinate (rinsmaxA) at (3.87,\rinsAymax);
+    \coordinate (rinsmaxB) at (4.13,\rinsBymax);
+}
+
+% --------------------------------------------------
+% Draw feasible region and lattice
+% --------------------------------------------------
+\newcommand{\DrawNeighborhoodBase}{%
+    % LP relaxation
+    \filldraw[lpregion]
+        (0,0) --
+        (\xD,0) --
+        (\xLP,\yLP) --
+        (0,\bone) --
+        cycle;
+
+    % Constraint boundaries
+    \draw[constraint] (0,\bone) -- (\xLP,\yLP);
+    \draw[constraint] (\xLP,\yLP) -- (\xD,0);
+    \draw[constraint] (0,0) -- (\xD,0);
+    \draw[constraint] (0,0) -- (0,\bone);
+
+    % Integer lattice points
+    \foreach \x in {0,...,5}{%
+      \foreach \y in {0,...,4}{%
+        \pgfmathtruncatemacro{\ok}{%
+          ifthenelse(%
+            \y <= \aone*\x+\bone + 0.001 &&%
+            \y <= \atwo*\x+\btwo + 0.001,%
+            1,0)%
+        }%
+        \ifnum\ok=1
+          \node[feasiblept] at (\x,\y) {};%
+        \else
+          \node[lattice] at (\x,\y) {};%
+        \fi
+      }%
+    }%
+}
+
+% --------------------------------------------------
+% Draw zoom axes
+% --------------------------------------------------
+\newcommand{\DrawNeighborhoodZoomAxes}{%
+    \draw[->, thick]
+      (\zxmin,\zymin) -- (\zxmax+0.18,\zymin) node[below right] {$x_1$};
+    \draw[->, thick]
+      (\zxmin,\zymin) -- (\zxmin,\zymax+0.18) node[above left] {$x_2$};
+
+    \foreach \x/\lab in {3/3,4/4,5/5}{%
+      \draw (\x,\zymin) -- (\x,\zymin-0.035) node[below] {\scriptsize \lab};%
+    }%
+    \foreach \y/\lab in {0/0,1/1,2/2}{%
+      \draw (\zxmin,\y) -- (\zxmin-0.035,\y) node[left] {\scriptsize \lab};%
+    }%
+}
+
+% ==================================================
+% Global view
+% ==================================================
+\begin{subfigure}[t]{0.315\textwidth}
+\centering
+\vspace{0pt}%
+\begin{tikzpicture}[nbhfig, x=0.80cm, y=0.80cm]
+
+\DefineNeighborhoodGeometry
+
+\path[use as bounding box] (-0.35,-0.38) rectangle (6.20,4.55);
+
+% Axes
+\draw[->, thick] (-0.25,0) -- (5.75,0) node[below right] {$x_1$};
+\draw[->, thick] (0,-0.25) -- (0,4.20) node[above left] {$x_2$};
+
+\DrawNeighborhoodBase
+
+% Zoom window
+\draw[black!45, dashed, rounded corners=1pt]
+    (\zxmin,\zymin) rectangle (\zxmax,\zymax);
+
+% Main points
+\node[solLP] at (xbar) {};
+\node[blue!80!black, above left] at (xbar) {$\bar{x}$};
+
+\node[incpt] at (xinc) {};
+\node[red!70!black, above left] at (xinc) {$x^{\mathrm{inc}}$};
+
+\node[rinspt] at (xrins) {};
+\node[orange!80!black, above right, xshift=1mm] at (xrins) {$x^{\mathrm{RINS}}$};
+
+\node[vnspt] at (xvns) {};
+\node[green!45!black, above left] at (xvns) {$x^{\mathrm{VNS}}$};
+
+\end{tikzpicture}
+\end{subfigure}%
+\hfill
+% ==================================================
+% Zoom: RINS
+% ==================================================
+\begin{subfigure}[t]{0.315\textwidth}
+\centering
+\vspace{0pt}%
+\begin{tikzpicture}[nbhfig, x=1.55cm, y=1.25cm]
+
+\DefineNeighborhoodGeometry
+
+\path[use as bounding box]
+  (\zxmin-0.22,\zymin-0.25) rectangle (\zxmax+0.38,\zymax+0.35);
+
+\DrawNeighborhoodZoomAxes
+
+\begin{scope}
+  \clip (\zxmin,\zymin) rectangle (\zxmax,\zymax);
+
+  \DrawNeighborhoodBase
+
+  % RINS neighborhood: fix x1 = 4
+  %\filldraw[rinsband]
+  %  (3.87,\zymin) rectangle (4.13,\zymax);
+  \filldraw[rinsband]
+     (3.87,\zymin) --
+     (4.13,\zymin) --
+     (rinsmaxB) --
+     (rinsmaxA) --
+     cycle;
+
+
+  % Points
+  \node[solLP] at (xbar) {};
+  \node[blue!80!black, above left] at (xbar) {$\bar{x}$};
+
+  \node[incpt] at (xinc) {};
+  \node[red!70!black, above right] at (xinc) {$x^{\mathrm{inc}}$};
+
+  \node[rinspt] at (xrins) {};
+  \node[orange!80!black, left, xshift=-1mm] at (xrins) {$x^{\mathrm{RINS}}$};
+
+  % Guides / arrows
+  \draw[orange!80!black, dashed, ->] (xinc) -- (xrins);
+\end{scope}
+
+\node[orange!80!black, align=center, xshift=2.5mm] at (4.45,2.20)
+  {\scriptsize fix $x_1=4$};
+
+\end{tikzpicture}
+\end{subfigure}%
+\hfill
+% ==================================================
+% Zoom: VNS
+% ==================================================
+\begin{subfigure}[t]{0.315\textwidth}
+\centering
+\vspace{0pt}%
+\begin{tikzpicture}[nbhfig, x=1.55cm, y=1.25cm]
+
+\DefineNeighborhoodGeometry
+
+\path[use as bounding box]
+  (\zxmin-0.22,\zymin-0.25) rectangle (\zxmax+0.38,\zymax+0.35);
+
+\DrawNeighborhoodZoomAxes
+
+\begin{scope}
+  \clip (\zxmin,\zymin) rectangle (\zxmax,\zymax);
+
+  \DrawNeighborhoodBase
+
+  % Expanding neighborhoods around incumbent
+  \draw[nbhone] (xinc) ellipse [x radius=1, y radius=1];
+  
+
+  % Points
+  \node[incpt] at (xinc) {};
+  \node[red!70!black, above right] at (xinc) {$x^{\mathrm{inc}}$};
+
+  \node[shakept] at (xshake) {};
+  \node[purple!80!black, above left] at (xshake) {$x'$};
+
+  \draw[nbhtwo] (xshake) ellipse [x radius={sqrt(2)}, y radius={sqrt(2)})];
+
+  \node[vnspt] at (xvns) {};
+  \node[green!45!black, above] at (xvns) {$x^{\mathrm{VNS}}$};
+
+  % Path
+  \draw[purple!80!black, dashed, ->] (xinc) -- (xshake);
+  \draw[green!55!black, dashed, ->] (xshake) -- (xvns);
+\end{scope}
+
+\node[purple!80!black] at (4.92,0.92) {\scriptsize $\mathcal{N}_1(x^{\mathrm{inc}})$};
+\node[green!55!black] at (4.95,1.72) {\scriptsize $\mathcal{N}_2(x')$};
+
+\end{tikzpicture}
+\end{subfigure}
+
+\caption{Illustration of neighborhood-based improvement heuristics. RINS defines a restricted subproblem by fixing variables on which the incumbent and the rounded LP solution agree, whereas VNS explores progressively larger neighborhoods around the incumbent through shaking and local improvement.}
+\label{fig:neighborhood_search_rins_vns}
+\end{figure}

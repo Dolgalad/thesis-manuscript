@@ -1,0 +1,107 @@
+\begin{figure}[t]
+\centering
+
+\definecolor{darkgray176}{RGB}{110,110,110}
+\definecolor{lightgray204}{RGB}{200,200,200}
+
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.82\textwidth,
+    height=0.42\textwidth,
+    scale only axis,
+    tick align=outside,
+    tick pos=left,
+    x grid style={darkgray176},
+    y grid style={darkgray176},
+    ymajorgrids,
+    xmin=-0.6, xmax=3.6,
+    ymin=0, ymax=3.63976,
+    xtick={0,1,2,3},
+    xticklabels={SC-S,SC-M,MIS-S,MIS-M},
+    xlabel={Dataset},
+    ylabel={Runtime (s)},
+    title={Average runtime by dataset},
+    xtick style={color=black},
+    ytick style={color=black},
+]
+
+% --- GNN+EGG ---
+\draw[draw=none,fill=GNNEGGColor] (axis cs:-0.4,0) rectangle (axis cs:-0.248,0.00503389303293);
+\draw[draw=none,fill=GNNEGGColor,pattern=north east lines] (axis cs:-0.4,0.00503389303293) rectangle (axis cs:-0.248,0.0538215242932);
+\draw[draw=none,fill=GNNEGGColor,pattern=dots] (axis cs:-0.4,0.0538215242932) rectangle (axis cs:-0.248,0.102756911428);
+\draw[draw=none,fill=GNNEGGColor] (axis cs:0.6,0) rectangle (axis cs:0.752,0.00399925579503);
+\draw[draw=none,fill=GNNEGGColor,pattern=north east lines] (axis cs:0.6,0.00399925579503) rectangle (axis cs:0.752,0.274659009837);
+\draw[draw=none,fill=GNNEGGColor,pattern=dots] (axis cs:0.6,0.274659009837) rectangle (axis cs:0.752,0.480623873137);
+% missing: group=MIS-S, series=gnn
+% missing: group=MIS-M, series=gnn
+
+% --- LBP+EGG ---
+\draw[draw=none,fill=LBPEGGColor] (axis cs:-0.24,0) rectangle (axis cs:-0.088,0.0256877696961);
+\draw[draw=none,fill=LBPEGGColor,pattern=north east lines] (axis cs:-0.24,0.0256877696961) rectangle (axis cs:-0.088,0.139532828805);
+\draw[draw=none,fill=LBPEGGColor,pattern=dots] (axis cs:-0.24,0.139532828805) rectangle (axis cs:-0.088,0.317227300641);
+\draw[draw=none,fill=LBPEGGColor] (axis cs:0.76,0) rectangle (axis cs:0.912,0.02100330423);
+\draw[draw=none,fill=LBPEGGColor,pattern=north east lines] (axis cs:0.76,0.02100330423) rectangle (axis cs:0.912,0.392494059991);
+\draw[draw=none,fill=LBPEGGColor,pattern=dots] (axis cs:0.76,0.392494059991) rectangle (axis cs:0.912,1.09925283856);
+% missing: group=MIS-S, series=lbp
+% missing: group=MIS-M, series=lbp
+
+% --- LBP+GD ---
+\draw[draw=none,fill=LBPGDColor] (axis cs:-0.08,0) rectangle (axis cs:0.072,0.0256877696961);
+\draw[draw=none,fill=LBPGDColor,pattern=north east lines] (axis cs:-0.08,0.0256877696961) rectangle (axis cs:0.072,0.756798896828);
+\draw[draw=none,fill=LBPGDColor,pattern=dots] (axis cs:-0.08,0.756798896828) rectangle (axis cs:0.072,0.934493368664);
+\draw[draw=none,fill=LBPGDColor] (axis cs:0.92,0) rectangle (axis cs:1.072,0.02100330423);
+\draw[draw=none,fill=LBPGDColor,pattern=north east lines] (axis cs:0.92,0.02100330423) rectangle (axis cs:1.072,2.45825415852);
+\draw[draw=none,fill=LBPGDColor,pattern=dots] (axis cs:0.92,2.45825415852) rectangle (axis cs:1.072,3.1650129371);
+% missing: group=MIS-S, series=lbp_gd
+% missing: group=MIS-M, series=lbp_gd
+
+% --- NMF+EGG ---
+% missing: group=SC-S, series=nmf
+\draw[draw=none,fill=NMFEGGColor] (axis cs:1.08,0) rectangle (axis cs:1.232,0.0105286563635);
+\draw[draw=none,fill=NMFEGGColor,pattern=north east lines] (axis cs:1.08,0.0105286563635) rectangle (axis cs:1.232,0.371176240993);
+\draw[draw=none,fill=NMFEGGColor,pattern=dots] (axis cs:1.08,0.371176240993) rectangle (axis cs:1.232,0.985983561838);
+% missing: group=MIS-S, series=nmf
+% missing: group=MIS-M, series=nmf
+
+% --- NMF+GD ---
+% missing: group=SC-S, series=nmf_gd
+\draw[draw=none,fill=NMFGDColor] (axis cs:1.24,0) rectangle (axis cs:1.392,0.0105271835795);
+\draw[draw=none,fill=NMFGDColor,pattern=north east lines] (axis cs:1.24,0.0105271835795) rectangle (axis cs:1.392,0.782565566253);
+\draw[draw=none,fill=NMFGDColor,pattern=dots] (axis cs:1.24,0.782565566253) rectangle (axis cs:1.392,1.3973728871);
+% missing: group=MIS-S, series=nmf_gd
+% missing: group=MIS-M, series=nmf_gd
+
+\end{axis}
+\node[anchor=north, draw=lightgray204, fill=white, fill opacity=0.85, text opacity=1, inner sep=1pt] at ($(current bounding box.south) + (0, -0.25cm)$) {
+\begin{tikzpicture}[baseline]
+\matrix[
+    matrix of nodes,
+    nodes={anchor=west, font=\scriptsize},
+    column sep=10pt,
+    row sep=0pt
+] {
+    \draw[draw=none, fill=GNNEGGColor] (0,0) rectangle (0.350,0.120); & GNN+EGG &
+    \draw[draw=none, fill=LBPEGGColor] (0,0) rectangle (0.350,0.120); & LBP+EGG &
+    \draw[draw=none, fill=LBPGDColor] (0,0) rectangle (0.350,0.120); & LBP+GD &
+    \draw[draw=none, fill=NMFEGGColor] (0,0) rectangle (0.350,0.120); & NMF+EGG &
+    \draw[draw=none, fill=NMFGDColor] (0,0) rectangle (0.350,0.120); & NMF+GD \\
+};
+\end{tikzpicture}
+};
+\node[anchor=north, draw=lightgray204, fill=white, fill opacity=0.85, text opacity=1, inner sep=1pt] at ($(current bounding box.south) + (0, -0.70cm)$) {
+\begin{tikzpicture}[baseline]
+\matrix[
+    matrix of nodes,
+    nodes={anchor=west, font=\scriptsize},
+    column sep=10pt,
+    row sep=0pt
+] {
+    \draw[draw=black, fill=white] (0,0) rectangle (0.350,0.120); & Forward &
+    \draw[draw=black, fill=white, pattern=north east lines] (0,0) rectangle (0.350,0.120); & Decode &
+    \draw[draw=black, fill=white, pattern=dots] (0,0) rectangle (0.350,0.120); & Other \\
+};
+\end{tikzpicture}
+};
+\end{tikzpicture}
+\label{fig:stacked_grouped_bar}
+\end{figure}

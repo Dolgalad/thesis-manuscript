@@ -1,42 +1,172 @@
-\begin{figure}[H]
+
+
+\begin{figure}[htbp]
 \centering
-\begin{tikzpicture}[scale=1.2,>=Stealth]
+\begin{tikzpicture}[
+    scale=0.85,
+    >=Latex,
+    line cap=round,
+    line join=round,
+    every node/.style={font=\small},
+    lattice/.style={circle, fill=black, inner sep=1.15pt},
+    feasiblept/.style={circle, fill=black, inner sep=1.55pt},
+    lpregion/.style={draw=blue!65!black, fill=blue!8, line width=0.0pt},
+    cutregion/.style={draw=red!70!black, fill=red!12, line width=0.0pt},
+    constraint/.style={blue!70!black, line width=1.0pt},
+    cut/.style={red!75!black, dashed, line width=1.1pt},
+    solLP/.style={circle, fill=blue!80!black, inner sep=2pt},
+    solIP/.style={circle, fill=green!55!black, inner sep=2pt}
+]
 
-  % Coordinate axes
-  \draw[->] (-0.2,0) -- (4.2,0) node[anchor=west] {$x_1$};
-  \draw[->] (0,-0.2) -- (0,3.2) node[anchor=south] {$x_2$};
+% --------------------------------------------------
+% Parameters
+% --------------------------------------------------
+\def\eps{0.20}
 
-  % Integer grid points
-  \foreach \x in {0,1,2,3,4}
-    \foreach \y in {0,1,2,3}
-      \fill[black!40] (\x,\y) circle (0.03);
+% Constraint 1: x_2 <= a_1 x_1 + b_1
+\pgfmathsetmacro{\aone}{(-1 - 2*\eps)/4}
+\pgfmathsetmacro{\bone}{3 + \eps}
 
-  % LP relaxation feasible region (a polygon)
-  \filldraw[fill=blue!10,draw=blue!60]
-    (0.5,0.5) --
-    (3.5,0.5) --
-    (3.0,2.5) --
-    (0.7,2.8) --
+% Constraint 2: x_2 <= a_2 x_1 + b_2,
+% written as x_2 <= a_2 (x_1 - (5 + eps))
+\pgfmathsetmacro{\atwo}{(-3 + 2*\eps)/2}
+\pgfmathsetmacro{\btwo}{-\atwo*(5+\eps)}
+
+% Intersection of the two LP constraints = fractional LP optimum
+\pgfmathsetmacro{\xLP}{(\btwo-\bone)/(\aone-\atwo)}
+\pgfmathsetmacro{\yLP}{\aone*\xLP+\bone}
+
+% Values used for plotting boundaries
+\pgfmathsetmacro{\yA}{\bone}
+\pgfmathsetmacro{\yB}{\aone*5+\bone}
+\pgfmathsetmacro{\yC}{\atwo*5+\btwo}
+\pgfmathsetmacro{\xD}{-\btwo/\atwo}
+
+% A Gomory-like illustrative cut, chosen to remove x^LP
+% while preserving the integer points below it.
+\pgfmathsetmacro{\acut}{-1}
+\pgfmathsetmacro{\bcut}{5}
+
+% Intersections of cut with the two LP edges
+\pgfmathsetmacro{\xCutOne}{(\bcut-\bone)/(\aone-\acut)}
+\pgfmathsetmacro{\yCutOne}{\acut*\xCutOne+\bcut}
+
+\pgfmathsetmacro{\xCutTwo}{(\btwo-\bcut)/(\acut-\atwo)}
+\pgfmathsetmacro{\yCutTwo}{\acut*\xCutTwo+\bcut}
+
+% --------------------------------------------------
+% Axes
+% --------------------------------------------------
+\draw[->, thick] (-0.25,0) -- (5.75,0) node[below right] {$x_1$};
+\draw[->, thick] (0,-0.25) -- (0,4.35) node[above left] {$x_2$};
+
+% --------------------------------------------------
+% Lattice points
+% --------------------------------------------------
+\foreach \x in {0,...,5}{
+  \foreach \y in {0,...,4}{
+    \node[lattice, fill=black!35] at (\x,\y) {};
+  }
+}
+
+% --------------------------------------------------
+% Original LP relaxation
+% --------------------------------------------------
+\filldraw[lpregion]
+  (0,0) --
+  (\xD,0) --
+  %(5,\yC) --
+  (\xLP,\yLP) --
+  (0,\yA) --
+  cycle;
+
+
+% --------------------------------------------------
+% Region removed by the cut
+% --------------------------------------------------
+\filldraw[cutregion]
+  (\xCutOne,\yCutOne) --
+  (\xLP,\yLP) --
+  (\xD,0) --
+  (5,0) --
+  cycle;
+
+
+% Red hatching inside removed part
+\begin{scope}
+  \clip
+    (\xCutOne,\yCutOne) --
+    (\xLP,\yLP) --
+    (\xD,0) --
+    (5,0) --
     cycle;
 
-  % Original LP optimum (fractional)
-  \fill[blue!80] (2.8,1.4) circle (0.06);
-  \node[anchor=west,blue!80] at (2.8,1.4) {$x^{\text{LP}}$};
+  \foreach \s in {-2,-1.75,...,6}{
+    \draw[red!65, line width=0.65pt]
+      (\s,0) -- ++(3.0,3.0);
+  }
+\end{scope}
+% --------------------------------------------------
+% Constraint boundaries
+% --------------------------------------------------
+\draw[constraint] (0,\yA) -- (\xLP,\yLP);
+\draw[constraint] (\xLP,\yLP) -- (5,\yC);
 
-  % Cutting plane (valid inequality) cutting off x^LP
-  \draw[thick,red]
-    (0.2,2.3) -- (3.7,1.4);
-  \node[anchor=south east,red] at (3.7,1.4) {cut};
+% Optional extension of LP boundary lines
+\draw[constraint, opacity=0.6]
+  (-0.15,{\aone*(-0.15)+\bone})
+  --
+  (5.45,{\aone*5.45+\bone});
 
-  % New feasible region after cut (just outline intersection)
-  % (for illustration: show only boundary segment)
-  \draw[red,dashed]
-    (0.7,2.8) -- (0.2,2.3);
+% Stop the second boundary at x_2=0 to avoid drawing below the axis
+\draw[constraint, opacity=0.6]
+  (2.65,{\atwo*2.65+\btwo})
+  --
+  ({-\btwo/\atwo},0);
 
-  % Highlight an integer feasible solution inside the cut polytope
-  \fill[green!70!black] (2,2) circle (0.07);
-  \node[anchor=south west,green!70!black] at (2,2) {$x^{\text{IP}}$};
+% --------------------------------------------------
+% Cutting plane
+% --------------------------------------------------
+\draw[cut]
+  (1.0,4.0)
+  --
+  (5,0);
+
+\node[red!75!black, above right] at (1.55,{\acut*1.55+\bcut}) {cut};
+
+% --------------------------------------------------
+% Feasible integer points: those satisfying both LP constraints and the cut
+% --------------------------------------------------
+\foreach \x in {0,...,5}{
+  \foreach \y in {0,...,4}{
+    \pgfmathtruncatemacro{\ok}{
+      ifthenelse(
+        \y <= \aone*\x+\bone + 0.001 &&
+        \y <= \atwo*\x+\btwo + 0.001 &&
+        \y <= \acut*\x+\bcut + 0.001,
+        1,0)
+    }
+    \ifnum\ok=1
+      \node[feasiblept] at (\x,\y) {};
+    \fi
+  }
+}
+
+% --------------------------------------------------
+% Solutions
+% --------------------------------------------------
+\node[solLP] at (\xLP,\yLP) {};
+\node[blue!80!black, above right] at (\xLP,\yLP) {$x^{\mathrm{LP}}$};
+
+\node[solIP] at (3,2) {};
+\node[green!45!black, below left] at (3,2) {$x^{\mathrm{IP}}$};
+
+% --------------------------------------------------
+% Small label for feasible region
+% --------------------------------------------------
+%\node[blue!65!black] at (1.25,1.35) {$P_{\mathrm{LP}}$};
 
 \end{tikzpicture}
-\caption{Illustration of a cutting plane removing a fractional LP optimum while preserving integer-feasible solutions.}
+\caption{Illustration of a cutting plane. The blue shaded region represents the LP relaxation, whose optimum $x^{\mathrm{LP}}$ is attained at a fractional vertex. The dashed red inequality cuts off this fractional solution while preserving the integer-feasible points, including $x^{\mathrm{IP}}$.}
+\label{fig:cutting_plane}
 \end{figure}

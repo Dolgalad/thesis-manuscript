@@ -1,0 +1,201 @@
+\begin{figure}[htbp]
+\centering
+% Requires: \usepackage{pgfplots}
+% Requires: \usepgfplotslibrary{groupplots}
+% Requires: \usetikzlibrary{calc, matrix}
+\definecolor{darkgray176}{RGB}{110,110,110}
+\definecolor{lightgray204}{RGB}{200,200,200}
+\begin{tikzpicture}
+\begin{groupplot}[
+    group style={group size=2 by 2, horizontal sep=0.75cm, vertical sep=0.75cm, y descriptions at=edge left, ylabels at=edge left},
+    width=0.42\textwidth,
+    height=0.30\textwidth,
+    scale only axis,
+    tick align=outside,
+    tick pos=left,
+    xmajorgrids,
+    ymajorgrids,
+    x grid style={darkgray176},
+    y grid style={darkgray176},
+]
+
+\nextgroupplot[
+    title={SC-S},
+    xtick style={draw=none},
+    ylabel={Gap (\%)},
+    xmode=log,
+    log basis x={10},
+    xmin=0.0567562755508, xmax=0.968195435621,
+    ymin=0.324848484848, ymax=9.64282828283,
+]
+% scp_n50_m50_k5 / var_logits_bce::EGG
+\addplot+[semithick, color=GNNEGGColor, mark=*, mark size=3, mark options={solid}]
+coordinates {(0.0787783249654,2) (0.0681075306609,3.42222222222) (0.0694122564141,5.18585858586) (0.073212749958,7.36767676768) (0.075686957147,8.56767676768)};
+\node[font=\tiny, anchor=south west, text=GNNEGGColor] at (axis cs:0.0787783249654,2) {0.5};
+\node[font=\tiny, anchor=south west, text=GNNEGGColor] at (axis cs:0.0681075306609,3.42222222222) {0.6};
+\node[font=\tiny, anchor=south west, text=GNNEGGColor] at (axis cs:0.0694122564141,5.18585858586) {0.7};
+\node[font=\tiny, anchor=south west, text=GNNEGGColor] at (axis cs:0.073212749958,7.36767676768) {0.8};
+\node[font=\tiny, anchor=south west, text=GNNEGGColor] at (axis cs:0.075686957147,8.56767676768) {0.9};
+% scp_n50_m50_k5 / lbp_fce::EGG
+\addplot+[semithick, color=LBPEGGColor, mark=*, mark size=3, mark options={solid}]
+coordinates {(0.184668398621,1.4) (0.179667182742,2.2) (0.169764551008,2.82222222222) (0.169559630128,3.80404040404) (0.168967585973,5.00404040404)};
+\node[font=\tiny, anchor=south west, text=LBPEGGColor] at (axis cs:0.184668398621,1.4) {0.5};
+\node[font=\tiny, anchor=south west, text=LBPEGGColor] at (axis cs:0.179667182742,2.2) {0.6};
+\node[font=\tiny, anchor=south west, text=LBPEGGColor] at (axis cs:0.169764551008,2.82222222222) {0.7};
+\node[font=\tiny, anchor=south west, text=LBPEGGColor] at (axis cs:0.169559630128,3.80404040404) {0.8};
+\node[font=\tiny, anchor=south west, text=LBPEGGColor] at (axis cs:0.168967585973,5.00404040404) {0.9};
+% scp_n50_m50_k5 / lbp_fce::GD
+\addplot+[semithick, color=LBPGDColor, mark=square, mark size=3, mark options={solid}]
+coordinates {(0.532932139486,1.6) (0.603092093375,2.2) (0.665446116244,2.6) (0.746985982442,3) (0.806829529684,3.2)};
+\node[font=\tiny, anchor=south west, text=LBPGDColor] at (axis cs:0.532932139486,1.6) {0.5};
+\node[font=\tiny, anchor=south west, text=LBPGDColor] at (axis cs:0.603092093375,2.2) {0.6};
+\node[font=\tiny, anchor=south west, text=LBPGDColor] at (axis cs:0.665446116244,2.6) {0.7};
+\node[font=\tiny, anchor=south west, text=LBPGDColor] at (axis cs:0.746985982442,3) {0.8};
+\node[font=\tiny, anchor=south west, text=LBPGDColor] at (axis cs:0.806829529684,3.2) {0.9};
+% scp_n50_m50_k5 / nmf_fce::EGG
+\addplot+[semithick, color=NMFEGGColor, mark=*, mark size=3, mark options={solid}]
+coordinates {(0.152687040232,2.6) (0.149587717596,3.22222222222) (0.14597484515,3.62222222222) (0.145795099419,5.20404040404) (0.146500766343,7.96767676768)};
+\node[font=\tiny, anchor=south west, text=NMFEGGColor] at (axis cs:0.152687040232,2.6) {0.5};
+\node[font=\tiny, anchor=south west, text=NMFEGGColor] at (axis cs:0.149587717596,3.22222222222) {0.6};
+\node[font=\tiny, anchor=south west, text=NMFEGGColor] at (axis cs:0.14597484515,3.62222222222) {0.7};
+\node[font=\tiny, anchor=south west, text=NMFEGGColor] at (axis cs:0.145795099419,5.20404040404) {0.8};
+\node[font=\tiny, anchor=south west, text=NMFEGGColor] at (axis cs:0.146500766343,7.96767676768) {0.9};
+% scp_n50_m50_k5 / nmf_fce::GD
+\addplot+[semithick, color=NMFGDColor, mark=square*, mark size=3, mark options={solid}]
+coordinates {(0.229067553487,2.4) (0.244152145693,3.02222222222) (0.256363744838,4.42222222222) (0.27106491507,4.62222222222) (0.281218038946,5.02222222222)};
+\node[font=\tiny, anchor=south west, text=NMFGDColor] at (axis cs:0.229067553487,2.4) {0.5};
+\node[font=\tiny, anchor=south west, text=NMFGDColor] at (axis cs:0.244152145693,3.02222222222) {0.6};
+\node[font=\tiny, anchor=south west, text=NMFGDColor] at (axis cs:0.256363744838,4.42222222222) {0.7};
+\node[font=\tiny, anchor=south west, text=NMFGDColor] at (axis cs:0.27106491507,4.62222222222) {0.8};
+\node[font=\tiny, anchor=south west, text=NMFGDColor] at (axis cs:0.281218038946,5.02222222222) {0.9};
+\addplot [thick, black, dashed]
+coordinates {(0.0681075306609,3.42222222222) (0.0787783249654,2) (0.184668398621,1.4)};
+
+\nextgroupplot[
+    title={SC-M},
+    xtick style={draw=none},
+    ytick style={draw=none},
+    xmode=log,
+    log basis x={10},
+    xmin=0.238198889955, xmax=2.98656015478,
+    ymin=-0.572772657629, ymax=12.5656676305,
+]
+% scp_n120-180_m150-250_k5 / var_logits_bce::EGG
+\addplot+[semithick, color=GNNEGGColor, mark=*, mark size=3, mark options={solid}]
+coordinates {(1.38755885688,1.97150696257) (0.558267956171,3.35460189684) (0.285838667946,5.28993569488) (0.287667967388,7.54278964599) (0.315015469976,11.0496937511)};
+\node[font=\tiny, anchor=south west, text=GNNEGGColor] at (axis cs:1.38755885688,1.97150696257) {0.5};
+\node[font=\tiny, anchor=south west, text=GNNEGGColor] at (axis cs:0.558267956171,3.35460189684) {0.6};
+\node[font=\tiny, anchor=south west, text=GNNEGGColor] at (axis cs:0.285838667946,5.28993569488) {0.7};
+\node[font=\tiny, anchor=south west, text=GNNEGGColor] at (axis cs:0.287667967388,7.54278964599) {0.8};
+\node[font=\tiny, anchor=south west, text=GNNEGGColor] at (axis cs:0.315015469976,11.0496937511) {0.9};
+% scp_n120-180_m150-250_k5 / lbp_fce::EGG
+\addplot+[semithick, color=LBPEGGColor, mark=*, mark size=3, mark options={solid}]
+coordinates {(1.16839256794,0.943201221769) (0.715190988826,1.48284329891) (0.472384071313,2.36333058343) (0.450558456732,3.17386936897) (0.446217714958,4.77014495999)};
+\node[font=\tiny, anchor=south west, text=LBPEGGColor] at (axis cs:1.16839256794,0.943201221769) {0.5};
+\node[font=\tiny, anchor=south west, text=LBPEGGColor] at (axis cs:0.715190988826,1.48284329891) {0.6};
+\node[font=\tiny, anchor=south west, text=LBPEGGColor] at (axis cs:0.472384071313,2.36333058343) {0.7};
+\node[font=\tiny, anchor=south west, text=LBPEGGColor] at (axis cs:0.450558456732,3.17386936897) {0.8};
+\node[font=\tiny, anchor=south west, text=LBPEGGColor] at (axis cs:0.446217714958,4.77014495999) {0.9};
+% scp_n120-180_m150-250_k5 / lbp_fce::GD
+\addplot+[semithick, color=LBPGDColor, mark=square, mark size=3, mark options={solid}]
+coordinates {(2.19993154359,1.14011241868) (2.09245301466,1.38096739704) (2.10865637533,1.63264488621) (2.28544654797,1.97578562757) (2.48880012899,2.39176307118)};
+\node[font=\tiny, anchor=south west, text=LBPGDColor] at (axis cs:2.19993154359,1.14011241868) {0.5};
+\node[font=\tiny, anchor=south west, text=LBPGDColor] at (axis cs:2.09245301466,1.38096739704) {0.6};
+\node[font=\tiny, anchor=south west, text=LBPGDColor] at (axis cs:2.10865637533,1.63264488621) {0.7};
+\node[font=\tiny, anchor=south west, text=LBPGDColor] at (axis cs:2.28544654797,1.97578562757) {0.8};
+\node[font=\tiny, anchor=south west, text=LBPGDColor] at (axis cs:2.48880012899,2.39176307118) {0.9};
+% scp_n120-180_m150-250_k5 / nmf_fce::EGG
+\addplot+[semithick, color=NMFEGGColor, mark=*, mark size=3, mark options={solid}]
+coordinates {(1.10374479127,1.30229092645) (0.614911401691,2.21011711497) (0.437423482118,3.57793053906) (0.429974199682,5.16827411425) (0.429524863893,7.87951209799)};
+\node[font=\tiny, anchor=south west, text=NMFEGGColor] at (axis cs:1.10374479127,1.30229092645) {0.5};
+\node[font=\tiny, anchor=south west, text=NMFEGGColor] at (axis cs:0.614911401691,2.21011711497) {0.6};
+\node[font=\tiny, anchor=south west, text=NMFEGGColor] at (axis cs:0.437423482118,3.57793053906) {0.7};
+\node[font=\tiny, anchor=south west, text=NMFEGGColor] at (axis cs:0.429974199682,5.16827411425) {0.8};
+\node[font=\tiny, anchor=south west, text=NMFEGGColor] at (axis cs:0.429524863893,7.87951209799) {0.9};
+% scp_n120-180_m150-250_k5 / nmf_fce::GD
+\addplot+[semithick, color=NMFGDColor, mark=square*, mark size=3, mark options={solid}]
+coordinates {(0.939948068885,1.47754313718) (0.773951410726,2.47832903651) (0.787512016948,3.31945058464) (0.82689855298,4.4659997016) (0.862844122704,4.93397243339)};
+\node[font=\tiny, anchor=south west, text=NMFGDColor] at (axis cs:0.939948068885,1.47754313718) {0.5};
+\node[font=\tiny, anchor=south west, text=NMFGDColor] at (axis cs:0.773951410726,2.47832903651) {0.6};
+\node[font=\tiny, anchor=south west, text=NMFGDColor] at (axis cs:0.787512016948,3.31945058464) {0.7};
+\node[font=\tiny, anchor=south west, text=NMFGDColor] at (axis cs:0.82689855298,4.4659997016) {0.8};
+\node[font=\tiny, anchor=south west, text=NMFGDColor] at (axis cs:0.862844122704,4.93397243339) {0.9};
+\addplot [thick, black, dashed]
+coordinates {(0.285838667946,5.28993569488) (0.429974199682,5.16827411425) (0.437423482118,3.57793053906) (0.450558456732,3.17386936897) (0.472384071313,2.36333058343) (0.614911401691,2.21011711497) (0.715190988826,1.48284329891) (0.939948068885,1.47754313718) (1.10374479127,1.30229092645) (1.16839256794,0.943201221769)};
+
+\nextgroupplot[
+    title={MIS-S},
+    xlabel={Runtime (s)},
+    ylabel={Gap (\%)},
+    xmode=log,
+    log basis x={10},
+    xmin=0.0747268671092, xmax=0.540046127636,
+    ymin=4.19729907773, ymax=45.8777997365,
+]
+% mis_n100_p0.15 / var_logits_bce::EGG
+\addplot+[semithick, color=GNNEGGColor, mark=*, mark size=3, mark options={solid}]
+coordinates {(0.250872918982,10.3143233578) (0.103543401416,13.0242800678) (0.0906998283323,16.0517598344) (0.0896722405311,19.8447204969) (0.0999157025479,23.5766986637)};
+\node[font=\tiny, anchor=south west, text=GNNEGGColor] at (axis cs:0.250872918982,10.3143233578) {0.5};
+\node[font=\tiny, anchor=south west, text=GNNEGGColor] at (axis cs:0.103543401416,13.0242800678) {0.6};
+\node[font=\tiny, anchor=south west, text=GNNEGGColor] at (axis cs:0.0906998283323,16.0517598344) {0.7};
+\node[font=\tiny, anchor=south west, text=GNNEGGColor] at (axis cs:0.0896722405311,19.8447204969) {0.8};
+\node[font=\tiny, anchor=south west, text=GNNEGGColor] at (axis cs:0.0999157025479,23.5766986637) {0.9};
+% mis_n100_p0.15 / lbp_fce::EGG
+\addplot+[semithick, color=LBPEGGColor, mark=*, mark size=3, mark options={solid}]
+coordinates {(0.392076725475,9.00658761528) (0.301800253782,12.236777715) (0.281387479687,13.9121023904) (0.276892601419,17.5322793149) (0.274943064805,20.6058723885)};
+\node[font=\tiny, anchor=south west, text=LBPEGGColor] at (axis cs:0.392076725475,9.00658761528) {0.5};
+\node[font=\tiny, anchor=south west, text=LBPEGGColor] at (axis cs:0.301800253782,12.236777715) {0.6};
+\node[font=\tiny, anchor=south west, text=LBPEGGColor] at (axis cs:0.281387479687,13.9121023904) {0.7};
+\node[font=\tiny, anchor=south west, text=LBPEGGColor] at (axis cs:0.276892601419,17.5322793149) {0.8};
+\node[font=\tiny, anchor=south west, text=LBPEGGColor] at (axis cs:0.274943064805,20.6058723885) {0.9};
+% mis_n100_p0.15 / lbp_fce::GD
+\addplot+[semithick, color=LBPGDColor, mark=square, mark size=3, mark options={solid}]
+coordinates {(0.450038439697,17.2725390551) (0.351304507982,22.1780538302) (0.361190973213,27.0135516657) (0.367729880763,34.1193299454) (0.393231845275,41.0685111989)};
+\node[font=\tiny, anchor=south west, text=LBPGDColor] at (axis cs:0.450038439697,17.2725390551) {0.5};
+\node[font=\tiny, anchor=south west, text=LBPGDColor] at (axis cs:0.351304507982,22.1780538302) {0.6};
+\node[font=\tiny, anchor=south west, text=LBPGDColor] at (axis cs:0.361190973213,27.0135516657) {0.7};
+\node[font=\tiny, anchor=south west, text=LBPGDColor] at (axis cs:0.367729880763,34.1193299454) {0.8};
+\node[font=\tiny, anchor=south west, text=LBPGDColor] at (axis cs:0.393231845275,41.0685111989) {0.9};
+% mis_n100_p0.15 / nmf_fce::EGG
+\addplot+[semithick, color=NMFEGGColor, mark=*, mark size=3, mark options={solid}]
+coordinates {(0.302443445437,9.02785620177) (0.165100769121,11.2446828534) (0.156231435072,14.1069075852) (0.147697388129,16.8699416526) (0.147118802406,20.187088274)};
+\node[font=\tiny, anchor=south west, text=NMFEGGColor] at (axis cs:0.302443445437,9.02785620177) {0.5};
+\node[font=\tiny, anchor=south west, text=NMFEGGColor] at (axis cs:0.165100769121,11.2446828534) {0.6};
+\node[font=\tiny, anchor=south west, text=NMFEGGColor] at (axis cs:0.156231435072,14.1069075852) {0.7};
+\node[font=\tiny, anchor=south west, text=NMFEGGColor] at (axis cs:0.147697388129,16.8699416526) {0.8};
+\node[font=\tiny, anchor=south west, text=NMFEGGColor] at (axis cs:0.147118802406,20.187088274) {0.9};
+% mis_n100_p0.15 / nmf_fce::GD
+\addplot+[semithick, color=NMFGDColor, mark=square*, mark size=3, mark options={solid}]
+coordinates {(0.267593712918,17.7310370789) (0.18062867986,20.5853566723) (0.169285198441,24.3732354602) (0.173552551465,28.8198757764) (0.180730663929,29.3783173348)};
+\node[font=\tiny, anchor=south west, text=NMFGDColor] at (axis cs:0.267593712918,17.7310370789) {0.5};
+\node[font=\tiny, anchor=south west, text=NMFGDColor] at (axis cs:0.18062867986,20.5853566723) {0.6};
+\node[font=\tiny, anchor=south west, text=NMFGDColor] at (axis cs:0.169285198441,24.3732354602) {0.7};
+\node[font=\tiny, anchor=south west, text=NMFGDColor] at (axis cs:0.173552551465,28.8198757764) {0.8};
+\node[font=\tiny, anchor=south west, text=NMFGDColor] at (axis cs:0.180730663929,29.3783173348) {0.9};
+\addplot [thick, black, dashed]
+coordinates {(0.0896722405311,19.8447204969) (0.0906998283323,16.0517598344) (0.103543401416,13.0242800678) (0.165100769121,11.2446828534) (0.250872918982,10.3143233578) (0.302443445437,9.02785620177) (0.392076725475,9.00658761528)};
+
+\nextgroupplot[
+    title={MIS-M},
+    xlabel={Runtime (s)},
+    ytick style={draw=none},
+    xmode=log,
+    log basis x={10},
+    xmin=0.1, xmax=1,
+    ymin=0, ymax=1,
+]
+
+\end{groupplot}
+\node[anchor=north, draw=lightgray204, fill=white, fill opacity=0.9, text opacity=1, inner sep=3pt] at ($(current bounding box.south) + (0cm, -0.45cm)$) {
+\begin{tikzpicture}[baseline]
+\matrix[matrix of nodes, nodes={anchor=west, font=\scriptsize}, column sep=8pt, row sep=3pt] {
+\tikz[baseline=-0.55ex]{\draw[very thick, color=GNNEGGColor] (0,0) -- (0.42,0); \draw[color=GNNEGGColor] plot[only marks, mark=*, mark size=2.0pt] coordinates {(0.21,0)};} & DGN+EGG & \tikz[baseline=-0.55ex]{\draw[very thick, color=LBPEGGColor] (0,0) -- (0.42,0); \draw[color=LBPEGGColor] plot[only marks, mark=*, mark size=2.0pt] coordinates {(0.21,0)};} & LMRF-LBP+EGG & \tikz[baseline=-0.55ex]{\draw[very thick, color=LBPGDColor] (0,0) -- (0.42,0); \draw[color=LBPGDColor] plot[only marks, mark=square, mark size=2.0pt] coordinates {(0.21,0)};} & LMRF-LBP+GD \\
+\tikz[baseline=-0.55ex]{\draw[very thick, color=NMFEGGColor] (0,0) -- (0.42,0); \draw[color=NMFEGGColor] plot[only marks, mark=*, mark size=2.0pt] coordinates {(0.21,0)};} & LMRF-NMF+EGG & \tikz[baseline=-0.55ex]{\draw[very thick, color=NMFGDColor] (0,0) -- (0.42,0); \draw[color=NMFGDColor] plot[only marks, mark=square*, mark size=2.0pt] coordinates {(0.21,0)};} & LMRF-NMF+GD &  &  \\
+};
+\end{tikzpicture}
+};
+\end{tikzpicture}
+
+\caption{\inferenceFreqMaxIterAblationParetoCaption}
+\label{fig:inference_test_nair_pareto}
+\end{figure}

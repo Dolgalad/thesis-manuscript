@@ -9,6 +9,8 @@
 \newcommand\NCONSTR{m}
 \newcommand\YVEC{y}
 
+\newcommand\PARTSOL{S}
+
 % MIS
 \newcommand\G{G}
 \newcommand\GV{V}
@@ -19,28 +21,32 @@
 % SCP
 \newcommand\ITEMS{\mathcal{A}}
 \newcommand\ITEM{a}
-\newcommand\SET{F}
-\newcommand\SETS{\mathcal{\SET}}
-\newcommand\SCPROB{\PROB_{\text{SCP}}}
-\newcommand\SETI{\mathcal{\SET}_i}
+\newcommand\SCSET{s}
+\newcommand\SCSETS{\mathcal{S}}
+\newcommand\SCPROB{\PROB_{\text{SC}}}
+\newcommand\SCSETI{\SCSETS_i}
 
 
 % Distributions
 \newcommand\PDIST{p}
 \newcommand\XRAV{X}
+\newcommand\MARGINAL{\mu}
 
 % variable-constraint bipartite graph
 \newcommand\VCG{H}
-\newcommand\VCGE{\mathcal{E}}
-\newcommand\VCGV{V}
-\newcommand\VCGC{C}
+\newcommand\VCGV{\mathcal{V}}
+\newcommand\VCGC{\mathcal{C}}
+\newcommand\VCGE{\mathcal{E}_{\mathrm{vc}}}
 \newcommand\VCGFULL{\VCG=(\VCGV \cup \VCGC, \VCGE)}
 
 % MRFs
-\newcommand\FACTORSET{F}
-\newcommand\FG{H}
+\newcommand\FACTORSET{\mathcal{F}}
+\newcommand\FG{H_{\mathrm{F}}}
+\newcommand\FGV{\VCGV}
 \newcommand\FGF{\FACTORSET}
-\newcommand\FGFULL{\FG = (\VCGV \cup \FGF, \VCGE)}
+\newcommand\FGE{\mathcal{E}_{\mathrm{F}}}
+\newcommand\FGFULL{\FG=(\FGV \cup \FGF,\FGE)}
+
 \newcommand\FACTOR{\alpha}
 \newcommand\POTENTIAL{\psi}
 \newcommand\SSTAT{\phi}
@@ -48,11 +54,21 @@
 \newcommand\EPARAM{\theta}
 \newcommand\EPARAMF{\EPARAM_{\FACTOR}}
 \newcommand\EPARAMDOM{\Omega}
-\newcommand\SSDIM{d}
+\newcommand\SSDIM{D}
 \newcommand\FDIM{d}
 \newcommand\PMRF{p_{\EPARAM}}
 \newcommand\XFACT{\XVEC_{\FACTOR}}
-\newcommand\FMARGIN{\mu_{\FACTOR}}
+\newcommand\FMARGIN{\MARGINAL_{\FACTOR}}
+
+% MRF parameter variants
+\newcommand\GENEPARAM{\theta}
+\newcommand\CANEPARAM{\bar{\theta}}
+\newcommand\PREEPARAM{\hat{\theta}}
+\newcommand\NNPARAM{\omega}
+
+\newcommand\GENEPARAMF{\GENEPARAM_{\FACTOR}}
+\newcommand\CANEPARAMF{\CANEPARAM_{\FACTOR}}
+\newcommand\PREEPARAMF{\PREEPARAM_{\FACTOR}}
 
 % GNN
 \newcommand\FEATURES{\gamma}

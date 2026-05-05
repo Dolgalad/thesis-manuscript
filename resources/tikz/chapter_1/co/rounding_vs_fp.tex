@@ -1,103 +1,228 @@
-\begin{figure}[ht]
-    \centering
-    %----------------- Rounding -----------------%
-    \begin{subfigure}{0.45\textwidth}
-        \centering
-        \begin{tikzpicture}[scale=1.2,>=Stealth]
+\begin{figure}[t]
+\centering
 
-            % Axes
-            \draw[->] (-0.2,0) -- (3.5,0) node[right] {$x_1$};
-            \draw[->] (0,-0.2) -- (0,3.0) node[above] {$x_2$};
+% --------------------------------------------------
+% Shared styles
+% --------------------------------------------------
+\tikzset{
+    roundingfig/.style={
+        >=Latex,
+        line cap=round,
+        line join=round,
+        every node/.style={font=\small},
+        lattice/.style={circle, fill=black!30, inner sep=1.05pt},
+        feasiblept/.style={circle, fill=black, inner sep=1.45pt},
+        lpregion/.style={draw=none, fill=blue!8},
+        constraint/.style={blue!70!black, line width=1.0pt},
+        solLP/.style={circle, fill=blue!80!black, inner sep=2pt},
+        roundpt/.style={circle, fill=red!70!black, inner sep=2pt},
+        pertpt/.style={circle, fill=brown!70!black, inner sep=2pt},
+        fppt/.style={circle, fill=green!55!black, inner sep=2pt},
+        projpt/.style={circle, fill=purple!80!black, inner sep=2pt}
+    }
+}
 
-            % LP feasible region (polytope)
-            \fill[blue!5]
-                (0.5,0.5) --
-                (3.0,0.5) --
-                (2.4,1.8) --
-                (0.8,2.0) -- cycle;
-            \draw[blue!60] 
-                (0.5,0.5) --
-                (3.0,0.5) --
-                (2.4,1.8) --
-                (0.8,2.0) -- cycle;
+% Shared zoom window
+\def\zxmin{2.5}
+\def\zxmax{4.5}
+\def\zymin{1.75}
+\def\zymax{3.25}
 
-            % Integer lattice points
-            \foreach \x in {0,1,2,3}
-                \foreach \y in {0,1,2}
-                    \fill[black!40] (\x,\y) circle (0.03);
+% --------------------------------------------------
+% Macro: shared geometry
+% --------------------------------------------------
+\newcommand{\DefineRoundingGeometry}{%
+    \def\eps{0.20}%
+    \pgfmathsetmacro{\aone}{(-1 - 2*\eps)/4}%
+    \pgfmathsetmacro{\bone}{3 + \eps}%
+    \pgfmathsetmacro{\atwo}{(-3 + 2*\eps)/2}%
+    \pgfmathsetmacro{\btwo}{-\atwo*(5+\eps)}%
+    \pgfmathsetmacro{\xLP}{(\btwo-\bone)/(\aone-\atwo)}%
+    \pgfmathsetmacro{\yLP}{\aone*\xLP+\bone}%
+    \pgfmathsetmacro{\xD}{-\btwo/\atwo}%
+    \pgfmathsetmacro{\xproj}{2.78}
+    \pgfmathsetmacro{\yproj}{\aone*\xproj + \bone}
+    % Chosen illustrative points
+    \coordinate (xbar)   at (\xLP,\yLP);%
+    \coordinate (xround) at (4,2);%
+    \coordinate (xpert)  at (3,3);
+    \coordinate (xproj)  at (\xproj,\yproj);%
+    \coordinate (xfp)    at (3,2);%
+}
 
-            % Fractional LP optimum (inside polytope)
-            \filldraw[blue] (2.4,1.8) circle (0.06);
-            \node[blue,anchor=west] at (2.4,1.8) {$\bar{x}$};
+% --------------------------------------------------
+% Macro: draw feasible region and lattice
+% --------------------------------------------------
+\newcommand{\DrawRoundingBase}{%
+    % LP relaxation
+    \filldraw[lpregion]
+        (0,0) --
+        (\xD,0) --
+        (\xLP,\yLP) --
+        (0,\bone) --
+        cycle;
 
-            % Simple rounding: closest integer (2,2), not necessarily feasible
-            \filldraw[green!60!black] (2,2) circle (0.07);
-            \node[green!60!black,anchor=south west] at (2,2) {$x^{\text{round}}$};
+    % Constraint boundaries
+    \draw[constraint] (0,\bone) -- (\xLP,\yLP);
+    \draw[constraint] (\xLP,\yLP) -- (\xD,0);
+    \draw[constraint] (0,0) -- (\xD,0);
+    \draw[constraint] (0,0) -- (0,\bone);
 
-            % Arrow for rounding heuristic
-            \draw[thick,green!70!black,->] (2.4,1.8) -- (2,2);
+    % Integer lattice points
+    \foreach \x in {0,...,5}{%
+      \foreach \y in {0,...,4}{%
+        \pgfmathtruncatemacro{\ok}{%
+          ifthenelse(%
+            \y <= \aone*\x+\bone + 0.001 &&%
+            \y <= \atwo*\x+\btwo + 0.001,%
+            1,0)%
+        }%
+        \ifnum\ok=1
+          \node[feasiblept] at (\x,\y) {};%
+        \else
+          \node[lattice] at (\x,\y) {};%
+        \fi
+      }%
+    }%
+}
 
-            % Optional label for feasible region
-            \node[blue!60] at (2.6,1.2) {\scriptsize LP feasible region};
+% --------------------------------------------------
+% Macro: draw zoom axes and ticks
+% --------------------------------------------------
+\newcommand{\DrawZoomAxes}{%
+    \draw[->, thick]
+      (\zxmin,\zymin) -- (\zxmax+0.22,\zymin) node[below right] {$x_1$};
+    \draw[->, thick]
+      (\zxmin,\zymin) -- (\zxmin,\zymax+0.22) node[above left] {$x_2$};
 
-        \end{tikzpicture}
-        \caption{Simple rounding: nearest integer point to $\bar{x}$, possibly infeasible.}
-        \label{fig:rounding_heuristic}
-    \end{subfigure}
-    \hfill
-    %----------------- Feasibility Pump -----------------%
-    \begin{subfigure}{0.45\textwidth}
-        \centering
-        \begin{tikzpicture}[scale=1.2,>=Stealth]
+    \foreach \x/\lab in {3/3,4/4}{%
+      \draw (\x,\zymin) -- (\x,\zymin-0.035) node[below] {\scriptsize \lab};%
+    }%
+    \foreach \y/\lab in {2/2}{%
+      \draw (\zxmin,\y) -- (\zxmin-0.035,\y) node[left] {\scriptsize \lab};%
+    }%
+}
 
-            % Axes
-            \draw[->] (-0.2,0) -- (3.5,0) node[right] {$x_1$};
-            \draw[->] (0,-0.2) -- (0,3.0) node[above] {$x_2$};
+% ==================================================
+% Global view
+% ==================================================
+\begin{subfigure}[t]{0.315\textwidth}
+\centering
+\vspace{0pt}%
+\begin{tikzpicture}[roundingfig, x=0.8cm, y=0.8cm]
 
-            % LP feasible region (same polytope)
-            \fill[blue!5]
-                (0.5,0.5) --
-                (3.0,0.5) --
-                (2.4,1.8) --
-                (0.8,2.0) -- cycle;
-            \draw[blue!60] 
-                (0.5,0.5) --
-                (3.0,0.5) --
-                (2.4,1.8) --
-                (0.8,2.0) -- cycle;
+\DefineRoundingGeometry
 
-            % Integer lattice points
-            \foreach \x in {0,1,2,3}
-                \foreach \y in {0,1,2}
-                    \fill[black!40] (\x,\y) circle (0.03);
+% Fixed bounding box keeps the panel width predictable without scaling text.
+\path[use as bounding box] (-0.35,-0.38) rectangle (6.40,4.65);
 
-            % Fractional LP optimum (same as left)
-            \filldraw[blue] (2.4,1.8) circle (0.06);
-            \node[blue,anchor=west] at (2.4,1.8) {$\bar{x}$};
+% Axes
+\draw[->, thick] (-0.25,0) -- (5.75,0) node[below right] {$x_1$};
+\draw[->, thick] (0,-0.25) -- (0,4.35) node[above left] {$x_2$};
 
-            % Proximity-based integer point: closest FEASIBLE integer
-            % (picked inside the feasible region to illustrate feasibility pump)
-            %\filldraw[red!70!black] (2,2) circle (0.07);
-            \node[red!70!black,anchor=north west] at (2,2) {$x^{I}$};
+\DrawRoundingBase
 
-            % LP projection back from integer point
-            %\filldraw[purple] (1.9,1.9) circle (0.06);
-            \node[purple,anchor=east] at (1.9,1.9) {$x^{LP}$};
+% Highlight zoom window
+\draw[black!45, dashed, rounded corners=1pt]
+    (\zxmin,\zymin) rectangle (\zxmax,\zymax);
 
-            % Arrow: fractional LP -> nearest feasible integer (proximity problem)
-            \draw[thick,red!70!black,->] (2.4,1.8) -- (2,2);
+% Points
+\node[solLP] at (xbar) {};
+\node[blue!80!black, below] at (xbar) {$\bar{x}$};
 
-            % Arrow: integer -> LP projection (solve LP with $x$ fixed or partially fixed)
-            \draw[thick,purple!80!black,->,bend left=15] (2,2) -- (1.9,1.8);
+\node[roundpt] at (xround) {};
+\node[red!70!black, above right] at (xround) {$x^{\mathrm{round}}$};
 
-            % Optional label
-            \node[blue!60] at (2.6,1.2) {\scriptsize LP feasible region};
+\node[fppt] at (xfp) {};
+\node[green!45!black, below left] at (xfp) {$x^{\mathrm{FP}}$};
 
-        \end{tikzpicture}
-        \caption{Feasibility pump: proximity-based integer projection and LP projection.}
-        \label{fig:feasibility_pump}
-    \end{subfigure}
+\end{tikzpicture}
+\label{fig:rounding-vs-fp-global}
+\end{subfigure}%
+\hfill
+% ==================================================
+% Zoom: rounding
+% ==================================================
+\begin{subfigure}[t]{0.315\textwidth}
+\centering
+\vspace{0pt}%
+\begin{tikzpicture}[roundingfig, x=2.0cm, y=2.0cm]
 
-    \caption{Comparison between a simple rounding heuristic (left) and a feasibility-pump style approach (right). Rounding maps $\bar{x}$ to the nearest integer point, which may lie outside the feasible region. The feasibility pump instead solves a proximity problem over the feasible set to obtain the closest \emph{feasible} integer point $x^{I}$, then projects back into the LP relaxation.}
-    \label{fig:rounding_vs_fp}
+\DefineRoundingGeometry
+
+% Fixed bounding box keeps both zoom panels identical.
+\path[use as bounding box]
+  (\zxmin-0.24,\zymin-0.27) rectangle (\zxmax+0.45,\zymax+0.36);
+
+\DrawZoomAxes
+
+\begin{scope}
+  \clip (\zxmin,\zymin) rectangle (\zxmax,\zymax);
+
+  \DrawRoundingBase
+
+  \node[solLP] at (xbar) {};
+  \node[blue!80!black, left, xshift=-2.5mm] at (xbar) {$\bar{x}$};
+
+  \node[roundpt] at (xround) {};
+  \node[red!70!black, above] at (xround) {$x^{\mathrm{round}}$};
+
+  \draw[red!70!black, dashed, ->] (xbar) -- (xround);
+\end{scope}
+
+\end{tikzpicture}
+\label{fig:rounding-zoom}
+\end{subfigure}%
+\hfill
+% ==================================================
+% Zoom: feasibility pump
+% ==================================================
+\begin{subfigure}[t]{0.315\textwidth}
+\centering
+\vspace{0pt}%
+\begin{tikzpicture}[roundingfig, x=2.0cm, y=2.0cm]
+
+\DefineRoundingGeometry
+
+% Fixed bounding box keeps both zoom panels identical.
+\path[use as bounding box]
+  (\zxmin-0.24,\zymin-0.27) rectangle (\zxmax+0.45,\zymax+0.36);
+
+\DrawZoomAxes
+
+\begin{scope}
+  \clip (\zxmin,\zymin) rectangle (\zxmax,\zymax);
+
+  \DrawRoundingBase
+
+  \node[solLP] at (xbar) {};
+  \node[blue!80!black, left, xshift=-2.5mm] at (xbar) {$\bar{x}$};
+
+  \node[roundpt] at (xround) {};
+  \node[red!70!black, above right] at (xround) {$x^{I}$};
+
+  \node[pertpt] at (xpert) {};
+  \node[brown!80!black, above] at (xpert) {$x^{\mathrm{pert}}$};
+
+  \node[projpt] at (xproj) {};
+  \node[purple!80!black, above, yshift=2mm] at (xproj) {$x^{\mathrm{proj}}$};
+
+  \node[fppt] at (xfp) {};
+  \node[green!45!black, below left] at (xfp) {$x^{\mathrm{FP}}$};
+
+  \draw[red!70!black, dashed, ->] (xbar) -- (xround);
+  \draw[brown!80!black, dashed, ->] (xround) to (xpert);
+  \draw[purple!80!black, dashed, ->] (xpert) to (xproj);
+  \draw[red!55!black, dashed, ->] (xproj) to (xfp);
+\end{scope}
+
+\end{tikzpicture}
+\label{fig:fp-zoom}
+\end{subfigure}
+
+\caption{Comparison between simple rounding and a schematic feasibility-pump trajectory.
+Simple rounding may map the fractional LP solution $\bar{x}$ to an infeasible integer
+point, whereas the feasibility pump alternates between integer rounding, perturbation,
+and projection back onto the LP relaxation.}
+\label{fig:rounding_vs_fp}
 \end{figure}
