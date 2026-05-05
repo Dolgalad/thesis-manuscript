@@ -6,7 +6,14 @@ Contributions of this thesis focus on the problem of solving Integer Linear prog
 \subsection{A brief historical overview}
 Combinatorial optimization has a long history, with problems arising naturally in tasks such as finding efficient paths for foraging or planning routes. A systematic mathematical study of CO emerged in the 20th century, leading to a unified field encompassing graph theory, operations research, and integer programming \cite{schrijver_history_2005}. 
 
-\input{resources/tikz/chapter_1/co/co_event_timeline}
+% \input{resources/tikz/chapter_1/co/co_event_timeline}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.99\linewidth]{resources/img/chapter_1/co_event_timeline.png}
+    \caption{Timeline of major milestones in linear and integer programming, cutting planes, and modern MILP solvers.}
+    \label{fig:co_event_timeline}
+\end{figure}
 
 The terms \emph{combinatorial optimization} and \emph{discrete optimization} are often used interchangeably. The former emphasizes that the underlying search space is combinatorial, e.g.\ involving subsets of vertices, edges, or paths, while the latter stresses the distinction from continuous optimization. Indeed, many discrete optimization methods borrow tools from continuous optimization, such as linear programming relaxations and polyhedral methods.
 
@@ -37,78 +44,93 @@ The most straightforward but impractical approach is exhaustive enumeration of a
 
 \paragraph{Branch-and-Bound}  
 
-\todo[inline]{need to define the node selection, variable selection and other heuristics used in branch-and-bound. Improve figure}
 The Branch-and-Bound (B\&B) (\cite{land_automatic_1960,dakin_tree-search_1965} method explores the solution space using a tree search. At each node, the problem is restricted by fixing a decision variable, yielding two subproblems (in the case of BILPs). Although the B\&B algorithm is an exact method it can be viewed as a sophisticated enumeration strategy and in worse case scenarios take very long to solve a given ILP. B\&B rely's on a number of choices such as which node to expand next, which variables should be fixed at the next node, etc. and these choices have a significant impact on the size of the B\&B tree (see Figure~\ref{fig:branch_and_bound_tree} constructed. Finding the best suited strategies for each of these components has been the subject of alot of work and a summary of choices and available methods in the current state of the art is presented in Table~\ref{tab:branch_and_bound_choices}
 
 \input{resources/tikz/chapter_1/co/generic_branch_and_bound}
 
-\input{resources/tab/branch_and_bound_strategies}
+\input{resources/tab/chapter_1/co/branch_and_bound_strategies}
 
 \paragraph{Cutting planes}  
 The introduction of cutting planes in 1958 by R. E. Gomory, marked a turning point in the study of linear programs and lead to an increased interest in particularities linked to dealing with integer variables in these types of problems. Cutting planes strengthen the continuous relaxation by iteratively adding linear inequalities (cuts) that remove infeasible fractional solutions while preserving all integer feasible solutions. Since their introduction, cutting-plane methods have since been refined and are widely used in practice, often in combination with B\&B (the Branch-and-Cut framework). Consider an LP problem with a set of binary decision variables $x \in \Z^n$ and a feasible set defined by a set of linear inequalities $\mathcal{F} = \{ x | A x \leq b \}$. $\mathcal{F}$ is a polyhedron who's vertices are not necessarily integer points and thus not solutions to the ILP. If $\mathcal{F}$'s vertices were integer points the problems would be easily solvable by relying on LP solver literature. In practice this is not the case. The set of integer points that are within the feasible set is $\mathcal{F} \cap \Z^n$. It would thus be desirable to solve the optimization problem over the set $\text{Conv}(\mathcal{F}\cap \Z^n)$, the convex hull of all integer feasible solutions. Cutting plane methods aim to successively "cut" the feasible space eliminating non-integer feasible solutions so that the feasible set converges to the convex hull of integer feasible solutions. 
 
+Figure~\ref{fig:cutting_plane} illustrates this process geometrically. The blue shaded region represents the feasible region of the LP relaxation, whose current optimum $x^{\mathrm{LP}}$ is attained at a fractional vertex. The dashed red line represents a valid cut: it removes this fractional solution while preserving all integer-feasible points. In the illustrated example, after adding the cut, the next fractional LP optimum would occur at the intersection between the newly added cut and the first constraint. Repeating this procedure progressively removes fractional portions of the relaxation and yields tighter approximations of $\operatorname{conv}(\mathcal{F} \cap \mathbb{Z}^n)$.
+
 \input{resources/tikz/chapter_1/co/cutting_plane}
 
-In Branch-and-Bound, the search space is recursively partitioned by branching on variables. Branch-and-Cut extends this framework by strengthening the LP relaxation at each node using cutting planes: valid inequalities that remove fractional LP solutions without excluding any integer-feasible points. At a node, the LP relaxation is solved and a separation routine attempts to identify violated cuts. These cuts are added to tighten the relaxation, which is then re-optimized. If no further violated cuts can be found and the LP solution is still fractional, the algorithm proceeds to branch, thereby creating subproblems exactly as in Branch-and-Bound. If the LP relaxation becomes integer-feasible, the node can be pruned or its solution used as an incumbent. A selection of choices and implementation strategies available in the literature is presented in Table~\ref{tab:branch_and_cut_choices}
+In B\&B, the search space is recursively partitioned by branching on variables. Branch-and-Cut extends this framework by strengthening the LP relaxation at each node using cutting planes: valid inequalities that remove fractional LP solutions without excluding any integer-feasible points. At a node, the LP relaxation is solved and a separation routine attempts to identify violated cuts. These cuts are added to tighten the relaxation, which is then re-optimized. If no further violated cuts can be found and the LP solution is still fractional, the algorithm proceeds to branch, thereby creating subproblems exactly as in B\&B. If the LP relaxation becomes integer-feasible, the node can be pruned or its solution used as an incumbent. A selection of choices and implementation strategies available in the literature is presented in Table~\ref{tab:branch_and_cut_choices}.
 
-
-\input{resources/tab/branch_and_cut_choices}
+\input{resources/tab/chapter_1/co/branch_and_cut_choices}
 
 
 
 \subsubsection{Heuristics}
 Heuristics play a crucial role in solving ILPs. It is important to make the distinction with approximation schemes for which approximation bounds are known. Heuristics are methods for creating feasible solutions to the problem, that is finding a point that lies withing the feasible region and is integer. They can be used within exact solvers to generate candidate solutions, approximate lower bounds at a node of a B\&B tree. In this section we will give a brief presentation of a selection of heuristics. 
 
-\todo[inline]{more information is needed in this section, feasibility pump, variable neighborhood search, RINS}
 Because exact approaches scale poorly, approximate methods are indispensable in practice.  
 
-\paragraph{Diving/Depth-First Search/Breadth-First Search} These are among the simplest node-selection strategies used to traverse a Branch-and-Bound tree.
+\paragraph{Diving/Depth-First Search/Breadth-First Search} These are among the simplest node-selection strategies used to traverse a B\&B tree.
 Diving refers to following a single branch of the tree downward as far as possible—typically by repeatedly selecting a child node with the smallest estimated bound—until reaching a leaf node or an infeasible relaxation. It does not allow backtracking within the heuristic; once the dive ends, control returns to the general B\&B search strategy.
 
 By contrast, Depth-First Search (DFS) and Breadth-First Search (BFS) are full-fledged search strategies that do support backtracking. DFS prioritizes exploring the deepest unexplored node first, systematically backtracking when a subtree is exhausted. BFS explores the tree level by level, expanding all nodes at depth $d$ before moving to depth $d+1$. Both DFS and BFS ensure completeness of the search, unlike diving, which is a heuristic used only to obtain feasible solutions quickly or guide the search in promising directions.
 
 \input{resources/tikz/chapter_1/co/bfs_path}
 
-\paragraph{Rounding/Feasibility Pump} Another class of primal heuristics attempts to construct an integer solution that is close to the fractional LP relaxation point. Simple rounding strategies directly round fractional variables to nearby integer values and may apply repair procedures to restore feasibility. In contrast, the Feasibility Pump adopts a more elaborate alternating scheme: it iteratively projects the current fractional LP solution $\bar{x}$ onto the integer domain , typically by solving a rounding or proximity optimization problem (see Equation~\ref{eq:fp_proximity_obj} and then projects the resulting integer point back into the LP relaxation. This alternating process continues until an integer-feasible solution is found or a stopping criterion is met.
+\paragraph{Rounding/Feasibility Pump}
+Another class of primal heuristics attempts to construct an integer solution that is close to a fractional solution of the LP relaxation. Simple rounding strategies directly round fractional variables to nearby integer values and may apply repair procedures to restore feasibility. However, independently rounding the variables of an LP solution can easily produce an integer point that violates the original constraints.
 
+The Feasibility Pump~\cite{fischetti_feasibility_2005} addresses this issue through an alternating projection scheme. Starting from a fractional LP-feasible solution $\bar{x}$, the method first computes an integer point $x^I$ by rounding the integer-constrained components. If $x^I$ satisfies the original constraints, the procedure terminates with an integer-feasible solution. Otherwise, $x^I$ is projected back onto the LP relaxation by solving a continuous proximity optimization problem, yielding a new LP-feasible point $x^{\mathrm{proj}}$:
 \begin{align}
-    x^{I} \in 
+    x^{\mathrm{proj}} \in 
     \arg\min_{x} \quad 
-        & \sum_{i \in I} \left| x_i - \bar{x}_i \right|  \label{eq:fp_proximity_obj} \\
+        & \sum_{i \in I} \left| x_i - x^{I}_i \right|  \label{eq:fp_proximity_obj} \\
     \text{s.t.} \quad
         & A x \le b, \label{eq:fp_constraints} \\
-        & \ell \le x \le u, \label{eq:fp_bounds} \\
-        & x \in \mathbb{Z}^n 
 \end{align}
+
+The method then repeats by rounding $x^{\mathrm{proj}}$ to a new integer point. If the algorithm detects cycling or stalling, the current integer point may be perturbed before the projection step is performed.
+
+Figure~\ref{fig:rounding_vs_fp} illustrates the difference between simple rounding and a schematic feasibility-pump trajectory. Simple rounding maps the fractional solution $\bar{x}$ directly to an integer point $x^{\mathrm{round}}$, which may be infeasible. In contrast, the feasibility-pump path first rounds $\bar{x}$ to an integer point $x^I$. In the illustrated example, a cycle is assumed to be detected, so $x^I$ is perturbed to $x^{\mathrm{pert}}$. This perturbed point is then projected back onto the LP relaxation by solving a proximity problem, producing the LP-feasible point $x^{\mathrm{proj}}$. A subsequent rounding step yields the integer-feasible point $x^{\mathrm{FP}}$.
+
 
 \input{resources/tikz/chapter_1/co/rounding_vs_fp}
 
 
 
-\paragraph{Neighborhood-Based Improvement Heuristics (RINS and VNS).}
-Neighborhood-based improvement heuristics attempt to refine a current incumbent integer solution by exploring a restricted subset of the feasible region. Two representative methods are \emph{Relaxation Induced Neighborhood Search} (RINS) and \emph{Variable Neighborhood Search} (VNS).
 
-Relaxation Induced Neighborhood Search (RINS) \cite{danna_exploring_2005} constructs its neighborhood by exploiting the structural relationship between the incumbent solution $x^{\text{inc}}$ and the optimal fractional LP relaxation $\bar{x}$. Let $I$ be the set of integer indices, and define
-\[
-    F = \{\, i \in I : x^{\text{inc}}_i = \lfloor \bar{x}_i \rceil \,\}.
-\]
+
+\paragraph{Neighborhood-Based Improvement Heuristics.}
+Neighborhood-based improvement heuristics attempt to refine a current incumbent integer solution by exploring a restricted subset of the feasible region. Two representative methods are \emph{Relaxation Induced Neighborhood Search} (RINS) \cite{danna_exploring_2005} and \emph{Variable Neighborhood Search} (VNS) \cite{mladenovic_variable_1997,hansen_variable_2008}.
+
+Let $\operatorname{round}(\bar{x}_i)$ denote a nearest integer value to $\bar{x}_i$. RINS fixes the integer variables for which the incumbent agrees with this rounded
+LP value:
+\begin{equation}
+    F =
+    \left\{
+        i \in I :
+        x^{\mathrm{inc}}_i = \operatorname{round}(\bar{x}_i)
+    \right\}.
+\end{equation}
+
 RINS then fixes the variables in $F$ and solves the reduced MILP
-\[
+\begin{equation}
     \min\{\, c^\top x : Ax \le b,\; x_i = x^{\text{inc}}_i \ (i \in F),\; x_j \in \mathbb{Z} \ (j \in I \setminus F)\,\},
-\]
+\end{equation}
 which defines a neighborhood containing all feasible solutions consistent with the common components of $x^{\text{inc}}$ and $\bar{x}$.
 
 VNS, in contrast, defines a sequence of expanding combinatorial neighborhoods around the incumbent. For binary or integer variables, a typical choice is the $k$-flip neighborhood
-\[
+\begin{equation}
     \mathcal{N}_k(x^{\text{inc}}) = \{\, x \in X : \Delta(x, x^{\text{inc}}) = k \,\},
-\]
+\end{equation}
 where $\Delta(\cdot,\cdot)$ denotes the Hamming distance. A generic VNS iteration consists of:
 (i) a \emph{shaking} step that selects a point $x' \in \mathcal{N}_k(x^{\text{inc}})$,
 (ii) a local improvement phase applied to $x'$, and
 (iii) an update rule that either accepts the improved solution (and resets $k=1$) or increases the neighborhood size $k \leftarrow k+1$.
 This systematic enlargement of neighborhoods allows VNS to escape local minima while intensifying search around promising regions.
 
-Both RINS and VNS follow the large-neighborhood search philosophy: they construct a restricted subproblem around the incumbent, attempt to improve it, and update the incumbent whenever a better solution is found.
+Both RINS and VNS follow the large-neighborhood search philosophy: they construct a restricted subproblem around the incumbent, attempt to improve it, and update the incumbent whenever a better solution is found. Figure~\ref{fig:neighborhood_search_rins_vns} illustrates this distinction schematically: RINS defines a restricted neighborhood using agreement between the incumbent and the LP relaxation, whereas VNS explores increasingly large neighborhoods around the incumbent through shaking and local improvement.
+
+
+\input{resources/tikz/chapter_1/co/neighborhood_search_rins_vs_vns.tex}
 
 \subsection{Variable-Constraint Bipartite Representation}
 \label{sec:vcg_definition}
@@ -170,13 +192,13 @@ Notice that each constraint $x_i + x_j \leq 1$ ensures that no two adjacent vert
 The number of cliques in an undirected graph can however be exponential in $n$ meaning that it may not be feasible to use this formulation. The set $\mathcal{C}$ can further be restricted to the set of \emph{maximal} cliques, i.e. cliques that are not strictly contained in another clique of the graph. Enumerating all maximal cliques is a difficult task in itself, however clique contraints can be added as needed to strengthen the formulation during solving. 
 
 \subsubsection{Set Covering Problem (SC)}  
-The Set Covering problem is defined as follows: given a set of items $\ITEMS = \{\ITEM_i\}_{1\leq i\leq m}$ and a collection of sets $\SETS$ the objective is to find the smallest subset of $\SETS = \{\SET_i\}_{1\leq i\leq n}$ such that each item in $\ITEMS$ belongs to at least one set $\SET_i$. For each set $\SET\in\SETS$ introduce a binary decision variable $x_{\SET}$ and denoting by $\SETI$ the sets that contain the $i$-th item, then the corresponding ILP is :
+The Set Covering problem is defined as follows: given a set of items $\ITEMS = \{\ITEM_i\}_{1\leq i\leq m}$ and a collection of sets $\SCSETS$ the objective is to find the smallest subset of $\SCSETS = \{\SCSET_i\}_{1\leq i\leq n}$ such that each item in $\ITEMS$ belongs to at least one set $\SCSET_i$. For each set $\SCSET\in\SCSETS$ introduce a binary decision variable $x_{\SCSET}$ and denoting by $\SCSETI$ the sets that contain the $i$-th item, then the corresponding ILP is :
 \begin{align}
     \label{equ:sc_formuation_cliques}
     (P_\text{SC}) \Leftrightarrow \left\{
     \begin{array}{lll}
         \min        & \mathds{1}^T x   & \\
-        \text{s.t.} & \sum_{\SET\in\SETI} x_{\SET} \geq 1 & \forall 1 \leq i \leq m \\
+        \text{s.t.} & \sum_{\SCSET\in\SCSETI} x_{\SCSET} \geq 1 & \forall 1 \leq i \leq m \\
                     & x \in \{0,1\}^n
     \end{array}
     \right.

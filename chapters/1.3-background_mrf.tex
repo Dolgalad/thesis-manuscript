@@ -21,15 +21,17 @@ In summary, Boltzmann distributions encapsulate the idea that structured solutio
 
 \paragraph{Exponential-family form and learning.}
 A large class of energy-based models, including Markov Random Fields, can be expressed within the general framework of exponential families. In this setting, a distribution over configurations $x \in \mathcal{X}$ is written as
-\[
+
+\begin{equation}
 p_\theta(x) = \exp\!\left(\theta^\top \phi(x) - A(\theta)\right),
-\]
+\end{equation}
+
 where $\phi(x)$ is a vector of sufficient statistics, $\theta$ is the vector of natural parameters, and $A(\theta)=\log \sum_{x\in\mathcal{X}} \exp(\theta^\top \phi(x))$ is the log-partition function. This formulation generalizes the Boltzmann distribution by emphasizing the role of feature functions $\phi(x)$, which capture local interactions or structural properties of $x$. The log-partition function $A(\theta)$ ensures normalization and is also the cumulant-generating function of the sufficient statistics, which implies convexity and well-behaved optimization landscapes for maximum likelihood estimation \citep{wainwright_graphical_2007}.
 
 Learning in exponential-family models typically proceeds by maximum likelihood, which requires computing gradients of the log-likelihood with respect to $\theta$. For a dataset $\mathcal{D}=\{x^{(1)},\dots,x^{(N)}\}$, the gradient takes the moment-matching form
-\[
+\begin{equation}
 \nabla_\theta \log p_\theta(\mathcal{D}) = \sum_{i=1}^N \phi(x^{(i)}) - N \,\mathbb{E}_{p_\theta}[\phi(X)].
-\]
+\end{equation}
 This expression highlights the core difficulty: while the first term (empirical sufficient statistics) is easily computed from data, the second term requires expectations under the model distribution, which are generally intractable due to the partition function. As a result, practical learning algorithms must resort to approximate inference schemes. Classical approaches include Monte Carlo methods such as Gibbs sampling, which generate approximate samples from $p_\theta$, and variational approximations that replace $A(\theta)$ with a tractable surrogate. More recently, amortized inference networks and neural variational methods have been proposed to approximate the intractable expectations efficiently \citep{wiseman_amortized_2019}.
 
 \begin{example}{\hrule\vspace{.2em}Boltzmann Machine (pairwise EBM)\vspace{.2em}\hrule}
@@ -38,11 +40,13 @@ A canonical example of an exponential-family energy-based model is the Boltzmann
 E(s) = -\sum_{(i,j)\in E} w_{ij} s_i s_j - \sum_i \theta_i s_i. \label{equ:bm_energy}
 \end{equation}
 The corresponding distribution is
-\[
+\begin{equation}
 p(s) \propto \exp\!\left(\sum_{(i,j)} w_{ij} s_i s_j + \sum_i \theta_i s_i\right).
-\]
+\end{equation}
 Here the sufficient statistics $\phi(x)$ are the pairwise products $(s_i s_j)$ and the unary states $(s_i)$, and the natural parameters $\theta$ are the weights $w_{ij}$ and biases $\theta_i$. Learning in Boltzmann Machines requires adjusting the parameters so that the model statistics match the empirical statistics of the training data. Because the model expectations are not analytically available, training algorithms alternate between gradient updates and approximate sampling from the current model, typically using Gibbs sampling or contrastive divergence \citep{hinton_reducing_2006}. This example illustrates both the expressive power of exponential-family EBMs and the computational obstacles posed by their normalization constants.
 \end{example}
+
+
 
 
 \subsubsection{Sampling from Boltzmann distributions}
@@ -289,9 +293,9 @@ In the context of this thesis, MRFs serve as the core formalism for linking ener
 
 
 \subsubsection{Factor graphs}
-Factor graphs provide an alternative representation of graphical models that makes the factorization structure of the distribution explicit. Formally, a factor graph is a bipartite graph $H=(V \cup F,E_H)$ consisting of variable nodes $V$ corresponding to random variables $\{X_v : v\in V\}$ and factor nodes $F$ corresponding to potential functions $\{\psi_f : f\in F\}$. An edge $(v,f)\in E_H$ indicates that variable $X_v$ participates in factor $\psi_f(x_f)$. The joint distribution over all variables then factorizes as
+Factor graphs provide an alternative representation of graphical models that makes the factorization structure of the distribution explicit. Formally, a factor graph is a bipartite graph $H=(V \cup \FACTORSET,E_H)$ consisting of variable nodes $\VCGV$ corresponding to random variables $\{\XRAV_i : i\in \VCGV \}$ and factor nodes $\FACTORSET$ corresponding to potential functions $\{\psi_{\FACTOR} : \FACTOR\in \FACTORSET\}$. An edge $(i,\FACTOR)\in E_H$ indicates that variable $\XRAV_i$ participates in factor $\psi_{\FACTOR}(x_{\FACTOR})$. The joint distribution over all variables then factorizes as
 \[
-p(x) = \frac{1}{Z}\prod_{f\in F}\psi_f(x_f).
+p(x) = \frac{1}{Z}\prod_{\FACTOR\in \FACTORSET}\psi_{\FACTOR}(x_{\FACTOR}).
 \]
 This representation generalizes both directed and undirected graphical models by explicitly distinguishing between variables and the factors that constrain them \citep{wainwright_graphical_2007}.
 
@@ -301,7 +305,7 @@ Factor graphs also provide a flexible modeling tool for combinatorial optimizati
 
 \begin{example}{\hrule\vspace{.2em}Factor-graph view of a chain\vspace{.2em}\hrule}
 \vspace{1em}
-\todo{figure missing} 
+%\todo{figure missing} 
 Consider a simple chain $X_1$--$X_2$--$X_3$ with pairwise factors $\psi_{12}(x_1,x_2)$ and $\psi_{23}(x_2,x_3)$ as well as unary factors $\phi_i(x_i)$. The corresponding factor graph has variable nodes $\{1,2,3\}$ and factor nodes $\{\psi_{12},\psi_{23},\phi_1,\phi_2,\phi_3\}$, with edges connecting each factor to the variables it depends on. This bipartite structure highlights how the distribution factorizes and directly supports the mechanics of sum--product message passing.
 
 \input{resources/tikz/chapter_1/mrf/chain_factor_graph_example}
@@ -309,6 +313,30 @@ Consider a simple chain $X_1$--$X_2$--$X_3$ with pairwise factors $\psi_{12}(x_1
 \end{example}
 
 In summary, factor graphs not only unify the representation of directed and undirected models but also provide the natural stage on which message-passing inference algorithms operate. For this reason, they will serve as a central tool in later chapters when we study inference in Markov random fields and its application to combinatorial optimization problems.
+
+\paragraph{Canonical over-complete representation.}
+For discrete graphical models, an equivalent but often more convenient parameterization is obtained through the canonical over-complete representation. Rather than associating features with a minimal set of sufficient statistics, one introduces indicator functions for every local assignment of each variable and factor. For a factor graph with variables $X_i \in \mathcal{X}_i$ and factors $F \in \mathcal{F}$, the unary sufficient statistics are
+\begin{equation}
+\phi_{i,y}(x)=\mathbbm{1}\{x_i=y\}, \qquad y\in\mathcal{X}_i,
+\end{equation}
+while the factor sufficient statistics are
+\begin{equation}
+\phi_{\FACTOR,y_{\FACTOR}}(\XVEC)=\mathbbm{1}\{\XFACT=y_{\FACTOR}\}, \qquad y_{\FACTOR}\in\mathcal{X}_{\FACTOR} .
+\end{equation}
+The corresponding exponential-family distribution can then be written as
+\begin{equation}
+p_{\EPARAM}(\XVEC)
+=
+\exp\left(
+\sum_{i\in \VCGV}\sum_{y\in\mathcal{X}_i}\EPARAM_{i,y}\phi_{i,y}(\XVEC)
++
+\sum_{\FACTOR\in\FACTORSET}\sum_{y_{\FACTOR}\in\mathcal{X}_{\FACTOR}}
+\theta_{\FACTOR,y_{\FACTOR}}\phi_{\FACTOR,y_{\FACTOR}}(\XVEC)
+-
+A(\theta)
+\right).
+\end{equation}
+This representation is called over-complete because the indicator statistics are linearly dependent: for each variable or factor, exactly one local configuration is active, so the associated indicators sum to one. Consequently, the natural parameters are not identifiable without additional constraints or gauge choices. Nevertheless, the over-complete form is particularly useful for graphical models because it aligns directly with local potentials, marginal inference, and variational relaxations. In this parameterization, learning can still be interpreted as moment matching, but the moments now correspond to unary and factor marginals. Approximate inference algorithms such as belief propagation therefore naturally operate on these quantities, returning beliefs $\mu_i(\XVEC_i)$ and $\mu_{\FACTOR}(x_{\FACTOR})$ that approximate the marginal expectations of the corresponding indicator sufficient statistics \cite{wainwright_graphical_2007}. When we refer to \emph{over-complete parameters}, we mean natural parameters whose entries are indexed by this over-complete set of indicator sufficient statistics. Thus, over-completeness is formally a property of the sufficient-statistic representation, not of the parameters themselves; the parameters are called over-complete only as shorthand for being compatible with that representation.
 
 
 \subsection{Inference and Belief Propagation}
@@ -367,7 +395,7 @@ Despite these successes, BP also has well-documented limitations. On loopy graph
 
 
 \subsubsection{Learning-augmented Belief Propagation}
-While classical Belief Propagation (BP) is purely algorithmic and determined by the graphical model structure and its potentials, recent research has explored how learning can be used to augment or modify the BP procedure itself. The motivation is twofold: first, to overcome some of the limitations of standard BP, such as poor convergence or inaccurate marginals on loopy graphs; and second, to integrate inference more tightly with modern machine learning pipelines where parameters are trained end-to-end.
+While classical BP is purely algorithmic and determined by the graphical model structure and its potentials, recent research has explored how learning can be used to augment or modify the BP procedure itself. The motivation is twofold: first, to overcome some of the limitations of standard BP, such as poor convergence or inaccurate marginals on loopy graphs; and second, to integrate inference more tightly with modern machine learning pipelines where parameters are trained end-to-end.
 
 Learning can intervene at several levels of the BP algorithm. One approach is to make the \emph{messages} themselves parametric and learnable, so that instead of strictly following the sum--product or max--product updates, neural networks predict or reweight the messages passed along edges. This idea underlies neural message-passing architectures that generalize BP by embedding richer computations within each update \citep{satorras_neural_2021}. A second approach is to learn the \emph{message schedule}, i.e., the order and frequency with which messages are updated. By training update schedules on data, convergence speed and accuracy can often be improved relative to fixed synchronous or asynchronous schemes. A third line of work uses learning to adapt the \emph{potentials} of the graphical model itself, either by parameterizing them with neural networks or by amortizing inference across many instances of a problem class \citep{wiseman_amortized_2019}.
 

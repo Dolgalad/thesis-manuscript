@@ -162,18 +162,7 @@ All experiments in this section are conducted on instances of the Set Covering P
 
 We consider three datasets. First, we reuse the two datasets with small constraint arity introduced in the previous chapter, on which the full factor graph can be represented explicitly. These datasets allow for a direct comparison between exact and approximate MRF parameterizations. Second, we introduce a new synthetic dataset specifically designed to evaluate the scalability of the proposed approach. Instances in this dataset contain constraints of arity $15$, with the total number of variables and constraints ranging between $150$ and $300$. This setting lies well beyond the regime in which explicit high-arity factor parameterizations are tractable, and therefore provides a controlled testbed for evaluating structured approximate MRFs.
 
-\paragraph{Decoding strategy.}
-Converting the scores predicted by the model into a feasible solution is performed using three distinct decoding strategies.
 
-First, we consider a \emph{score-driven greedy} procedure, in which variables are sorted according to their predicted marginal probabilities and iteratively added to the solution while maintaining feasibility. In the context of the Set Covering Problem, this strategy aligns with classical greedy heuristics based on cost-to-coverage ratios: variables that are predicted to be more likely part of the optimal solution are selected first, and only rejected when necessary to preserve feasibility. This approach evaluates the direct usefulness of the predicted marginals as a ranking signal.
-
-Second, we consider an \emph{entropy-guided greedy} (EGG) protocol, in which variables are fixed in decreasing order of confidence (low entropy), but without updating the predictions after each decision.
-
-Finally, we use the \emph{guided-decimation} (GD) protocol, which updates the predicted marginals after each variable assignment through repeated inference, yielding a more adaptive decoding strategy at the expense of increased computational cost.
-
-While the score-driven greedy and EGG strategies test the quality of the marginals as static predictors, GD evaluates whether the learned distribution remains informative when combined with iterative inference and partial assignments.
-
-\paragraph{Evaluation metrics.} Evaluating the performance of the models is done by evaluating the optimality gap with respect to the best known solution. For Set Covering problems we used a Lagrangian relaxation heuristic to obtain good quality solutions in reasonable time and all optimality metrics in this section are computed with this solution as a baseline. We are also interested in the time needed to find a solution and report solver times for the EGG and GD decoding strategies.
 
 \subsection{Feature-to-Factor Mapping Variants}
 Here we present the variants of the feature-to-factor mapping implementations that will be tested in experiments. The variants are ordered by increasing complexity and capacity to distinguish information belonging to constraints and variable nodes. After constructing an approximate factor graph, the embeddings corresponding to a particular constraint may be involved in the construction of multiple factor embeddings but may contribute differently to each of these factors. We start by trying a simple implementation of the mapping that does not differentiate between variable and constraint embeddings, we then implement a model that explicitly separates the input between variable and constraint information and add an attention mechanism to adaptively strengthen the contribution of constraint embeddings of particular importance (learned by the model), finally we propose a transformer network layer to perform the mapping. 

@@ -53,12 +53,12 @@ The form of $\mathcal{L}_{\text{sup}}$ depends on the prediction task:
     where $p_{\theta}(y|x)$ denotes the model’s predicted probability for the correct class.
 \end{itemize}
 
-Supervised learning thus reduces to a parameter optimization problem, where $\theta$ is iteratively updated to minimize $\widehat{\mathcal{L}}_{\text{sup}}(\theta)$ using stochastic gradient descent or one of its many variants \todo{citations}. When the learned parameters generalize beyond the training data, the model effectively captures an underlying mapping between inputs and outputs, a property central to most modern applications of deep learning \todo{citations}.
+Supervised learning thus reduces to a parameter optimization problem, where $\theta$ is iteratively updated to minimize $\widehat{\mathcal{L}}_{\text{sup}}(\theta)$ using stochastic gradient descent or one of its many variants \cite{goodfellow_deep_2016,kingma_adam_2014}. When the learned parameters generalize beyond the training data, the model effectively captures an underlying mapping between inputs and outputs, a property central to most modern applications of deep learning \cite{vapnik_nature_2000,bishop_pattern_2006}.
 
 \subsection{Unsupervised Learning}
 \label{sec:unsupervised_learning}
 
-Unsupervised learning encompasses learning paradigms in which no explicit ground-truth labels or target outputs are provided during training. Instead, the objective is to discover latent structures, dependencies, or representations within the data itself \todo{cite bishop2006pattern,goodfellow2016deep}. Formally, given a dataset of unlabeled examples 
+Unsupervised learning encompasses learning paradigms in which no explicit ground-truth labels or target outputs are provided during training. Instead, the objective is to discover latent structures, dependencies, or representations within the data itself \cite{bishop_pattern_2006,goodfellow_deep_2016}. Formally, given a dataset of unlabeled examples 
 \begin{equation}
     \mathcal{D} = \{ x_i \}_{i=1}^{N}, \quad x_i \in \mathcal{X},
 \end{equation}
@@ -71,30 +71,163 @@ the goal is to learn parameters $\theta$ that optimize a self-consistency criter
 The precise form of $\mathcal{L}_{\text{unsup}}$ depends on the learning objective. Common unsupervised frameworks include:
 
 \paragraph{1. Representation learning and dimensionality reduction.}
-Methods such as \emph{Principal Component Analysis (PCA)}, \emph{autoencoders}, and their probabilistic extensions aim to learn low-dimensional latent representations $z = g_{\theta}(x)$ that capture the salient structure of the data. In an autoencoder, for instance, the model is composed of an encoder–decoder pair $(g_{\theta}, d_{\theta})$ trained to minimize the reconstruction error:
+Methods such as \emph{Principal Component Analysis (PCA)} \cite{jolliffe_principal_2010}, \emph{autoencoders} \cite{hinton_reducing_2006}, and their probabilistic extensions aim to learn low-dimensional latent representations $z = g_{\theta}(x)$ that capture the salient structure of the data. In an autoencoder, for instance, the model is composed of an encoder–decoder pair $(g_{\theta}, d_{\theta})$ trained to minimize the reconstruction error:
 \begin{equation}
     \mathcal{L}_{\text{rec}}(\theta, x) = \| d_{\theta}(g_{\theta}(x)) - x \|^2,
 \end{equation}
-thus encouraging the latent code $z$ to capture the essential variability in $\mathcal{X}$ while discarding noise and redundancy \todo{ cite hinton2006reducing,kingma2013auto}.
+thus encouraging the latent code $z$ to capture the essential variability in $\mathcal{X}$ while discarding noise and redundancy \cite{ hinton_reducing_2006,kingma_auto-encoding_2022}.
 
 \paragraph{2. Density estimation and probabilistic modeling.}
 Another key class of unsupervised methods seeks to model the underlying data distribution $p_{\theta}(x)$ directly. Training such models typically involves maximizing the likelihood of the observed data, or equivalently, minimizing the negative log-likelihood loss:
 \begin{equation}
     \mathcal{L}_{\text{nll}}(\theta, x) = - \log p_{\theta}(x).
 \end{equation}
-Examples include probabilistic graphical models such as Markov Random Fields (MRFs) and Conditional Random Fields (CRFs), as well as modern generative models like Variational Autoencoders (VAEs) \cite{kingma_introduction_2019} and Generative Adversarial Networks (GANs) \todo{cite goodfellow2014generative}. These models can capture complex dependencies between variables and generate realistic new samples from learned distributions.
+Examples include probabilistic graphical models such as Markov Random Fields (MRFs) and Conditional Random Fields (CRFs), as well as modern generative models like Variational Autoencoders (VAEs) \cite{kingma_introduction_2019} and Generative Adversarial Networks (GANs) \cite{goodfellow_generative_2014}. These models can capture complex dependencies between variables and generate realistic new samples from learned distributions.
 
 \paragraph{3. Clustering and self-organization.}
-In clustering-based approaches, the learning process groups similar samples together according to an implicit or explicit similarity measure. Classical algorithms include $k$-means, Gaussian mixture models, and spectral clustering. In the neural setting, differentiable clustering losses or contrastive objectives are often employed to encourage representation spaces where semantically similar samples are close together \todo{ cite oord2018representation,chen2020simple}.
+In clustering-based approaches, the learning process groups similar samples together according to an implicit or explicit similarity measure. Classical
+algorithms include $k$-means, Gaussian mixture models, and spectral clustering \cite{macqueen_methods_1967,dempster_maximum_1977,ng_spectral_2001}. In the neural setting, differentiable clustering losses or contrastive objectives are often employed to encourage representation spaces where semantically similar samples are close together \cite{oord_representation_2019,chen_simple_2020}.
 
 Overall, unsupervised learning provides a foundation for learning useful data representations and priors that can later be exploited in semi-supervised, transfer, or reinforcement learning contexts. In this work, it plays a key role in formulating models that learn from problem structure—rather than explicit supervision—especially in the context of probabilistic graphical models and combinatorial optimization, where ground-truth solutions are expensive or unavailable.
 
+
+\subsection{Generative Models and Denoising Objectives}
+
+Generative models aim to learn a probability distribution over the data, rather than directly predicting a single deterministic output. In the conditional setting considered throughout this thesis, an input instance $x \in \mathcal{X}$ may be associated with multiple valid or high-quality outputs $y \in \mathcal{Y}$. This is particularly relevant in combinatorial optimization, where a problem instance can admit several near-optimal solutions with different structures. Instead of returning a single prediction, a generative model defines a conditional distribution over possible outputs and obtains predictions by sampling from this distribution (see Figure~\ref{fig:conditional_generative_graph}).
+
+Formally, we view input-output pairs as realizations of random variables $X$ and $Y$. The goal is to approximate the conditional distribution
+\begin{equation}
+    p(y \mid x) = \mathbb{P}\left[ Y = y \mid X = x \right],
+\end{equation}
+where $x$ denotes the observed input instance and $y$ denotes a target output, such as a feasible solution or an optimal assignment.
+
+In practice, the true conditional distribution $p(y \mid x)$ is unknown and must be approximated by a parameterized model. We denote this approximation by $p_\Theta(y \mid x)$, where $\Theta$ are learned parameters. In some models, the input $x$ is first mapped to the parameters of an output distribution, for example through a neural network $\Theta = f_\theta(x)$, yielding a distribution $p_\Theta(y)$. Predictions can then be obtained by sampling
+\begin{equation}
+    y \sim p_\Theta(\cdot \mid x),
+\end{equation}
+or by selecting high-probability outputs according to the learned distribution.
+
+Different families of generative models mainly differ in how they parameterize this distribution and in the training objective used to match it to the data distribution. Examples include maximum-likelihood objectives, variational objectives, adversarial objectives, denoising objectives, and, more recently, diffusion and flow-matching objectives. In the remainder of this section, we focus on denoising-based generative models, since they provide the conceptual basis for the diffusion and flow-based decoding methods studied later in this thesis.
+
+\input{resources/tikz/chapter_1/ml/generative_model.tex}
+
+\paragraph{Denoising-based generative modeling.}
+
+A central idea in modern generative modeling is to learn how to recover structured data from corrupted observations. Instead of directly learning to sample from the data distribution, denoising-based methods define a corruption process that progressively perturbs a clean target $y$ into a noisy version $\tilde{y}$. A model is then trained to invert this process, either by predicting the original clean sample, the noise that was added, or an update direction that moves the corrupted sample closer to the data distribution.
+
+Let $y \in \mathcal{Y}$ denote a clean target output, such as an optimal or high-quality solution of a combinatorial optimization problem. A corruption process defines a conditional distribution
+\begin{equation}
+    q(\tilde{y} \mid y, t),
+\end{equation}
+where $t$ denotes the noise level or time index. For small values of $t$, the corrupted sample $\tilde{y}$ remains close to the original target, while for large values of $t$ it may contain little information about $y$. The learning problem consists in training a model that, given the corrupted sample $\tilde{y}$, the input instance $x$, and the noise level $t$, predicts how to recover information about the clean output:
+\begin{equation}
+    D_\theta(x, \tilde{y}, t) \approx y.
+\end{equation}
+Equivalently, depending on the formulation, the model may predict the perturbation applied to $y$, or a direction in the output space that transforms $\tilde{y}$ toward a clean sample.
+
+\input{resources/tikz/chapter_1/ml/graph_denoising_illustration.tex}
+
+This denoising view is especially natural for structured prediction. In many problems, the output is not a single scalar label but a structured object composed of many dependent decisions. In combinatorial optimization, for example, a solution may be represented by a binary vector $y \in \{0,1\}^n$, where each component corresponds to the value of a decision variable. Corrupting such a solution can be interpreted as randomly masking, flipping, or relaxing some of its variables. The denoising model must then learn how local and global dependencies between variables constrain the reconstruction of a valid or high-quality solution.
+
+A common training objective is to minimize a reconstruction loss between the model prediction and the clean target. For example, when the model predicts the original solution, one may use
+\begin{equation}
+    \mathcal{L}_{\mathrm{denoise}}(\theta)
+    =
+    \mathbb{E}_{(x,y),t,\tilde{y}}
+    \left[
+        \ell\left(D_\theta(x,\tilde{y},t), y\right)
+    \right],
+\end{equation}
+where $\tilde{y} \sim q(\cdot \mid y,t)$ and $\ell$ is a suitable loss function, such as a cross-entropy loss for discrete variables or a squared error loss for continuous relaxations. The model is therefore trained on many reconstruction tasks of varying difficulty, ranging from lightly corrupted samples to highly noisy ones.
+
+At inference time, denoising-based generative models reverse the corruption process. Starting from a noisy or partially initialized sample, the learned denoising model is applied iteratively to produce increasingly structured outputs. This procedure can be interpreted as a learned refinement process: each denoising step uses the instance information $x$, the current candidate solution, and the noise level to move the sample toward the learned solution distribution.
+
+In the context of this thesis, this perspective is useful because it connects generative modeling with solution construction. Rather than predicting each variable independently in a single forward pass, a denoising model defines a dynamics over candidate solutions. This makes it possible to progressively refine a noisy assignment into a feasible or high-quality solution, while potentially capturing dependencies between variables through the architecture used to parameterize the denoising function.
+
+This general principle underlies both diffusion models, which learn to reverse a stochastic noising process, and flow-based formulations, which learn a deterministic or approximately deterministic transformation from a simple initial distribution toward the data distribution.
+
+\paragraph{Flow matching and velocity prediction models.}
+
+Flow matching is a generative modeling framework in which the model learns a time-dependent transformation between a simple source distribution and the data distribution. Instead of learning a reverse stochastic denoising chain, as in diffusion models, flow matching trains a neural network to predict a velocity field that transports samples from an initial distribution toward the target distribution.
+
+Let $y_0 \sim p_0$ denote a sample from a simple source distribution, such as Gaussian noise, and let $y_1 \sim p_{\mathrm{data}}$ denote a target data sample. Flow matching defines a family of intermediate states $y_t$ for $t \in [0,1]$ that interpolate between $y_0$ and $y_1$. A common choice is the linear interpolation path
+\begin{equation}
+    y_t = (1-t)y_0 + t y_1.
+\end{equation}
+Along this path, the corresponding target velocity is
+\begin{equation}
+    u_t = \frac{d y_t}{dt} = y_1 - y_0.
+\end{equation}
+The learning problem is then to train a parameterized model $v_\theta$ to predict this velocity from the current state and time:
+\begin{equation}
+    v_\theta(y_t,t) \approx u_t.
+\end{equation}
+In a conditional setting, where generation depends on an input instance $x$, the model is instead written as
+\begin{equation}
+    v_\theta(x_t,t,x) \approx u_t.
+\end{equation}
+For example, in combinatorial optimization, $x$ may represent the optimization instance and $y_1$ may represent an optimal or high-quality solution.
+
+The standard flow matching objective takes the form
+\begin{equation}
+    \mathcal{L}_{\mathrm{FM}}(\theta)
+    =
+    \mathbb{E}_{t,y_0,y_1}
+    \left[
+        \left\|
+            v_\theta(y_t,t,x) - u_t
+        \right\|_2^2
+    \right],
+\end{equation}
+where $t$ is sampled from $[0,1]$, $y_0$ is sampled from the source distribution, $y_1$ is sampled from the data distribution, and $y_t$ is obtained from the chosen interpolation path. The model is therefore trained by supervised regression onto a known velocity target.
+
+Once the velocity field has been learned, samples can be generated by starting from $y_0 \sim p_0$ and solving the ordinary differential equation (see Algorithm~\ref{alg:flow_sampling})
+\begin{equation}
+    \frac{d y_t}{dt} = v_\theta(y_t,t,x),
+    \qquad y_0 \sim p_0.
+\end{equation}
+The endpoint $y_1$ of this trajectory is then expected to follow the learned data distribution. In practice, this ODE is solved numerically using a finite number of integration steps. Compared with diffusion models, this formulation often leads to a more direct generative procedure, since the model predicts a deterministic direction of motion rather than the parameters of a stochastic reverse transition.
+
+\begin{algorithm}[t]
+\caption{Sample generation with a learned velocity field}
+\label{alg:flow_sampling}
+\DontPrintSemicolon
+
+\KwIn{
+    Problem instance $x$;
+    learned velocity field $v_\theta$;
+    source distribution $p_0$;
+    number of integration steps $K$;
+    decoding operator $\mathcal{D}$
+}
+\KwOut{
+    Discrete candidate solution $\hat{y}$
+}
+
+Sample an initial state $y^{(0)} \sim p_0$\;
+Set $\Delta t \leftarrow 1/K$\;
+
+\For{$k = 0,\ldots,K-1$}{
+    Set $t_k \leftarrow k \Delta t$\;
+    
+    Predict the velocity $\hat{u}^{(k)} \leftarrow v_\theta(y^{(k)}, t_k, x)$\;
+    
+    Update state using an Euler step $y^{(k+1)} \leftarrow y^{(k)} + \Delta t \, \hat{u}^{(k)} $ \;
+}
+
+Decode the final state $\hat{y} \leftarrow \mathcal{D}(y^{(K)}, x)$ \;
+
+\Return{$\hat{y}$}\;
+
+\end{algorithm}
+
+\paragraph{From data generation to solution generation.}
 
 
 \subsection{Neural Networks and Graph Neural Networks}
 \label{sec:neural_networks}
 
-Neural networks (NNs) are a class of parametric models designed to approximate complex nonlinear mappings between inputs and outputs. They are inspired by the structure of biological neurons but are best viewed as powerful function approximators that can represent a broad class of continuous functions \todo{citations hornik1989multilayer,goodfellow2016deep}. A neural network defines a function 
+Neural networks (NNs) are a class of parametric models designed to approximate complex nonlinear mappings between inputs and outputs. They are inspired by the structure of biological neurons but are best viewed as powerful function approximators that can represent a broad class of continuous functions \cite{hornik_multilayer_1989,goodfellow_deep_2016}. A neural network defines a function 
 \begin{equation}
     f_{\theta} : \mathcal{X} \rightarrow \mathcal{Y},
 \end{equation}
@@ -104,7 +237,7 @@ composed of a sequence of linear transformations followed by nonlinear activatio
 \end{equation}
 where $h^{(0)} = x \in \mathcal{X}$ is the input, $h^{(L)}$ represents the output layer, and the set of trainable parameters is $\theta = \{W^{(l)}, b^{(l)}\}_{l=1}^{L}$. The activation function $\sigma$ introduces nonlinearity (e.g., ReLU, sigmoid, or tanh), which allows the network to model complex relationships that cannot be captured by purely linear models. 
 
-During training, the parameters $\theta$ are optimized to minimize a task-specific loss function (see Equation~\ref{equ:training_task}), typically using stochastic gradient-based methods such as backpropagation and variants of gradient descent \todo{cite rumelhart1986learning,kingma2014adam}. The success of neural networks in computer vision, language modeling, and reinforcement learning has motivated their extension to domains where the data exhibit rich, relational or graph-structured dependencies.
+During training, the parameters $\theta$ are optimized to minimize a task-specific loss function (see Equation~\ref{equ:training_task}), typically using stochastic gradient-based methods such as backpropagation and variants of gradient descent \cite{rumelhart_learning_1986,kingma_adam_2014}. The success of neural networks in computer vision, language modeling, and reinforcement learning has motivated their extension to domains where the data exhibit rich, relational or graph-structured dependencies.
 
 \input{resources/img/tikz/nn_tikz}
 
@@ -124,6 +257,6 @@ After several message-passing iterations, node representations can be used to pr
 \end{equation}
 where $\rho$ is a readout function (e.g., summation or attention pooling) producing a fixed-size representation for the graph.
 
-GNNs have emerged as a natural choice for learning in domains such as chemistry, social network analysis, combinatorial optimization, and structured prediction \todo{cite gilmer2017neural,battaglia2018relational}. In the context of combinatorial optimization, they offer a way to learn heuristics or inference rules that operate directly on graph-structured problem instances (e.g., traveling salesman, maximum independent set, or set covering), bridging the gap between neural models and discrete optimization techniques.
+GNNs have emerged as a natural choice for learning in domains such as chemistry, social network analysis, combinatorial optimization, and structured prediction \cite{gilmer_neural_2017,battaglia_relational_2018}. In the context of combinatorial optimization, they offer a way to learn heuristics or inference rules that operate directly on graph-structured problem instances (e.g., traveling salesman, maximum independent set, or set covering), bridging the gap between neural models and discrete optimization techniques.
 
 %\input{resources/img/tikz/gnn_tikz}
