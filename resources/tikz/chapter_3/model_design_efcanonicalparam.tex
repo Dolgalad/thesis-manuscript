@@ -1,21 +1,291 @@
-\begin{figure}[h!]
-    \centering
-    \begin{tikzpicture}[
-            every node/.style={minimum width=1.5em, minimum height=1.5em}]
-        \node[draw] (p) {Input $\PROB$};
-        \node[draw,right=1cm of p] (gnn) {GNN};
-        \node[right=2cm of gnn] (efcpdots) {$\hdots$};
-        \node[draw,above=of efcpdots] (efcp1) {$\FPARAMPRED_{\FACTOR_1}(\cdot)$};
-        \node[draw,below=of efcpdots] (efcpK) {$\FPARAMPRED_{\FACTOR_{|\VCGC|}}(\cdot)$};
-        \node[draw,right=2cm of efcpdots] (concat) {Concat};
-        \node[draw,right=of concat] (mrf) {MRF};
-        \draw[->] (p) -- (gnn) node[midway,label={$\scriptstyle \VCGFULL$}] {};
-        \draw[->] (gnn.east) -- (efcpdots.west);
-        \draw[->] (efcp1.east) -| (concat.west);
-        \draw[->] (efcpK.east) -| (concat.west);
-        \draw[->] (efcpdots.east) -- (concat.west);
-        \draw[->] (concat.east) -- (mrf.west) node[midway,label={$\scriptstyle \EPARAM \in \EPARAMDOM$}] {};
-    \end{tikzpicture}
-    \caption{GNN feature extraction and MRF parameter prediction.}
-    \label{fig:model_design_efcanonicalparam}
+% \begin{figure}[h!]
+%     \centering
+%     \begin{tikzpicture}[
+%             every node/.style={minimum width=1.5em, minimum height=1.5em}]
+%         \node[draw] (p) {Input $\PROB$};
+%         \node[draw,right=1cm of p] (gnn) {GNN};
+%         \node[right=2cm of gnn] (efcpdots) {$\hdots$};
+%         \node[draw,above=of efcpdots] (efcp1) {$\FPARAMPRED_{\FACTOR_1}(\cdot)$};
+%         \node[draw,below=of efcpdots] (efcpK) {$\FPARAMPRED_{\FACTOR_{|\VCGC|}}(\cdot)$};
+%         \node[draw,right=2cm of efcpdots] (concat) {Concat};
+%         \node[draw,right=of concat] (mrf) {MRF};
+%         \draw[->] (p) -- (gnn) node[midway,label={$\scriptstyle \VCGFULL$}] {};
+%         \draw[->] (gnn.east) -- (efcpdots.west);
+%         \draw[->] (efcp1.east) -| (concat.west);
+%         \draw[->] (efcpK.east) -| (concat.west);
+%         \draw[->] (efcpdots.east) -- (concat.west);
+%         \draw[->] (concat.east) -- (mrf.west) node[midway,label={$\scriptstyle \PREEPARAM \in \PREEPARAMDOM$}] {};
+%     \end{tikzpicture}
+%     \caption{GNN feature extraction and MRF parameter prediction.}
+%     \label{fig:model_design_efcanonicalparam}
+% \end{figure}
+
+% Requires:
+% \usetikzlibrary{arrows.meta, positioning, calc}
+
+% Optional shared muted colors, if not already defined elsewhere:
+\definecolor{PanelSlate}{RGB}{92,108,125}
+\definecolor{PanelTeal}{RGB}{88,145,140}
+\definecolor{PanelSage}{RGB}{112,142,122}
+\definecolor{VarBlue}{RGB}{82,121,160}
+\definecolor{ConsOchre}{RGB}{184,135,75}
+\definecolor{ScoreOlive}{RGB}{112,145,92}
+\definecolor{SolutionPlum}{RGB}{128,100,145}
+
+\begin{figure}
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tikzpicture}[
+    font=\small,
+    >=Latex,
+    slatepanel/.style={
+        draw=PanelSlate!80!black,
+        fill=PanelSlate!7,
+        rounded corners=8pt,
+        line width=0.9pt
+    },
+    tealpanel/.style={
+        draw=PanelTeal!80!black,
+        fill=PanelTeal!7,
+        rounded corners=8pt,
+        line width=0.9pt
+    },
+    sagepanel/.style={
+        draw=PanelSage!80!black,
+        fill=PanelSage!7,
+        rounded corners=8pt,
+        line width=0.9pt
+    },
+    arrow/.style={
+        -{Latex[length=3mm,width=2mm]},
+        line width=1.0pt,
+        draw=gray!70!black
+    },
+    thinarrow/.style={
+        -{Latex[length=2mm,width=1.4mm]},
+        line width=0.7pt,
+        draw=gray!65!black
+    },
+    varnode/.style={
+        circle,
+        draw=VarBlue!75!black,
+        fill=VarBlue!15,
+        minimum size=7mm,
+        inner sep=0pt,
+        line width=0.8pt
+    },
+    consnode/.style={
+        rectangle,
+        rounded corners=1pt,
+        draw=ConsOchre!80!black,
+        fill=ConsOchre!18,
+        minimum width=8mm,
+        minimum height=6mm,
+        inner sep=1pt,
+        line width=0.8pt
+    },
+    nnin/.style={
+        circle,
+        draw=PanelTeal!70!black,
+        fill=PanelTeal!18,
+        minimum size=4mm,
+        inner sep=0pt,
+        line width=0.6pt
+    },
+    nnhid/.style={
+        circle,
+        draw=SolutionPlum!70!black,
+        fill=SolutionPlum!16,
+        minimum size=4mm,
+        inner sep=0pt,
+        line width=0.6pt
+    },
+    nnout/.style={
+        circle,
+        draw=ScoreOlive!75!black,
+        fill=ScoreOlive!18,
+        minimum size=4mm,
+        inner sep=0pt,
+        line width=0.6pt
+    },
+    block/.style={
+        draw=gray!65!black,
+        fill=gray!6,
+        rounded corners=5pt,
+        line width=0.8pt,
+        minimum height=8mm,
+        inner sep=4pt,
+        align=center
+    },
+    headblock/.style={
+        draw=SolutionPlum!80!black,
+        fill=SolutionPlum!10,
+        rounded corners=5pt,
+        line width=0.9pt,
+        minimum width=1.2cm,
+        minimum height=7mm,
+        inner sep=3pt,
+        align=center
+    },
+    tableblock/.style={
+        draw=ScoreOlive!85!black,
+        fill=ScoreOlive!10,
+        rounded corners=4pt,
+        line width=0.8pt,
+        minimum width=1.45cm,
+        minimum height=6mm,
+        inner sep=2pt,
+        align=center
+    }
+]
+
+% ==================================================
+% Layout anchors
+% ==================================================
+\coordinate (P1) at (-7.2,0);
+\coordinate (P2) at (0,0);
+\coordinate (P3) at (7.3,0);
+
+% ==================================================
+% Panel 1: Input graph
+% ==================================================
+\node[slatepanel, minimum width=4.8cm, minimum height=6cm] (inputpanel) at (P1) {};
+\node[font=\bfseries] at ($(P1)+(0,2.5)$) {Input representation};
+\node[font=\scriptsize, text=black] at ($(P1)+(0,-2.5)$) {$\VCGFULL$};
+
+\begin{scope}[shift={($(P1)+(0,-0.1)$)}]
+    % variable nodes
+    \node[varnode] (x1) at (-1.25, 1.25) {$x_1$};
+    \node[varnode] (x2) at (-1.25, 0.45) {$x_2$};
+    \node[varnode] (x3) at (-1.25,-0.35) {$x_3$};
+    \node[varnode] (x4) at (-1.25,-1.15) {$x_4$};
+
+    % constraint nodes
+    \node[consnode] (c1) at (1.20, 0.95) {$c_1$};
+    \node[consnode] (c2) at (1.20, 0.00) {$c_2$};
+    \node[consnode] (c3) at (1.20,-0.95) {$c_3$};
+
+    % edges
+    \draw[gray!70, line width=0.9pt] (x1) -- (c1);
+    \draw[gray!70, line width=0.9pt] (x1) -- (c2);
+
+    \draw[gray!70, line width=0.9pt] (x2) -- (c1);
+    \draw[gray!70, line width=0.9pt] (x2) -- (c3);
+
+    \draw[gray!70, line width=0.9pt] (x3) -- (c2);
+
+    \draw[gray!70, line width=0.9pt] (x4) -- (c2);
+    \draw[gray!70, line width=0.9pt] (x4) -- (c3);
+\end{scope}
+
+% ==================================================
+% Arrow 1
+% ==================================================
+\draw[arrow] ($(inputpanel.east)+(0.15,0)$) -- ($(P2)+(-2.55,0)$);
+
+% ==================================================
+% Panel 2: GNN feature extraction
+% ==================================================
+\node[tealpanel, minimum width=5.1cm, minimum height=6cm] (gnnpanel) at (P2) {};
+\node[font=\bfseries] at ($(P2)+(0,2.5)$) {Feature extraction};
+\node[font=\bfseries] at ($(P2)+(0,2)$) {GNN};
+\node[font=\scriptsize, text=black] at ($(P2)+(0,-2.5)$)
+{$\{\EMB_v\}_{v\in\VCGV\cup\VCGC} \subset \mathbb{R}^{\EMBDIM}$};
+
+\begin{scope}[shift={($(P2)+(0,-0.05)$)}]
+    % input layer
+    \foreach \i/\y in {1/0.95,2/0.35,3/-0.25,4/-0.85}{
+        \node[nnin] (iin\i) at (-1.15,\y) {};
+    }
+
+    % hidden layer
+    \foreach \i/\y in {1/1.10,2/0.55,3/0.00,4/-0.55,5/-1.10}{
+        \node[nnhid] (hid\i) at (0,\y) {};
+    }
+
+    % output layer
+    \foreach \i/\y in {1/0.65,2/0.05,3/-0.55}{
+        \node[nnout] (out\i) at (1.15,\y) {};
+    }
+
+    % connections
+    \foreach \u in {1,2,3,4}{
+        \foreach \v in {1,2,3,4,5}{
+            \draw[PanelTeal!65!black, line width=0.35pt, opacity=0.8] (iin\u) -- (hid\v);
+        }
+    }
+    \foreach \u in {1,2,3,4,5}{
+        \foreach \v in {1,2,3}{
+            \draw[SolutionPlum!65!black, line width=0.35pt, opacity=0.8] (hid\u) -- (out\v);
+        }
+    }
+\end{scope}
+
+% ==================================================
+% Arrow 2
+% ==================================================
+\draw[arrow] ($(gnnpanel.east)+(0.15,0)$) -- ($(P3)+(-3.15,0)$);
+
+% ==================================================
+% Panel 3: MRF parameter prediction
+% ==================================================
+\node[sagepanel, minimum width=6.4cm, minimum height=6cm] (mrfpanel) at (P3) {};
+\node[font=\bfseries] at ($(P3)+(0,2.5)$) {MRF parameter prediction};
+
+% --------------------------------------------------
+% Factor contexts
+% --------------------------------------------------
+\node[block, minimum width=5.2cm, minimum height=1.0cm] (factorcontext) at ($(P3)+(0,1.45)$) {};
+\node[font=\small] at ($(factorcontext.north)+(0,-0.24)$) {Constraint/factor embeddings};
+
+\node[font=\scriptsize] at ($(P3)+(-1.65,1.32)$) {$\EMB_{\FACTOR_1}$};
+\node[font=\scriptsize] at ($(P3)+(0,1.32)$) {$\EMB_{\FACTOR_2}$};
+\node[font=\scriptsize] at ($(P3)+(1.65,1.32)$) {$\EMB_{\FACTOR_k}$};
+
+\draw[gray!65, line width=0.8pt] ($(P3)+(-1.95,1.03)$) -- ($(P3)+(-1.35,1.03)$);
+\draw[gray!65, line width=0.8pt] ($(P3)+(-0.30,1.03)$) -- ($(P3)+(0.30,1.03)$);
+\draw[gray!65, line width=0.8pt] ($(P3)+(1.35,1.03)$) -- ($(P3)+(1.95,1.03)$);
+
+% --------------------------------------------------
+% Parameter heads
+% --------------------------------------------------
+\node[headblock] (head1) at ($(P3)+(-1.95,0.05)$) {$\FPARAMPRED_{|\FACTOR_1|}$};
+\node[headblock] (head2) at ($(P3)+(0,0.05)$) {$\FPARAMPRED_{|\FACTOR_2|}$};
+\node[headblock] (headk) at ($(P3)+(1.95,0.05)$) {$\FPARAMPRED_{|\FACTOR_K|}$};
+
+\draw[thinarrow] ($(factorcontext.south)+(-1.65,0)$) -- (head1.north);
+\draw[thinarrow] ($(factorcontext.south)+(0,0)$) -- (head2.north);
+\draw[thinarrow] ($(factorcontext.south)+(1.65,0)$) -- (headk.north);
+
+% --------------------------------------------------
+% Factor tables
+% --------------------------------------------------
+\node[tableblock] (tab1) at ($(P3)+(-1.95,-1.15)$){$\PREEPARAM_{\FACTOR_1}$};
+\node[tableblock] (tab2) at ($(P3)+(0,-1.15)$){$\PREEPARAM_{\FACTOR_2}$};
+\node[tableblock] (tabk) at ($(P3)+(1.95,-1.15)$){$\PREEPARAM_{\FACTOR_K}$};
+
+\draw[thinarrow] (head1.south) -- (tab1.north);
+\draw[thinarrow] (head2.south) -- (tab2.north);
+\draw[thinarrow] (headk.south) -- (tabk.north);
+
+% --------------------------------------------------
+% Assembled MRF parameters
+% --------------------------------------------------
+\node[
+    block,
+    minimum width=5.2cm,
+    minimum height=0.95cm,
+    draw=SolutionPlum!80!black,
+    fill=SolutionPlum!8,
+    line width=1.2pt
+] (params) at ($(P3)+(0,-2.25)$)
+{MRF parameters $\PREEPARAM=\{\PREEPARAM_{\FACTOR}\}_{\FACTOR\in\FGF}$};
+
+\draw[thinarrow] (tab1.south) -- ++(0,-0.36);
+\draw[thinarrow] (tab2.south) -- ++(0,-0.36);
+\draw[thinarrow] (tabk.south) -- ++(0,-0.36);
+
+\end{tikzpicture}}
+\caption{Learned MRF parameter-prediction pipeline. A GNN encodes the variable--constraint graph $\VCGFULL$ into node embeddings. Since variable nodes correspond to unary factors and constraint nodes to constraint factors, their embeddings are passed to arity-dependent heads to produce predicted log-potential tables $\PREEPARAM_{\FACTOR}$, assembled into $\PREEPARAM$.}
+\label{fig:model_design_efcanonicalparam}
 \end{figure}

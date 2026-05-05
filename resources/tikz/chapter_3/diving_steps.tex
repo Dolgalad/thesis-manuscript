@@ -30,7 +30,7 @@
   \node[rem] at (c) {$c$};
 
   % Cross out neighbors
-  \foreach \x in {a,c}{
+  \foreach \x in {a,c,d}{
     \draw[red,thick] ($(\x)+(-.18,.18)$) -- ($(\x)+(.18,-.18)$);
     \draw[red,thick] ($(\x)+(.18,.18)$) -- ($(\x)+(-.18,-.18)$);
   }
@@ -68,7 +68,7 @@
   \draw (S1.north) -- (i2.south);
   \draw (S2.north) -- (i2.south);
   \draw (S2.north) -- (i3.south);
-  \draw (S2.north) -- (i5.south); % unique coverage of e5
+  \draw (S2.north) -- (i5.south);
   \draw (S3.north) -- (i3.south);
   \draw (S3.north) -- (i4.south);
 
@@ -77,7 +77,7 @@
   \begin{scope}[yshift=-2.0cm]
     \node[draw,rounded corners,inner sep=3pt,fill=white] (leg) at (0,0) {
       \begin{tabular}{@{}l@{}}
-        \tikz{\node[align=left,anchor=west] at (2.0,0.0) {\small \textbf{add} $\SCSET_2$  \small (unique cover of $e_5$)};} \\
+        \tikz{\node[align=left,anchor=west] at (2.0,0.0) {\small \textbf{add} $\SCSET_2$  \small (unique cover of $a_5$)};} \\
         \tikz{\node[align=left,anchor=east] at (-2.0,0.0) {\small \textbf{discard} $\SCSET_1$  \small (no new items)};}
       \end{tabular}
     };

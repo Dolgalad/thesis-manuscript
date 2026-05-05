@@ -290,7 +290,7 @@ $\FPARAMPRED_k : \R^{\EMBDIM} \rightarrow \R^{2^k}$. Thus, for a factor $\FACTOR
 
 The final parameter vector is obtained as 
 \begin{equation}
-    \PREEPARAM = \{\FPARAMPRED_{|N(\FACTOR)|} (\FEMB)\}_{\FACTOR\in \FGF}.
+    \PREEPARAM = \{\FPARAMPRED_{|N(\FACTOR)|} (\FEMB; \FPARAMPREDPARAM)\}_{\FACTOR\in \FGF}.
 \end{equation}
 
 Unary and non-unary factors are handled by the same over-complete representation, but correspond to different factor arities. For a unary factor associated with variable $i$, the predictor outputs two parameters, one for $\XVEC_i=0$ and one for $\XVEC_i=1$. For a non-unary constraint factor $\FACTOR$, the predictor outputs one parameter for every joint assignment of the variables in $N(\FACTOR)$. These non-unary tables allow the LMRF to learn interactions between variables that participate in the same constraint.
@@ -325,8 +325,6 @@ Having predicted the parameters $\PREEPARAM(\PROB)$ and run approximate inferenc
 We decode solutions using diving procedures. A dive maintains a partial assignment $\PARTSOL$ and repeatedly fixes one candidate variable to a selected value. After each fixing step, the remaining problem is simplified by propagating the consequences of the decision: variables that can no longer take one of their values without violating feasibility are fixed or removed from the candidate set. This propagation keeps the partial assignment feasible at every step.
 
 In this chapter we use two diving decoders. EGG performs a single inference pass at the beginning and uses the resulting marginals or scores throughout the entire dive. GD uses the same diving procedure, but periodically conditions the MRF on the current partial assignment and reruns inference to update the scores used for subsequent decisions.
-
-\input{resources/tikz/chapter_3/bp_conditioned_inference}
 
 \paragraph{Feasibility propagation for MIS and SC.} The propagation step is problem-specific. For MIS, fixing a vertex to one forces all adjacent vertices to zero, since they can no longer be included in the independent set. Vertices fixed to zero are removed from the candidate set. For SC, fixing a set to one covers its elements and reduces the residual covering problem; sets that no longer cover any uncovered element can be discarded, while elements that are covered by only one remaining set force that set to be selected. These deterministic updates reduce the problem after each dive step and maintain feasibility of the partial assignment.
 

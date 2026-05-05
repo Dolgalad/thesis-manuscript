@@ -1,16 +1,245 @@
-\begin{figure}[h]
-    \centering
-    \begin{tikzpicture}[
-            every node/.style={
-                minimum width=1.5em, 
-                minimum height=1.5em},
-        ]
-        \node[draw] (p) {Input $P$};
-        \node[draw,right=2cm of p] (gnn) {GNN};
-        \node[draw,right=2cm of gnn] (pred) {Prediction $\XVEC\in\{ 0,1 \}^{\NVAR}$};
-        \draw (p) -- (gnn) node[midway,label={$\scriptstyle \VCGFULL$}] {};
-        \draw (gnn) -- (pred) node[midway,label={$\scriptstyle \SCORE_i, i\in \VCGV$}] {};
-    \end{tikzpicture}
-    \caption{Model inspired by Nair et al.~\cite{nair_solving_2020}.}
-    \label{fig:model_design_nair}
+\definecolor{PanelSand}{RGB}{173,142,101}
+\definecolor{PanelSage}{RGB}{112,142,122}
+\definecolor{PanelMauve}{RGB}{145,120,145}
+
+\begin{figure}
+    \resizebox{\linewidth}{!}{
+\begin{tikzpicture}[
+    font=\small,
+    >=Latex,
+    bluepanel/.style={
+        draw=PanelSand!80!black,
+        fill=PanelSand!7,
+        rounded corners=8pt,
+        line width=0.9pt
+    },
+    tealpanel/.style={
+        draw=PanelSage!80!black,
+        fill=PanelSage!7,
+        rounded corners=8pt,
+        line width=0.9pt
+    },
+    greenpanel/.style={
+        draw=PanelMauve!80!black,
+        fill=PanelMauve!7,
+        rounded corners=8pt,
+        line width=0.9pt
+    },
+    arrow/.style={
+        -{Latex[length=3mm,width=2mm]},
+        line width=1.0pt,
+        draw=gray!70!black
+    },
+    thinarrow/.style={
+        -{Latex[length=2mm,width=1.4mm]},
+        line width=0.7pt,
+        draw=gray!65!black
+    },
+    varnode/.style={
+        circle,
+        draw=blue!45!black,
+        fill=blue!12,
+        minimum size=7mm,
+        inner sep=0pt,
+        line width=0.8pt
+    },
+    solnode/.style={
+        circle,
+        draw=blue!45!black,
+        fill=blue!12,
+        minimum size=5mm,
+        inner sep=0pt,
+        line width=0.8pt
+    },
+    consnode/.style={
+        rectangle,
+        rounded corners=1pt,
+        draw=orange!55!black,
+        fill=orange!14,
+        minimum width=8mm,
+        minimum height=6mm,
+        inner sep=1pt,
+        line width=0.8pt
+    },
+    nnin/.style={
+        circle,
+        draw=teal!55!black,
+        fill=teal!18,
+        minimum size=4mm,
+        inner sep=0pt,
+        line width=0.6pt
+    },
+    nnhid/.style={
+        circle,
+        draw=violet!45!black,
+        fill=violet!16,
+        minimum size=4mm,
+        inner sep=0pt,
+        line width=0.6pt
+    },
+    nnout/.style={
+        circle,
+        draw=green!45!black,
+        fill=green!18,
+        minimum size=4mm,
+        inner sep=0pt,
+        line width=0.6pt
+    },
+    block/.style={
+        draw=gray!65!black,
+        fill=gray!6,
+        rounded corners=5pt,
+        line width=0.8pt,
+        minimum height=8mm,
+        inner sep=4pt,
+        align=center
+    },
+    scoreline/.style={
+        line width=2.1pt,
+        draw=green!45!black
+    },
+    scorebase/.style={
+        line width=0.5pt,
+        draw=gray!55
+    }
+]
+
+% ==================================================
+% Layout anchors
+% ==================================================
+\coordinate (P1) at (-7.2,0);
+\coordinate (P2) at (0,0);
+\coordinate (P3) at (7.2,0);
+
+% ==================================================
+% Panel 1: Input graph
+% ==================================================
+\node[bluepanel, minimum width=4.8cm, minimum height=6cm] (inputpanel) at (P1) {};
+\node[font=\bfseries] at ($(P1)+(0,2.5)$) {Input representation};
+\node[font=\scriptsize, text=black] at ($(P1)+(0,-2.5)$){$\VCGFULL$};
+
+\begin{scope}[shift={($(P1)+(0,-0.1)$)}]
+    % variable nodes
+    \node[varnode] (x1) at (-1.25, 1.25) {$x_1$};
+    \node[varnode] (x2) at (-1.25, 0.45) {$x_2$};
+    \node[varnode] (x3) at (-1.25,-0.35) {$x_3$};
+    \node[varnode] (x4) at (-1.25,-1.15) {$x_4$};
+
+    % constraint nodes
+    \node[consnode] (c1) at (1.20, 0.95) {$c_1$};
+    \node[consnode] (c2) at (1.20, 0.00) {$c_2$};
+    \node[consnode] (c3) at (1.20,-0.95) {$c_3$};
+
+    % edges
+    \draw[gray!70, line width=0.9pt] (x1) -- (c1);
+    \draw[gray!70, line width=0.9pt] (x1) -- (c2);
+
+    \draw[gray!70, line width=0.9pt] (x2) -- (c1);
+    \draw[gray!70, line width=0.9pt] (x2) -- (c3);
+
+    \draw[gray!70, line width=0.9pt] (x3) -- (c2);
+
+    \draw[gray!70, line width=0.9pt] (x4) -- (c2);
+    \draw[gray!70, line width=0.9pt] (x4) -- (c3);
+\end{scope}
+
+% ==================================================
+% Arrow 1
+% ==================================================
+\draw[arrow] ($(inputpanel.east)+(0.15,0)$) -- ($(P2)+(-2.55,0)$);
+
+% ==================================================
+% Panel 2: GNN feature extraction
+% ==================================================
+\node[tealpanel, minimum width=5.1cm, minimum height=6cm] (gnnpanel) at (P2) {};
+\node[font=\bfseries] at ($(P2)+(0,2.5)$) {Feature extraction};
+\node[font=\bfseries] at ($(P2)+(0,2)$) {GNN};
+\node[font=\scriptsize, text=black] at ($(P2)+(0,-2.5)$){$\{ \EMB_v\}_{v \in \VCGV \cup \VCGC} \subset \R^{\EMBDIM}$};
+
+% A small NN-style representation inside the GNN block
+\begin{scope}[shift={($(P2)+(0,-0.05)$)}]
+    % input layer
+    \foreach \i/\y in {1/0.95,2/0.35,3/-0.25,4/-0.85}{
+        \node[nnin] (iin\i) at (-1.15,\y) {};
+    }
+
+    % hidden layer
+    \foreach \i/\y in {1/1.10,2/0.55,3/0.00,4/-0.55,5/-1.10}{
+        \node[nnhid] (hid\i) at (0,\y) {};
+    }
+
+    % output layer
+    \foreach \i/\y in {1/0.65,2/0.05,3/-0.55}{
+        \node[nnout] (out\i) at (1.15,\y) {};
+    }
+
+    % connections
+    \foreach \u in {1,2,3,4}{
+        \foreach \v in {1,2,3,4,5}{
+            \draw[teal!55!black, line width=0.35pt, opacity=0.8] (iin\u) -- (hid\v);
+        }
+    }
+    \foreach \u in {1,2,3,4,5}{
+        \foreach \v in {1,2,3}{
+            \draw[violet!50!black, line width=0.35pt, opacity=0.8] (hid\u) -- (out\v);
+        }
+    }
+\end{scope}
+
+% ==================================================
+% Arrow 2
+% ==================================================
+\draw[arrow] ($(gnnpanel.east)+(0.15,0)$) -- ($(P3)+(-3.0,0)$);
+
+% ==================================================
+% Panel 3: Scores + decoding
+% ==================================================
+\node[greenpanel, minimum width=6cm, minimum height=6cm] (decodepanel) at (P3) {};
+\node[font=\bfseries] at ($(P3)+(0,2.5)$) {Prediction and decoding};
+
+% \draw[thinarrow] ($(P3)+(0.0,1.0)$) -- ($(P3)+(0.0,0.1)$);
+\node[block, minimum width=5cm, minimum height=1.5cm] (scorebox) at ($(P3)+(0,1.5)$) {};
+\node[font=\small] at ($(P3)+(0.0,2.0)$) {Variable logits};
+
+\begin{scope}[shift={($(P3)+(-1.9,0.7)$)}]
+    \foreach \name/\yy/\lab/\val in {
+        a/0.85/$x_1$/0.95,
+        b/0.30/$x_3$/0.80
+    }{
+        \node[varnode, minimum size=4.5mm] (\name) at (0,\yy) {\scriptsize\lab};
+        \draw[scorebase] ($( \name.east)+(0.15,0)$) -- ++(1.15,0);
+        \draw[scoreline] ($( \name.east)+(0.15,0)$) -- ++(\val*1.15,0);
+    }
+\end{scope}
+
+\begin{scope}[shift={($(P3)+(0.3,0.7)$)}]
+    \foreach \name/\yy/\lab/\val in {
+        c/0.85/$x_2$/0.45,
+        d/0.30/$x_4$/0.20
+    }{
+        \node[varnode, minimum size=4.5mm] (\name) at (0,\yy) {\scriptsize\lab};
+        \draw[scorebase] ($( \name.east)+(0.15,0)$) -- ++(1.15,0);
+        \draw[scoreline] ($( \name.east)+(0.15,0)$) -- ++(\val*1.15,0);
+    }
+\end{scope}
+
+% --- decoder block
+\node[block, minimum width=5cm, minimum height=1.1cm] (decoder) at ($(P3)+(-.0,-0.4)$){Decoder\\[-1mm]\scriptsize fix-and-solve / heuristic};
+
+% --- solution under decoder
+\node[block, minimum width=5cm, minimum height=1.1cm, draw=black, fill=green!50, fill opacity=0.15, line width=1.2pt] (solutionbox) at ($(P3)+(0,-2)$) {};
+\node[font=\small] at ($(P3)+(-0.0,-1.65)$) {Solution};
+\begin{scope}[shift={($(P3)+(0.0,-2.2)$)}]
+    \node[solnode, fill=green!30] (sx1) at (-0.90,0) {$1$};
+    \node[solnode, fill=gray!10]  (sx2) at (-0.30,0) {$0$};
+    \node[solnode, fill=green!30] (sx3) at ( 0.30,0) {$1$};
+    \node[solnode, fill=gray!10]  (sx4) at ( 0.90,0) {$0$};
+\end{scope}
+
+\draw[thinarrow] (scorebox.south) -- (decoder.north);
+\draw[thinarrow] (decoder.south) -- (solutionbox.north);
+
+\end{tikzpicture}}
+\caption{Variable-score neural pipeline. The input problem $\PROB$ is represented by its variable--constraint graph $\VCGFULL$ and encoded by a GNN into node embeddings. A variable-level prediction head produces logits for the decision variables, and a separate decoding procedure converts these logits into a binary solution.}
+\label{fig:model_design_nair}
 \end{figure}
