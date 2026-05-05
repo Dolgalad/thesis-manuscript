@@ -40,7 +40,7 @@ Here, we focus only on the works most directly connected to the MRF-based BILP p
 
 The closest starting point is the class of neural methods that represent an optimization instance by its variable--constraint graph and predict variable-level scores. In particular, the framework of Nair et al.~\cite{nair_solving_2020} uses a neural predictor to guide the search for high-quality solutions. Similar graph-based learning ideas have also been used for construction heuristics and solver guidance \cite{dai_learning_2017,gasse_exact_2019}. These approaches demonstrate the usefulness of learned variable scores, but the prediction model used for decoding is typically factorized across variables. The method in this chapter keeps the same graph-based neural input representation, but replaces the factorized output distribution with an MRF over binary assignments.
 
-A second line of work studies message passing as an optimization procedure. Park and Shin~\cite{park_max-product_2017} show that max-product BP can solve certain combinatorial optimization problems when the corresponding graphical model and LP relaxation satisfy specific assumptions. This result motivates the canonical feasibility-cost parameterization introduced below, where constraint factors encode local feasibility and unary factors encode the linear objective. In contrast to the exact-recovery setting analyzed by Park and Shin, the BILP instances considered here are  treated with approximate finite-iteration inference.
+A second line of work studies message passing as an optimization procedure. Park and Shin~\cite{park_max-product_2017} show that max-product BP can solve certain combinatorial optimization problems when the corresponding graphical model and LP relaxation satisfy specific assumptions. This result motivates the canonical feasibility-cost parameterization introduced below, where constraint factors encode local feasibility and unary factors encode the linear objective. In contrast to the exact-recovery setting analyzed by Park and Shin, the BILP instances considered here are treated with approximate finite-iteration inference.
 
 Our approach is also related to works that unroll or learn BP-style inference procedures \cite{kuck_belief_2020,deng_deep_2022,wiseman_amortized_2019}. Those methods typically aim to improve the inference algorithm itself, for example by learning message updates, damping, or schedules. Here, LBP and NMF are used differently: they are fixed approximate inference layers applied to an MRF whose parameters are either given by the canonical BILP construction or predicted by a neural model. The resulting approximate marginals are used for training and decoding. They should therefore be understood as surrogate inference outputs, not as exact likelihoods or exact marginals.
 
@@ -51,7 +51,7 @@ Finally, the framework studied in this chapter differs from generative, sampling
 \section{Learning MRF Parameters for ILPs}
 In this section we describe the framework used in this chapter, combining GNNs with MRF inference. The central idea is to move beyond fully factorized predictors, which treat variable assignments as independent, and instead define a structured distribution over solutions. This distribution is modeled as an exponential-family MRF whose parameters are predicted by a GNN encoder operating on a graph representation of the problem. Inference in this MRF---via belief propagation or mean-field approximations---yields marginal distributions that capture dependencies between variables and can be used to guide diving-based greedy solution construction. We consider two such decoders: EGG, which uses the initial inferred scores throughout the dive, and GD, which periodically conditions on the current partial assignment and reinfers the remaining marginals.
 
-We formalize this approach by first defining the class problems we target, and then specifying how their structure is encoded into the GNN–MRF architecture.
+We formalize this approach by first defining the problem classes we target, and then specifying how their structure is encoded into the GNN–MRF architecture.
 
 \subsection{Problem class and graph representation}
 We focus on optimization problems that can be formulated as binary integer linear programs of the form
@@ -73,7 +73,7 @@ For a given instance $(\PROB)$, a solution $\XVEC$ can be viewed as a realizatio
 \end{equation*}
 from a dataset of solved instances.
 
-A common neural approach is to represent $(\PROB)$ by its variable--constraint bipartite (see Section~\ref{sec:vcg_definition} for details on the construction of the variable--constraint bipartite representation) graph and use a GNN to produce one score $\SCORE_i$ for each decision variable \cite{dai_learning_2017,gasse_exact_2019,nair_solving_2020,sun_difusco_2023}. In the binary setting, these scores are typically interpreted as Bernoulli probabilities
+A common neural approach is to represent $(\PROB)$ by its variable--constraint bipartite graph and use a GNN to produce one score $\SCORE_i$ for each decision variable \cite{dai_learning_2017,gasse_exact_2019,nair_solving_2020,sun_difusco_2023}. See Section~\ref{sec:vcg_definition} for details on this construction. In the binary setting, these scores are typically interpreted as Bernoulli probabilities
 \begin{equation*}
     \SCORE_i \approx \PDIST(\XRAV_i = 1 \mid \PROB).
 \end{equation*}
@@ -115,7 +115,7 @@ MRF-based alternative: first the exponential-family parameterization, then the c
 
 \input{resources/tikz/chapter_3/model_design_nair}
 
-\paragraph{Maximum Independent Set problems.} In this first contribution we focus on the classical edge based formulation of the problem defined over an undirected graph $\GFULL$: 
+\paragraph{Maximum Independent Set problems.} For MIS, we use the classical edge-based formulation over an undirected graph $\GFULL$: 
 \begin{equation}
     (\MISPROB) \Leftrightarrow \left\{ \begin{array}{clr}
         \max & \mathds{1}^T \XVEC & \\
@@ -125,7 +125,7 @@ MRF-based alternative: first the exponential-family parameterization, then the c
 \end{equation}
 where the decision variable $x_i$ indicates whether vertex $i$ belongs to the independent set, and the constraints ensure that both endpoints of any edge cannot simultaneously belong to the set.
 
-The corresponding factor graph contains only factors of size $2$. The features provided to the model are extracted by solving the continuous relaxation of $\MISPROB$. Since the trivial solution $\XVEC_i=1/2$ is always optimal for this problem the features essentially do not provide any information about the solution and the feature extraction process must make full use of any topological properties of the graph to learn meaningful information.
+The corresponding factor graph contains only factors of size $2$. The features provided to the model are extracted by solving the continuous relaxation of $\MISPROB$. Since the trivial solution $\XVEC_i=1/2$ is always optimal for this problem, the features essentially do not provide any information about the solution and the feature extraction process must make full use of any topological properties of the graph to learn meaningful information.
 
 \paragraph{Set Covering problems.} The problem formulation as a linear program is given in standard form:
 \begin{equation}
@@ -172,12 +172,7 @@ Here $\EPARAM = (\EPARAM_{\FACTOR})_{\FACTOR \in \FGF}$ is the collection of fac
 \end{equation*}
 In this parameterization, learning an MRF amounts to choosing the factor parameters $\EPARAM = (\EPARAM_{\FACTOR})_{\FACTOR \in \FGF}$ so that the resulting distribution assigns high probability to assignments that resemble the training data.
 
-Throughout this chapter, we work in log-potential form. Equivalently, the quantity
-\begin{equation*}
-    \langle \EPARAM_{\FACTOR},
-    \SSTAT_{\FACTOR}(\XVEC_{\FACTOR}) \rangle
-\end{equation*}
-can be interpreted as a negative local energy,
+Throughout this chapter, we work in log-potential form. Equivalently, the parameter score can be interpreted as a negative local energy:
 \begin{equation*}
     \langle \EPARAM_{\FACTOR},
     \SSTAT_{\FACTOR}(\XVEC_{\FACTOR}) \rangle
@@ -199,7 +194,7 @@ We now define a fixed, non-learned choice of the generic parameters $\EPARAM$ in
 
 We refer to this construction as the \emph{canonical feasibility-cost parameterization}, and denote its parameters by $\CANEPARAM$.
 
-Let $\XVEC = (\XVEC_1,\ldots,\XVEC_{\NVAR})$ denote the binary decision variables of an ILP. Each constraint factor $\FACTOR\in\FGF$ is associated with a constraint of the ILP and has scope $N(\FACTOR) \subseteq \{ 1,\ldots, \NVAR\}$. We write $\XVEC_{\FACTOR} = (\XVEC_i)_{i\in N(\FACTOR)}$ for a local assignment to the variables appearing in constraint $\FACTOR$. The set of locally feasible assignments for this constraint is denoted by 
+Let $\XVEC = (\XVEC_1,\ldots,\XVEC_{\NVAR})$ denote the binary decision variables of an ILP. Each constraint factor $\FACTOR \in \FGF$ is associated with a constraint of the ILP and has scope $N(\FACTOR) \subseteq \{ 1,\ldots, \NVAR\}$. We write $\XVEC_{\FACTOR} = (\XVEC_i)_{i \in N(\FACTOR)}$ for a local assignment to the variables appearing in constraint $\FACTOR$. The set of locally feasible assignments for this constraint is denoted by 
 \begin{equation}
     \mathcal{X}_{\FACTOR}
     =
@@ -283,9 +278,9 @@ The LMRF uses a neural network to predict the over-complete factor parameters of
 \end{enumerate}
 The LMRF models use the predicted parameter vector $\PREEPARAM(\PROB;\NNPARAM)$, where $\NNPARAM$ denotes the trainable weights of the encoder and parameter heads. Figure~\ref{fig:model_design_efcanonicalparam} illustrates this architecture.
 
-\paragraph{Graph encoder.} A problem $(\PROB)$ is represented as its variable-constraint bipartite graph $\VCGFULL$ (where $\VCGV$ indexes the set of decision variables and $\VCGC$ the set of constraints) and by a set of features $\FEATURES = \{ \FEATURES_u \}_{u \in \VCGV \cup \VCGC}$. The graph encoder is a parametrized differentiable function that converts the structured representation of the problem into a set of vector embeddings $\EMB = \{ \EMB_u \}_{u \in \VCGV \cup \VCGC }$ that serve as inputs to the following components of the predictor. We denote the set of trainable parameters of the graph encoder $\GNNEMB$ by $\GNNEMBPARAM$.
+\paragraph{Graph encoder.} A problem $(\PROB)$ is represented as its variable--constraint bipartite graph $\VCGFULL$ (where $\VCGV$ indexes the set of decision variables and $\VCGC$ the set of constraints) and by a set of features $\FEATURES = \{ \FEATURES_u \}_{u \in \VCGV \cup \VCGC}$. The graph encoder is a parameterized differentiable function that converts the structured representation of the problem into a set of vector embeddings $\EMB = \{ \EMB_u \}_{u \in \VCGV \cup \VCGC }$ that serve as inputs to the following components of the predictor. We denote the set of trainable parameters of the graph encoder $\GNNEMB$ by $\GNNEMBPARAM$.
 \begin{equation}
-    \GNNEMB ( \VCG, \FEATURES; \GNNEMBPARAM) = \EMB.
+    \GNNEMB (\VCG, \FEATURES; \GNNEMBPARAM) = \EMB.
 \end{equation}
 
 In practice $\GNNEMB$ is defined as a sequence of $\NUMGNNLAYERS$ graph convolution layers (see experimental results for details on the GNN implementation). 
@@ -295,7 +290,7 @@ $\FPARAMPRED_k : \R^{\EMBDIM} \rightarrow \R^{2^k}$. Thus, for a factor $\FACTOR
 
 The final parameter vector is obtained as 
 \begin{equation}
-    \PREEPARAM  = \{ \FPARAMPRED_{|N(\FACTOR)|} (\FEMB) \}_{\FACTOR\in \FGF}.
+    \PREEPARAM = \{\FPARAMPRED_{|N(\FACTOR)|} (\FEMB)\}_{\FACTOR\in \FGF}.
 \end{equation}
 
 Unary and non-unary factors are handled by the same over-complete representation, but correspond to different factor arities. For a unary factor associated with variable $i$, the predictor outputs two parameters, one for $\XVEC_i=0$ and one for $\XVEC_i=1$. For a non-unary constraint factor $\FACTOR$, the predictor outputs one parameter for every joint assignment of the variables in $N(\FACTOR)$. These non-unary tables allow the LMRF to learn interactions between variables that participate in the same constraint.
@@ -312,11 +307,11 @@ Once parameters are predicted, inference in the MRF provides structured predicti
 \end{itemize}
 Inference thus bridges learning and optimization by allowing predictions to take variable dependencies into account.
 
-It is worth noting the conceptual similarities with recent approaches that integrate combinatorial optimization problems as layers within machine learning models \citep{berthet_learning_2020, dalle_learning_2022}. In these works, the optimization layer is treated as a black box: logits or continuous parameters are passed to a state-of-the-art solver that computes exact (but non-differentiable) solutions, while gradient information is approximated by sampling or perturbing the inputs to estimate the sensitivity of the outputs. In contrast, this chapter uses approximate marginal inference as the inference mechanism. We instantiate this mechanism with LBP and NMF, both of which produce differentiable approximate marginals through fixed-iteration message-passing or variational updates. These marginals define a smooth energy-based relaxation over assignments, which can be used for decoding while remaining amenable to end-to-end training and efficient parallelization. In the canonical parameterization, exact MAP inference in the resulting MRF would correspond to solving the encoded combinatorial optimization problem. In this chapter, however, we use approximate marginal inference as a differentiable surrogate that guides decoding rather than directly solving the MAP problem exactly.
+It is worth noting the conceptual similarities with recent approaches that integrate combinatorial optimization problems as layers within machine learning models \citep{berthet_learning_2020,dalle_learning_2022}. In these works, the optimization layer is treated as a black box: logits or continuous parameters are passed to a state-of-the-art solver that computes exact (but non-differentiable) solutions, while gradient information is approximated by sampling or perturbing the inputs to estimate the sensitivity of the outputs. In contrast, this chapter uses approximate marginal inference as the inference mechanism. We instantiate this mechanism with LBP and NMF, both of which produce differentiable approximate marginals through fixed-iteration message-passing or variational updates. These marginals define a smooth energy-based relaxation over assignments, which can be used for decoding while remaining amenable to end-to-end training and efficient parallelization. In the canonical parameterization, exact MAP inference in the resulting MRF would correspond to solving the encoded combinatorial optimization problem. In this chapter, however, we use approximate marginal inference as a differentiable surrogate that guides decoding rather than directly solving the MAP problem exactly.
 
 At this stage, the model has computed the parameters associated with instance $\PROB$, denoted $\PREEPARAM(\PROB;\NNPARAM)$. Training and decoding then require approximate inference in the resulting MRF. During training, inference returns factor or variable marginals used in the supervised surrogate loss. During decoding, inference returns variable marginals used by the diving procedures. Because fixed-iteration LBP and NMF consist of differentiable operations, gradients can be propagated through the inference layer during end-to-end training.
 
-This chapter uses two inference methods: LBP and NMF (see Chapter ~\ref{sec:mrf_intro} for details and implementation details for both algorithms). The advantage of these inference methods is that they incorporate dependencies between variables while still producing differentiable marginal estimates. They also allow the MRF to be conditioned on partial evidence during decoding, which is the mechanism used by guided decimation. This conditioning mechanism is described next in the subsection on guided decimation.
+This chapter uses two inference methods: LBP and NMF (see Chapter~\ref{sec:mrf_intro} for details on both algorithms). The advantage of these inference methods is that they incorporate dependencies between variables while still producing differentiable marginal estimates. They also allow the MRF to be conditioned on partial evidence during decoding, which is the mechanism used by guided decimation. This conditioning mechanism is described next in the subsection on guided decimation.
 
 The messages, variational updates, and marginals computed by fixed-iteration LBP and NMF are differentiable operations and do not introduce additional trainable parameters. Because both LBP and NMF are iterative approximate inference procedures, we use a fixed maximum number of iterations and optionally apply update damping for stability \cite{heskes_uniqueness_2004,wainwright_graphical_2007,meltzer_convergent_2012}. In LBP, damping interpolates between old and new messages. In NMF, we apply the same relaxation idea to variable-marginal updates. 
 
@@ -341,7 +336,7 @@ In this chapter we use two diving decoders. EGG performs a single inference pass
 
 Both EGG and GD use the same diving and feasibility-propagation mechanism. They differ only in how the scores used for selecting the next fixing decision are obtained. EGG computes marginals or scores once on the original instance and keeps them fixed during the whole dive. GD uses the conditioning operation described above after each fixing step, or after a fixed number of steps, to update the marginals used for subsequent decisions.
 
-Whereas predicting scores with the GNN does not provide any way of integrating partial assignments into the marginal calculations, MRFs do. As we are building a solution we can incorporate the partial solution as evidence into the inference process to update the marginals used at the following steps of the solution construction. Details of EGG and GD iterations are given in Algorithm ~\ref{alg:bp_guided_decimation}.
+Whereas predicting scores with the GNN does not provide any way of integrating partial assignments into the marginal calculations, MRFs do. When building a solution, we can incorporate the partial solution as evidence into inference and update the marginals used in subsequent construction steps. Details of EGG and GD iterations are given in Algorithm~\ref{alg:bp_guided_decimation}.
 
 \begin{figure}[htbp]
   \centering
@@ -357,7 +352,7 @@ Whereas predicting scores with the GNN does not provide any way of integrating p
         \While{solution incomplete}{
             %Select a candidate fixing $(i, \XVEC_i)$ using the current scores $\MARGINAL$\;
             Select an unfixed variable $i \in \argmin_{j \in C} H(\MARGINAL_j)$\;
-            Set $\XVEC_i \gets \argmax_{b \in \{0,1\}} \MARGINAL_i(b)$ \;
+            Set $\XVEC_i \gets \argmax_{b \in \{0,1\}} \MARGINAL_i(b)$\;
             Add $(i, \XVEC_i)$ to $\PARTSOL$\;
             Propagate feasibility consequences and update $C$\;
             \If{using GD and an update is triggered}{
@@ -452,7 +447,7 @@ where $\MARGINAL_{v}^{(i)}$ is the approximate marginal of variable $v$ obtained
 The natural training target is to minimize the global negative log-likelihood (NLL) of the MRF:
 \begin{align}
 \mathcal{L}_{\mathrm{NLL}}(\NNPARAM) &= -\log p_{\PREEPARAM(\PROB;\NNPARAM)}(\YVEC), \\
-                                   &= \log Z(\PREEPARAM(\PROB;\NNPARAM)) - \langle \PREEPARAM(\PROB;\NNPARAM), \SSTAT(\YVEC) \rangle .
+                                   &= \log Z(\PREEPARAM(\PROB;\NNPARAM)) - \langle \PREEPARAM(\PROB;\NNPARAM), \SSTAT(\YVEC) \rangle.
 \end{align}
 This objective is not used in this chapter, because evaluating it requires the partition function $Z(\PREEPARAM(\PROB;\NNPARAM))$. For the loopy factor graphs considered here, this normalization is intractable. The losses above therefore serve as supervised marginal-likelihood surrogates: they train the model to assign high approximate marginal probability to the local configurations observed in the reference solution, rather than maximizing the exact likelihood of the full assignment. A principled alternative is to approximate the likelihood using variational free energy methods such as the Bethe free energy, which provide tractable approximations consistent with loopy BP. Exploring such objectives is a promising avenue for future work.
 
@@ -498,16 +493,14 @@ Thus, CMRF-LBP and CMRF-NMF test whether the hand-designed canonical MRF paramet
 
 \paragraph{Training setup.} All learned models are trained using the supervised objective introduced in Section~\ref{sec:chapter_3_training_objective}. DGN is trained from variable-level labels, whereas the learned MRF models are trained through the marginals returned by the chosen inference procedure: factor marginals for LMRF-LBP and variable marginals for LMRF-NMF.
 
-All learned models use the same neural backbone, a four-layer GCN \citep{kipf_semi-supervised_2017} with hidden dimension  $\EMBDIM=64$. This shared architecture keeps the comparison computationally tractable and isolates the effect of the prediction head and inference layer. The direct predictor outputs one logit $\SCORE_i$ per decision variable, while the learned MRF models output canonical factor parameters $\EPARAM_{\FACTOR}$ that are passed to either LBP or NMF inference.
+All learned models use the same neural backbone, a four-layer GCN \citep{kipf_semi-supervised_2017} with hidden dimension $\EMBDIM=64$. This shared architecture keeps the comparison computationally tractable and isolates the effect of the prediction head and inference layer. The direct predictor outputs one logit $\SCORE_i$ per decision variable, while the learned MRF models output factor parameters $\EPARAM_{\FACTOR}$ that are passed to either LBP or NMF inference.
 
 Models are optimized with AdamW~\citep{loshchilov_decoupled_2018-1} using a learning rate of $10^{-3}$ across all datasets. Approximate inference is run for at most $10$ iterations, and the LBP damping coefficient is set to $0.5$. Each dataset is split into training, validation, and test sets using an $80/10/10\%$ split. Results are reported over three random seeds, $\{0,1,2\}$.
 
 \paragraph{Inference and decoding.}
 At test time, each method produces one score per decision variable. DGN outputs logits directly, while CMRF-LBP, CMRF-NMF, LMRF-LBP, and LMRF-NMF obtain variable marginals by running approximate inference on the corresponding MRF. Inference is capped at $10$ iterations for both LBP and NMF, with LBP message damping coefficient set to $0.5$. Since the factor graphs are loopy, LBP beliefs are treated as approximate marginals.
 
-Scores or marginals are converted into feasible solutions using two decoders. EGG is a static decoder: it computes predictions once and fixes variables in decreasing order of confidence, measured by low entropy for marginals or by the sigmoid confidence of the DGN logit. GD (Algorithm~\ref{alg:bp_guided_decimation}) is adaptive: after each assignment, the model is conditioned on the current partial solution and inference is rerun before selecting the next variable. EGG  therefore evaluates the quality of the initial predictions, whereas GD evaluates whether the inferred distribution remains useful under iterative partial assignments.
-
-%\todo[inline]{EGG and GD are described in more detail before the experimental section where we describe the general diving procedure used. refer to that section here}
+Scores or marginals are converted into feasible solutions using two decoders. EGG is a static decoder: it computes predictions once and fixes variables in decreasing order of confidence, measured by low entropy for marginals or by the sigmoid confidence of the DGN logit. GD (Algorithm~\ref{alg:bp_guided_decimation}) is adaptive: after each assignment, the model is conditioned on the current partial solution and inference is rerun before selecting the next variable. EGG therefore evaluates the quality of the initial predictions, whereas GD evaluates whether the inferred distribution remains useful under iterative partial assignments.
 
 \paragraph{Evaluation metrics.}
 Assuming that all problems are given in canonical form, we evaluate solution quality using the relative gap
@@ -518,10 +511,10 @@ Assuming that all problems are given in canonical form, we evaluate solution qua
         z(\YVEC^{\mathrm{ref}}) - z(\hat{\YVEC})
     }{
         |z(\YVEC^{\mathrm{ref}})|
-    }
+    },
 \end{equation}
 
-where $z(x)$ is the objective value of the solution returned by the method and $z_{\mathrm{ref}}$ is the objective value of the reference solution provided with the dataset. Since the dataset labels are produced by external solvers or heuristics, this quantity should be interpreted as a gap with respect to the available reference solution, not necessarily as a gap to the true optimum. Lower values indicate better solutions, and a zero gap means that the method matches the reference objective value.
+where $z(x)$ is the objective value of the solution returned by the method and $z(\YVEC^{\mathrm{ref}})$ is the objective value of the reference solution provided with the dataset. Since the dataset labels are produced by external solvers or heuristics, this quantity should be interpreted as a gap with respect to the available reference solution, not necessarily as a gap to the true optimum. Lower values indicate better solutions, and a zero gap means that the method matches the reference objective value.
 
 We also report end-to-end solve time at test time. This includes all steps required to produce a feasible solution from an input instance, including preprocessing, neural prediction, approximate inference, and decoding. For runtime-split figures, we decompose this total time into its main components in order to distinguish the cost of prediction, inference, and solution construction.
 
@@ -537,8 +530,6 @@ MIS instances are generated from Erdős--Rényi random graphs with edge probabil
 
 \paragraph{Set Cover.}
 SC instances are generated using a balanced randomized procedure. For a given number of items $n$, sets $m$, and coverage parameter $k$, we sample an item--set incidence matrix and enforce two validity conditions: no set is empty, and each item is covered by exactly $k$ sets. We consider two size regimes: $n=50$, $m=50$, $k=5$, and $n \sim \mathcal{U}[120,180]$, $m \sim \mathcal{U}[150,250]$, $k=5$. Reference labels are obtained using the SCIP solver~\citep{achterberg_scip_2009}.
-
-%\todo[inline]{create annexe document with more details on instance generation ?}
 
 \input{resources/tab/chapter_3/dataset_identifiers.tex}
 
@@ -621,9 +612,9 @@ Overall, the ablation confirms that the effectiveness of GD depends on balancing
 
 \subsection{Fix-and-solve with learned predictions}
 
-Fix-and-solve is most useful at moderate fixing ratios, where learned predictions reduce the solver workload without overconstraining the residual problem. We evaluate this by using learned predictions to accelerate an exact solver through a fix-and-solve procedure. The evaluation metric is the relative optimality gap with respect to a reference optimum. For each instance, the reference solution is obtained by solving the original problem to optimality with Gurobi~\cite{gurobi}. In the fix-and-solve experiments, however, the residual problem is solved with SCIP under a restrictive time limit of $300$s. Thus, the reported gaps measure the quality of the SCIP solution obtained after partial fixing, relative to the optimal objective value computed independently by Gurobi.
+Fix-and-solve is most useful at moderate fixing ratios, where learned predictions reduce the solver workload without overconstraining the residual problem. We evaluate this by using learned predictions to accelerate an exact solver through a fix-and-solve procedure. The evaluation metric is the relative optimality gap with respect to a reference optimum. For each instance, the reference solution is obtained by solving the original problem to optimality with Gurobi~\cite{gurobi}. In the fix-and-solve experiments, however, the residual problem is solved with SCIP under a restrictive time limit of $300$ seconds. Thus, the reported gaps measure the quality of the SCIP solution obtained after partial fixing, relative to the optimal objective value computed independently by Gurobi.
 
-In this setting, the learned model is not used to produce the final solution directly. Instead, it is used to decide a subset of variables whose values are fixed before calling SCIP on the remaining reduced problem. More precisely, for a target fixed-variable proportion $\rho$, the decoder is run until $\rho$ of the variables have been assigned. The selected variables and their predicted values are then clamped in the original combinatorial problem, and SCIP is used to solve the residual instance over the remaining unfixed variables within the $300$s time limit. This protocol is applied in the same way for both EGG and GD decoding. With EGG, variables are fixed according to the ordering induced by the initial scores or marginals until the desired proportion is reached. With GD, the decimation process is stopped once the target proportion has been fixed; inference and clamping are performed as in the standard GD decoder, but the remaining variables are left to SCIP rather than being decoded by GD. Thus, the reported solution is always obtained by SCIP on a partially fixed problem, and the learned model only determines which variables are fixed before the exact solve.
+In this setting, the learned model is not used to produce the final solution directly. Instead, it is used to decide a subset of variables whose values are fixed before calling SCIP on the remaining reduced problem. More precisely, for a target fixed-variable proportion $\rho$, the decoder is run until $\rho$ of the variables have been assigned. The selected variables and their predicted values are then clamped in the original combinatorial problem, and SCIP is used to solve the residual instance over the remaining unfixed variables within the $300$ second time limit. This protocol is applied in the same way for both EGG and GD decoding. With EGG, variables are fixed according to the ordering induced by the initial scores or marginals until the desired proportion is reached. With GD, the decimation process is stopped once the target proportion has been fixed; inference and clamping are performed as in the standard GD decoder, but the remaining variables are left to SCIP rather than being decoded by GD. Thus, the reported solution is always obtained by SCIP on a partially fixed problem, and the learned model only determines which variables are fixed before the exact solve.
 
 \input{resources/tikz/chapter_3/inference_test_nair_gap_bar.tex}
 
@@ -637,7 +628,7 @@ An important distinction from the previous decoding experiments is that GD is no
 
 \input{resources/tikz/chapter_3/inference_test_nair_runtime_stacked_bar.tex}
 
-Figure~\ref{fig:inference_test_nair_runtime_stacked_bar} shows the corresponding runtime decomposition. The total runtime is split into preprocessing, model forward pass, decoding-based fixing, and the final reduced SCIP solve. The dominant trend is that the reduced-solver time decreases as the fixed-variable proportion increases. This confirms the intended effect of fix-and-solve: by clamping a larger part of the problem, the exact solver is called on a smaller residual instance and therefore requires less time within the $300$s time limit.
+Figure~\ref{fig:inference_test_nair_runtime_stacked_bar} shows the corresponding runtime decomposition. The total runtime is split into preprocessing, model forward pass, decoding-based fixing, and the final reduced SCIP solve. The dominant trend is that the reduced-solver time decreases as the fixed-variable proportion increases. This confirms the intended effect of fix-and-solve: by clamping a larger part of the problem, the exact solver is called on a smaller residual instance and therefore requires less time within the $300$ second time limit.
 
 However, the runtime reduction comes with the gap increase observed in Figure~\ref{fig:inference_test_nair_gap_bar}. The fixed-variable proportion therefore controls the main quality--runtime trade-off. Small values of $\rho$ are conservative: they preserve solution quality but leave a larger problem for SCIP. Large values of $\rho$ are aggressive: they accelerate the reduced solve but can lock in incorrect assignments. Intermediate fixing proportions provide the most useful regime, since they reduce the SCIP workload while still allowing the solver to correct the uncertain part of the solution.
 
