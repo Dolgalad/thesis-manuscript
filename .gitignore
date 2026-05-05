@@ -16,6 +16,13 @@
 *.snm
 *.vrb
 
+# LaTeX auxiliary/index/build artifacts
+*.auxlock
+*.bbl-SAVE-ERROR
+*.idx
+*.ilg
+*.ind
+
 # Generated PDFs
 *.pdf
 
@@ -29,3 +36,4 @@
 tmp/
 build/
 tikz-cache/
+revision/
