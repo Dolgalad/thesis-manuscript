@@ -454,7 +454,7 @@ The natural training target is to minimize the global negative log-likelihood (N
 \mathcal{L}_{\text{NLL}}(\NNPARAM) &= -\log p_{\PREEPARAM(\PROB;\NNPARAM)}(\YVEC), \\
                                    &= \log Z(\PREEPARAM(\PROB;\NNPARAM)) - \langle \PREEPARAM(\PROB;\NNPARAM), \SSTAT(\YVEC) \rangle .
 \end{align}
-This objective is not used in this chapter, because evaluating it requires the partition function $Z(\PREEPARAM(\PROB;\NNPARAM))$. For the loopy factor graphs considered here, this normalization is intractable. The losses above therefore serve as supervised marginal-likelihood surrogates: they train the model to assign high approximate marginal probability to the local configurations observed in the reference solution, rather than maximizing the exact likelihood of the full assignment. A  principled alternative is to approximate the likelihood using variational free energy methods such as the Bethe free energy, which provide tractable approximations consistent with loopy BP. Exploring such objectives is a promising avenue for future work.
+This objective is not used in this chapter, because evaluating it requires the partition function $Z(\PREEPARAM(\PROB;\NNPARAM))$. For the loopy factor graphs considered here, this normalization is intractable. The losses above therefore serve as supervised marginal-likelihood surrogates: they train the model to assign high approximate marginal probability to the local configurations observed in the reference solution, rather than maximizing the exact likelihood of the full assignment. A principled alternative is to approximate the likelihood using variational free energy methods such as the Bethe free energy, which provide tractable approximations consistent with loopy BP. Exploring such objectives is a promising avenue for future work.
 
 Gradients are computed by backpropagating through the fixed unrolled inference computation. For LBP, this computation consists of a fixed number of differentiable message updates followed by marginal normalization. For NMF, it consists of a fixed number of differentiable mean-field marginal updates. Since the number of iterations is fixed, the inference procedure defines a deterministic differentiable map from $\PREEPARAM(\PROB_i;\NNPARAM)$ to the marginals used in the loss.
 
@@ -472,35 +472,32 @@ We first describe the experimental protocol, including dataset generation, featu
 This subsection describes the common experimental protocol used to compare the different prediction and inference methods. We first specify the families of predictors considered in the experiments, including the non-learned probabilistic baselines, the direct GNN logit predictor, and the learned MRF-based models. We then describe the shared training setup, the approximate inference budget, the decoding strategies used to convert scores or marginals into feasible solutions, and the metrics used to evaluate solution quality and runtime. For GD, we also evaluate cheaper update schedules that rerun inference only every $k$ decoding steps.
 
 \paragraph{Compared methods.}
-We compare five prediction methods, summarized in
-Table~\ref{tab:compared_methods}. They differ in whether their parameters are learned from data and in the type of quantity they provide to the decoder. The GNN baseline directly predicts one logit per variable, whereas the probabilistic methods produce variable marginals through approximate inference.
+We compare five prediction methods, summarized in Table~\ref{tab:chapter_3_compared_methods}. All method names are defined before the table to make the comparison unambiguous. \emph{CMRF-LBP} and \emph{CMRF-NMF} are non-learned canonical-MRF baselines: their factor parameters are fixed by the feasibility-cost parameterization in Section~\ref{subsec:canonical-feasibility-cost-param}, and LBP or NMF is then used only as an approximate inference procedure. \emph{DGN} is the direct GNN baseline: it uses the same neural backbone as the learned MRF models but outputs one logit per decision variable and does not include an MRF inference layer. \emph{LMRF-LBP} and \emph{LMRF-NMF} are learned-MRF predictors: a GNN predicts over-complete factor parameters, and LBP or NMF converts those parameters into approximate variable marginals.
+
+The table separates the quantity used by the decoder from the quantity used for training. The decoder always receives one scalar score per decision variable: a direct logit for DGN, or an approximate variable marginal for the MRF-based methods. The training signal differs across learned models: DGN is trained from variable-level labels, LMRF-LBP uses the factor-wise marginal surrogate from Section~\ref{sec:chapter_3_training_objective}, and LMRF-NMF uses the variable-wise marginal surrogate. The CMRF variants contain no learned parameters, so they do not have a supervised training objective.
 
 \begin{table}[t]
 \centering
 \caption{Summary of the prediction methods compared in the experiments.}
-\label{tab:compared_methods}
-\begin{tabular}{lccc}
+\label{tab:chapter_3_compared_methods}
+\begin{tabular}{lcccc}
 \toprule
-Method & Learned & Inference procedure & Decoder input \\
+Method & Learned & Parameter source & Inference procedure & Decoder input / training signal \\
 \midrule
-CMRF-LBP & No & LBP on canonical MRF parameters & Marginals \\
-CMRF-NMF & No & NMF on canonical MRF parameters & Marginals \\
-DGN & Yes & None; direct GNN prediction & Logits \\
-LMRF-LBP & Yes & LBP on learned MRF parameters & Marginals \\
-LMRF-NMF & Yes & NMF on learned MRF parameters & Marginals \\
+CMRF-LBP & No & Canonical feasibility-cost parameters & LBP & Variable marginals / none \\
+CMRF-NMF & No & Canonical feasibility-cost parameters & NMF & Variable marginals / none \\
+DGN & Yes & GNN variable logits & None & Logits / variable labels \\
+LMRF-LBP & Yes & GNN-predicted factor parameters & LBP & Variable marginals / factor-wise marginal surrogate \\
+LMRF-NMF & Yes & GNN-predicted factor parameters & NMF & Variable marginals / variable-wise marginal surrogate \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-CMRF-LBP and CMRF-NMF are non-learned probabilistic baselines: their MRF parameters are constructed directly from the objective and constraints, and variable marginals are obtained using either LBP or NMF. CMRF-LBP and CMRF-NMF use the canonical feasibility-cost parameterization described in Section~\ref{subsec:canonical-feasibility-cost-param}, with inference performed using LBP and NMF respectively. The DGN baseline uses the same neural backbone as the learned MRF models but directly predicts one score per variable, without an explicit inference layer. LMRF-LBP and LMRF-NMF correspond to our proposed MRF-based predictors: a GNN first predicts factor parameters, which approximate inference is used to produce variable marginals.
+Thus, CMRF-LBP and CMRF-NMF test whether the hand-designed canonical MRF parameterization is useful when paired with approximate inference, while LMRF-LBP and LMRF-NMF test whether learned factor parameters produce more useful approximate marginals under the same inference budget. DGN isolates the effect of removing the MRF layer entirely.
 
-\todo[inline]{ add section "MRF parameterization for CO" that introduces the ideal exponential family parameterization, refer to that section here for the definition of PBP and PMF}
+\paragraph{Training setup.} All learned models are trained using the supervised objective introduced in Section~\ref{sec:chapter_3_training_objective}. DGN is trained from variable-level labels, whereas the learned MRF models are trained through the marginals returned by the chosen inference procedure: factor marginals for LMRF-LBP and variable marginals for LMRF-NMF.
 
-\paragraph{Training setup.}
-All learned models are trained using the supervised objective introduced in Section~\ref{sec:chapter_3_training_objective}. DGN is trained from variable-level labels, whereas the learned MRF models are trained through the marginals returned by the chosen inference procedure: factor marginals for LMRF-LBP and variable marginals for LMRF-NMF.
-
-All learned models use the same neural backbone, a four-layer GCN
-\citep{kipf_semi-supervised_2017} with hidden dimension  $\EMBDIM=64$. This shared architecture keeps the comparison computationally tractable and isolates the effect of the prediction head and inference layer. The direct predictor outputs one logit $\SCORE_i$ per decision variable, while the learned MRF models output canonical factor parameters $\EPARAM_{\FACTOR}$ that are passed to either LBP or NMF inference.
+All learned models use the same neural backbone, a four-layer GCN \citep{kipf_semi-supervised_2017} with hidden dimension  $\EMBDIM=64$. This shared architecture keeps the comparison computationally tractable and isolates the effect of the prediction head and inference layer. The direct predictor outputs one logit $\SCORE_i$ per decision variable, while the learned MRF models output canonical factor parameters $\EPARAM_{\FACTOR}$ that are passed to either LBP or NMF inference.
 
 Models are optimized with AdamW~\citep{loshchilov_decoupled_2018-1} using a learning rate of $10^{-3}$ across all datasets. Approximate inference is run for at most $10$ iterations, and the LBP damping coefficient is set to $0.5$. Each dataset is split into training, validation, and test sets using an $80/10/10\%$ split. Results are reported over three random seeds, $\{0,1,2\}$.
 
