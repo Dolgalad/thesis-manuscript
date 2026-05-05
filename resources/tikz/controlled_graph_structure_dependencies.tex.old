@@ -1,0 +1,64 @@
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    font=\small,
+    v1/.style={circle, draw, thick, fill=red!25,    minimum size=6mm, inner sep=0pt},
+    v2/.style={circle, draw, thick, fill=blue!25,   minimum size=6mm, inner sep=0pt},
+    v3/.style={circle, draw, thick, fill=green!25,  minimum size=6mm, inner sep=0pt},
+    v4/.style={circle, draw, thick, fill=orange!30, minimum size=6mm, inner sep=0pt},
+    edge/.style={draw, thick},
+    faded/.style={draw, thick, gray!40},
+]
+
+% -------------------------
+% Left: full dependency graph (clique)
+% -------------------------
+\node[v1] (a1) at (0,  1) {$x_1$};
+\node[v2] (a2) at (1,  0) {$x_2$};
+\node[v3] (a3) at (0, -1) {$x_3$};
+\node[v4] (a4) at (-1, 0) {$x_4$};
+
+\foreach \i/\j in {a1/a2,a2/a3,a3/a4,a4/a1,a1/a3,a2/a4}{
+  \draw[edge] (\i) -- (\j);
+}
+
+%\node[align=center] at (0, -1.8) {Full factor\\dependencies};
+
+% -------------------------
+% Middle: fully factorized
+% -------------------------
+\node[v1] (b1) at (4,  1) {$x_1$};
+\node[v2] (b2) at (5,  0) {$x_2$};
+\node[v3] (b3) at (4, -1) {$x_3$};
+\node[v4] (b4) at (3,  0) {$x_4$};
+
+%\node[align=center] at (4, -1.8) {Fully factorized\\dependencies};
+
+% -------------------------
+% Right: tree cover
+% -------------------------
+\node[v1] (c1) at (8,  1) {$x_1$};
+\node[v2] (c2) at (9,  0) {$x_2$};
+\node[v3] (c3) at (8, -1) {$x_3$};
+\node[v4] (c4) at (7,  0) {$x_4$};
+
+% tree edges
+\draw[edge] (c1) -- (c2);
+\draw[edge] (c2) -- (c3);
+\draw[edge] (c3) -- (c4);
+
+% non-tree edges (grayed out)
+\draw[faded] (c4) -- (c1);
+\draw[faded] (c1) -- (c3);
+\draw[faded] (c2) -- (c4);
+
+%\node[align=center] at (8, -1.8) {Tree-cover--induced\\dependencies};
+
+\end{tikzpicture}
+\caption{Variable dependency graphs induced by different posterior approximations.
+Left: full dependency graph corresponding to a clique over four variables.
+Middle: fully factorized posterior, in which all dependencies are removed.
+Right: dependency graph induced by a tree cover; solid edges belong to the tree, while gray edges correspond to discarded dependencies.}
+\label{fig:controlled_graph_structure_dependencies}
+\end{figure}
+

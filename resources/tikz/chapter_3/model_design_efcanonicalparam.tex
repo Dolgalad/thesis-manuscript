@@ -1,0 +1,21 @@
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}[
+            every node/.style={minimum width=1.5em, minimum height=1.5em}]
+        \node[draw] (p) {Input $\PROB$};
+        \node[draw,right=1cm of p] (gnn) {GNN};
+        \node[right=2cm of gnn] (efcpdots) {$\hdots$};
+        \node[draw,above=of efcpdots] (efcp1) {$\FPARAMPRED_{\FACTOR_1}(\cdot)$};
+        \node[draw,below=of efcpdots] (efcpK) {$\FPARAMPRED_{\FACTOR_{|\VCGC|}}(\cdot)$};
+        \node[draw,right=2cm of efcpdots] (concat) {Concat};
+        \node[draw,right=of concat] (mrf) {MRF};
+        \draw[->] (p) -- (gnn) node[midway,label={$\scriptstyle \VCGFULL$}] {};
+        \draw[->] (gnn.east) -- (efcpdots.west);
+        \draw[->] (efcp1.east) -| (concat.west);
+        \draw[->] (efcpK.east) -| (concat.west);
+        \draw[->] (efcpdots.east) -- (concat.west);
+        \draw[->] (concat.east) -- (mrf.west) node[midway,label={$\scriptstyle \EPARAM \in \EPARAMDOM$}] {};
+    \end{tikzpicture}
+    \caption{GNN feature extraction and MRF parameter prediction.}
+    \label{fig:model_design_efcanonicalparam}
+\end{figure}

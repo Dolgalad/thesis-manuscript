@@ -1,0 +1,40 @@
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    node distance=1.2cm and 1.8cm,
+    box/.style={draw, rounded corners, minimum width=2.7cm, minimum height=0.9cm, align=center, font=\small},
+    group/.style={draw, rounded corners, inner sep=6pt, densely dashed},
+    arrow/.style={-Latex},
+]
+
+% --- Left: different ILP problem families ---
+\node[box] (scp) {SCP};
+\node[box, above=of scp] (mis) {MIS};
+\node[box, below=of scp] (vrp) {VRP, etc.};
+
+\node[box, right=1.3cm of scp, fill=blue!10] (policy) {Problem-agnostic\\learned policy};
+
+\draw[arrow] (mis.east) -- (policy.west);
+\draw[arrow] (scp.east) -- (policy.west);
+\draw[arrow] (vrp.east) -- (policy.west);
+
+\node[group, fit=(mis) (scp) (vrp), label=left:{\small Different ILP problems}] (problemgroup) {};
+
+% --- Right: generic solver components controlled by policy ---
+\node[box, right=1.3cm of policy, fill=green!10] (branch) {Branching /\\node selection};
+\node[box, above=of branch, fill=green!10] (cuts) {Cut selection /\\cut scheduling};
+\node[box, below=of branch, fill=green!10] (heur) {Primal heuristics /\\diving};
+\node[box, below=of heur, fill=green!10] (restart) {Restart /\\search policy};
+
+\node[group, fit=(cuts) (branch) (heur) (restart), label=right:{\small Generic solver components}] (solvergroup) {};
+
+\draw[arrow] (policy.east) -- (branch.west);
+\draw[arrow] (policy.east) |- (cuts.west);
+\draw[arrow] (policy.east) |- (heur.west);
+\draw[arrow] (policy.east) |- (restart.west);
+
+\end{tikzpicture}
+
+\caption{Illustration of problem-agnostic learning strategies: a shared learned policy is trained across heterogeneous ILP families and used to control generic solver components such as branching, node selection, cut management, primal heuristics, and restart policies.}
+\label{fig:problem_agnostic_learning}
+\end{figure}

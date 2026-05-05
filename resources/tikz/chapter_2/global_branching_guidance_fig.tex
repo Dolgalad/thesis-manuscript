@@ -1,0 +1,35 @@
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    node/.style={draw, rounded corners, minimum width=1.9cm, minimum height=0.9cm, align=center, font=\small},
+    good/.style={fill=green!20},
+    bad/.style={fill=red!20},
+    undecided/.style={fill=blue!10},
+    edge/.style={-Latex}
+]
+
+% Root
+\node[node, undecided] (root) {Node $P_0$\\Partial assign.};
+
+% Level 1
+\node[node, good, above left=1.2cm and 2.1cm of root] (n1) {Node $P_1$\\Feasible?\\{\scriptsize predicted YES}};
+\node[node, bad, above right=1.2cm and 2.1cm of root] (n2) {Node $P_2$\\Feasible?\\{\scriptsize predicted NO}};
+
+% Level 2 (children of P1)
+\node[node, good, above left=1.2cm and 1.2cm of n1] (n3) {Promising\\{\scriptsize keep}};
+\node[node, bad, above right=1.2cm and 1.2cm of n1] (n4) {Low potential\\{\scriptsize prune}};
+
+% Edges
+\draw[edge] (root) -- (n1);
+\draw[edge] (root) -- (n2);
+\draw[edge] (n1) -- (n3);
+\draw[edge] (n1) -- (n4);
+
+% Classifier box
+\node[draw, dashed, rounded corners, fit=(n1) (n2), inner sep=8pt, label=below:{\small Learned global decision model}] {};
+
+\end{tikzpicture}
+
+\caption{Illustration of global and semi-global guidance during branch-and-bound. A learned decision model evaluates partial subproblems based on global solver state and predicted node utility, producing signals that guide pruning and prioritization decisions. Rather than selecting individual branching variables, the model assesses the potential impact of subtrees, allowing the solver to focus on promising regions of the search space and discard low-utility nodes early.}
+\label{fig:global_branching_guidance_fig}
+\end{figure}

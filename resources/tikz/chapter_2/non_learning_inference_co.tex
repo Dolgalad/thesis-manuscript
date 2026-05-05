@@ -1,0 +1,48 @@
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}[
+    node distance=0.8cm and 1.2cm,
+    var/.style={circle, draw, minimum size=0.7cm, font=\scriptsize},
+    fac/.style={rectangle, draw, minimum width=0.8cm, minimum height=0.5cm, font=\scriptsize},
+    arrow/.style={-Latex, line width=0.3pt},
+    box/.style={draw, rounded corners, inner sep=4pt}
+]
+
+% Factor graph: variables
+\node[var] (x1) {$x_1$};
+\node[var, right=1.2cm of x1] (x2) {$x_2$};
+\node[var, right=1.2cm of x2] (x3) {$x_3$};
+
+% Factor nodes
+\node[fac, above=0.7cm of x1] (f1) {$f_1$};
+\node[fac, above=0.7cm of x2] (f2) {$f_2$};
+\node[fac, above=0.7cm of x3] (f3) {$f_3$};
+
+% Edges (factor graph)
+\draw (f1) -- (x1);
+\draw (f1) -- (x2);
+
+\draw (f2) -- (x1);
+\draw (f2) -- (x2);
+\draw (f2) -- (x3);
+
+\draw (f3) -- (x2);
+\draw (f3) -- (x3);
+
+% Message passing arrows (just a few illustrative ones)
+\draw[arrow] (x1.north) to[bend left=20] node[midway, left, font=\tiny] {$m_{x_1\to f_1}$} (f1.west);
+\draw[arrow] (f1.south) to[bend left=20] node[midway, right, font=\tiny] {$m_{f_1\to x_2}$} (x2.north);
+
+% Big box around factor graph
+\node[box, fit=(x1)(x2)(x3)(f1)(f2)(f3), label=above:{\scriptsize Factor graph $E(x)=\sum_\alpha f_\alpha(x_\alpha)$}] (fgbox) {};
+
+% Right: optimization interpretation
+\node[box, right=2.6cm of x2, align=center, font=\scriptsize, minimum width=3.0cm]
+    (opt) {Max-sum / BP\\$\Rightarrow$ approximate $\arg\min_x E(x)$\\(combinatorial solution)};
+
+\draw[arrow] (fgbox.east) -- (opt.west);
+\end{tikzpicture}
+
+\caption{Non-learning inference for combinatorial optimization. A combinatorial problem is encoded as an energy function on a factor graph, and max-sum or related message-passing algorithms are used to obtain approximate MAP configurations, which serve as solutions to the underlying optimization problem.}
+\label{fig:non_learning_inference_co}
+\end{figure}

@@ -1,0 +1,90 @@
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    >=Latex,
+    font=\small,
+    every path/.style={line width=0.9pt},
+    vec/.style={draw, rounded corners=1pt, minimum width=6mm, minimum height=10mm, inner sep=1pt},
+    vvec/.style={draw, rounded corners=1pt, minimum width=6mm, minimum height=10mm, inner sep=1pt, fill=green!20},
+    cvec/.style={draw, rounded corners=1pt, minimum width=6mm, minimum height=10mm, inner sep=1pt, fill=blue!20},
+    ovec/.style={draw, rounded corners=1pt, minimum width=6mm, minimum height=10mm, inner sep=1pt, fill=magenta!20},
+    tiny/.style={font=\scriptsize},
+    lbl/.style={font=\small}
+]
+
+% =========================================================
+% Left: separate variable and constraint embeddings
+% =========================================================
+\begin{scope}[xshift=0cm]
+
+\node[vvec] (hi)  at (0, 1.2) {$h_i$};
+\node[vvec] (hj)  at (0, 0.0) {$h_j$};
+
+\node[cvec] (hc1) at (0,-1.2) {$h_{c_1}$};
+\node[cvec] (hc2) at (0,-2.4) {$h_{c_2}$};
+
+\node[draw,dashed,rounded corners=3pt,inner sep=5pt,fit=(hi)(hj)(hc1)(hc2)] {};
+
+\end{scope}
+
+% =========================================================
+% Middle: attention-weighted aggregation
+% =========================================================
+\begin{scope}[xshift=4.2cm]
+
+
+% weights stack
+\node[draw,rounded corners=2pt,fill=orange!15,minimum width=11mm,minimum height=7mm] (b1) at (1.9,-1.2) {\tiny $\beta_{ij,c_1}$};
+\node[draw,rounded corners=2pt,fill=orange!15,minimum width=11mm,minimum height=7mm] (b2) at (1.9,-2.4) {\tiny $\beta_{ij,c_2}$};
+
+% weighted sum node
+\node[draw,rounded corners=3pt,fill=yellow!20,minimum width=9mm,minimum height=16mm] (sum) at (4.0,-1.8) {$\sum$};
+
+% arrows
+\draw[->] ([xshift=2mm]hc1.east) -- (b1.west);
+\draw[->] ([xshift=2mm]hc2.east) -- (b2.west);
+
+\draw[->] (b1.east) -- (sum.west |- b1.east);
+\draw[->] (b2.east) -- (sum.west |- b2.east);
+
+% aggregated constraint embedding
+%\draw[->] (sum.east) -- (5.2,-1.8);
+%\node[ovec] (hcagg) at (6.1,-1.8) {$h^c_{ij}$};
+
+% from h_i
+\begin{scope}[on background layer]
+    \draw[->] ([xshift=2mm]hi.east) -| ([xshift=1mm]b1.north);
+    \draw[->] ([xshift=2mm]hi.east) -| ([xshift=1mm]b2.north);
+    \draw[->] ([xshift=2mm]hj.east) -| ([xshift=-1mm]b1.north);
+    \draw[->] ([xshift=2mm]hj.east) -| ([xshift=-1mm]b2.north);
+\end{scope}
+
+
+\end{scope}
+
+% =========================================================
+% Right: inputs to prediction head
+% =========================================================
+\begin{scope}[xshift=12.0cm]
+
+\node[vvec] (ohi) at (0, 0.8) {$h_i$};
+\node[vvec] (ohj) at (0,-0.3) {$h_j$};
+\node[ovec] (ohc)  at (0,-1.8) {$h^c_{ij}$};
+\draw[->] (sum.east) -- ([xshift=-2mm]ohc.west);
+
+
+\begin{scope}[on background layer]
+\node[
+  draw,dashed,
+  rounded corners=3pt,
+  inner sep=4pt,
+  fit=(ohi)(ohj)(ohc)
+] {};
+\end{scope}
+
+\end{scope}
+
+\end{tikzpicture}
+\caption{Attention-based aggregation of constraint embeddings. Variable embeddings \(h_i\) and \(h_j\) remain distinct inputs, while neighboring constraint embeddings are combined into \(h^c_{ij}\) by a weighted sum with attention coefficients \(\beta_{ij,c}\) predicted from \((h_i,h_j,h_c)\).}
+\label{fig:chapter_5_structure_prediction_constr_attention_mapping_figure}
+\end{figure}

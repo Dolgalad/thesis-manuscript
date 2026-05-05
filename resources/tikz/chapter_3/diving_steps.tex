@@ -1,0 +1,89 @@
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  v/.style={circle,draw,thick,minimum size=6mm,inner sep=0pt},
+  sel/.style={circle,draw,thick,fill=green!25,minimum size=6mm,inner sep=0pt},
+  rem/.style={circle,draw,thick,fill=gray!25,minimum size=6mm,inner sep=0pt,opacity=0.9},
+  item/.style={rectangle,draw,thick,minimum width=6mm,minimum height=4mm,inner sep=0pt},
+  set/.style={rounded corners,draw,thick,inner sep=3pt},
+  every edge/.style={draw,thick},
+  >=Latex
+]
+
+% --- (A) MIS diving (left) ---
+\begin{scope}[xshift=-3.2cm]
+  \node[align=center,anchor=south] at (0,1.8) {\bf MIS dive};
+
+  % Graph layout (pentagon)
+  \node[v]   (a) at (90:1.1)  {$a$};
+  \node[v]   (b) at (18:1.1)  {$b$};
+  \node[v]   (c) at (-54:1.1) {$c$};
+  \node[v]   (d) at (-126:1.1){$d$};
+  \node[v]   (e) at (162:1.1) {$e$};
+
+  % Edges
+  \draw (a)--(b)--(c)--(d)--(e)--(a) (b)--(d) (c)--(e);
+
+  % Pick vertex b, remove its neighbors a,c
+  \node[sel] at (b) {$b$};
+  \node[rem] at (a) {$a$};
+  \node[rem] at (c) {$c$};
+
+  % Cross out neighbors
+  \foreach \x in {a,c}{
+    \draw[red,thick] ($(\x)+(-.18,.18)$) -- ($(\x)+(.18,-.18)$);
+    \draw[red,thick] ($(\x)+(.18,.18)$) -- ($(\x)+(-.18,-.18)$);
+  }
+
+  % Legend box below
+  \begin{scope}[yshift=-2.0cm]
+    \node[draw,rounded corners,inner sep=3pt,fill=white] (leg) at (0,0) {
+      \begin{tabular}{@{}ll@{}}
+        \tikz{\node[sel,minimum size=4mm]{};} & selected vertex \\
+        \tikz{\node[rem,minimum size=4mm]{};} & removed neighbor
+      \end{tabular}
+    };
+  \end{scope}
+\end{scope}
+
+% --- (B) SCP diving (right) ---
+\begin{scope}[xshift=3.8cm]
+  \node[align=center,anchor=south] at (0,1.8) {\bf SCP dive};
+
+  % Items (top row)
+  \foreach \i/\x in {1/-1.6,2/-0.8,3/0.0,4/0.8,5/1.6}{
+    \node[item] (i\i) at (\x,1.0) {$a_{\i}$};
+  }
+
+  \node[above=2pt of i1, text=green!60!black] {\small \checkmark};
+  \node[above=2pt of i2, text=green!60!black] {\small \checkmark};
+
+  % Sets (bottom row)
+  \node[set,fill=gray!10]  (S1) at (-1.2,0.0) {\small $\SET_1$};
+  \node[set,fill=green!20] (S2) at ( 0.0,0.0) {\small $\SET_2$};
+  \node[set,fill=gray!10]  (S3) at ( 1.2,0.0) {\small $\SET_3$};
+
+  % Incidence edges
+  \draw (S1.north) -- (i1.south);
+  \draw (S1.north) -- (i2.south);
+  \draw (S2.north) -- (i2.south);
+  \draw (S2.north) -- (i3.south);
+  \draw (S2.north) -- (i5.south); % unique coverage of e5
+  \draw (S3.north) -- (i3.south);
+  \draw (S3.north) -- (i4.south);
+
+  % Annotations
+
+  \begin{scope}[yshift=-2.0cm]
+    \node[draw,rounded corners,inner sep=3pt,fill=white] (leg) at (0,0) {
+      \begin{tabular}{@{}l@{}}
+        \tikz{\node[align=left,anchor=west] at (2.0,0.0) {\small \textbf{add} $\SET_2$  \small (unique cover of $e_5$)};} \\
+        \tikz{\node[align=left,anchor=east] at (-2.0,0.0) {\small \textbf{discard} $\SET_1$  \small (no new items)};}
+      \end{tabular}
+    };
+  \end{scope}
+\end{scope}
+
+\end{tikzpicture}
+\caption{Diving steps: (left) MIS—select a vertex and remove its neighbors; (right) SCP—add a set with unique coverage and discard sets adding no new items.}
+\end{figure}

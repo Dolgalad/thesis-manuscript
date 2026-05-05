@@ -1,0 +1,89 @@
+\begin{figure}[t]
+\centering
+\definecolor{GNNEGGColor}{RGB}{0,102,204}
+\definecolor{MRFEGGColor}{RGB}{200,60,40}
+\definecolor{PairMRFEGGColor}{RGB}{230,120,20}
+\definecolor{darkgray176}{RGB}{110,110,110}
+
+\newcommand{\BarWidth}{0.3}
+\newcommand{\BarInnerGap}{0}
+\newcommand{\BarGroupGap}{0.2}
+
+% usage: \drawBarGroup{800}{34/blue,52/red,41/green}
+\newcommand{\drawBarGroup}[2]{%
+  % count bars
+  \def\nBars{0}%
+  \foreach \val/\clr [count=\k] in {#2}{%
+    \xdef\nBars{\k}%
+  }%
+
+  % group geometry
+  \pgfmathsetmacro{\GroupWidth}{\nBars*\BarWidth + (\nBars-1)*\BarInnerGap}%
+  \pgfmathsetmacro{\GroupStart}{#1 - 0.5*\GroupWidth}%
+
+  % draw bars
+  \foreach \val/\clr [count=\k from 0] in {#2}{%
+    \pgfmathsetmacro{\XLeft}{\GroupStart + \k*(\BarWidth+\BarInnerGap)}%
+    \pgfmathsetmacro{\XRight}{\XLeft + \BarWidth}%
+    \edef\BarPath{%
+      \noexpand\path[draw=none,fill=\clr]%
+      (axis cs:\XLeft,0) rectangle (axis cs:\XRight,\val);%
+    }%
+    \BarPath
+  }%
+}
+
+
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.72\textwidth,
+    height=0.34\textwidth,
+    scale only axis,
+    tick align=outside,
+    tick pos=left,
+    x grid style={darkgray176},
+    y grid style={darkgray176},
+    ymajorgrids,
+    xmin=-0.7, xmax=3.7,
+    ymin=0.00, ymax=1.05,
+    log basis y={10},
+    xtick={0,1,2,3},
+    xticklabels={
+        MIS small,
+        MIS moyen,
+        SCP small,
+        SCP moyen
+    },
+    x tick label style={rotate=55, anchor=east, font=\scriptsize},
+    xtick style={draw=none},
+    ytick style={color=black},
+    ylabel={Feasible sample proportion},
+    xlabel={}
+]
+
+% MIS n=100  (Pair missing in archive, so omitted)
+\drawBarGroup{0}{0.000000/GNNEGGColor,0.936884/MRFEGGColor}
+
+% MIS n=200--300
+\drawBarGroup{1}{0.000000/GNNEGGColor,0.854000/PairMRFEGGColor,0.315000/MRFEGGColor}
+
+% SCP n=50,m=50,k=5
+\drawBarGroup{2}{0.070000/GNNEGGColor,0.220000/PairMRFEGGColor,0.830000/MRFEGGColor}
+
+% SCP n in U[120,180], m in U[150,250], k=5
+\drawBarGroup{3}{0.001000/GNNEGGColor,0.002000/PairMRFEGGColor,0.890000/MRFEGGColor}
+
+\end{axis}
+
+\node[anchor=north] at ($(current bounding box.south)+(0,-0.8cm)$) {%
+\begin{tabular}{@{}c c c@{}}
+\tikz \draw[GNNEGGColor, line width=4pt] (0,0)--(0.35,0);~GNN &
+\tikz \draw[PairMRFEGGColor, line width=4pt] (0,0)--(0.35,0);~Pair &
+\tikz \draw[MRFEGGColor, line width=4pt] (0,0)--(0.35,0);~Full
+\end{tabular}%
+};
+
+\end{tikzpicture}
+\caption{Proportion of raw diffusion samples that are already feasible before projection, aggregated over all available evaluated instances and seeds for each dataset and model architecture. Higher values indicate that the diffusion model more frequently generates feasible candidates directly.}
+\label{fig:diffusion_feasible_sample_rate}
+\end{figure}

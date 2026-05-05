@@ -1,0 +1,155 @@
+\begin{figure}[t]
+\centering
+\definecolor{GNNEGGColor}{RGB}{0,102,204}
+\definecolor{MRFEGGColor}{RGB}{200,60,40}
+\definecolor{PairMRFEGGColor}{RGB}{230,120,20}
+\definecolor{PreprocessColor}{RGB}{180,180,180}
+\definecolor{PredictionColor}{RGB}{66,133,244}
+\definecolor{DecodeColor}{RGB}{244,160,0}
+\definecolor{ProjectionColor}{RGB}{15,157,88}
+\definecolor{darkgray176}{RGB}{110,110,110}
+
+
+
+\newcommand{\BarWidth}{0.3}
+\newcommand{\BarInnerGap}{0}
+\newcommand{\BarGroupGap}{0.2}
+
+% usage: \drawBarGroup{800}{34/blue,52/red,41/green}
+\newcommand{\drawBarGroup}[2]{%
+  % count bars
+  \def\nBars{0}%
+  \foreach \val/\clr [count=\k] in {#2}{%
+    \xdef\nBars{\k}%
+  }%
+
+  % group geometry
+  \pgfmathsetmacro{\GroupWidth}{\nBars*\BarWidth + (\nBars-1)*\BarInnerGap}%
+  \pgfmathsetmacro{\GroupStart}{#1 - 0.5*\GroupWidth}%
+
+  % draw bars
+  \foreach \val/\clr [count=\k from 0] in {#2}{%
+    \pgfmathsetmacro{\XLeft}{\GroupStart + \k*(\BarWidth+\BarInnerGap)}%
+    \pgfmathsetmacro{\XRight}{\XLeft + \BarWidth}%
+    \edef\BarPath{%
+      \noexpand\path[draw=none,fill=\clr]%
+      (axis cs:\XLeft,0) rectangle (axis cs:\XRight,\val);%
+    }%
+    \BarPath
+  }%
+}
+
+\begin{tikzpicture}
+
+\begin{groupplot}[
+    group style={
+        group size=2 by 2,
+        vertical sep=2cm,
+        horizontal sep=0.55cm,
+        y descriptions at=edge left,
+        ylabels at=edge left
+    },
+    width=0.31\textwidth,
+    height=0.34\textwidth,
+    scale only axis,
+    tick align=outside,
+    tick pos=left,
+    x grid style={darkgray176},
+    y grid style={darkgray176},
+    ymajorgrids,
+    xtick style={draw=none},
+    ytick style={color=black},
+    x tick label style={rotate=55, anchor=east, font=\scriptsize},
+    xlabel={},
+    ymin=-4.000,
+    ymax=30.000,
+]
+
+% ------------------------------------------------------------------
+% MIS n=100
+% groups: EGG -> x around 0,1 ; GD -> x around 3,4 ; Diff -> x around 6,7
+% each bar width = 0.42
+% ------------------------------------------------------------------
+\nextgroupplot[
+    title={\tiny MIS $\left(\begin{array}{l}n=100\\ p=0.15\end{array}\right)$},
+    xmin=-0.8, xmax=2.8,
+    xtick={0,1,2},
+    xticklabels={EGG,GD,Diff},
+    ylabel={Rel. gap (\%)}
+]
+
+
+\drawBarGroup{0}{20.895477/GNNEGGColor,16.414787/MRFEGGColor}
+\drawBarGroup{1}{20.895477/GNNEGGColor,4.372755/MRFEGGColor}
+\drawBarGroup{2}{21.373178/GNNEGGColor,6.374957/MRFEGGColor}
+
+% ------------------------------------------------------------------
+% MIS n=200--300
+% ------------------------------------------------------------------
+\nextgroupplot[
+    title={\tiny MIS $\left(\begin{array}{l}n\in \mathcal{U}[200\text{--}300]\\ p=0.15\end{array}\right)$},
+    xmin=-0.8, xmax=2.8,
+    xtick={0,1,2},
+    xticklabels={EGG,GD,Diff},
+    ylabel={},
+    ytick style={draw=none}
+]
+
+\drawBarGroup{0}{22.685534/GNNEGGColor,18.578585/MRFEGGColor}
+\drawBarGroup{1}{22.685534/GNNEGGColor,2.910464/MRFEGGColor}
+\drawBarGroup{2}{18.913013/GNNEGGColor,11.394425/MRFEGGColor}
+
+
+% ------------------------------------------------------------------
+% SCP n=50,m=50,k=5
+% groups centered at 1,5,9 with 3 bars each
+% bar width = 0.36
+% x intervals:
+% GNN  : c-0.54 -> c-0.18
+% Pair : c-0.18 -> c+0.18
+% Full : c+0.18 -> c+0.54
+% ------------------------------------------------------------------
+\nextgroupplot[
+    title={\tiny SCP $\left(\begin{array}{l}n=50\\ m=50\\ k=5\end{array}\right)$},
+    xmin=-0.8, xmax=2.8,
+    xtick={0,1,2},
+    xticklabels={EGG,GD,Diff},
+    ylabel={Rel. gap (\%)},
+    ytick style={draw=none}
+]
+
+\drawBarGroup{0}{8.305859/GNNEGGColor,5.564848/PairMRFEGGColor,3.505455/MRFEGGColor}
+\drawBarGroup{1}{8.305859/GNNEGGColor,2.891313/PairMRFEGGColor,0.654343/MRFEGGColor}
+\drawBarGroup{2}{21.001953/GNNEGGColor,5.310842/PairMRFEGGColor,1.637172/MRFEGGColor}
+
+
+% ------------------------------------------------------------------
+% SCP U[120,180], U[150,250], k=5
+% ------------------------------------------------------------------
+\nextgroupplot[
+    title={\tiny SCP $\left(\begin{array}{l}n\in\mathcal{U}[120,180]\\ m\in\mathcal{U}[150,250]\\ k=5\end{array}\right)$},
+    xmin=-0.8, xmax=2.8,
+    xtick={0,1,2},
+    xticklabels={EGG,GD,Diff},
+    ylabel={},
+    ytick style={draw=none}
+]
+
+\drawBarGroup{0}{10.569335/GNNEGGColor,7.690221/PairMRFEGGColor,5.206983/MRFEGGColor}
+\drawBarGroup{1}{10.569335/GNNEGGColor,3.666615/PairMRFEGGColor,-0.185595/MRFEGGColor}
+\drawBarGroup{2}{25.852494/GNNEGGColor,19.655381/PairMRFEGGColor,1.003393/MRFEGGColor}
+
+\end{groupplot}
+
+\node[anchor=north] at ($(group c1r2.south)!0.5!(group c2r2.south)+(0,-1.5cm)$) {%
+\begin{tabular}{@{}c c c@{}}
+\tikz \draw[GNNEGGColor, line width=4pt] (0,0)--(0.35,0);~GNN &
+\tikz \draw[PairMRFEGGColor, line width=4pt] (0,0)--(0.35,0);~Pair &
+\tikz \draw[MRFEGGColor, line width=4pt] (0,0)--(0.35,0);~Full
+\end{tabular}%
+};
+
+\end{tikzpicture}
+\caption{Relative optimality gaps of the diffusion-based decoders, aggregated over all available evaluated instances and seeds. Bars are grouped by decoding strategy so that each cluster compares predictive model families under the same decoder.}
+\label{fig:diffusion_gap_bars}
+\end{figure}

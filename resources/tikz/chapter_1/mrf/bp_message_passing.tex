@@ -1,0 +1,65 @@
+\begin{figure}[htbp]\centering
+\begin{tikzpicture}[
+  >=Latex,
+  var/.style={circle,draw,minimum size=18pt,inner sep=1pt},
+  factor/.style={rectangle,draw,rounded corners=0pt,minimum width=16pt,minimum height=12pt,inner sep=2pt},
+  graphedge/.style={line width=0.5pt},
+  msgVF/.style={->,thick,blue!70,shorten <=2pt,shorten >=2pt},
+  msgFV/.style={->,thick,red!70,shorten <=2pt,shorten >=2pt},
+  msglabel/.style={font=\scriptsize,fill=white,inner sep=1pt}
+]
+
+% --- Nodes
+\node[var]    (x1) at (0,0)   {$X_1$}; 
+\node[var]    (x2) at (4,0)   {$X_2$};
+\node[var]    (x3) at (8,0)   {$X_3$};
+\node[factor] (u1) at (0,2)   {$\phi_1$};
+\node[factor] (u2) at (4,2)   {$\phi_2$};
+\node[factor] (u3) at (8,2)   {$\phi_2$}; % keep as provided
+\node[factor] (p12) at (2,-2) {$\psi_{12}$};
+\node[factor] (p23) at (6,-2) {$\psi_{23}$};
+
+% --- Undirected factor-graph edges
+\path[graphedge] (x1) -- (u1);
+\path[graphedge] (x2) -- (u2);
+\path[graphedge] (x3) -- (u3);
+\path[graphedge] (x1) -- (p12);
+\path[graphedge] (x2) -- (p12);
+\path[graphedge] (x2) -- (p23);
+\path[graphedge] (x3) -- (p23);
+
+% --- Message arrows (one iteration t)
+% Unary factors
+\draw[msgVF,bend left=28] (x1) to node[msglabel,pos=0.5] {$q_{1\to \phi_1}^{(t)}$} (u1);
+\draw[msgFV,bend left=28] (u1) to node[msglabel,pos=0.5] {$r_{\phi_1\to 1}^{(t)}$} (x1);
+
+\draw[msgVF,bend left=28] (x2) to node[msglabel,pos=0.5] {$q_{2\to \phi_2}^{(t)}$} (u2);
+\draw[msgFV,bend left=28] (u2) to node[msglabel,pos=0.5] {$r_{\phi_2\to 2}^{(t)}$} (x2);
+
+\draw[msgVF,bend left=28] (x3) to node[msglabel,pos=0.5] {$q_{3\to \phi_2}^{(t)}$} (u3);
+\draw[msgFV,bend left=28] (u3) to node[msglabel,pos=0.5] {$r_{\phi_2\to 3}^{(t)}$} (x3);
+
+% Pairwise factors: psi_12
+\draw[msgVF,bend left=28] (x1) to node[msglabel,pos=0.5] {$q_{1\to \psi_{12}}^{(t)}$} (p12);
+\draw[msgFV,bend left=28] (p12) to node[msglabel,pos=0.5]   {$r_{\psi_{12}\to 1}^{(t)}$} (x1);
+
+\draw[msgVF,bend left=28] (x2) to node[msglabel,pos=0.5] {$q_{2\to \psi_{12}}^{(t)}$} (p12);
+\draw[msgFV,bend left=28] (p12) to node[msglabel,pos=0.5]   {$r_{\psi_{12}\to 2}^{(t)}$} (x2);
+
+% Pairwise factors: psi_23
+\draw[msgVF,bend left=28] (x2) to node[msglabel,pos=0.5] {$q_{2\to \psi_{23}}^{(t)}$} (p23);
+\draw[msgFV,bend left=28] (p23) to node[msglabel,pos=0.5]   {$r_{\psi_{23}\to 2}^{(t)}$} (x2);
+
+\draw[msgVF,bend left=28] (x3) to node[msglabel,pos=0.5] {$q_{3\to \psi_{23}}^{(t)}$} (p23);
+\draw[msgFV,bend left=28] (p23) to node[msglabel,pos=0.5]   {$r_{\psi_{23}\to 3}^{(t)}$} (x3);
+
+% --- Legend
+\begin{scope}[shift={(0.0,-4.1)}]
+  %\node[align=left,anchor=west,font=\small] at (0,1.2) {Legend (messages in iteration $t$):};
+  \draw[msgVF] (0,0.6) -- ++(1.1,0) node[right,black,font=\scriptsize] {variable $\to$ factor $\,q_{i\to F}^{(t)}$};
+  \draw[msgFV] (0,0.1) -- ++(1.1,0) node[right,black,font=\scriptsize] {factor $\to$ variable $\,r_{F\to i}^{(t)}$};
+\end{scope}
+
+\end{tikzpicture}
+\caption{Simple factor graph with $3$ variables, unary and pairwise factors, with belief-propagation messages shown (blue: $q_{i\to F}$, red: $r_{F\to i}$).}
+\end{figure}

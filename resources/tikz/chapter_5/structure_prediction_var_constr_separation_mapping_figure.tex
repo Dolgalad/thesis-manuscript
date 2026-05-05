@@ -1,0 +1,114 @@
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    >=Latex,
+    font=\small,
+    every path/.style={line width=0.9pt},
+    vec/.style={draw, rounded corners=1pt, minimum width=6mm, minimum height=10mm, inner sep=1pt},
+    vvec/.style={draw, rounded corners=1pt, minimum width=6mm, minimum height=10mm, inner sep=1pt, fill=green!20},
+    cvec/.style={draw, rounded corners=1pt, minimum width=6mm, minimum height=10mm, inner sep=1pt, fill=blue!20},
+    ovec/.style={draw, rounded corners=1pt, minimum width=6mm, minimum height=10mm, inner sep=1pt, fill=magenta!20},
+    tiny/.style={font=\scriptsize},
+    lbl/.style={font=\small}
+]
+
+% =========================================================
+% Left: separate variable embeddings
+% =========================================================
+\begin{scope}[xshift=0cm]
+
+\node[vvec] (hi) at (0,1.2) {$h_i$};
+\node[vvec] (hj) at (0,0.0) {$h_j$};
+
+\node[cvec] (hc1) at (0,-1.2) {$h_{c_1}$};
+\node[cvec] (hc2) at (0,-2.4) {$h_{c_2}$};
+
+\node[fit=(hc1)(hc2),inner sep=2pt] (hc_group) {};
+
+\draw[
+    decorate,
+    decoration={brace, amplitude=6pt}
+]
+([xshift=6pt]hc_group.north east) -- ([xshift=6pt]hc_group.south east)
+node[midway, left=6pt] {};
+
+\node[draw,dashed,rounded corners=3pt,inner sep=5pt,fit=(hi)(hj)(hc1)(hc2)] {};
+
+\end{scope}
+
+
+% arrow from constraint set to aggregation
+
+
+% =========================================================
+% Middle: aggregation of constraint features only
+% =========================================================
+\begin{scope}[xshift=3.3cm,yshift=-2.5cm]
+\draw[->] (-2.2,0.75) -- (-1.1,0.75);
+
+% outer matrix box
+\draw[rounded corners=3pt] (-0.2,2.5) rectangle (2.1,-1.4);
+
+% first row
+\node[tiny] (ha11) at (0.45,1.7) {$h_{c_1}^{(1)}$};
+\node[tiny] (ha21) at (1.35,1.7) {$h_{c_2}^{(1)}$};
+
+% second row
+\node[tiny] at (0.45,0.95) {$h_{c_1}^{(2)}$};
+\node[tiny] at (1.35,0.95) {$h_{c_2}^{(2)}$};
+
+% dots
+\node[tiny] at (0.45,0.25) {$\vdots$};
+\node[tiny] at (1.35,0.25) {$\vdots$};
+
+% last row
+\node[tiny] at (0.45,-0.65) {$h_{c_1}^{(d)}$};
+\node[tiny] at (1.35,-0.65) {$h_{c_2}^{(d)}$};
+
+% dashed highlight on one coordinate row? no, keep column like previous
+\begin{scope}[on background layer]
+\node[
+  draw,
+  dashed,
+  rounded corners=1pt,
+  inner sep=1pt,
+  fill=yellow!20,
+  fit=(ha11)(ha21)
+] {};
+\end{scope}
+
+\draw[->] (2.9,0.75) -- (4.0,0.75);
+
+\end{scope}
+
+% arrow to aggregated constraint vector
+
+
+% =========================================================
+% Right: separate inputs to prediction head
+% =========================================================
+\begin{scope}[xshift=9.7cm]
+
+\node[vvec] (ohi) at (0,0.8) {$h_i$};
+\node[vvec] (ohj) at (0,-0.3) {$h_j$};
+
+\node[ovec] (ohc1) at (0,-1.6) {$\underset{c \in \mathcal N(\alpha)\cap C}{\square} h_c$};
+
+\begin{scope}[on background layer]
+\node[
+  draw,dashed,
+  rounded corners=3pt,
+  inner sep=4pt,
+  %fill=purple!15,
+  fit=(ohi)(ohj)(ohc1)
+] {};
+\end{scope}
+
+%\node[draw,rounded corners=3pt,inner sep=4pt,fit=(ohi)(ohj)(ohc1)] {};
+
+\end{scope}
+
+\end{tikzpicture}
+\caption{Separating variable and constraint features in the parameter prediction head. Variable embeddings \(h_i\) and \(h_j\) are kept as distinct inputs, while only neighboring constraint embeddings are aggregated coordinate-wise into a last input.}
+\label{fig:chapter_5_structure_prediction_var_constr_separation_mapping_figure}
+\end{figure}

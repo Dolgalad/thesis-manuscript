@@ -1,0 +1,137 @@
+\begin{figure}[H]
+    \centering
+
+    %--------------------- DIVING ---------------------%
+    \begin{subfigure}{0.32\textwidth}
+        \centering
+        \begin{tikzpicture}[
+            scale=1.0,
+            base/.style={circle,draw=gray!60,fill=white,inner sep=1pt,minimum size=5mm},
+            treeedge/.style={draw=gray!40},
+            feasible/.style={fill=green!30,draw=green!60!black},
+            infeasible/.style={fill=red!20,draw=red!70!black,dashed},
+            pathDiving/.style={very thick,->,>=Stealth,blue},
+        ]
+            %--- Nodes (same layout for all subfigures) ---%
+            \node[base,infeasible] (r)  at (0,0) {};
+            \node[base,infeasible] (a)  at (-1.5,-1.5) {};
+            \node[base,infeasible] (b)  at ( 1.5,-1.5) {};
+            \node[base,infeasible] (a1) at (-2.3,-3) {};
+            \node[base,feasible] (a2) at (-0.7,-3) {};
+            \node[base,feasible] (b1) at ( 0.7,-3) {};
+            \node[base,infeasible] (b2) at ( 2.3,-3) {};
+
+            %--- Tree edges (faint) ---%
+            \draw[treeedge] (r) -- (a);
+            \draw[treeedge] (r) -- (b);
+            \draw[treeedge] (a) -- (a1);
+            \draw[treeedge] (a) -- (a2);
+            \draw[treeedge] (b) -- (b1);
+            \draw[treeedge] (b) -- (b2);
+
+            %--- Diving path: root -> left child -> left grandchild ---%
+            \draw[pathDiving] (r) to[bend left=5] (a);
+            \draw[pathDiving] (a) to[bend left=5] (a1);
+
+        \end{tikzpicture}
+        \caption{Diving: single guided root-to-leaf path}
+        \label{fig:diving_path}
+    \end{subfigure}
+    \hfill
+    %--------------------- DFS ---------------------%
+    \begin{subfigure}{0.32\textwidth}
+        \centering
+        \begin{tikzpicture}[
+            scale=1.0,
+            base/.style={circle,draw=gray!60,fill=white,inner sep=1pt,minimum size=5mm},
+            feasible/.style={fill=green!30,draw=green!60!black},
+            infeasible/.style={fill=red!20,draw=red!70!black,dashed},
+            treeedge/.style={draw=gray!40},
+            pathDFS/.style={very thick,->,>=Stealth,red},
+        ]
+            %--- Nodes ---%
+            \node[base,infeasible] (r)  at (0,0) {};
+            \node[base,infeasible] (a)  at (-1.5,-1.5) {};
+            \node[base,infeasible] (b)  at ( 1.5,-1.5) {};
+            \node[base,infeasible] (a1) at (-2.3,-3) {};
+            \node[base,feasible] (a2) at (-0.7,-3) {};
+            \node[base,feasible] (b1) at ( 0.7,-3) {};
+            \node[base,infeasible] (b2) at ( 2.3,-3) {};
+
+            %--- Tree edges (faint) ---%
+            \draw[treeedge] (r) -- (a);
+            \draw[treeedge] (r) -- (b);
+            \draw[treeedge] (a) -- (a1);
+            \draw[treeedge] (a) -- (a2);
+            \draw[treeedge] (b) -- (b1);
+            \draw[treeedge] (b) -- (b2);
+
+            %--- DFS path (with backtracking, using bent arrows) ---%
+            % r -> a -> a1
+            \draw[pathDFS] (r)  to[bend left=5] (a);
+            \draw[pathDFS] (a)  to[bend left=5] (a1);
+            % backtrack a1 -> a
+            %\draw[pathDFS] (a1) to[bend left=40] (a);
+            % a -> a2
+            \draw[pathDFS] (a1)  to[bend left=5] (a2);
+
+
+        \end{tikzpicture}
+        \caption{Depth-First Search (DFS) with backtracking}
+        \label{fig:dfs_path}
+    \end{subfigure}
+    \hfill
+    %--------------------- BFS ---------------------%
+    \begin{subfigure}{0.32\textwidth}
+        \centering
+        \begin{tikzpicture}[
+            scale=1.0,
+            base/.style={circle,draw=gray!60,fill=white,inner sep=1pt,minimum size=5mm},
+            feasible/.style={fill=green!30,draw=green!60!black},
+            infeasible/.style={fill=red!20,draw=red!70!black,dashed},
+            treeedge/.style={draw=gray!40},
+            pathBFS/.style={very thick,->,>=Stealth,green!60!black},
+        ]
+            %--- Nodes ---%
+            \node[base,infeasible] (r)  at (0,0) {};
+            \node[base,infeasible] (a)  at (-1.5,-1.5) {};
+            \node[base,infeasible] (b)  at ( 1.5,-1.5) {};
+            \node[base,infeasible] (a1) at (-2.3,-3) {};
+            \node[base,feasible] (a2) at (-0.7,-3) {};
+            \node[base,feasible] (b1) at ( 0.7,-3) {};
+            \node[base,infeasible] (b2) at ( 2.3,-3) {};
+
+            %--- Tree edges (faint) ---%
+            \draw[treeedge] (r) -- (a);
+            \draw[treeedge] (r) -- (b);
+            \draw[treeedge] (a) -- (a1);
+            \draw[treeedge] (a) -- (a2);
+            \draw[treeedge] (b) -- (b1);
+            \draw[treeedge] (b) -- (b2);
+
+            %--- BFS path (level by level, with bent backtracking to root/parent) ---%
+            % Level 0 -> Level 1
+            %\draw[pathBFS] (r)  to[bend left=5] (a);
+            %\draw[pathBFS] (a)  to[bend left=40] (r);
+            %\draw[pathBFS] (r)  to[bend left=5] (b);
+            %\draw[pathBFS] (b)  to[bend left=40] (r);
+            % Level 1 -> Level 2
+            %\draw[pathBFS] (r)  to[bend left=20] (a1);
+            %\draw[pathBFS] (a1) to[bend left=40] (r);
+            %\draw[pathBFS] (r)  to[bend left=0]  (a2);
+
+            \draw[pathBFS] (r) to[bend left=5] (a);
+            \draw[pathBFS] (a) to (b);
+            \draw[pathBFS] (b) to (a1);
+            \draw[pathBFS] (a1) to (a2);
+
+            
+
+        \end{tikzpicture}
+        \caption{Breadth-First Search (BFS) visiting nodes by level}
+        \label{fig:bfs_path}
+    \end{subfigure}
+
+    \caption{Traversal paths of Diving (blue), DFS (red), and BFS (green) on the same search tree. Faint gray edges show the full tree; colored bent arrows illustrate the actual search path including backtracking.}
+    \label{fig:diving_dfs_bfs}
+\end{figure}

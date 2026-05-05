@@ -1,0 +1,129 @@
+\section{Machine Learning and Deep Learning}
+\label{sec:ml_intro}
+
+Machine Learning (ML), and in particular \emph{Deep Learning} (DL), is the field of study concerned with designing and training parameterized mathematical models to perform tasks through experience rather than explicit programming \cite{heaton_ian_2018,noauthor_pattern_2007}. Learning algorithms can be categorized in various ways, two of the most prominent paradigms being \emph{supervised} and \emph{unsupervised} learning. 
+
+In general, a machine learning model is a parameterized function 
+\begin{equation}
+    f_{\theta} : \mathcal{X} \rightarrow \mathcal{Y},
+\end{equation}
+where $\mathcal{X}$ denotes the input domain (often referred to as the \emph{feature space}), $\mathcal{Y}$ the output domain (labels or targets), and $\theta \in \Theta$ the set of \emph{trainable parameters}. The model is evaluated according to a task-specific \emph{loss function} 
+\begin{equation}
+    \mathcal{L} : \Theta \times \mathcal{X} \rightarrow \mathbb{R},
+\end{equation}
+which measures the ability of the model with parameters $\theta$ to perform the desired task on an input $x \in \mathcal{X}$. For convenience, we assume that smaller values of $\mathcal{L}$ correspond to better performance. The goal of the training process is to find parameters $\theta^*$ that minimize this loss, typically formulated as the optimization problem
+\begin{equation}
+    \label{equ:training_task}
+    \theta^* = \argmin_{\theta \in \Theta} \, \mathbb{E}_{x \sim \mathcal{D}} \, \mathcal{L}(\theta, x),
+\end{equation}
+where $\mathcal{D}$ denotes the data distribution over the input space.
+
+In \emph{supervised learning}, the dataset $\mathcal{D}$ provides labeled examples $(x, y)$, allowing direct estimation of $\theta^*$ by gradient-based optimization (e.g., stochastic gradient descent). In contrast, \emph{unsupervised learning} seeks to discover hidden structure in unlabeled data, often by optimizing surrogate objectives such as likelihoods or reconstruction errors. Many modern frameworks extend these two paradigms to encompass reinforcement learning, self-supervised learning, and generative modeling, broadening the scope of ML beyond prediction toward reasoning and structured decision-making \cite{lecun_deep_2015}.
+
+In this work, we focus on learning paradigms where ML models are used to approximate or guide optimization processes, often by learning mappings from structured problem instances to high-quality solutions or to efficient inference strategies. Such approaches are particularly relevant in the context of combinatorial optimization and probabilistic graphical models, as discussed in later sections (see \S\ref{sec:mrf_intro} and \S\ref{sec:co_intro}).
+
+
+\subsection{Supervised Learning}
+\label{sec:supervised_learning}
+
+Supervised learning refers to the class of learning strategies in which the \emph{ground truth} or target value is available during training. Formally, we assume access to a dataset of input–output pairs 
+\begin{equation}
+    \mathcal{D} = \{(x_i, y_i)\}_{i=1}^{N}, \quad x_i \in \mathcal{X}, \; y_i \in \mathcal{Y},
+\end{equation}
+where each input $x_i$ is associated with a corresponding label $y_i$ representing the correct or desired outcome. The objective is to learn a parameterized function $f_{\theta} : \mathcal{X} \rightarrow \mathcal{Y}$ capable of producing predictions $\hat{y} = f_{\theta}(x)$ that generalize well to unseen data drawn from the same underlying distribution $\mathcal{D}$.
+
+By quantifying the discrepancy between the predicted outcome $\hat{y}$ and the ground truth $y$, it becomes possible to define a \emph{loss function} $\mathcal{L}_{\text{sup}} : \Theta \times \mathcal{X} \times \mathcal{Y} \rightarrow \mathbb{R}$ that measures model performance on each training example. The learning problem is then formulated as minimizing the expected loss over the data distribution:
+\begin{equation}
+    \label{equ:supervised_learning}
+    \theta^* = \argmin_{\theta \in \Theta} \, \mathbb{E}_{(x,y) \sim \mathcal{D}} \left[ \mathcal{L}_{\text{sup}}(\theta, x, y) \right].
+\end{equation}
+
+In practice, this expectation is approximated by the empirical average over the training set:
+\begin{equation}
+    \widehat{\mathcal{L}}_{\text{sup}}(\theta) = \frac{1}{N} \sum_{i=1}^{N} \mathcal{L}_{\text{sup}}(\theta, x_i, y_i).
+\end{equation}
+
+The form of $\mathcal{L}_{\text{sup}}$ depends on the prediction task:
+\begin{itemize}
+    \item In \emph{regression} tasks, the model predicts continuous quantities and typical losses include the squared error $\mathcal{L}_{\text{sup}} = \| f_{\theta}(x) - y \|^2$ or the mean absolute error.
+    \item In \emph{classification} tasks, where the label $y$ belongs to a discrete set of classes, the loss commonly takes the form of the negative log-likelihood or cross-entropy:
+    \begin{equation}
+        \mathcal{L}_{\text{sup}}(\theta, x, y) = - \log p_{\theta}(y|x),
+    \end{equation}
+    where $p_{\theta}(y|x)$ denotes the model’s predicted probability for the correct class.
+\end{itemize}
+
+Supervised learning thus reduces to a parameter optimization problem, where $\theta$ is iteratively updated to minimize $\widehat{\mathcal{L}}_{\text{sup}}(\theta)$ using stochastic gradient descent or one of its many variants \todo{citations}. When the learned parameters generalize beyond the training data, the model effectively captures an underlying mapping between inputs and outputs, a property central to most modern applications of deep learning \todo{citations}.
+
+\subsection{Unsupervised Learning}
+\label{sec:unsupervised_learning}
+
+Unsupervised learning encompasses learning paradigms in which no explicit ground-truth labels or target outputs are provided during training. Instead, the objective is to discover latent structures, dependencies, or representations within the data itself \todo{cite bishop2006pattern,goodfellow2016deep}. Formally, given a dataset of unlabeled examples 
+\begin{equation}
+    \mathcal{D} = \{ x_i \}_{i=1}^{N}, \quad x_i \in \mathcal{X},
+\end{equation}
+the goal is to learn parameters $\theta$ that optimize a self-consistency criterion defined by a loss function $\mathcal{L}_{\text{unsup}} : \Theta \times \mathcal{X} \rightarrow \mathbb{R}$,
+\begin{equation}
+    \label{equ:unsupervised_learning}
+    \theta^* = \argmin_{\theta \in \Theta} \, \mathbb{E}_{x \sim \mathcal{D}} \left[ \mathcal{L}_{\text{unsup}}(\theta, x) \right].
+\end{equation}
+
+The precise form of $\mathcal{L}_{\text{unsup}}$ depends on the learning objective. Common unsupervised frameworks include:
+
+\paragraph{1. Representation learning and dimensionality reduction.}
+Methods such as \emph{Principal Component Analysis (PCA)}, \emph{autoencoders}, and their probabilistic extensions aim to learn low-dimensional latent representations $z = g_{\theta}(x)$ that capture the salient structure of the data. In an autoencoder, for instance, the model is composed of an encoder–decoder pair $(g_{\theta}, d_{\theta})$ trained to minimize the reconstruction error:
+\begin{equation}
+    \mathcal{L}_{\text{rec}}(\theta, x) = \| d_{\theta}(g_{\theta}(x)) - x \|^2,
+\end{equation}
+thus encouraging the latent code $z$ to capture the essential variability in $\mathcal{X}$ while discarding noise and redundancy \todo{ cite hinton2006reducing,kingma2013auto}.
+
+\paragraph{2. Density estimation and probabilistic modeling.}
+Another key class of unsupervised methods seeks to model the underlying data distribution $p_{\theta}(x)$ directly. Training such models typically involves maximizing the likelihood of the observed data, or equivalently, minimizing the negative log-likelihood loss:
+\begin{equation}
+    \mathcal{L}_{\text{nll}}(\theta, x) = - \log p_{\theta}(x).
+\end{equation}
+Examples include probabilistic graphical models such as Markov Random Fields (MRFs) and Conditional Random Fields (CRFs), as well as modern generative models like Variational Autoencoders (VAEs) \cite{kingma_introduction_2019} and Generative Adversarial Networks (GANs) \todo{cite goodfellow2014generative}. These models can capture complex dependencies between variables and generate realistic new samples from learned distributions.
+
+\paragraph{3. Clustering and self-organization.}
+In clustering-based approaches, the learning process groups similar samples together according to an implicit or explicit similarity measure. Classical algorithms include $k$-means, Gaussian mixture models, and spectral clustering. In the neural setting, differentiable clustering losses or contrastive objectives are often employed to encourage representation spaces where semantically similar samples are close together \todo{ cite oord2018representation,chen2020simple}.
+
+Overall, unsupervised learning provides a foundation for learning useful data representations and priors that can later be exploited in semi-supervised, transfer, or reinforcement learning contexts. In this work, it plays a key role in formulating models that learn from problem structure—rather than explicit supervision—especially in the context of probabilistic graphical models and combinatorial optimization, where ground-truth solutions are expensive or unavailable.
+
+
+
+\subsection{Neural Networks and Graph Neural Networks}
+\label{sec:neural_networks}
+
+Neural networks (NNs) are a class of parametric models designed to approximate complex nonlinear mappings between inputs and outputs. They are inspired by the structure of biological neurons but are best viewed as powerful function approximators that can represent a broad class of continuous functions \todo{citations hornik1989multilayer,goodfellow2016deep}. A neural network defines a function 
+\begin{equation}
+    f_{\theta} : \mathcal{X} \rightarrow \mathcal{Y},
+\end{equation}
+composed of a sequence of linear transformations followed by nonlinear activation functions:
+\begin{equation}
+    h^{(l)} = \sigma\!\left(W^{(l)} h^{(l-1)} + b^{(l)}\right), \quad l = 1, \dots, L,
+\end{equation}
+where $h^{(0)} = x \in \mathcal{X}$ is the input, $h^{(L)}$ represents the output layer, and the set of trainable parameters is $\theta = \{W^{(l)}, b^{(l)}\}_{l=1}^{L}$. The activation function $\sigma$ introduces nonlinearity (e.g., ReLU, sigmoid, or tanh), which allows the network to model complex relationships that cannot be captured by purely linear models. 
+
+During training, the parameters $\theta$ are optimized to minimize a task-specific loss function (see Equation~\ref{equ:training_task}), typically using stochastic gradient-based methods such as backpropagation and variants of gradient descent \todo{cite rumelhart1986learning,kingma2014adam}. The success of neural networks in computer vision, language modeling, and reinforcement learning has motivated their extension to domains where the data exhibit rich, relational or graph-structured dependencies.
+
+\input{resources/img/tikz/nn_tikz}
+
+\paragraph{Graph Neural Networks.}
+Many real-world problems can be naturally represented as graphs $\mathcal{G} = (\mathcal{V}, \mathcal{E})$, where $\mathcal{V}$ is the set of nodes and $\mathcal{E}$ the set of edges, encoding pairwise relationships or constraints. Traditional neural architectures (e.g., CNNs, RNNs) assume Euclidean input domains and therefore fail to directly exploit the topological structure of such data. \emph{Graph Neural Networks} (GNNs) address this limitation by defining message-passing operations that iteratively exchange information between neighboring nodes \cite{scarselli_graph_2009,kipf_semi-supervised_2017,bronstein_geometric_2017}. 
+
+Each node $i \in \mathcal{V}$ is associated with an initial feature vector $h_i^{(0)} \in \mathbb{R}^{d_0}$, and the node representations are updated through successive \emph{message passing} layers of the general form:
+\begin{equation}
+    h_i^{(l)} = \phi^{(l)} \!\left( h_i^{(l-1)}, \, \bigoplus_{j \in \mathcal{N}(i)} \psi^{(l)}(h_i^{(l-1)}, h_j^{(l-1)}, e_{ij}) \right),
+    \label{eq:gnn_message_passing}
+\end{equation}
+where $\mathcal{N}(i)$ denotes the neighborhood of node $i$, $e_{ij}$ represents optional edge features, $\bigoplus$ is a permutation-invariant aggregation operator (e.g., sum, mean, or max), and $\psi^{(l)}$ and $\phi^{(l)}$ are neural functions parameterized by trainable weights. This formulation ensures that GNNs are invariant to node permutations and can generalize across graphs of varying size and structure.
+
+After several message-passing iterations, node representations can be used to produce node-level, edge-level, or global graph-level outputs, depending on the downstream task:
+\begin{equation}
+    y = \rho\!\left( \{ h_i^{(L)} \}_{i \in \mathcal{V}} \right),
+\end{equation}
+where $\rho$ is a readout function (e.g., summation or attention pooling) producing a fixed-size representation for the graph.
+
+GNNs have emerged as a natural choice for learning in domains such as chemistry, social network analysis, combinatorial optimization, and structured prediction \todo{cite gilmer2017neural,battaglia2018relational}. In the context of combinatorial optimization, they offer a way to learn heuristics or inference rules that operate directly on graph-structured problem instances (e.g., traveling salesman, maximum independent set, or set covering), bridging the gap between neural models and discrete optimization techniques.
+
+%\input{resources/img/tikz/gnn_tikz}

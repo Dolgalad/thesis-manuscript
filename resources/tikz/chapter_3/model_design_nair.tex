@@ -1,0 +1,16 @@
+\begin{figure}[h]
+    \centering
+    \begin{tikzpicture}[
+            every node/.style={
+                minimum width=1.5em, 
+                minimum height=1.5em},
+        ]
+        \node[draw] (p) {Input $P$};
+        \node[draw,right=2cm of p] (gnn) {GNN};
+        \node[draw,right=2cm of gnn] (pred) {Prediction $\XVEC\in\{ 0,1 \}^{\NVAR}$};
+        \draw (p) -- (gnn) node[midway,label={$\scriptstyle \VCGFULL$}] {};
+        \draw (gnn) -- (pred) node[midway,label={$\scriptstyle \SCORE_i, i\in \VCGV$}] {};
+    \end{tikzpicture}
+    \caption{Model inspired by Nair et al.~\cite{nair_solving_2020}.}
+    \label{fig:model_design_nair}
+\end{figure}

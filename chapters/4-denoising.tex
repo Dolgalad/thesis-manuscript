@@ -1,0 +1,54 @@
+\label{chapter:6_denoising_and_mrf_inference}
+
+\input{resources/tikz/chapter_4/denoising_runtimes}
+
+\input{resources/tikz/chapter_4/denoising_relative_gap}
+
+\input{resources/tikz/chapter_4/denoising_decoding_pareto}
+
+\input{resources/tikz/chapter_4/denoising_diffusion_feasibility}
+
+Figure~\ref{fig:diffusion_runtime_bars} shows that runtime is overwhelmingly dominated by the decoding phase, whereas the prediction step is negligible in all configurations and the projection step adds only a minor overhead for diffusion-based decoding. The cheapest pipelines are consistently the GNN-based ones, followed by the pairwise and full MRF variants, which reflects the increasing preprocessing cost of more expressive probabilistic models. Across all datasets, \textsc{GD} is the most expensive decoding strategy by a large margin, and this gap widens on larger instances, confirming that repeatedly recomputing marginals during greedy construction induces a substantial computational burden. By contrast, \textsc{EGG} remains much cheaper, and \textsc{Diff} exhibits a similarly favorable runtime profile despite requiring a backward denoising process. Notably, on the larger MIS and SCP instances, diffusion decoding stays far closer to \textsc{EGG} than to \textsc{GD}, suggesting that its iterative refinement procedure is considerably less costly than dynamically conditioning marginals after every assignment. Overall, these results indicate that the principal runtime bottleneck lies in the choice of decoding policy rather than in the predictive model itself.
+
+The results in Figure~\ref{fig:diffusion_gap_bars} show that predictive model expressiveness and decoding policy have a strong joint effect on solution quality. Across all datasets, the full MRF model consistently attains the lowest relative gaps, while the pairwise approximation improves substantially over the GNN baseline but remains slightly behind the full model. This trend is particularly pronounced on the SCP benchmarks, where the gains from richer factorization are systematic under all three decoders. The best overall performance is obtained with \textsc{GD}, whose iterative marginal updates yield the lowest gap in every setting; the advantage is especially striking for the full MRF model, which comes close to zero gap on the small SCP instances and reaches slightly negative average gap on the larger SCP benchmark. In contrast, \textsc{EGG} is less accurate, reflecting the limitations of decoding from a fixed set of marginals without conditioning on the evolving partial solution. Diffusion decoding lies between these two extremes: although it often improves markedly over the GNN baseline and remains competitive when coupled with the structured models, its performance is less consistent, particularly on MIS and on the larger SCP benchmark. Overall, the figure suggests that structured MRF-based predictors provide a clear advantage over unstructured baselines, and that this advantage is best exploited when the decoding procedure dynamically incorporates the information revealed during solution construction.
+
+Figure~\ref{fig:diffusion_pareto} provides a consolidated view of the trade-off between solution quality and computational cost. Across all datasets, a clear Pareto structure emerges in which different model--decoder combinations occupy distinct regions of the runtime--gap space. The GNN-based methods consistently achieve the lowest runtimes, but at the cost of significantly higher optimality gaps, placing them on the fast but low-quality end of the spectrum. In contrast, MRF-based models shift the trade-off toward lower gaps, with the full MRF achieving the best solution quality overall, albeit at higher computational cost. 
+
+The proportion of feasible samples produced directly by the diffusion process varies significantly across model architectures (see Figure~\ref{fig:diffusion_feasible_sample_rate}). The GNN baseline almost never generates feasible solutions, especially on the larger instances, indicating that it fails to capture the combinatorial structure required for feasibility during generation. In contrast, the full MRF model achieves consistently high feasible-sample rates across all datasets, demonstrating that richer structured representations strongly align the diffusion dynamics with the underlying constraints. The pairwise model occupies an intermediate regime, improving substantially over the GNN but remaining less reliable than the full model. Overall, these results highlight that incorporating structured dependencies into the predictive model is crucial not only for final solution quality, but also for guiding the generative process toward feasible regions of the solution space.
+
+Among the decoding strategies, \textsc{GD} systematically produces the lowest gaps and therefore defines the lower envelope of the frontier, but incurs a substantial runtime penalty. \textsc{EGG} offers a much cheaper alternative, with moderate degradation in solution quality, while diffusion decoding typically occupies an intermediate regime, providing a favorable balance between runtime and accuracy. Notably, diffusion-based decoding often recovers a significant portion of the gains of \textsc{GD} while remaining closer in runtime to \textsc{EGG}, especially when paired with structured MRF models.
+
+Overall, the figure highlights a continuous spectrum of trade-offs: GNN models provide extremely fast but coarse solutions, pairwise and full MRF models progressively improve solution quality, and the choice of decoding strategy controls the position along the accuracy--runtime frontier. These trends are consistent across both MIS and SCP benchmarks and across problem scales, indicating that the observed trade-offs are robust.
+
+\begin{table}[t]
+\centering
+
+\resizebox{.95\linewidth}{!}{
+\begin{tabular}{l p{0.75\linewidth}}
+\toprule
+\textbf{Method} & \textbf{Description} \\
+\midrule
+
+\textbf{EGG} \\ (Entropy-Guided Greedy)
+&
+Constructs a solution sequentially using the predicted marginals.
+At each step, selects the variable with minimum entropy (i.e., highest confidence), fixes its value according to the marginal, and updates the candidate set to maintain feasibility (e.g., removing conflicting variables). The marginals are computed once and remain fixed throughout decoding. \\
+
+\addlinespace
+
+\textbf{GD} \\ (Greedy with Dynamic marginals)
+&
+Follows the same entropy-guided selection policy as EGG, but recomputes the marginals after each variable assignment. The updated marginals are conditioned on the current partial solution, allowing the model to adapt its predictions as the feasible set evolves. This improves consistency at the cost of additional computation. \\
+
+\addlinespace
+
+\textbf{Diff} \\ (Diffusion decoding)
+&
+Generates solutions by starting from a highly corrupted (random) sample and iteratively applying the learned reverse diffusion process. At each step, the model predicts a denoised distribution, gradually refining the sample toward a feasible solution. The final assignment is obtained after the full reverse trajectory. \\
+
+\bottomrule
+\end{tabular}}
+\caption{Decoding strategies used to construct feasible solutions from predicted marginals.}
+\label{tab:chapter_4_decoding_strategies}
+\end{table}
+

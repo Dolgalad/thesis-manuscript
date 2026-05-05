@@ -1,0 +1,69 @@
+\begin{figure}[htbp]
+\centering
+\resizebox{0.9\textwidth}{!}{
+\begin{tikzpicture}[
+    node distance=1.2cm and 2.0cm,
+    box/.style={draw, rounded corners, minimum width=3.1cm, minimum height=0.95cm, align=center, font=\small},
+    group/.style={draw, rounded corners, inner sep=7pt, densely dashed},
+    arrow/.style={-Latex, thick},
+    flow/.style={-Latex, thick},
+    info/.style={-Latex, dashed, thick},
+]
+
+% --- Left: different ILP problem families / distributions ---
+\node[box] (scp) {SCP instances};
+\node[box, above=of scp] (mis) {MIS instances};
+\node[box, below=of scp] (vrp) {VRP, etc.};
+
+\node[group, fit=(mis) (scp) (vrp), label=left:{\small Training / test distributions}] (problemgroup) {};
+
+% --- Center: generic solver state extracted during B\&B ---
+\node[box, right=1.6cm of scp, fill=gray!15] (state)
+{Solver state\\{\scriptsize LP relaxation, bounds, incumbents, graph features}};
+
+\draw[flow] (mis.east) -- (state.west);
+\draw[flow] (scp.east) -- (state.west);
+\draw[flow] (vrp.east) -- (state.west);
+
+% --- Learned model ---
+\node[box, right=1.6cm of state, fill=blue!10] (model)
+{Learned decision model\\{\scriptsize imitation / RL / scoring}};
+
+\draw[flow] (state.east) -- (model.west);
+
+% --- Right: solver decisions controlled by the model ---
+\node[box, right=1.8cm of model, fill=green!10] (branch)
+{Branching\\(variable selection)};
+\node[box, above=of branch, fill=green!10] (node)
+{Node selection\\(prioritization)};
+\node[box, below=of branch, fill=green!10] (cuts)
+{Cut selection/\\ scheduling};
+\node[box, below=of cuts, fill=green!10] (heur)
+{Primal heuristics\\(diving / repair)};
+\node[box, above=of node, fill=green!10] (restart)
+{Restart / search\\strategy};
+
+\node[group, fit=(restart) (node) (branch) (cuts) (heur),
+      label=right:{\small Decision points in B\&B}] (decisiongroup) {};
+
+% Arrows from model to decisions
+\draw[arrow] (model.east) -- (branch.west);
+\draw[arrow] (model.east) |- (node.west);
+\draw[arrow] (model.east) |- (cuts.west);
+\draw[arrow] (model.east) |- (heur.west);
+\draw[arrow] (model.east) |- (restart.west);
+
+% Feedback loop: decisions update solver state
+\draw[info] (branch.south) |- ([xshift=0.0cm]state.south);
+\draw[info] (node.south)   |- ([xshift=-0.3cm]state.south);
+\draw[info] (cuts.south)   |- ([xshift=0.3cm]state.south);
+
+\node[font=\scriptsize, align=center, below=0.6cm of model] (looptext)
+{Decisions update the search tree and constraints\\and therefore change subsequent solver states};
+
+\end{tikzpicture}
+}
+
+\caption{Overview of learning-augmented branch-and-bound. Across different ILP instance distributions, solver states encountered during enumeration are encoded and passed to a learned decision model (e.g., imitation learning, reinforcement learning, or learned scoring). The model outputs decisions for standard solver components such as branching, node selection, cut management, primal heuristics, and restart strategies. These decisions in turn modify the search process, creating a feedback loop through the evolving solver state.}
+\label{fig:problem_agnostic_learning}
+\end{figure}

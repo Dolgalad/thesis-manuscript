@@ -1,0 +1,62 @@
+	\begin{tikzpicture}[
+			remember picture,
+			every node/.style={
+				circle,
+				minimum height=2em,
+				minimum width=2em,
+			},
+			ampersand replacement=\&,
+			row 1/.style={
+				%nodes={fill=blue!20},
+				minimum height=2em,
+			},
+			var/.style={draw,fill=blue!20},
+			cost/.style={fill=purple!20},
+			clabel/.style={rectangle,draw,fill=green!20},
+			constr/.style={draw,fill=red!20},
+			rhs/.style={fill=orange!20},
+		]
+
+		\node[var,label=120:$\scriptstyle c_1$] (X1) at (0,0) {$x_1$};
+		\node[below=1em of X1] (xt) {$\vdots$};
+		\node[var,draw=cyan,line width=0.5mm,below=1em of xt,label=120:$\scriptstyle c_j$] (Xj) {$x_j$};
+		\node[below=1em of Xj] (xtt) {$\vdots$};
+		\node[var,below=1em of xtt,label=120:$\scriptstyle c_n$] (Xn) {$x_n$};
+
+		\node[clabel,right=4em of X1,label=60:$\scriptstyle b_1$] (R1) {$(r_1)$};
+		\node[below=1em of R1] (rt) {$\vdots$};
+		\node[clabel,draw=magenta,line width=0.5mm,below=1em of rt,label=60:$\scriptstyle b_i$] (Ri) {$(r_i)$};
+		\node[below=1em of Ri] (rtt) {$\vdots$};
+		\node[clabel,below=1em of rtt,label=60:$\scriptstyle b_m$] (Rm) {$(r_m)$};
+
+		%\path[draw] (xj) -- (ri) node[midway,label={$\scriptstyle a_{ij}$}]{$\scriptstyle a_{ij}$};
+		\path[draw=magenta,thick] (Xj) -- (Ri) node[draw=red,line width=0.5mm,midway,fill=white] (eij) {$\scriptstyle a_{ij}$};
+
+		\draw[dashed,line width=0.5mm] (X1) --+ (0:1cm);
+            	\draw[dashed,line width=0.5mm] (X1) --+ (-40:1cm);
+            	\draw[dashed,line width=0.5mm] (X1) --+ (-20:1cm);
+
+		\draw[dashed,line width=0.5mm] (Xj) --+ (20:1cm);
+            	\draw[dashed,line width=0.5mm] (Xj) --+ (-20:1cm);
+
+		\draw[dashed,line width=0.5mm] (Xn) --+ (0:1cm);
+            	\draw[dashed,line width=0.5mm] (Xn) --+ (20:1cm);
+            	\draw[dashed,line width=0.5mm] (Xn) --+ (40:1cm);
+
+		\draw[dashed,line width=0.5mm] (R1) --+ (180:1cm);
+            	\draw[dashed,line width=0.5mm] (R1) --+ (220:1cm);
+            	\draw[dashed,line width=0.5mm] (R1) --+ (200:1cm);
+
+		\draw[dashed,line width=0.5mm] (Ri) --+ (160:1cm);
+            	\draw[dashed,line width=0.5mm] (Ri) --+ (200:1cm);
+
+		\draw[dashed,line width=0.5mm] (Rm) --+ (180:1cm);
+            	\draw[dashed,line width=0.5mm] (Rm) --+ (160:1cm);
+            	\draw[dashed,line width=0.5mm] (Rm) --+ (140:1cm);
+
+
+		%\path[-] (xj) edge (ri);
+
+
+\end{tikzpicture}
+

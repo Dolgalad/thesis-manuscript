@@ -1,0 +1,196 @@
+\begin{figure}[!t]
+\centering
+\begin{tikzpicture}[
+  >=Stealth,
+  node distance=1.8cm,
+  every node/.style={font=\small},
+  vtx/.style={circle, draw, thick, minimum size=7.5mm, inner sep=0pt, fill=white},
+  agg/.style={diamond, draw, thick, inner sep=2pt, aspect=2, fill=white},
+  box/.style={rounded corners, draw=black!30, inner sep=6pt},
+  msg/.style={-{Stealth[length=2.2mm,width=1.5mm]}, thick},
+  edge/.style={thick},
+  faded/.style={black!55}
+]
+
+% ---------- Graph nodes (layer l) ----------
+\node[vtx] (v1) at (0,0) {$h^{(l)}_{1}$};
+\node[vtx] (v2) [above right=1.2cm and 2.2cm of v1] {$h^{(l)}_{2}$};
+\node[vtx] (v3) [right=3.8cm of v1] {$h^{(l)}_{3}$};
+\node[vtx] (v4) [below right=1.2cm and 2.2cm of v1] {$h^{(l)}_{4}$};
+\node[vtx,fill=white] (vi) [above right=0.0cm and 1.9cm of v1] {$h^{(l)}_{i}$};
+
+% Optional edge features label
+\node[faded] at ($(vi)!0.5!(v2)+(0,0.35)$) {$e_{2i}$};
+\node[faded] at ($(vi)!0.5!(v3)+(0.2,0.25)$) {$e_{3i}$};
+\node[faded] at ($(vi)!0.5!(v4)+(0,-0.35)$) {$e_{4i}$};
+\node[faded] at ($(vi)!0.5!(v1)+(-0.2,0)$) {$e_{1i}$};
+
+% ---------- Undirected edges ----------
+\draw[edge] (v1) -- (vi);
+\draw[edge] (v2) -- (vi);
+\draw[edge] (v3) -- (vi);
+\draw[edge] (v4) -- (vi);
+\draw[edge,faded] (v1) -- (v2);
+\draw[edge,faded] (v2) -- (v3);
+\draw[edge,faded] (v3) -- (v4);
+\draw[edge,faded] (v4) -- (v1);
+
+% ---------- Message arrows into i ----------
+\draw[msg] (v1) .. controls ($(v1)!0.5!(vi)+(-0.3,0.4)$) .. ($(vi)+(-0.3,0.0)$);
+\draw[msg] (v2) .. controls ($(v2)!0.5!(vi)+(0.15,0.35)$) .. ($(vi)+(0.05,0.25)$);
+\draw[msg] (v3) .. controls ($(v3)!0.5!(vi)+(0.25,0.0)$) .. ($(vi)+(0.35,0.0)$);
+\draw[msg] (v4) .. controls ($(v4)!0.5!(vi)+(0.10,-0.35)$) .. ($(vi)+(0.05,-0.25)$);
+
+% ---------- Aggregation operator and update ----------
+\node[agg, minimum width=7mm, inner sep=1pt] (op) at ($(vi)+(1.6,0)$) {$\bigoplus$};
+\draw[msg] (vi) -- (op);
+
+% New representation at layer l+1
+\node[vtx, fill=white] (vi2) [right=1.6cm of op] {$h^{(l+1)}_{i}$};
+\draw[msg] (op) -- (vi2);
+
+% ---------- Layer annotation (equations) ----------
+\node[align=left, anchor=west, text width=6.5cm] (eqbox) 
+  at ($(vi2)+(2.4,0)$) {$\displaystyle
+  \begin{aligned}
+  m^{(l)}_{j\rightarrow i} &= \psi^{(l)}\!\big(h^{(l)}_{i},\,h^{(l)}_{j},\,e_{ji}\big) \\
+  \tilde{h}^{(l)}_{i} &= \bigoplus_{j\in\mathcal{N}(i)} m^{(l)}_{j\rightarrow i} \\
+  h^{(l+1)}_{i} &= \phi^{(l)}\!\big(h^{(l)}_{i},\,\tilde{h}^{(l)}_{i}\big)
+  \end{aligned}$};
+
+% ---------- Readout (graph-level) ----------
+% Pool nodes -> graph embedding -> output
+\node[agg, minimum width=8mm] (pool) at ($(v3)+(0,-2.1)$) {$\rho$};
+\draw[msg] (v1) -- (pool);
+\draw[msg] (v2) -- (pool);
+\draw[msg] (v3) -- (pool);
+\draw[msg] (v4) -- (pool);
+\draw[msg] (vi) -- (pool);
+
+\node[vtx, minimum size=7mm] (gemb) [right=1.7cm of pool] {$\;g\;$};
+\draw[msg] (pool) -- (gemb);
+
+\node[rectangle, draw, thick, minimum width=10mm, minimum height=7mm, align=center] (out) 
+  [right=1.6cm of gemb] {$y$};
+\draw[msg] (gemb) -- (out);
+
+% ---------- Labels ----------
+\node[above=6pt of v2] {\textbf{Message-passing (layer $l$)}};
+\node[below=4pt of pool] {\textbf{Readout}};
+
+% ---------- Light boxes around components ----------
+\node[box, fit=(v1) (v2) (v3) (v4) (vi)] (graphbox) {};
+\node[box, fit=(pool) (gemb) (out)] (readbox) {};
+
+% ---------- Legend ----------
+\node[draw, rounded corners, align=left, anchor=north west, inner sep=5pt] at ($(graphbox.north west)+(-0.1,1.0)$) {%
+\begin{tabular}{@{}l@{ }l@{}}
+\raisebox{0.5ex}{\tikz{\node[vtx, minimum size=3.5mm]{};}} & node feature $h^{(l)}_i$ \\
+\raisebox{0.5ex}{\tikz{\draw[edge] (0,0) -- (0.5,0);}} & edge with feature $e_{ij}$ \\
+\raisebox{0.5ex}{\tikz{\draw[msg] (0,0) -- (0.6,0);}} & message $m^{(l)}_{j\to i}$ \\
+\raisebox{0.6ex}{\tikz{\node[agg, minimum width=4.5mm, inner sep=0pt] {\small$\bigoplus$};}} & permutation-invariant aggregation
+\end{tabular}
+};
+
+\end{tikzpicture}
+\caption{Graph Neural Network (GNN) schematic. Messages $m^{(l)}_{j\to i}=\psi^{(l)}(h^{(l)}_{i},h^{(l)}_{j},e_{ji})$ from neighbors $j\in\mathcal{N}(i)$ are aggregated with a permutation-invariant operator $\bigoplus$ to form $\tilde{h}^{(l)}_{i}$, followed by an update $h^{(l+1)}_{i}=\phi^{(l)}(h^{(l)}_{i},\tilde{h}^{(l)}_{i})$. A readout $\rho$ pools node embeddings into a graph-level representation $g$ for prediction $y$.}
+\label{fig:gnn_tikz}
+\end{figure}
+
+
+
+
+You said:
+the last image's layout is all over the place, make it much simpler. It should fit in the width of an a4paper
+
+
+
+ChatGPT said:
+got it — here’s a much simpler, compact GNN TikZ figure that fits comfortably within an A4 page width. It shows: a tiny graph, messages into a node 
+��
+i, aggregation 
+⨁
+⨁, the updated embedding 
+ℎ
+��
+(
+��
++
+1
+)
+h 
+i
+(l+1)
+​
+ , and a small graph-level readout. Only common TikZ libs; no big equation block.
+
+latex
+Copy code
+%=== In your preamble ===
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc}
+
+%=== Wherever you want the figure ===
+\begin{figure}[!t]
+\centering
+\begin{tikzpicture}[
+  >=Stealth,
+  every node/.style={font=\small},
+  vtx/.style={circle, draw, thick, minimum size=6.5mm, inner sep=0pt, fill=white},
+  agg/.style={diamond, draw, thick, inner sep=1.3pt, aspect=2, fill=white},
+  box/.style={rounded corners, draw=black!30, inner sep=4pt},
+  msg/.style={-{Stealth[length=2mm,width=1.2mm]}, thick},
+  edge/.style={thick, black!65}
+]
+
+% --- Small input graph (layer l) ---
+\node[vtx] (v1) at (0,0) {$h^{(l)}_{1}$};
+\node[vtx] (v2) at (1.3,1.0) {$h^{(l)}_{2}$};
+\node[vtx,fill=white] (vi) at (2.6,0.0) {$h^{(l)}_{i}$};
+\node[vtx] (v3) at (1.3,-1.0) {$h^{(l)}_{3}$};
+\node[vtx] (v4) at (-0.2,-0.9) {$h^{(l)}_{4}$};
+
+% Undirected edges (light)
+\draw[edge] (v1) -- (v2);
+\draw[edge] (v1) -- (v3);
+\draw[edge] (v2) -- (vi);
+\draw[edge] (v3) -- (vi);
+\draw[edge] (v4) -- (v1);
+
+% Messages into node i (simple curved arrows)
+\draw[msg] (v1) .. controls ($(v1)!0.5!(vi)+(0,0.35)$) .. ($(vi)+(-0.15,0.25)$);
+\draw[msg] (v2) .. controls ($(v2)!0.5!(vi)+(0.15,0.25)$) .. ($(vi)+(0.15,0.18)$);
+\draw[msg] (v3) .. controls ($(v3)!0.5!(vi)+(0.10,-0.30)$) .. ($(vi)+(0.10,-0.20)$);
+\draw[msg] (v4) .. controls ($(v4)!0.5!(vi)+(-0.05,-0.15)$) .. ($(vi)+(-0.20,-0.18)$);
+
+% Aggregation operator and update
+\node[agg, minimum width=6mm] (op) at ($(vi)+(1.4,0)$) {$\bigoplus$};
+\draw[msg] (vi) -- (op);
+
+\node[vtx] (vi2) at ($(op)+(1.6,0)$) {$h^{(l+1)}_{i}$};
+\draw[msg] (op) -- (vi2);
+
+% Tiny readout (graph-level)
+\node[rectangle, draw, thick, minimum width=7mm, minimum height=6mm, right=10mm of vi2] (out) {$y$};
+\node[draw, circle, minimum size=6.2mm, inner sep=0pt, left=6mm of out] (gemb) {$g$};
+\draw[msg] (vi2) -- (gemb);
+\draw[msg] (gemb) -- (out);
+
+% Short labels (compact)
+\node[above=2pt of vi] {Message passing};
+\node[below=0pt of gemb] {Readout};
+
+% Minimal legend (very compact)
+\node[align=left, anchor=north west, draw, rounded corners, inner sep=3pt]
+  at ([xshift=-2pt,yshift=6pt]v1.north west) {%
+  \begin{tabular}{@{}l@{}}
+  \tikz{\node[vtx, minimum size=4mm]{};} node $h^{(l)}$ \\
+  \tikz{\draw[msg] (0,0)--(0.55,0);} message \\
+  \tikz{\node[agg, minimum width=4.2mm]{\tiny$\bigoplus$};} aggregation \\
+  \end{tabular}
+};
+
+\end{tikzpicture}
+\caption{Compact GNN schematic. Neighbors send messages to node $i$, messages are aggregated with a permutation-invariant operator $\bigoplus$, then $h^{(l+1)}_{i}$ is produced. A simple readout pools to graph embedding $g$ and prediction $y$.}
+\label{fig:gnn_tikz}
+\end{figure}

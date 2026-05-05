@@ -1,0 +1,78 @@
+% \begin{figure}[h!]
+% \centering
+% \begin{forest}{
+% for tree={
+%     draw,
+%     rounded corners,
+%     align=center,
+%     minimum width=2.2cm,
+%     minimum height=1cm,
+%     inner sep=2pt,
+%     font=\small
+% },
+% % --- Colors ---
+% good/.style={fill=green!20},
+% bad/.style={fill=red!20},
+% neutral/.style={fill=blue!10},
+% % --- Global B&B styling ---
+% edge label/.style={midway, sloped, font=\scriptsize},
+% }
+% % ---------------- TREE ----------------
+% [P$_0$\\(root)\\{\color{blue}select $x_1$}, neutral
+%     [P$_1$\\{\color{blue}$x_1 \le 0$}, good,
+%         edge label={node[midway,above]{\scriptsize branch}}
+%     ]
+%     [P$_2$\\{\color{blue}$x_1 \ge 1$}, neutral,
+%         edge label={node[midway,above]{\scriptsize branch}}
+%         [P$_3$\\{\color{blue}select $x_2$}, neutral
+%             [P$_5$\\{\color{blue}$x_2 \le 0$}, bad,
+%                 edge label={node[midway,above]{\scriptsize prune}}
+%             ]
+%             [P$_6$\\{\color{blue}$x_2 \ge 1$}, good,
+%                 edge label={node[midway,above]{\scriptsize feasible}}
+%             ]
+%         ]
+%         [P$_4$\\{\color{blue}$x_2 \ge 1$}, bad,
+%             edge label={node[midway,above]{\scriptsize prune}}
+%         ]
+%     ]
+% ]
+% \end{forest}
+% \caption{Illustration of Branch-and-Bound showing variable selection, branching, and bounding/pruning.}
+% \label{fig:branch_and_bound_tree}
+% \end{figure}
+
+
+\begin{figure}[h!]
+\centering
+\begin{forest}
+for tree={
+    draw,
+    rounded corners,
+    align=center,
+    minimum width=2.2cm,
+    minimum height=1cm,
+    inner sep=2pt,
+    font=\small
+},
+good/.style={fill=green!20},
+bad/.style={fill=red!20},
+neutral/.style={fill=blue!10}
+[P$_0$\\(root)\\{\color{blue}select $x_1$}, neutral
+    [P$_1$\\{\color{blue}$x_1 \le 0$}, good,
+        edge label={node[midway,above,font=\scriptsize]{branch}}
+    ]
+    [P$_2$\\{\color{blue}$x_1 \ge 1$}\\{\color{blue}select $x_2$}, neutral,
+        edge label={node[midway,above,font=\scriptsize]{branch}}
+        [P$_5$\\{\color{blue}$x_2 \le 0$}, bad,
+            edge label={node[midway,above,font=\scriptsize]{prune}}
+        ]
+        [P$_6$\\{\color{blue}$x_2 \ge 1$}, good,
+            edge label={node[midway,above,font=\scriptsize]{feasible}}
+        ]
+    ]
+]
+\end{forest}
+\caption{Illustration of Branch-and-Bound showing variable selection, branching, and bounding/pruning.}
+\label{fig:branch_and_bound_tree}
+\end{figure}

@@ -1,0 +1,448 @@
+%%%%%%%%%%%%% Doing my own template
+%%%%%%%%%%%%% Following the specifications of
+% http://bu.univ-amu.libguides.com/c.php?g=511743&p=4025195
+%%%%%%%%%%%%% Sober amu thesis template
+% temp
+
+% LAYOUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Using the report class
+\documentclass[12pt, 			% Recommended
+               twoside,         % SHOULD BE
+               %singlespacing
+			  ]{report}
+
+%%% Margins
+\usepackage[%a4paper,
+		%width=150mm,
+		top=25mm,
+		bottom=25mm,
+            right=25mm,
+            left=25mm,
+            % Offset to bind pages
+            bindingoffset=6mm,  
+            % To make room for the header
+            headheight=20mm,    
+           ]{geometry}
+           
+\usepackage[english, french]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+% Fonts and symbols
+\usepackage{amsmath,amssymb}
+\usepackage{dsfont}
+\usepackage{algorithm2e}
+\usepackage{multirow}
+\usepackage{float}
+\usepackage{lscape} 
+\usepackage{booktabs}
+\usepackage{siunitx}
+\sisetup{
+  separate-uncertainty = true, % supports "±"
+  detect-weight = true,
+  %detect-inline-weight = math
+}
+\sisetup{separate-uncertainty = true, mode = math, table-number-alignment = center}
+
+
+\usepackage{forest}
+\forestset{
+  declare toks={left branch prefix}{},
+  declare toks={right branch prefix}{},
+  declare toks={left branch suffix}{},
+  declare toks={right branch suffix}{},
+  maths branch labels/.style={
+    branch label/.style={
+      if n=1{
+        edge label={node [left, midway] {$\forestoption{left branch prefix}##1\forestoption{left branch suffix}$}},
+      }{
+        edge label={node [right, midway] {$\forestoption{right branch prefix}##1\forestoption{right branch suffix}$}},
+      }
+    },
+  },
+  set branch labels/.style n args=4{%
+    left branch prefix={#1},
+    left branch suffix={#2},
+    right branch prefix={#3},
+    right branch suffix={#4},
+  },
+  branch and bound/.style={
+    /tikz/every label/.append style=tree node label,
+    maths branch labels,
+    for tree={
+      tree node,
+      math content,
+      s sep'+=20mm,
+      l sep'+=5mm,
+      thick,
+      edge+={thick},
+    },
+    before typesetting nodes={
+      for tree={
+        split option={content}{:}{content,branch label},
+      },
+    },
+  },
+  tree node/.style = {align=center, inner sep=0pt, draw, circle, minimum size=18},
+  tree node label/.style={font=\scriptsize},
+}
+
+% Line spacing - 1 is normal, 1.3 is onehalf and 1.6 is double spacing
+\linespread{1}
+
+% Highlight stuff for revisions + colors and units
+\usepackage{color}
+\usepackage[dvipsnames,x11names]{xcolor}
+\definecolor{darkgreen}{rgb}{0.1,0.7,0.07}
+\definecolor{mypink1}{RGB}{111,174,208}
+\definecolor{lightmauve}{rgb}{0.86, 0.82, 1.0}
+
+% To make todo notes, exemple in the intro
+\usepackage[textwidth=3cm]{todonotes}
+% commandes todo
+\newcommand\todol[1]{\todo[inline]{#1}}
+\newcommand\todolc[2]{\todo[inline,color=#1]{#2}}
+\newcommand\todog[1]{\todo[inline,color=green!20]{#1}}
+
+\usepackage{tikz}
+\usetikzlibrary{graphs,graphs.standard,fit}
+\usetikzlibrary{positioning} 
+\usetikzlibrary{calc}
+\usetikzlibrary{backgrounds}
+\usetikzlibrary{arrows.meta,shapes.misc}
+\usetikzlibrary{shapes}
+\usetikzlibrary{matrix}
+\usetikzlibrary{plotmarks}
+
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{statistics} % <-- provides 'violin'
+\usepgfplotslibrary{fillbetween}
+
+%\usepackage{pgfplotstable}
+\usepackage{csvsimple}
+\pgfplotsset{width=10cm,compat=1.9}
+
+%%% Change titles & stuff
+%\makeatletter
+%\renewcommand{\@chapapp}{Chapitre}
+%\makeatother
+%\renewcommand{\abstractname}{Résumé}
+%\renewcommand{\contentsname}{Table des matières}
+%\renewcommand{\listfigurename}{Liste des Figures}
+%\renewcommand{\listtablename}{Liste des Tableaux}
+%\renewcommand \tablename{Tableau}
+%\renewcommand{\appendixname}{Annexes}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Miscellaneous packages %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% For figures
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage[graphicx]{realboxes}
+
+% blocks
+\usepackage{amsthm}
+\newtheorem{lemma}{Lemme}
+\newtheorem{proposition}{Proposition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{conjecture}{Conjecture}
+\newtheorem{notation}{Notation}
+\newtheorem{example}{Example}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\newcommand{\independent}{\protect\mathpalette{\protect\independenT}{\perp}}
+\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}   
+
+%%% Header & Footer
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[RO,LE]{\rightmark}
+\fancyfoot{}
+\fancyfoot[LE,RO]{\thepage}
+\fancyfoot[CE,CO]{\leftmark}
+\fancyfoot[RE,LO]{Alexandre Schulz}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% To include pdfs, like articles, directly
+%\usepackage{pdfpages}            
+
+
+% For text boxes spanning multiple pages
+% And to add a color to it
+\usepackage{framed}
+% Access the different colors here
+% http://mirrors.standaloneinstaller.com/ctan/macros/latex/contrib/xcolor/xcolor.pdf page 40
+\colorlet{shadecolor}{LightSteelBlue1}
+\colorlet{framecolor}{Blue4}
+
+% New environment for shaded frames
+\newenvironment{frshaded}{%
+\def\FrameCommand{
+\fboxrule=\FrameRule
+\fboxsep=\FrameSep
+\fcolorbox{framecolor}{shadecolor}
+}%
+\MakeFramed {\FrameRestore}}%
+{\endMakeFramed}
+% Use like this
+%\begin{frshaded}
+%\end{frshaded}
+
+% For appendices
+\usepackage[toc,page]{appendix}
+% And change the names
+%\renewcommand{\appendixname}{Annexe}
+%\renewcommand{\appendixtocname}{Annexes}
+%\renewcommand{\appendixpagename}{Annexes}
+
+% Line breaks in text
+% Warning: should find something better for urls >.<
+\sloppy
+
+% Add quotes
+%\usepackage{dirtytalk}
+
+% Fancy tables
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{array}
+
+\usepackage{tabularx}
+% breakable, ragged column types:
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash\hspace{0pt}}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash\hspace{0pt}}X}
+
+% Urls
+\usepackage{url}
+
+% for pdf docs to read on computers
+% use this when compiling the pdf version (to send by mail)
+% comment it when you want to print it
+\usepackage{hyperref}
+
+% Package only for the template
+\usepackage{lipsum}
+
+% index
+\usepackage{makeidx}
+\makeindex 
+
+% to comment whole passages
+\usepackage{comment}
+\usepackage{todonotes}
+
+
+
+% style dans tout le document
+\usepackage{setspace}
+\onehalfspacing
+\everymath{\displaystyle}
+
+% math notations
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Glossary %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% if you need a glossary
+% \usepackage{glossaries}         
+% \makeglossaries
+
+% \newglossaryentry{ABF}{name=ABF, description={Adaptive Biasing Force}}
+
+% Use \newglossaryentry{utc}{name=UTC, description={Coordinated Universal Time}} to add a glossary entry within the document
+% Use gls{utc} to use that entry somewhere
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Bibliography %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Required to generate language-dependent quotes in the bibliography
+\usepackage[autostyle=true]{csquotes}
+
+% Use biber - way better than bibtex
+\usepackage[backend=biber,
+% 			citestyle=numeric-comp,
+%             bibstyle=numeric,
+%            citestyle=authoryear,
+%            bibstyle=authoryear,
+            style=alphabetic,
+            %dashed=false,
+            sorting=nyt,
+            natbib=true,
+            doi=false,
+            url=false,
+            isbn=false,
+            eprint=false,
+            giveninits=true,
+            uniquename=init,
+            maxcitenames=1, 
+            minbibnames=6, 
+            maxbibnames=6
+            ]{biblatex}
+
+% The filename of the bibliography
+\addbibresource{references.bib} 
+% To escape some underscores in the .bib exported from mendeley
+\DeclareSourcemap{ % Used when .bib/Bibliography is compiled, not when document is
+    \maps{
+        \map{
+            \step[fieldsource=isbn,
+                  match=\regexp{^([0-9Xx-]+)\s+([0-9Xx-]+)$},
+                  replace=\regexp{$1}]
+        }
+        \map{
+            \step[fieldsource=isbn,
+                  match=\regexp{^([0-9Xx-]+)(\s+[0-9Xx-]+)+$},
+                  replace=\regexp{$1}]
+        }
+        \map{ % Replaces '{\_}', '{_}' or '\_' with just '_'
+            \step[fieldsource=url,
+                  match=\regexp{\{\\\_\}|\{\_\}|\\\_},
+                  replace=\regexp{\_}]
+        }
+        \map{ % Replaces '{'$\sim$'}', '$\sim$' or '{~}' with just '~'
+            \step[fieldsource=url,
+                  match=\regexp{\{\$\\sim\$\}|\{\~\}|\$\\sim\$},
+                  replace=\regexp{\~}]
+        }
+        \map{ % Replaces '{\_}', '{_}' or '\_' with just '_'
+            \step[fieldsource=doi,
+                  match=\regexp{\{\\\_\}|\{\_\}|\\\_},
+                  replace=\regexp{\_}]
+        }
+        \map{ % Replaces '{'$\sim$'}', '$\sim$' or '{~}' with just '~'
+            \step[fieldsource=doi,
+                  match=\regexp{\{\$\\sim\$\}|\{\~\}|\$\\sim\$},
+                  replace=\regexp{\~}]
+        }
+    }
+}
+
+% Start with roman numbers until the introduction
+\pagenumbering{roman}
+
+% handle the abbverviations ?
+% Basic abbreviation page here, you can play around with the two "5cm"
+% To increase or decrease the spacing between the abbreviation and the words
+\usepackage{calc}
+\makeatletter
+\newcommand{\tocfill}{\cleaders\hbox{$\m@th \mkern\@dotsep mu . \mkern\@dotsep mu$}\hfill}
+\makeatother
+\newcommand{\abbrlabel}[1]{\makebox[2cm][l]{\textbf{#1}\ \tocfill}}
+\newenvironment{abbreviations}{\begin{list}{}{\renewcommand{\makelabel}{\abbrlabel}%
+        \setlength{\labelwidth}{2cm}\setlength{\leftmargin}{\labelwidth+\labelsep}%
+                                              \setlength{\itemsep}{0pt}}}{\end{list}}
+                                              
+% crossed text, if you need it
+%\usepackage[normalem]{ulem}
+
+\usepackage{chronology}
+\usepackage{pgf}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+%% Macros
+\input{macros}
+
+%% Title pages
+\input{misc/titleLIPN}
+%\input{misc/titleUQAM}
+
+%\addcontentsline{toc}{chapter}{Thanks}
+%\input{misc/remerciements}
+
+\tableofcontents
+
+\addcontentsline{toc}{chapter}{List of Figures}
+\listoffigures
+
+%\addcontentsline{toc}{chapter}{Liste des Tableaux}
+%\listoftables
+
+\addcontentsline{toc}{chapter}{Abbreviations}
+\input{misc/abbrev}
+
+% %%% Abstract
+%\input{misc/abstract}
+
+% MAIN TEXT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% normal numbering from here
+\pagenumbering{arabic}
+
+%%%% Each chapter is in a different file
+%% In the [], how the chapter will be called in the table of contents
+%% In the {}, the name of the chapter in the text
+%% The chaptermark is the name of the chapter in the footer
+%%% You want a small enough chaptermark or it will overflow to the sides
+
+\addcontentsline{toc}{chapter}{Introduction}
+\chapter*{Introduction}\label{chap0:intro}
+\chaptermark{Introduction}
+\input{chapters/0-intro}
+
+\chapter{Background}\label{chap1:background}
+\chaptermark{Background}
+\input{chapters/1-background}
+
+\chapter{Related Work}\label{chap2:related_work}
+\chaptermark{Related Work}
+\input{chapters/2-related_work}
+
+% \chapter{Differentiable MRF Inference for Training CO Solution Predictors}\label{chap3:differentiable_mrf}
+% \chaptermark{Differentiable MRF Inference}
+% \input{chapters/3-nair_mrf}
+
+\chapter{Denoising and MRF inference}\label{chap4:denoising}
+\chaptermark{Denoising and MRF inference}
+\input{chapters/4-denoising}
+
+% \chapter{Feature-to-Factor Mappings for Approximate MRF inference}\label{chap5:f2f_mapping}
+% \chaptermark{Feature-to-Factor Mappings}
+% \input{chapters/5-feature-to-factor_mappings}
+
+
+
+% \chapter*{Conclusion}
+% \addcontentsline{toc}{chapter}{Conclusion}
+% \input{chapters/6-conclusion}
+
+%%%% Bibliography before appendices
+%%%% After the initial round, you need to fix it by hand depending on where you generate your .bib file from
+%%%% Mendeley often messes with italics and accents for instance
+\printbibliography
+
+% Appendices
+%\input{chapters/appendix}
+
+
+\cleardoublepage
+\addcontentsline{toc}{chapter}{INDEX}
+\pagecolor{white}
+\printindex
+
+\end{document}

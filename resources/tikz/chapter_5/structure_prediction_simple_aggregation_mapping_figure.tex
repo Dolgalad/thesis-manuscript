@@ -1,0 +1,109 @@
+% Preamble:
+% \usepackage{tikz}
+% \usetikzlibrary{arrows.meta,positioning,fit,calc,backgrounds}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    >=Latex,
+    font=\small,
+    every path/.style={line width=0.9pt},
+    vec/.style={draw, rounded corners=1pt, minimum width=5mm, minimum height=10mm, inner sep=0pt},
+    vvec/.style={draw, rounded corners=1pt, minimum width=5mm, minimum height=10mm, inner sep=0pt, fill=green!20},
+    cvec/.style={draw, rounded corners=1pt, minimum width=5mm, minimum height=10mm, inner sep=0pt, fill=blue!20},
+    tiny/.style={font=\scriptsize},
+    lbl/.style={font=\small}
+]
+
+% =========================================================
+% Left: input set of embeddings
+% =========================================================
+\begin{scope}[xshift=0cm]
+
+\node[vvec] (h1) at (0,1.8) {$h_i$};
+\node[vvec] (h2) at (0,0.75) {$h_j$};
+\node[cvec] (h3) at (0,-0.3) {$h_c$};
+
+% dashed grouping box
+\node[draw,dashed,rounded corners=3pt,inner sep=5pt,fit=(h1)(h2)(h3)] (ingroup) {};
+
+\end{scope}
+
+% arrow to matrix
+\draw[->] (0.9,0.7) -- (2.0,0.7);
+
+% =========================================================
+% Middle: stacked coordinates / pooling picture
+% =========================================================
+\begin{scope}[xshift=2.8cm,yshift=0.2cm]
+
+% outer matrix box
+\draw[rounded corners=3pt] (-0.2,2.5) rectangle (2.9,-1.4);
+
+% first row
+\node[tiny] (hi1) at (0.45,1.7) {$h_i^{(1)}$};
+\node[tiny] (hj1) at (1.35,1.7) {$h_j^{(1)}$};
+\node[tiny] (hc1) at (2.25,1.7) {$h_c^{(1)}$};
+
+% second row
+\node[tiny] at (0.45,0.95) {$h_i^{(2)}$};
+\node[tiny] at (1.35,0.95) {$h_j^{(2)}$};
+\node[tiny] at (2.25,0.95) {$h_j^{(2)}$};
+
+% dots
+\node[tiny] at (0.45,0.25) {$\vdots$};
+\node[tiny] at (1.35,0.25) {$\vdots$};
+\node[tiny] at (2.25,0.25) {$\vdots$};
+
+% last row
+\node[tiny] at (0.45,-0.65) {$h_i^{(d)}$};
+\node[tiny] at (1.35,-0.65) {$h_j^{(d)}$};
+\node[tiny] at (2.25,-0.65) {$h_{|N(\alpha)|}^{(d)}$};
+
+% dashed highlight on one column
+\begin{scope}[on background layer]
+\node[
+  draw,
+  dashed,
+  rounded corners=1pt,
+  inner sep=1pt,
+  fill=yellow!20,
+  fit=(hi1)(hj1)(hc1)
+] (ingroup_o) {};
+\end{scope}
+
+\end{scope}
+
+% arrow to matrix
+\draw[->] (6.4,0.7) -- (7.5,0.7);
+
+% =========================================================
+% Right: output embedding
+% =========================================================
+\begin{scope}[xshift=6.9cm]
+
+\node[tiny] (ha1) at (2,1.8) {$h_{\alpha}^{(1)}$};
+\node[tiny] (ha2) at (2,0.75) {$\vdots$};
+\node[tiny] (ha3) at (2,-0.3) {$h_{\alpha}^{(d)}$};
+
+\begin{scope}[on background layer]
+\node[
+  draw,
+  rounded corners=3pt,
+  inner sep=1pt,
+  fill=purple!15,
+  fit=(ha1)(ha2)(ha3)
+] (ingroup_a) {};
+\end{scope}
+
+\node[draw,rounded corners=3pt,inner sep=1pt,fit=(ha1)(ha2)(ha3)] (ingroup_a) {};
+
+\node[tiny,right=3mm of ha1] {$ = \square \left( h_i^{(1)}, h_j^{(1)}, h_c^{(1)} \right)$};
+\node[tiny,right=3mm of ha3] {$ = \square \left( h_i^{(d)}, h_j^{(d)}, h_c^{(d)} \right)$};
+
+\end{scope}
+
+\end{tikzpicture}
+\caption{Permutation-invariant construction of the factor embedding \(h_{\alpha}\) from the embeddings of the nodes in $N(\alpha) = \{ i,j,c \}$, illustrated here with coordinate-wise aggregation $\square$.}
+\label{fig:chapter_5_structure_prediction_simple_aggregation_mapping_figure}
+\end{figure}

@@ -1,0 +1,190 @@
+% Preamble:
+% \usepackage{tikz}
+% \usetikzlibrary{arrows.meta,positioning,fit,calc,backgrounds}
+
+\begin{figure}[H]
+\centering
+\resizebox{.99\linewidth}{!}{
+\begin{tikzpicture}[
+    >=Latex,
+    font=\small,
+    every path/.style={line width=0.9pt},
+    vvec/.style={draw, rounded corners=1pt, minimum width=7mm, minimum height=10mm, inner sep=1pt, fill=green!20},
+    cvec/.style={draw, rounded corners=1pt, minimum width=7mm, minimum height=10mm, inner sep=1pt, fill=blue!20},
+    pvec/.style={draw, rounded corners=1pt, minimum width=7mm, minimum height=10mm, inner sep=1pt, fill=gray!15},
+    ovec/.style={draw, rounded corners=1pt, minimum width=8mm, minimum height=10mm, inner sep=1pt, fill=magenta!20},
+    tiny/.style={font=\scriptsize},
+    lbl/.style={font=\small},
+    block/.style={draw, rounded corners=3pt, minimum width=15mm, minimum height=10mm, align=center, fill=orange!15}
+]
+
+% =========================================================
+% Left: dependency tokens for one target factor
+% =========================================================
+\begin{scope}[xshift=0cm]
+\node[vvec] (hi) at (0,1.8) {$h_i$};
+\node[vvec] (hj) at (0,0.6) {$h_j$};
+\node[cvec] (hc1) at (0,-0.8) {$h_{c_1}$};
+\node[cvec] (hc2) at (0,-2.0) {$h_{c_2}$};
+
+\node[draw,dashed,rounded corners=3pt,inner sep=5pt,fit=(hi)(hj)(hc1)(hc2)] {};
+%\node[lbl] at (0,-3.0) {dependencies of $\alpha'$};
+\end{scope}
+
+\draw[->] (0.8,-0.1) -- (1.9,-0.1);
+
+% =========================================================
+% Middle-left: packed tensor slice g0[m,:,:]
+% =========================================================
+\begin{scope}[xshift=2cm,yshift=-0.1cm]
+
+% front face
+\coordinate (A) at (0,1.5);
+\coordinate (B) at (2.7,1.5);
+\coordinate (C) at (2.7,-1.9);
+\coordinate (D) at (0,-1.9);
+
+% depth shift
+\coordinate (s) at (0.45,0.35);
+
+% back face
+\coordinate (A2) at ($(A)+(s)$);
+\coordinate (B2) at ($(B)+(s)$);
+\coordinate (C2) at ($(C)+(s)$);
+\coordinate (D2) at ($(D)+(s)$);
+
+% draw parallelepiped
+\fill[gray!6] (A) -- (B) -- (C) -- (D) -- cycle;
+\fill[gray!10] (A) -- (A2) -- (B2) -- (B) -- cycle;
+\fill[gray!14] (B) -- (B2) -- (C2) -- (C) -- cycle;
+
+\draw (A) -- (B) -- (C) -- (D) -- cycle;
+\draw (A) -- (A2) -- (B2) -- (B);
+\draw (B2) -- (C2) -- (C);
+%\draw[dashed] (A2) -- (D2) -- (C2);
+%\draw[dashed] (D) -- (D2);
+
+
+% token separators on front face
+\draw (0,0.65) -- (2.7,0.65);
+\draw (0,-0.20) -- (2.7,-0.20);
+\draw (0,-1.05) -- (2.7,-1.05);
+
+%\draw[dashed] (0,0.65) -- ($(0,0.65)+(s)$);
+%\draw[dashed] (0,-0.20) -- ($(0,-0.20)+(s)$);
+%\draw[dashed] (0,-1.05) -- ($(0,-1.05)+(s)$);
+
+\draw (2.7,0.65) -- ($(2.7,0.65)+(s)$);
+\draw (2.7,-0.20) -- ($(2.7,-0.20)+(s)$);
+\draw (2.7,-1.05) -- ($(2.7,-1.05)+(s)$);
+
+
+% labels inside slice
+\node[tiny] at (1.05,1.08) {$h_i\in\mathbb{R}^d$};
+\node[tiny] at (1.05,0.22) {$h_j\in\mathbb{R}^d$};
+\node[tiny] at (1.05,-0.63) {$h_{c_1}\in\mathbb{R}^d$};
+\node[tiny] at (1.05,-1.48) {$h_{c_2}\in\mathbb{R}^d$};
+
+% \node[tiny] at (2.15,1.08) {$\in\mathbb{R}^d$};
+% \node[tiny] at (2.15,0.22) {$\in\mathbb{R}^d$};
+% \node[tiny] at (2.15,-0.63) {$\in\mathbb{R}^d$};
+% \node[tiny] at (2.15,-1.48) {$\in\mathbb{R}^d$};
+
+% tensor labels
+\node[lbl] at (1.6,-2.75) {$g_0[m,:,:] \in \mathbb{R}^{S\times d}$};
+%\node[tiny] at (3.45,-0.2) {$m$};
+%\node[tiny] at (1.35,1.95) {$S$};
+%\node[tiny] at (3.05,1.85) {$d$};
+
+\end{scope}
+
+%\draw[->] (6.2,-0.1) -- (7.2,-0.1);
+
+% =========================================================
+% Middle: transformer stack
+% =========================================================
+\begin{scope}[xshift=7.8cm,yshift=-0.1cm]
+\node[block] (tr1) at (0,1.5) {MHA};
+\node[block] (tr2) at (0,0) {FFN};
+\node[block] (tr3) at (0,-1.5) {LN};
+
+\draw[->] (-2.5,-0) -- ++(1,0) |- (tr1.west);
+\draw[->] (tr1.south) -- (tr2.north);
+\draw[->] (tr2.south) -- (tr3.north);
+\draw[->] (tr3.east) -- ++(1.5,0) node[midway,fill=white] (tr_mid) {$g_\ell$} -- ++(0,1.5) -- ++(0.5,0);
+
+\draw[->] (tr_mid.south) -- ++(0,-.75) -- ++(-3,0) -- ++(0,4) |- (tr1.west);
+
+\node[lbl] at (0,-3.0) {$L$ transformer layers};
+\end{scope}
+
+% =========================================================
+% Right: output tensor slice gL[m,:,:]
+% =========================================================
+\begin{scope}[xshift=10.6cm,yshift=-0.1cm]
+
+% front face
+\coordinate (E) at (0,1.5);
+\coordinate (F) at (2.7,1.5);
+\coordinate (G) at (2.7,-1.9);
+\coordinate (H) at (0,-1.9);
+
+% depth shift
+\coordinate (t) at (0.45,0.35);
+
+% back face
+\coordinate (E2) at ($(E)+(t)$);
+\coordinate (F2) at ($(F)+(t)$);
+\coordinate (G2) at ($(G)+(t)$);
+\coordinate (H2) at ($(H)+(t)$);
+
+% draw parallelepiped
+\fill[magenta!8] (E) -- (F) -- (G) -- (H) -- cycle;
+\fill[magenta!12] (E) -- (E2) -- (F2) -- (F) -- cycle;
+\fill[magenta!16] (F) -- (F2) -- (G2) -- (G) -- cycle;
+
+\draw (E) -- (F) -- (G) -- (H) -- cycle;
+\draw (E) -- (E2) -- (F2) -- (F);
+\draw (F2) -- (G2) -- (G);
+%\draw[dashed] (E2) -- (H2) -- (G2);
+%\draw[dashed] (H) -- (H2);
+
+% token separators on front face
+\draw (0,0.65) -- (2.7,0.65);
+\draw (0,-0.20) -- (2.7,-0.20);
+\draw (0,-1.05) -- (2.7,-1.05);
+
+\draw (2.7,0.65) -- ($(2.7,0.65)+(t)$);
+\draw (2.7,-0.20) -- ($(2.7,-0.20)+(t)$);
+\draw (2.7,-1.05) -- ($(2.7,-1.05)+(t)$);
+
+% labels inside slice
+\node[tiny] at (1.15,1.08) {$\tilde h_i \in \mathbb{R}^d$};
+\node[tiny] at (1.15,0.22) {$\tilde h_j \in \mathbb{R}^d$};
+\node[tiny] at (1.15,-0.63) {$\tilde h_{c_1} \in \mathbb{R}^d$};
+\node[tiny] at (1.15,-1.48) {$\tilde h_{c_2} \in \mathbb{R}^d$};
+
+\node[lbl] at (1.6,-2.75) {$g_L[m,:,:] \in \mathbb{R}^{S\times d}$};
+
+\end{scope}
+
+\draw[->] (13.8,-0.1) -- (14.6,-0.1);
+
+\node[draw,rounded corners=3pt,fill=yellow!20,minimum width=9mm,minimum height=16mm] (sum) at (15,-0.1) {$\sum$};
+
+% =========================================================
+% Far right: pooled / selected representation
+% =========================================================
+\begin{scope}[xshift=15.5cm,yshift=-0.1cm]
+\node[ovec] (hout) at (1,-0) {$h_{\alpha}$};
+\draw[->] (sum.east) -- (hout.west);
+%\node[lbl] at (0,-1.1) {factor embedding};
+\end{scope}
+
+% overall title-ish annotation
+%\node[lbl] at (8.0,2.25) {$g_0 \in \mathbb{R}^{N\times S\times d} \;\longrightarrow\; g_L \in \mathbb{R}^{N\times S\times d}$};
+
+\end{tikzpicture}}
+\caption{Transformer-based feature mapping. For each target factor $\alpha'$, the embeddings of its dependent variables and constraints are packed into a tensor slice $g_0[m,:,:] \in \mathbb{R}^{S\times d}$. A stack of transformer layers produces contextualized representations $g_L[m,:,:]$, from which the factor embedding $h_{\alpha}$ is derived. Over all target factors, the full tensor has shape $g_0,g_L \in \mathbb{R}^{N\times S\times d}$.}
+\label{fig:chapter_5_structure_prediction_transformer_mapping_figure}
+\end{figure}

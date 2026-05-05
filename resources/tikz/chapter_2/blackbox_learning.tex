@@ -1,0 +1,38 @@
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    node distance=0.9cm and 1.4cm,
+    box/.style={draw, rounded corners, minimum width=2.2cm,
+                minimum height=0.75cm, align=center, font=\scriptsize},
+    arrow/.style={-Latex, line width=0.3pt},
+    dashedbox/.style={draw, rounded corners, densely dashed, inner sep=4pt}
+]
+
+% Neural model
+\node[box, fill=blue!10] (model) {Neural model\\(proposal)};
+\node[box, below=0.9cm of model] (sample) {Candidate\\solution};
+
+\draw[arrow] (model) -- (sample);
+
+% CO solver
+\node[box, fill=green!10, right=2.6cm of sample] (solver) {CO solver\\(black-box)};
+\draw[arrow] (sample.east) -- (solver.west);
+
+% Repair / feedback
+\node[box, fill=yellow!20, above=0.85cm of solver] (repair) {Repair / validate};
+\draw[arrow] (solver.north) -- (repair.south);
+
+% Feedback loop
+\node[box, fill=blue!10, above=0.85cm of model] (update) {Learning update};
+\draw[arrow] (repair.west) -- (update.east);
+\draw[arrow] (update.south) -- (model.north);
+
+% Group labels
+\node[dashedbox, fit=(model)(update), label=left:{\tiny Learning system}] {};
+\node[dashedbox, fit=(solver)(repair), label=right:{\tiny CO solver (oracle)}] {};
+
+\end{tikzpicture}
+
+\caption{Illustration of black-box learning with a CO solver. A neural model proposes candidate solutions, which are evaluated and possibly repaired by a conventional optimization solver. The solver's feedback is used to improve the proposal mechanism without requiring differentiability or solver-side modifications.}
+\label{fig:blackbox_learning}
+\end{figure}

@@ -1,0 +1,51 @@
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    node distance=0.8cm and 1.4cm,
+    box/.style={draw, rounded corners, minimum width=2.5cm,
+                minimum height=0.8cm, align=center, font=\scriptsize},
+    arrow/.style={-Latex, line width=0.3pt},
+    dashedbox/.style={draw, rounded corners, densely dashed, inner sep=4pt}
+]
+
+% ---------------- Left: Problem families ----------------
+\node[box] (graph) {Graph problems\\{\tiny MIS, MVC, MaxCut}};
+\node[box, below=0.6cm of graph] (routing) {Routing problems\\{\tiny TSP, VRP}};
+\node[box, below=0.6cm of routing] (set) {Set problems\\{\tiny SCP, SPP}};
+
+\node[dashedbox, fit=(graph)(routing)(set), label=left:{\tiny Problem families}] {};
+
+% ---------------- Middle: Specialized models ----------------
+\node[box, fill=blue!10, right=2.4cm of graph] (gnn) {Graph neural\\networks};
+\node[box, fill=blue!10, right=2.4cm of routing] (pointer) {Pointer nets /\\Transformers};
+\node[box, fill=blue!10, right=2.4cm of set] (hyper) {Bipartite /\\Hypergraph nets};
+
+\node[dashedbox, fit=(gnn)(pointer)(hyper),
+      label=above:{\tiny Specialized architectures}] {};
+
+% Arrows (left → middle)
+\draw[arrow] (graph.east) -- (gnn.west);
+\draw[arrow] (routing.east) -- (pointer.west);
+\draw[arrow] (set.east) -- (hyper.west);
+
+% ---------------- Right: Example behaviors ----------------
+\node[box, fill=green!10, right=2.4cm of gnn] (graphbeh) {Message passing\\greedy policies};
+\node[box, fill=green!10, right=2.4cm of pointer] (routebeh) {Autoregressive\\tour construction};
+\node[box, fill=green!10, right=2.4cm of hyper] (setbeh) {Coverage-aware\\set selection};
+
+\node[dashedbox, fit=(graphbeh)(routebeh)(setbeh),
+      label=right:{\tiny Learned behaviours}] {};
+
+% Arrows (middle → right)
+\draw[arrow] (gnn.east) -- (graphbeh.west);
+\draw[arrow] (pointer.east) -- (routebeh.west);
+\draw[arrow] (hyper.east) -- (setbeh.west);
+
+\end{tikzpicture}
+
+\caption{Specialized learning architectures tailored to combinatorial families.
+Graph-structured problems typically use graph neural networks; routing problems rely
+on pointer networks or transformer-style decoders; and set-based problems benefit
+from bipartite or hypergraph neural encodings aligned with the problem structure.}
+\label{fig:specialized_architectures}
+\end{figure}

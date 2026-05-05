@@ -1,0 +1,42 @@
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=1.2,>=Stealth]
+
+  % Coordinate axes
+  \draw[->] (-0.2,0) -- (4.2,0) node[anchor=west] {$x_1$};
+  \draw[->] (0,-0.2) -- (0,3.2) node[anchor=south] {$x_2$};
+
+  % Integer grid points
+  \foreach \x in {0,1,2,3,4}
+    \foreach \y in {0,1,2,3}
+      \fill[black!40] (\x,\y) circle (0.03);
+
+  % LP relaxation feasible region (a polygon)
+  \filldraw[fill=blue!10,draw=blue!60]
+    (0.5,0.5) --
+    (3.5,0.5) --
+    (3.0,2.5) --
+    (0.7,2.8) --
+    cycle;
+
+  % Original LP optimum (fractional)
+  \fill[blue!80] (2.8,1.4) circle (0.06);
+  \node[anchor=west,blue!80] at (2.8,1.4) {$x^{\text{LP}}$};
+
+  % Cutting plane (valid inequality) cutting off x^LP
+  \draw[thick,red]
+    (0.2,2.3) -- (3.7,1.4);
+  \node[anchor=south east,red] at (3.7,1.4) {cut};
+
+  % New feasible region after cut (just outline intersection)
+  % (for illustration: show only boundary segment)
+  \draw[red,dashed]
+    (0.7,2.8) -- (0.2,2.3);
+
+  % Highlight an integer feasible solution inside the cut polytope
+  \fill[green!70!black] (2,2) circle (0.07);
+  \node[anchor=south west,green!70!black] at (2,2) {$x^{\text{IP}}$};
+
+\end{tikzpicture}
+\caption{Illustration of a cutting plane removing a fractional LP optimum while preserving integer-feasible solutions.}
+\end{figure}

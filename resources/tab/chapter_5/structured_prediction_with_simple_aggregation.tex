@@ -1,0 +1,113 @@
+\begin{table}[H]
+\centering
+\resizebox{0.9\textwidth}{!}{
+\begin{tabular}{llcccccc}
+\toprule
+Dataset & Model & \multicolumn{3}{c}{Decimation} & \multicolumn{3}{c}{Greedy} \\
+\cmidrule(lr){3-5} \cmidrule(lr){6-8}
+ &  & Gap Avg. (\%) $\downarrow$ & Best (\%) $\downarrow$ & t (s) & Gap Avg. (\%) $\downarrow$ & Best (\%) $\downarrow$ & t (s) \\
+\midrule
+\multirow{4}{*}{SCP $\left(\begin{array}{l}n=50\\ m=50\\ k=5\end{array}\right)$}
+& Var. Logits
+& $7.486 (\pm 6.869)$
+& $7.468$
+& $0.096 (\pm 0.005)$
+& $15.107 (\pm 9.576)$
+& $14.695$
+& $0.011 (\pm 0.001)$ \\
+
+& MRF LBP
+& $1.653 (\pm 4.220)$
+& $1.066$
+& $0.991 (\pm 0.083)$
+& $6.100 (\pm 7.365)$
+& $5.973$
+& $0.005 (\pm 0.001)$ \\
+\cmidrule(lr){2-8}
+
+& P.0 MST
+& $7.570 (\pm 6.881)$
+& $7.504$
+& $1.102 (\pm 0.052)$
+& $15.006 (\pm 9.543)$
+& $14.322$
+& $0.009 (\pm 0.001)$ \\
+
+& P.0 ($\alpha' \leq 2$)
+& $2.924 (\pm 4.804)$
+& $2.801$
+& $1.285 (\pm 0.046)$
+& $9.850 (\pm 8.457)$
+& $9.448$
+& $0.008 (\pm 0.001)$ \\
+\bottomrule
+
+\multirow{4}{*}{SCP $\left(\begin{array}{l}n=120\text{-}180\\ m=150\text{-}250\\ k=5\end{array}\right)$}
+& Var. Logits
+& $9.548 (\pm 3.960)$
+& $9.414$
+& $0.734 (\pm 0.142)$
+& $19.129 (\pm 6.041)$
+& $18.863$
+& $0.087 (\pm 0.020)$ \\
+
+& MRF LBP
+& $0.847 (\pm 2.360)$
+& $0.784$
+& $3.361 (\pm 0.389)$
+& $7.873 (\pm 4.567)$
+& $7.815$
+& $0.043 (\pm 0.008)$ \\
+\cmidrule(lr){2-8}
+
+& P.0 MST
+& $9.484 (\pm 3.817)$
+& $9.376$
+& $2.464 (\pm 0.340)$
+& $18.937 (\pm 6.112)$
+& $18.805$
+& $0.048 (\pm 0.010)$ \\
+
+& P.0 ($\alpha' \leq 2$)
+& $6.943 (\pm 3.524)$
+& $6.831$
+& $0.744 (\pm 0.118)$
+& $12.948 (\pm 5.361)$
+& $12.823$
+& $0.087 (\pm 0.224)$ \\
+
+\midrule
+\multirow{3}{*}{SCP $\left(\begin{array}{l}n=150\text{-}300\\ m=150\text{-}300\\ k=15\end{array}\right)$}
+& Var. Logits
+& $16.509 (\pm 5.774)$
+& $16.242$
+& $0.925 (\pm 0.360)$
+& $36.884 (\pm 9.104)$
+& $36.715$
+& $0.080 (\pm 0.054)$ \\
+\cmidrule(lr){2-8}
+
+& P.0 MST
+& $16.902 (\pm 5.811)$
+& $16.522$
+& $5.278 (\pm 1.200)$
+& $37.384 (\pm 9.479)$
+& $36.174$
+& $0.064 (\pm 0.020)$ \\
+
+& P.0 ($\alpha' \leq 2$)
+& $45.974 (\pm 9.532)$
+& $37.205$
+& $24.243 (\pm 7.166)$
+& $93.978 (\pm 15.475)$
+& $77.028$
+& $0.090 (\pm 0.029)$ \\
+
+\bottomrule
+\end{tabular}}
+\caption{
+Performance of simple aggregation (Proposal 0) across datasets of increasing constraint arity. 
+Results are averaged over seeds. Lower is better.
+}
+\label{tab:chapter_5_proposal0_summary}
+\end{table}

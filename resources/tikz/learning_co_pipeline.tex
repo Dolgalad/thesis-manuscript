@@ -1,0 +1,14 @@
+\begin{tikzpicture}[every node/.style={minimum height=3em},text width=2cm]
+                \node[draw,text width=1.5cm] (p) {Problem $P$};
+                \node[draw=blue,above=of p] (data) {Solved problems $\{P_n,y_n\}$};
+                \node[draw,right=of p,text width=2cm] (fg) {Predictor model};
+                \node[draw,right=of fg,text width=2cm] (afg) {Scores $s_v$};
+                \node[draw,right=of afg,text width=2cm] (inf) {Guided CO Solver};
+                \node[draw,right=of inf,text width=2cm] (sol) {Solution};
+                %\node[draw,right=of inf] (sol) {Solution};
+                \path[->,draw] (p) -- (fg)
+                      (fg) -- (afg)
+                      (afg) -- (inf) -- (sol);
+                \path[->,draw=blue] (data) -- (fg);
+\end{tikzpicture}
+

@@ -1,0 +1,469 @@
+\begin{figure}[t]
+\centering
+
+% --- GNN (anchor) ---
+\definecolor{GNNEGGColor}{RGB}{0,102,204}      % strong blue
+% --- EGG family (warm + green) ---
+\definecolor{MRFEGGColor}{RGB}{200,60,40}      % red
+\definecolor{PairMRFEGGColor}{RGB}{230,120,20} % dark orange
+\definecolor{TreeMRFEGGColor}{RGB}{0,140,100}  % teal green
+% --- GD family (cool / distinct) ---
+\definecolor{MRFGDColor}{RGB}{140,80,160}      % purple
+\definecolor{PairMRFGDColor}{RGB}{0,150,180}   % cyan (dark enough)
+\definecolor{TreeMRFGDColor}{RGB}{120,120,40}  % olive
+% --- neutrals ---
+\definecolor{darkgray176}{RGB}{110,110,110}
+\definecolor{lightgray204}{RGB}{200,200,200}
+
+\begin{tikzpicture}
+\begin{groupplot}[
+    group style={
+        group size=3 by 2,
+        horizontal sep=0.2cm,
+        vertical sep=0.2cm,
+        x descriptions at=edge bottom,
+        y descriptions at=edge left
+    },
+    width=0.34\textwidth,
+    height=0.34\textwidth,
+    xmin=0,
+    ymin=-0.02, ymax=1.02,
+    xlabel={$t$},
+    ylabel={EGG $\overline{x}_{i}^{(t)}$},
+    tick align=outside,
+    tick pos=left,
+    xmajorgrids,
+    ymajorgrids,
+    x grid style={darkgray176},
+    y grid style={darkgray176},
+    legend cell align={left},
+    %unbounded coords=jump,
+]
+
+
+
+% =========================================================
+% Top row: EGG
+% =========================================================
+
+\nextgroupplot[
+    title={\tiny SCP $\left(\begin{array}{l}n=50\\ m=50\\ k=5\end{array}\right)$},
+    xtick style={draw=none},
+    xmin=0,
+    xmax=50,
+]
+\addplot[name path=full_up_egg_1, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn__value__mean}+\thisrow{gnn__value__std}
+]{resources/data/chapter_5/scp_n50_m50_k5_egg_selected_variable_diagnostics.csv};
+\addplot[name path=full_lo_egg_1, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn__value__mean}-\thisrow{gnn__value__std}
+]{resources/data/chapter_5/scp_n50_m50_k5_egg_selected_variable_diagnostics.csv};
+\addplot[GNNEGGColor, fill opacity=0.2] fill between[of=full_up_egg_1 and full_lo_egg_1];
+\addplot[semithick, GNNEGGColor]
+table[col sep=comma, x=iter, y=gnn__value__mean]
+{resources/data/chapter_5/scp_n50_m50_k5_egg_selected_variable_diagnostics.csv};
+
+\addplot[name path=full_up_egg_1, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn_lbp_full__value__mean}+\thisrow{gnn_lbp_full__value__std}
+]{resources/data/chapter_5/scp_n50_m50_k5_egg_selected_variable_diagnostics.csv};
+\addplot[name path=full_lo_egg_1, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn_lbp_full__value__mean}-\thisrow{gnn_lbp_full__value__std}
+]{resources/data/chapter_5/scp_n50_m50_k5_egg_selected_variable_diagnostics.csv};
+\addplot[MRFEGGColor, fill opacity=0.2] fill between[of=full_up_egg_1 and full_lo_egg_1];
+\addplot[semithick, MRFEGGColor]
+table[col sep=comma, x=iter, y=gnn_lbp_full__value__mean]
+{resources/data/chapter_5/scp_n50_m50_k5_egg_selected_variable_diagnostics.csv};
+
+\addplot[name path=pair_up_egg_1, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn_lbp_pair__value__mean}+\thisrow{gnn_lbp_pair__value__std}
+]{resources/data/chapter_5/scp_n50_m50_k5_egg_selected_variable_diagnostics.csv};
+\addplot[name path=pair_lo_egg_1, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn_lbp_pair__value__mean}-\thisrow{gnn_lbp_pair__value__std}
+]{resources/data/chapter_5/scp_n50_m50_k5_egg_selected_variable_diagnostics.csv};
+\addplot[PairMRFEGGColor, fill opacity=0.2] fill between[of=pair_up_egg_1 and pair_lo_egg_1];
+\addplot[semithick, PairMRFEGGColor]
+table[col sep=comma, x=iter, y=gnn_lbp_pair__value__mean]
+{resources/data/chapter_5/scp_n50_m50_k5_egg_selected_variable_diagnostics.csv};
+
+\addplot[name path=tree_up_egg_1, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn_lbp_tree__value__mean}+\thisrow{gnn_lbp_tree__value__std}
+]{resources/data/chapter_5/scp_n50_m50_k5_egg_selected_variable_diagnostics.csv};
+\addplot[name path=tree_lo_egg_1, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn_lbp_tree__value__mean}-\thisrow{gnn_lbp_tree__value__std}
+]{resources/data/chapter_5/scp_n50_m50_k5_egg_selected_variable_diagnostics.csv};
+\addplot[TreeMRFEGGColor, fill opacity=0.2] fill between[of=tree_up_egg_1 and tree_lo_egg_1];
+\addplot[semithick, TreeMRFEGGColor]
+table[col sep=comma, x=iter, y=gnn_lbp_tree__value__mean]
+{resources/data/chapter_5/scp_n50_m50_k5_egg_selected_variable_diagnostics.csv};
+
+\nextgroupplot[
+    title={\tiny SCP $\left(\begin{array}{l}n\in\mathcal{U}[120,180]\\ m\in\mathcal{U}[150,250]\\ k=5\end{array}\right)$},
+    ylabel={},
+    yticklabels={},
+    ytick style={draw=none},
+    xtick style={draw=none},
+    xmin=0,
+    xmax=180,
+]
+\addplot[name path=full_up_egg_1, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn__value__mean}+\thisrow{gnn__value__std}
+]{resources/data/chapter_5/scp_n120-180_m150-250_k5_egg_selected_variable_diagnostics.csv};
+\addplot[name path=full_lo_egg_1, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn__value__mean}-\thisrow{gnn__value__std}
+]{resources/data/chapter_5/scp_n120-180_m150-250_k5_egg_selected_variable_diagnostics.csv};
+\addplot[GNNEGGColor, fill opacity=0.2] fill between[of=full_up_egg_1 and full_lo_egg_1];
+\addplot[semithick, GNNEGGColor]
+table[col sep=comma, x=iter, y=gnn__value__mean]
+{resources/data/chapter_5/scp_n120-180_m150-250_k5_egg_selected_variable_diagnostics.csv};
+
+\addplot[name path=full_up_egg_2, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn_lbp_full__value__mean}+\thisrow{gnn_lbp_full__value__std}
+]{resources/data/chapter_5/scp_n120-180_m150-250_k5_egg_selected_variable_diagnostics.csv};
+\addplot[name path=full_lo_egg_2, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn_lbp_full__value__mean}-\thisrow{gnn_lbp_full__value__std}
+]{resources/data/chapter_5/scp_n120-180_m150-250_k5_egg_selected_variable_diagnostics.csv};
+\addplot[MRFEGGColor, fill opacity=0.2] fill between[of=full_up_egg_2 and full_lo_egg_2];
+\addplot[semithick, MRFEGGColor]
+table[col sep=comma, x=iter, y=gnn_lbp_full__value__mean]
+{resources/data/chapter_5/scp_n120-180_m150-250_k5_egg_selected_variable_diagnostics.csv};
+
+\addplot[name path=pair_up_egg_2, draw=none]
+table[
+    col sep=comma,
+    %unbounded coords=jump,
+    x=iter,
+    y expr=\thisrow{gnn_lbp_pair__value__mean}+\thisrow{gnn_lbp_pair__value__std}
+]{resources/data/chapter_5/scp_n120-180_m150-250_k5_egg_selected_variable_diagnostics.csv};
+\addplot[name path=pair_lo_egg_2, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn_lbp_pair__value__mean}-\thisrow{gnn_lbp_pair__value__std}
+]{resources/data/chapter_5/scp_n120-180_m150-250_k5_egg_selected_variable_diagnostics.csv};
+\addplot[PairMRFEGGColor, fill opacity=0.2] fill between[of=pair_up_egg_2 and pair_lo_egg_2];
+\addplot[semithick, PairMRFEGGColor]
+table[col sep=comma, x=iter, y=gnn_lbp_pair__value__mean]
+{resources/data/chapter_5/scp_n120-180_m150-250_k5_egg_selected_variable_diagnostics.csv};
+
+\addplot[name path=tree_up_egg_2, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn_lbp_tree__value__mean}+\thisrow{gnn_lbp_tree__value__std}
+]{resources/data/chapter_5/scp_n120-180_m150-250_k5_egg_selected_variable_diagnostics.csv};
+\addplot[name path=tree_lo_egg_2, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn_lbp_tree__value__mean}-\thisrow{gnn_lbp_tree__value__std}
+]{resources/data/chapter_5/scp_n120-180_m150-250_k5_egg_selected_variable_diagnostics.csv};
+\addplot[TreeMRFEGGColor, fill opacity=0.2] fill between[of=tree_up_egg_2 and tree_lo_egg_2];
+\addplot[semithick, TreeMRFEGGColor]
+table[col sep=comma, x=iter, y=gnn_lbp_tree__value__mean]
+{resources/data/chapter_5/scp_n120-180_m150-250_k5_egg_selected_variable_diagnostics.csv};
+
+\nextgroupplot[
+    title={\tiny SCP $\left(\begin{array}{l}n\in\mathcal{U}[150,300]\\ m\in\mathcal{U}[150,300]\\ k=15\end{array}\right)$},
+    ylabel={},
+    yticklabels={},
+    %empty cells with={nan},
+    %unbounded coord=jump,
+    ytick style={draw=none},
+    xtick style={draw=none},
+    xmin=0,
+    xmax=300,
+]
+\addplot[name path=full_up_egg_1, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn__value__mean}+\thisrow{gnn__value__std}
+]{resources/data/chapter_5/scp_n150-300_m150-300_k15_egg_selected_variable_diagnostics.csv};
+\addplot[name path=full_lo_egg_1, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn__value__mean}-\thisrow{gnn__value__std}
+]{resources/data/chapter_5/scp_n150-300_m150-300_k15_egg_selected_variable_diagnostics.csv};
+\addplot[GNNEGGColor, fill opacity=0.2] fill between[of=full_up_egg_1 and full_lo_egg_1];
+\addplot[semithick, GNNEGGColor]
+table[col sep=comma, x=iter, y=gnn__value__mean]
+{resources/data/chapter_5/scp_n150-300_m150-300_k15_egg_selected_variable_diagnostics.csv};
+
+\addplot[name path=pair_up_egg_3, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn_lbp_pair__value__mean}+\thisrow{gnn_lbp_pair__value__std}
+]{resources/data/chapter_5/scp_n150-300_m150-300_k15_egg_selected_variable_diagnostics.csv};
+\addplot[name path=pair_lo_egg_3, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn_lbp_pair__value__mean}-\thisrow{gnn_lbp_pair__value__std}
+]{resources/data/chapter_5/scp_n150-300_m150-300_k15_egg_selected_variable_diagnostics.csv};
+\addplot[PairMRFEGGColor, fill opacity=0.2] fill between[of=pair_up_egg_3 and pair_lo_egg_3];
+\addplot[semithick, PairMRFEGGColor]
+table[col sep=comma, x=iter, y=gnn_lbp_pair__value__mean]
+{resources/data/chapter_5/scp_n150-300_m150-300_k15_egg_selected_variable_diagnostics.csv};
+
+\addplot[name path=tree_up_egg_3, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn_lbp_tree__value__mean}+\thisrow{gnn_lbp_tree__value__std}
+]{resources/data/chapter_5/scp_n150-300_m150-300_k15_egg_selected_variable_diagnostics.csv};
+\addplot[name path=tree_lo_egg_3, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn_lbp_tree__value__mean}-\thisrow{gnn_lbp_tree__value__std}
+]{resources/data/chapter_5/scp_n150-300_m150-300_k15_egg_selected_variable_diagnostics.csv};
+\addplot[TreeMRFEGGColor, fill opacity=0.2] fill between[of=tree_up_egg_3 and tree_lo_egg_3];
+\addplot[semithick, TreeMRFEGGColor]
+table[col sep=comma, x=iter, y=gnn_lbp_tree__value__mean]
+{resources/data/chapter_5/scp_n150-300_m150-300_k15_egg_selected_variable_diagnostics.csv};
+
+% =========================================================
+% Bottom row: GD
+% =========================================================
+
+\nextgroupplot[
+    ylabel={GD $\overline{x}_{i}^{(t)}$},
+    xmin=0,
+    xmax=50,
+]
+\addplot[name path=full_up_gd_1, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn_lbp_full__value__mean}+\thisrow{gnn_lbp_full__value__std}
+]{resources/data/chapter_5/scp_n50_m50_k5_gd_selected_variable_diagnostics.csv};
+\addplot[name path=full_lo_gd_1, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn_lbp_full__value__mean}-\thisrow{gnn_lbp_full__value__std}
+]{resources/data/chapter_5/scp_n50_m50_k5_gd_selected_variable_diagnostics.csv};
+\addplot[MRFGDColor, fill opacity=0.2] fill between[of=full_up_gd_1 and full_lo_gd_1];
+\addplot[semithick, MRFGDColor]
+table[col sep=comma, x=iter, y=gnn_lbp_full__value__mean]
+{resources/data/chapter_5/scp_n50_m50_k5_gd_selected_variable_diagnostics.csv};
+
+\addplot[name path=pair_up_gd_1, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn_lbp_pair__value__mean}+\thisrow{gnn_lbp_pair__value__std}
+]{resources/data/chapter_5/scp_n50_m50_k5_gd_selected_variable_diagnostics.csv};
+\addplot[name path=pair_lo_gd_1, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn_lbp_pair__value__mean}-\thisrow{gnn_lbp_pair__value__std}
+]{resources/data/chapter_5/scp_n50_m50_k5_gd_selected_variable_diagnostics.csv};
+\addplot[PairMRFGDColor, fill opacity=0.2] fill between[of=pair_up_gd_1 and pair_lo_gd_1];
+\addplot[semithick, PairMRFGDColor]
+table[col sep=comma, x=iter, y=gnn_lbp_pair__value__mean]
+{resources/data/chapter_5/scp_n50_m50_k5_gd_selected_variable_diagnostics.csv};
+
+\addplot[name path=tree_up_gd_1, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn_lbp_tree__value__mean}+\thisrow{gnn_lbp_tree__value__std}
+]{resources/data/chapter_5/scp_n50_m50_k5_gd_selected_variable_diagnostics.csv};
+\addplot[name path=tree_lo_gd_1, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn_lbp_tree__value__mean}-\thisrow{gnn_lbp_tree__value__std}
+]{resources/data/chapter_5/scp_n50_m50_k5_gd_selected_variable_diagnostics.csv};
+\addplot[TreeMRFGDColor, fill opacity=0.2] fill between[of=tree_up_gd_1 and tree_lo_gd_1];
+\addplot[semithick, TreeMRFGDColor]
+table[col sep=comma, x=iter, y=gnn_lbp_tree__value__mean]
+{resources/data/chapter_5/scp_n50_m50_k5_gd_selected_variable_diagnostics.csv};
+
+\nextgroupplot[
+    ylabel={},
+    yticklabels={},
+    ytick style={draw=none},
+    xmin=0,
+    xmax=180,
+]
+\addplot[name path=full_up_gd_2, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn_lbp_full__value__mean}+\thisrow{gnn_lbp_full__value__std}
+]{resources/data/chapter_5/scp_n120-180_m150-250_k5_gd_selected_variable_diagnostics.csv};
+\addplot[name path=full_lo_gd_2, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn_lbp_full__value__mean}-\thisrow{gnn_lbp_full__value__std}
+]{resources/data/chapter_5/scp_n120-180_m150-250_k5_gd_selected_variable_diagnostics.csv};
+\addplot[MRFGDColor, fill opacity=0.2] fill between[of=full_up_gd_2 and full_lo_gd_2];
+\addplot[semithick, MRFGDColor]
+table[col sep=comma, x=iter, y=gnn_lbp_full__value__mean]
+{resources/data/chapter_5/scp_n120-180_m150-250_k5_gd_selected_variable_diagnostics.csv};
+
+\addplot[name path=pair_up_gd_2, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn_lbp_pair__value__mean}+\thisrow{gnn_lbp_pair__value__std}
+]{resources/data/chapter_5/scp_n120-180_m150-250_k5_gd_selected_variable_diagnostics.csv};
+\addplot[name path=pair_lo_gd_2, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn_lbp_pair__value__mean}-\thisrow{gnn_lbp_pair__value__std}
+]{resources/data/chapter_5/scp_n120-180_m150-250_k5_gd_selected_variable_diagnostics.csv};
+\addplot[PairMRFGDColor, fill opacity=0.2] fill between[of=pair_up_gd_2 and pair_lo_gd_2];
+\addplot[semithick, PairMRFGDColor]
+table[col sep=comma, x=iter, y=gnn_lbp_pair__value__mean]
+{resources/data/chapter_5/scp_n120-180_m150-250_k5_gd_selected_variable_diagnostics.csv};
+
+\addplot[name path=tree_up_gd_2, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn_lbp_tree__value__mean}+\thisrow{gnn_lbp_tree__value__std}
+]{resources/data/chapter_5/scp_n120-180_m150-250_k5_gd_selected_variable_diagnostics.csv};
+\addplot[name path=tree_lo_gd_2, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn_lbp_tree__value__mean}-\thisrow{gnn_lbp_tree__value__std}
+]{resources/data/chapter_5/scp_n120-180_m150-250_k5_gd_selected_variable_diagnostics.csv};
+\addplot[TreeMRFGDColor, fill opacity=0.2] fill between[of=tree_up_gd_2 and tree_lo_gd_2];
+\addplot[semithick, TreeMRFGDColor]
+table[col sep=comma, x=iter, y=gnn_lbp_tree__value__mean]
+{resources/data/chapter_5/scp_n120-180_m150-250_k5_gd_selected_variable_diagnostics.csv};
+
+\nextgroupplot[
+    %title={GD -- scp\_n150-300\_m150-300\_k15},
+    ylabel={},
+    yticklabels={},
+    ytick style={draw=none},
+    xmin=0,
+    xmax=300,
+]
+
+\addplot[name path=pair_up_gd_3, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn_lbp_pair__value__mean}+\thisrow{gnn_lbp_pair__value__std}
+]{resources/data/chapter_5/scp_n150-300_m150-300_k15_gd_selected_variable_diagnostics.csv};
+\addplot[name path=pair_lo_gd_3, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn_lbp_pair__value__mean}-\thisrow{gnn_lbp_pair__value__std}
+]{resources/data/chapter_5/scp_n150-300_m150-300_k15_gd_selected_variable_diagnostics.csv};
+\addplot[PairMRFGDColor, fill opacity=0.2] fill between[of=pair_up_gd_3 and pair_lo_gd_3];
+\addplot[semithick, PairMRFGDColor]
+table[col sep=comma, x=iter, y=gnn_lbp_pair__value__mean]
+{resources/data/chapter_5/scp_n150-300_m150-300_k15_gd_selected_variable_diagnostics.csv};
+
+\addplot[name path=tree_up_gd_3, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn_lbp_tree__value__mean}+\thisrow{gnn_lbp_tree__value__std}
+]{resources/data/chapter_5/scp_n150-300_m150-300_k15_gd_selected_variable_diagnostics.csv};
+\addplot[name path=tree_lo_gd_3, draw=none]
+table[
+    col sep=comma,
+    x=iter,
+    y expr=\thisrow{gnn_lbp_tree__value__mean}-\thisrow{gnn_lbp_tree__value__std}
+]{resources/data/chapter_5/scp_n150-300_m150-300_k15_gd_selected_variable_diagnostics.csv};
+\addplot[TreeMRFGDColor, fill opacity=0.2] fill between[of=tree_up_gd_3 and tree_lo_gd_3];
+\addplot[semithick, TreeMRFGDColor]
+table[col sep=comma, x=iter, y=gnn_lbp_tree__value__mean]
+{resources/data/chapter_5/scp_n150-300_m150-300_k15_gd_selected_variable_diagnostics.csv};
+
+\end{groupplot}
+
+\node[
+    anchor=north,
+    draw=lightgray204,
+    fill=white,
+    fill opacity=0.85,
+    text opacity=1,
+    inner sep=1pt
+] at ($(group c1r2.south west)!0.5!(group c3r2.south east) + (0,-1.45cm)$) {
+\begin{tikzpicture}[baseline]
+\matrix[
+    matrix of nodes,
+    nodes={anchor=west, font=\scriptsize},
+    column sep=10pt,
+    row sep=0pt
+] {
+    \draw[semithick, GNNEGGColor] (0,0) -- (0.45,0);
+    \fill[GNNEGGColor, opacity=0.15] (0,-0.1) rectangle (0.45,0.1);
+    \draw[semithick, GNNEGGColor] (0,0) -- (0.45,0); & GNN EGG &
+    \draw[semithick, MRFEGGColor] (0,0) -- (0.45,0);
+    \fill[MRFEGGColor, opacity=0.15] (0,-0.1) rectangle (0.45,0.1);
+    \draw[semithick, MRFEGGColor] (0,0) -- (0.45,0); & MRF EGG &
+    \draw[semithick, PairMRFEGGColor] (0,0) -- (0.45,0);
+    \fill[PairMRFEGGColor, opacity=0.15] (0,-0.1) rectangle (0.45,0.1);
+    \draw[semithick, PairMRFEGGColor] (0,0) -- (0.45,0); & Pair MRF EGG &
+    \draw[semithick, TreeMRFEGGColor] (0,0) -- (0.45,0);
+    \fill[TreeMRFEGGColor, opacity=0.15] (0,-0.1) rectangle (0.45,0.1);
+    \draw[semithick, TreeMRFEGGColor] (0,0) -- (0.45,0); & Tree MRF EGG \\
+    & & \draw[semithick, MRFGDColor] (0,0) -- (0.45,0);
+    \fill[MRFGDColor, opacity=0.15] (0,-0.1) rectangle (0.45,0.1);
+    \draw[semithick, MRFGDColor] (0,0) -- (0.45,0); & MRF GD &
+    \draw[semithick, PairMRFGDColor] (0,0) -- (0.45,0);
+    \fill[PairMRFGDColor, opacity=0.15] (0,-0.1) rectangle (0.45,0.1);
+    \draw[semithick, PairMRFGDColor] (0,0) -- (0.45,0); & Pair MRF GD &
+    \draw[semithick, TreeMRFGDColor] (0,0) -- (0.45,0);
+    \fill[TreeMRFGDColor, opacity=0.15] (0,-0.1) rectangle (0.45,0.1);
+    \draw[semithick, TreeMRFGDColor] (0,0) -- (0.45,0); & Tree MRF GD \\
+};
+\end{tikzpicture}
+};
+\end{tikzpicture}
+
+\caption{Evolution of the mean value of $x_{i}^{(t)}$ of the variable selected at decoding step $t$, highlighting the tendency of the policy to fix variables to $0$ or $1$ over time. Columns correspond to the three SCP test distributions. Solid lines denote the mean over instances and seeds, and shaded bands represent one standard deviation.}
+\label{fig:chapter_5_decoding_average_value}
+\end{figure}

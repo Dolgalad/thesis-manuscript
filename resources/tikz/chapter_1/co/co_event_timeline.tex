@@ -1,0 +1,65 @@
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=0.4cm,y=1cm] % x controls horizontal stretching
+
+    % Main timeline axis (0 -> 30 arbitrary units)
+    \draw[very thick,-latex] (0,0) -- (30,0);
+
+    % ---------------- Periods (colored bars on the axis) ----------------
+
+    % Combinatorial Optimization Advances (1970–1990)
+    \draw[line width=6pt,cyan!40] (10,0) -- (20,0);
+    \node[above=6pt,align=center,cyan!80!black]
+        at (15,0.35)
+        {\small Combinatorial Optimization\\[-2pt](1970--1990)};
+
+    % Modern solvers and hybrid methods (2000–2010)
+    \draw[line width=6pt,orange!40] (22,0) -- (26,0);
+    \node[below=8pt,align=center,orange!80!black]
+        at (24,-0.4)
+        {\small Modern solvers \& hybrids\\[-2pt](2000--2010)};
+
+    % Expansion into new domains (2010–2020)
+    \draw[line width=6pt,teal!40] (26,0) -- (30,0);
+    \node[above=6pt,align=center,teal!80!black]
+        at (28,0.35)
+        {\small Expansion into new domains\\[-2pt](2010--2020)};
+
+    % ---------------- Point events (colored dots + labels) ----------------
+
+    % 1947: Dantzig
+    \draw[gray] (3,0) -- (3,0.18);
+    \fill[blue!70!black] (3,0) circle (2pt);
+    \node[above=4pt,align=center,blue!70!black]
+        at (3,0.35)
+        {\small 1947\\[-2pt]Foundations of LP\\[-2pt](Dantzig)};
+
+    % 1958: Gomory cuts
+    \draw[gray] (6,0) -- (6,0.18);
+    \fill[red!70!black] (6,0) circle (2pt);
+    \node[below=6pt,align=center,red!70!black]
+        at (6,-0.4)
+        {\small 1958\\[-2pt]Gomory cuts};
+
+    % 1960: Branch-and-Bound
+    \draw[gray] (8,0) -- (8,0.18);
+    \fill[purple!70!black] (8,0) circle (2pt);
+    \node[above=4pt,align=center,purple!70!black]
+        at (8,0.35)
+        {\small 1960\\[-2pt]Branch-and-Bound\\[-2pt](Land \& Doig)};
+
+    % 1990: Revival of cutting planes
+    \draw[gray] (20,0) -- (20,0.18);
+    \fill[green!60!black] (20,0) circle (2pt);
+    \node[below=6pt,align=center,green!60!black]
+        at (20,-0.4)
+        {\small 1990\\[-2pt]Revival of cutting planes};
+
+    % ---------------- Start & end year labels ----------------
+    \node[above left]  at (0,0)  {\small 1937};
+    \node[above right] at (30,0) {\small 2020};
+
+\end{tikzpicture}
+\caption{Timeline of major milestones in linear and integer programming, cutting planes, and modern MILP solvers.}
+\label{fig:timeline_ip}
+\end{figure}

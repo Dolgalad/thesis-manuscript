@@ -1,0 +1,54 @@
+\begin{figure}[htbp]
+\centering
+\resizebox{0.9\textwidth}{!}{
+\begin{tikzpicture}[
+    node/.style={draw, rounded corners, minimum width=2.2cm, minimum height=0.95cm, align=center, font=\small},
+    good/.style={fill=green!20},
+    bad/.style={fill=red!20},
+    undecided/.style={fill=blue!10},
+    globalinfo/.style={fill=gray!15},
+    edge/.style={-Latex, thick},
+    info/.style={-Latex, dashed, thick}
+]
+
+% Root
+\node[node, undecided] (root) {Node $P_0$\\Partial assign.};
+
+% Global solver information
+\node[node, globalinfo, below=1.4cm of root] (global) {Global solver state\\{\scriptsize bounds, incumbent, stats}};
+
+% Level 1
+\node[node, good, above left=1.2cm and 2.4cm of root] (n1) {Node $P_1$\\Utility\\{\scriptsize predicted HIGH}};
+\node[node, bad, above right=1.2cm and 2.4cm of root] (n2) {Node $P_2$\\Utility\\{\scriptsize predicted LOW}};
+
+% Level 2 (children of P1)
+\node[node, good, above left=1.2cm and 1.3cm of n1] (n3) {Promising\\{\scriptsize keep / prioritize}};
+\node[node, bad, above right=1.2cm and 1.3cm of n1] (n4) {Low potential\\{\scriptsize prune}};
+
+% Tree edges (branching outcomes)
+\draw[edge] (root) -- (n1);
+\draw[edge] (root) -- (n2);
+\draw[edge] (n1) -- (n3);
+\draw[edge] (n1) -- (n4);
+
+% Learned model box (fit around nodes it evaluates)
+\node[draw, dashed, rounded corners, fit=(n1) (n2), inner sep=10pt,
+      label=below:{\small Learned node utility model}] (modelbox) {};
+
+% Information flow from global state to the learned model / evaluated nodes
+\draw[info] (global) -- (root);
+\draw[info] (global) -- (n1);
+\draw[info] (global) -- (n2);
+
+% Optional: show solver actions influenced by the model
+\node[font=\scriptsize, right=0.8cm of n2] (prune1) {prune};
+\draw[info] (n2.east) -- (prune1.west);
+
+\node[font=\scriptsize, left=0.8cm of n3] (prio) {prioritize};
+\draw[info] (n3.west) -- (prio.east);
+
+\end{tikzpicture}}
+
+\caption{Illustration of global and semi-global guidance during branch-and-bound. A learned node utility model evaluates partial subproblems using both the local node state and global solver information (e.g., bounds and incumbent statistics). The resulting utility estimates guide solver control decisions such as pruning and node prioritization, helping focus the search on promising regions of the tree.}
+\label{fig:global_branching_guidance_fig}
+\end{figure}

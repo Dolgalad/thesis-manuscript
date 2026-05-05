@@ -1,0 +1,31 @@
+# LaTeX build files
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.lof
+*.lot
+*.nav
+*.snm
+*.vrb
+
+# Generated PDFs
+*.pdf
+
+# Editor/OS files
+.DS_Store
+*.swp
+.vscode/
+.idea/
+
+# Temporary files
+tmp/
+build/
+tikz-cache/

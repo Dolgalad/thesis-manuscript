@@ -1,0 +1,38 @@
+\begin{figure}[H]
+\centering
+\begin{forest}
+for tree={
+    draw,
+    rounded corners,
+    align=center,
+    minimum width=2.4cm,
+    minimum height=1cm,
+    inner sep=3pt,
+    font=\small
+},
+selected/.style={fill=blue!10},
+good/.style={fill=green!20},
+bad/.style={fill=red!20},
+edge label/.style={midway, sloped, font=\scriptsize},
+%
+% ---------------- TREE ----------------
+[Node $P_0$\\GNN computes scores, selected
+    [Branch on $x_i \le 0$, good,
+        edge label={node[midway,above]{policy decision}}
+    ]
+    [Branch on $x_i \ge 1$, selected,
+        edge label={node[midway,above]{policy decision}}
+        [Node $P_1$\\GNN rescores vars, selected
+            [Pruned, bad,
+                edge label={node[midway,above]{bound}}
+            ]
+            [Feasible, good,
+                edge label={node[midway,above]{solution}}
+            ]
+        ]
+    ]
+]
+\end{forest}
+\caption{Illustration of learning to branch: at each node of the B\&B tree, a learned model (typically a GNN) scores candidate branching variables and selects a split that minimizes future search effort.}
+\label{fig:learning_to_branch}
+\end{figure}

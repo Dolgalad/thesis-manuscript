@@ -1,0 +1,266 @@
+\begin{figure}[t]
+\centering
+
+\definecolor{PairMRFEGGColor}{RGB}{214,39,40}
+\definecolor{darkgray176}{RGB}{176,176,176}
+\definecolor{TreeMRFEGGColor}{RGB}{255,127,14}
+\definecolor{TreeMRFGDColor}{RGB}{44,160,44}
+\definecolor{lightgray204}{RGB}{204,204,204}
+\definecolor{PariMRFGDColor}{RGB}{148,103,189}
+\definecolor{MRFGDColor}{RGB}{227,119,194}
+\definecolor{MRFEGGColor}{RGB}{140,86,75}
+\definecolor{GNNEGGColor}{RGB}{31,119,180}
+
+% --- GNN (anchor) ---
+\definecolor{GNNEGGColor}{RGB}{0,102,204}      % strong blue
+% --- EGG family (warm + green) ---
+\definecolor{MRFEGGColor}{RGB}{200,60,40}      % red
+\definecolor{PairMRFEGGColor}{RGB}{230,120,20} % dark orange
+\definecolor{TreeMRFEGGColor}{RGB}{0,140,100}  % teal green
+% --- GD family (cool / distinct) ---
+\definecolor{MRFGDColor}{RGB}{140,80,160}      % purple
+\definecolor{PairMRFGDColor}{RGB}{0,150,180}   % cyan (dark enough)
+\definecolor{TreeMRFGDColor}{RGB}{120,120,40}  % olive
+% --- neutrals ---
+\definecolor{darkgray176}{RGB}{110,110,110}
+\definecolor{lightgray204}{RGB}{200,200,200}
+
+%\resizebox{.99\linewidth}{!}{
+\begin{tikzpicture}
+\begin{groupplot}[
+    group style={
+        group size=3 by 1,
+        horizontal sep=0.2cm,
+        y descriptions at=edge left,
+        ylabels at=edge left,
+    },
+    width=0.29\textwidth,
+    height=0.30\textwidth,
+    scale only axis,
+    tick align=outside,
+    tick pos=left,
+    x grid style={darkgray176},
+    y grid style={darkgray176},
+    ymajorgrids,
+    xmin=-0.64, xmax=4.64,
+    xtick={0,1,2,3,4},
+    xticklabels={0.5,0.6,0.7,0.8,0.9},
+    ymin=-2, ymax=12,
+    xlabel={p},
+    xtick style={color=black},
+    ytick style={color=black},
+    legend to name=sharedlegend22,
+    legend columns=4,
+    legend cell align=left,
+    legend style={
+      draw=lightgray204,
+      /tikz/every even column/.append style={column sep=0.4cm}
+    },
+]
+
+% =========================
+% --- Plot 1 (left) ---
+% =========================
+\nextgroupplot[
+    ylabel={Gap (\%)},
+    title={\tiny SCP $\left(\begin{array}{l}n=50\\ m=50\\ k=5\end{array}\right)$},
+]
+
+\draw[draw=none,fill=GNNEGGColor] (axis cs:-0.4,0) rectangle (axis cs:-0.285714285714286,1.24148148148148);
+
+
+\draw[draw=none,fill=GNNEGGColor] (axis cs:0.6,0) rectangle (axis cs:0.714285714285714,2.13198653198653);
+\draw[draw=none,fill=GNNEGGColor] (axis cs:1.6,0) rectangle (axis cs:1.71428571428571,3.33414141414141);
+\draw[draw=none,fill=GNNEGGColor] (axis cs:2.6,0) rectangle (axis cs:2.71428571428571,5.36632996632997);
+\draw[draw=none,fill=GNNEGGColor] (axis cs:3.6,0) rectangle (axis cs:3.71428571428571,8.0179797979798);
+
+\draw[draw=none,fill=MRFEGGColor] (axis cs:-0.285714285714286,0) rectangle (axis cs:-0.171428571428571,1.33333333333333);
+
+\draw[draw=none,fill=MRFEGGColor] (axis cs:0.714285714285714,0) rectangle (axis cs:0.828571428571429,2);
+\draw[draw=none,fill=MRFEGGColor] (axis cs:1.71428571428571,0) rectangle (axis cs:1.82857142857143,2.33333333333333);
+\draw[draw=none,fill=MRFEGGColor] (axis cs:2.71428571428571,0) rectangle (axis cs:2.82857142857143,2.33333333333333);
+\draw[draw=none,fill=MRFEGGColor] (axis cs:3.71428571428571,0) rectangle (axis cs:3.82857142857143,5);
+
+\draw[draw=none,fill=MRFGDColor] (axis cs:-0.171428571428571,0) rectangle (axis cs:-0.0571428571428571,1);
+
+\draw[draw=none,fill=MRFGDColor] (axis cs:0.828571428571429,0) rectangle (axis cs:0.942857142857143,1);
+\draw[draw=none,fill=MRFGDColor] (axis cs:1.82857142857143,0) rectangle (axis cs:1.94285714285714,1);
+\draw[draw=none,fill=MRFGDColor] (axis cs:2.82857142857143,0) rectangle (axis cs:2.94285714285714,1.33333333333333);
+\draw[draw=none,fill=MRFGDColor] (axis cs:3.82857142857143,0) rectangle (axis cs:3.94285714285714,1.66666666666667);
+
+\draw[draw=none,fill=PairMRFEGGColor] (axis cs:-0.0571428571428571,0) rectangle (axis cs:0.0571428571428571,1);
+
+\draw[draw=none,fill=PairMRFEGGColor] (axis cs:0.942857142857143,0) rectangle (axis cs:1.05714285714286,1.33333333333333);
+\draw[draw=none,fill=PairMRFEGGColor] (axis cs:1.94285714285714,0) rectangle (axis cs:2.05714285714286,2.33333333333333);
+\draw[draw=none,fill=PairMRFEGGColor] (axis cs:2.94285714285714,0) rectangle (axis cs:3.05714285714286,3.66666666666667);
+\draw[draw=none,fill=PairMRFEGGColor] (axis cs:3.94285714285714,0) rectangle (axis cs:4.05714285714286,7.33333333333333);
+
+\draw[draw=none,fill=PariMRFGDColor] (axis cs:0.0571428571428571,0) rectangle (axis cs:0.171428571428571,1);
+
+\draw[draw=none,fill=PariMRFGDColor] (axis cs:1.05714285714286,0) rectangle (axis cs:1.17142857142857,1.33333333333333);
+\draw[draw=none,fill=PariMRFGDColor] (axis cs:2.05714285714286,0) rectangle (axis cs:2.17142857142857,2.33333333333333);
+\draw[draw=none,fill=PariMRFGDColor] (axis cs:3.05714285714286,0) rectangle (axis cs:3.17142857142857,3.33333333333333);
+\draw[draw=none,fill=PariMRFGDColor] (axis cs:4.05714285714286,0) rectangle (axis cs:4.17142857142857,4);
+
+\draw[draw=none,fill=TreeMRFEGGColor] (axis cs:0.171428571428571,0) rectangle (axis cs:0.285714285714286,1.66666666666667);
+
+\draw[draw=none,fill=TreeMRFEGGColor] (axis cs:1.17142857142857,0) rectangle (axis cs:1.28571428571429,2);
+\draw[draw=none,fill=TreeMRFEGGColor] (axis cs:2.17142857142857,0) rectangle (axis cs:2.28571428571429,3);
+\draw[draw=none,fill=TreeMRFEGGColor] (axis cs:3.17142857142857,0) rectangle (axis cs:3.28571428571429,8);
+\draw[draw=none,fill=TreeMRFEGGColor] (axis cs:4.17142857142857,0) rectangle (axis cs:4.28571428571429,10.3333333333333);
+
+\draw[draw=none,fill=TreeMRFGDColor] (axis cs:0.285714285714286,0) rectangle (axis cs:0.4,1.66666666666667);
+
+\draw[draw=none,fill=TreeMRFGDColor] (axis cs:1.28571428571429,0) rectangle (axis cs:1.4,2);
+\draw[draw=none,fill=TreeMRFGDColor] (axis cs:2.28571428571429,0) rectangle (axis cs:2.4,3);
+\draw[draw=none,fill=TreeMRFGDColor] (axis cs:3.28571428571429,0) rectangle (axis cs:3.4,6.66666666666667);
+\draw[draw=none,fill=TreeMRFGDColor] (axis cs:4.28571428571429,0) rectangle (axis cs:4.4,9.66666666666667);
+
+% =========================
+% --- Plot 2 (middle) ---
+% =========================
+\nextgroupplot[
+    title={\tiny SCP $\left(\begin{array}{l}n\in\mathcal{U}[120,180]\\ m\in\mathcal{U}[150,250]\\ k=5\end{array}\right)$},
+    ylabel={},
+    yticklabels={},
+]
+
+% Copy the same bar structure here, then change values later
+% Example placeholders:
+\draw[draw=none,fill=GNNEGGColor] (axis cs:-0.4,0) rectangle (axis cs:-0.285714285714286,1.28719735181417);
+% \addlegendimage{ybar,ybar legend,draw=none,fill=GNNEGGColor}
+% \addlegendentry{GNN EGG}
+
+\draw[draw=none,fill=GNNEGGColor] (axis cs:0.6,0) rectangle (axis cs:0.714285714285714,2.59584652368798);
+\draw[draw=none,fill=GNNEGGColor] (axis cs:1.6,0) rectangle (axis cs:1.71428571428571,4.21909092212313);
+\draw[draw=none,fill=GNNEGGColor] (axis cs:2.6,0) rectangle (axis cs:2.71428571428571,6.38368701478653);
+\draw[draw=none,fill=GNNEGGColor] (axis cs:3.6,0) rectangle (axis cs:3.71428571428571,9.3106593303389);
+\draw[draw=none,fill=MRFEGGColor] (axis cs:-0.285714285714286,0) rectangle (axis cs:-0.171428571428571,0.577553537449138);
+% \addlegendimage{ybar,ybar legend,draw=none,fill=MRFEGGColor}
+% \addlegendentry{MRF EGG}
+
+\draw[draw=none,fill=MRFEGGColor] (axis cs:0.714285714285714,0) rectangle (axis cs:0.828571428571429,1.15188593869782);
+\draw[draw=none,fill=MRFEGGColor] (axis cs:1.71428571428571,0) rectangle (axis cs:1.82857142857143,1.89569241500485);
+\draw[draw=none,fill=MRFEGGColor] (axis cs:2.71428571428571,0) rectangle (axis cs:2.82857142857143,3.05445896569175);
+\draw[draw=none,fill=MRFEGGColor] (axis cs:3.71428571428571,0) rectangle (axis cs:3.82857142857143,4.69141659395269);
+\draw[draw=none,fill=MRFGDColor] (axis cs:-0.171428571428571,0) rectangle (axis cs:-0.0571428571428571,0.477907217357616);
+% \addlegendimage{ybar,ybar legend,draw=none,fill=MRFGDColor}
+% \addlegendentry{MRF GD}
+
+\draw[draw=none,fill=MRFGDColor] (axis cs:0.828571428571429,0) rectangle (axis cs:0.942857142857143,0.804356019668834);
+\draw[draw=none,fill=MRFGDColor] (axis cs:1.82857142857143,0) rectangle (axis cs:1.94285714285714,1.12484380371488);
+\draw[draw=none,fill=MRFGDColor] (axis cs:2.82857142857143,0) rectangle (axis cs:2.94285714285714,1.49018147812082);
+\draw[draw=none,fill=MRFGDColor] (axis cs:3.82857142857143,0) rectangle (axis cs:3.94285714285714,1.825156217929);
+\draw[draw=none,fill=PairMRFEGGColor] (axis cs:-0.0571428571428571,0) rectangle (axis cs:0.0571428571428571,0.674819673498569);
+% \addlegendimage{ybar,ybar legend,draw=none,fill=PairMRFEGGColor}
+% \addlegendentry{Pair MRF EGG}
+
+\draw[draw=none,fill=PairMRFEGGColor] (axis cs:0.942857142857143,0) rectangle (axis cs:1.05714285714286,1.44459236523204);
+\draw[draw=none,fill=PairMRFEGGColor] (axis cs:1.94285714285714,0) rectangle (axis cs:2.05714285714286,2.68372812567816);
+\draw[draw=none,fill=PairMRFEGGColor] (axis cs:2.94285714285714,0) rectangle (axis cs:3.05714285714286,4.5916086955107);
+\draw[draw=none,fill=PairMRFEGGColor] (axis cs:3.94285714285714,0) rectangle (axis cs:4.05714285714286,6.67579142661191);
+\draw[draw=none,fill=PariMRFGDColor] (axis cs:0.0571428571428571,0) rectangle (axis cs:0.171428571428571,0.60207547171976);
+% \addlegendimage{ybar,ybar legend,draw=none,fill=PariMRFGDColor}
+% \addlegendentry{Pair MRF GD}
+
+\draw[draw=none,fill=PariMRFGDColor] (axis cs:1.05714285714286,0) rectangle (axis cs:1.17142857142857,1.25865723300985);
+\draw[draw=none,fill=PariMRFGDColor] (axis cs:2.05714285714286,0) rectangle (axis cs:2.17142857142857,2.2267453558002);
+\draw[draw=none,fill=PariMRFGDColor] (axis cs:3.05714285714286,0) rectangle (axis cs:3.17142857142857,3.43868022415078);
+\draw[draw=none,fill=PariMRFGDColor] (axis cs:4.05714285714286,0) rectangle (axis cs:4.17142857142857,4.40915887208487);
+\draw[draw=none,fill=TreeMRFEGGColor] (axis cs:0.171428571428571,0) rectangle (axis cs:0.285714285714286,1.12170704080413);
+% \addlegendimage{ybar,ybar legend,draw=none,fill=TreeMRFEGGColor}
+% \addlegendentry{Tree MRF EGG}
+
+\draw[draw=none,fill=TreeMRFEGGColor] (axis cs:1.17142857142857,0) rectangle (axis cs:1.28571428571429,2.44922673532684);
+\draw[draw=none,fill=TreeMRFEGGColor] (axis cs:2.17142857142857,0) rectangle (axis cs:2.28571428571429,4.18794645908774);
+\draw[draw=none,fill=TreeMRFEGGColor] (axis cs:3.17142857142857,0) rectangle (axis cs:3.28571428571429,6.4686331142369);
+\draw[draw=none,fill=TreeMRFEGGColor] (axis cs:4.17142857142857,0) rectangle (axis cs:4.28571428571429,9.19252391858699);
+\draw[draw=none,fill=TreeMRFGDColor] (axis cs:0.285714285714286,0) rectangle (axis cs:0.4,1.11819391190169);
+% \addlegendimage{ybar,ybar legend,draw=none,fill=TreeMRFGDColor}
+% \addlegendentry{Tree MRF GD}
+
+\draw[draw=none,fill=TreeMRFGDColor] (axis cs:1.28571428571429,0) rectangle (axis cs:1.4,2.44554022903442);
+\draw[draw=none,fill=TreeMRFGDColor] (axis cs:2.28571428571429,0) rectangle (axis cs:2.4,4.17137113556915);
+\draw[draw=none,fill=TreeMRFGDColor] (axis cs:3.28571428571429,0) rectangle (axis cs:3.4,6.43799249685541);
+\draw[draw=none,fill=TreeMRFGDColor] (axis cs:4.28571428571429,0) rectangle (axis cs:4.4,9.02571909744575);
+% ... continue all bars ...
+
+% =========================
+% --- Plot 3 (right) ---
+% =========================
+\nextgroupplot[
+    title={\tiny SCP $\left(\begin{array}{l}n\in\mathcal{U}[150,300]\\ m\in\mathcal{U}[150,300]\\ k=15\end{array}\right)$},
+    ylabel={},
+    yticklabels={},
+]
+
+% Copy the same bar structure here, then change values later
+% Example placeholders:
+\draw[draw=none,fill=GNNEGGColor] (axis cs:-0.4,0) rectangle (axis cs:-0.24,-0.231796792737634);
+%\addlegendimage{ybar,ybar legend,draw=none,fill=GNNEGGColor}
+%\addlegendentry{GNN EGG}
+
+\draw[draw=none,fill=GNNEGGColor] (axis cs:0.6,0) rectangle (axis cs:0.76,-0.190619417450081);
+\draw[draw=none,fill=GNNEGGColor] (axis cs:1.6,0) rectangle (axis cs:1.76,0.823717244912897);
+\draw[draw=none,fill=GNNEGGColor] (axis cs:2.6,0) rectangle (axis cs:2.76,4.98338152439983);
+\draw[draw=none,fill=GNNEGGColor] (axis cs:3.6,0) rectangle (axis cs:3.76,11.5809584749516);
+\draw[draw=none,fill=PairMRFEGGColor] (axis cs:-0.24,0) rectangle (axis cs:-0.08,-0.625169650027992);
+%\addlegendimage{ybar,ybar legend,draw=none,fill=PairMRFEGGColor}
+%\addlegendentry{Pair MRF EGG}
+
+\draw[draw=none,fill=PairMRFEGGColor] (axis cs:0.76,0) rectangle (axis cs:0.92,-0.306424279795207);
+\draw[draw=none,fill=PairMRFEGGColor] (axis cs:1.76,0) rectangle (axis cs:1.92,1.22561163054946);
+\draw[draw=none,fill=PairMRFEGGColor] (axis cs:2.76,0) rectangle (axis cs:2.92,3.72491361094364);
+\draw[draw=none,fill=PairMRFEGGColor] (axis cs:3.76,0) rectangle (axis cs:3.92,10.1844560315356);
+\draw[draw=none,fill=PariMRFGDColor] (axis cs:-0.08,0) rectangle (axis cs:0.08,-0.713830920652322);
+%\addlegendimage{ybar,ybar legend,draw=none,fill=PariMRFGDColor}
+%\addlegendentry{Pair MRF GD}
+
+\draw[draw=none,fill=PariMRFGDColor] (axis cs:0.92,0) rectangle (axis cs:1.08,-0.00953976097677741);
+\draw[draw=none,fill=PariMRFGDColor] (axis cs:1.92,0) rectangle (axis cs:2.08,1.12226497476307);
+\draw[draw=none,fill=PariMRFGDColor] (axis cs:2.92,0) rectangle (axis cs:3.08,3.52466791532344);
+\draw[draw=none,fill=PariMRFGDColor] (axis cs:3.92,0) rectangle (axis cs:4.08,8.0024321832451);
+\draw[draw=none,fill=TreeMRFEGGColor] (axis cs:0.08,0) rectangle (axis cs:0.24,-0.147626873110041);
+%\addlegendimage{ybar,ybar legend,draw=none,fill=TreeMRFEGGColor}
+%\addlegendentry{Tree MRF EGG}
+
+\draw[draw=none,fill=TreeMRFEGGColor] (axis cs:1.08,0) rectangle (axis cs:1.24,0.042896698224041);
+\draw[draw=none,fill=TreeMRFEGGColor] (axis cs:2.08,0) rectangle (axis cs:2.24,1.38388520668618);
+\draw[draw=none,fill=TreeMRFEGGColor] (axis cs:3.08,0) rectangle (axis cs:3.24,4.58849383925429);
+\draw[draw=none,fill=TreeMRFEGGColor] (axis cs:4.08,0) rectangle (axis cs:4.24,10.9352460239886);
+\draw[draw=none,fill=TreeMRFGDColor] (axis cs:0.24,0) rectangle (axis cs:0.4,-0.0797318441973558);
+%\addlegendimage{ybar,ybar legend,draw=none,fill=TreeMRFGDColor}
+%\addlegendentry{Tree MRF GD}
+
+\draw[draw=none,fill=TreeMRFGDColor] (axis cs:1.24,0) rectangle (axis cs:1.4,0.153990976868691);
+\draw[draw=none,fill=TreeMRFGDColor] (axis cs:2.24,0) rectangle (axis cs:2.4,1.38388520668618);
+\draw[draw=none,fill=TreeMRFGDColor] (axis cs:3.24,0) rectangle (axis cs:3.4,4.70349681083202);
+\draw[draw=none,fill=TreeMRFGDColor] (axis cs:4.24,0) rectangle (axis cs:4.4,10.8878919901413);
+
+\addlegendimage{ybar,ybar legend,draw=none,fill=GNNEGGColor}
+\addlegendentry{GNN EGG}
+\addlegendimage{ybar,ybar legend,draw=none,fill=MRFGDColor}
+\addlegendentry{MRF GD}
+\addlegendimage{ybar,ybar legend,draw=none,fill=MRFEGGColor}
+\addlegendentry{MRF EGG}
+\addlegendimage{ybar,ybar legend,draw=none,fill=PairMRFEGGColor}
+\addlegendentry{Pair MRF EGG}
+\addlegendimage{ybar,ybar legend,draw=none,fill=PariMRFGDColor}
+\addlegendentry{Pair MRF GD}
+\addlegendimage{ybar,ybar legend,draw=none,fill=TreeMRFEGGColor}
+\addlegendentry{Tree MRF EGG}
+\addlegendimage{ybar,ybar legend,draw=none,fill=TreeMRFGDColor}
+\addlegendentry{Tree MRF GD}
+
+\end{groupplot}
+
+\node[anchor=north] at ($(group c1r1.south west)!0.5!(group c3r1.south east) + (0,-1.0cm)$)
+{\pgfplotslegendfromname{sharedlegend22}};
+\end{tikzpicture}
+%}
+
+\caption{
+Optimality gap (\%) obtained after solving reduced instances as a function of the proportion of fixed variables $p$. Each subplot corresponds to a different dataset, and each bar represents a different prediction model used to guide variable fixing. Lower values indicate better solution quality. The results show that MRF-based predictions consistently outperform baseline GNN logits, with more expressive mappings yielding stronger improvements, especially as the proportion of fixed variables increases.
+}
+\label{fig:chapter_5_fix_and_solve_optimality_gaps}
+\end{figure}

@@ -1,0 +1,132 @@
+\NeedsTeXFormat{LaTeX2e}%
+\ProvidesPackage{chronology}[2023/08/20 v2.0 - Horizontal Timeline]%
+\RequirePackage{calc}%
+\RequirePackage{tikz}%
+\RequirePackage{xparse}%
+% Defining counters and lengths
+\newcounter{step}\newcounter{stepstart}\newcounter{stepstop}%
+\newcounter{yearstart}\newcounter{yearstop}\newcounter{deltayears}%
+\newlength{\xstart}\newlength{\xstop}%
+\newlength{\chronounit}\newlength{\timelinewidth}%
+\newsavebox{\timelinebox}%
+%
+% Defining TikZ styles for labels and events
+%
+\tikzset{%
+	,chronevent/.style={fill=black,draw=none,opacity=0.5}
+	,chronlabel/.style={opacity=1}
+	,chrontickslabel/.style={chronlabel}
+	,chroneventlabel/.style={chronlabel}
+	,eventlabel/.style={chroneventlabel,anchor=south west,yshift=.2\chronounit,rotate=45}
+	,flippedeventlabel/.style={chroneventlabel,anchor=north west,yshift=-.2\chronounit,rotate=-45}
+	,eventlabelbottom/.style={chroneventlabel,anchor=south west,yshift=-1cm,rotate=0}     % Bottom label
+	}
+%
+% For compatibity with babel. Handling of active characters in TikZ.
+%
+\tikzset{
+	handle active characters in code,
+	handle active characters in nodes
+}
+\makeatletter%
+\newif\ifchronology@star%
+\newenvironment{chronology}{%
+	\@ifstar{\chronology@startrue\chronology@i*}{\chronology@starfalse\chronology@i*}%
+}{%
+	\end{tikzpicture}%
+	\end{lrbox}%
+	\raisebox{2ex}{\resizebox{\timelinewidth}{!}{\usebox{\timelinebox}}}%
+}%
+\def\chronology@i*{%
+	\@ifnextchar[{\chronology@ii*}{\chronology@ii*[{5}]}%
+}%
+\def\chronology@ii*[#1]#2#3#4{%
+	\@ifnextchar[{\chronology@iii*[{#1}]{#2}{#3}{#4}}{\chronology@iii*[{#1}]{#2}{#3}{#4}[{#4}]}%
+}%
+\def\chronology@iii*[#1]#2#3#4[#5]{%
+	\newif\ifflipped%
+	\ifchronology@star%
+		\flippedtrue%
+	\else%
+		\flippedfalse%
+	\fi%
+	\setcounter{step}{#1}%
+	\setcounter{yearstart}{#2}\setcounter{yearstop}{#3}%
+	\setcounter{deltayears}{\theyearstop-\theyearstart}%
+	\setlength{\chronounit}{#5/\thedeltayears}%
+	\setlength{\timelinewidth}{#4}%
+	\pgfmathsetcounter{stepstart}{\theyearstart+\thestep-mod(\theyearstart,\thestep)}%
+	\pgfmathsetcounter{stepstop}{\theyearstop-mod(\theyearstop,\thestep)}%
+	\addtocounter{step}{\thestepstart}%
+	\begin{lrbox}{\timelinebox}%
+		\begin{tikzpicture}[baseline={(current bounding box.north)}]%
+			\draw [|->] (0,0) -- (\thedeltayears*\chronounit+\chronounit, 0);%
+			\foreach \x in {1,...,\thedeltayears}%
+				\draw[xshift=\x*\chronounit] (0,-.1\chronounit) -- (0,.1\chronounit);%
+			\addtocounter{deltayears}{1}%
+			\foreach \x in {\thestepstart,\thestep,...,\thestepstop}{%
+				\pgfmathsetlength\xstop{(\x-\theyearstart)*\chronounit}%
+				\draw[xshift=\xstop] (0,-.3\chronounit) -- (0,.3\chronounit);%
+				\ifflipped%
+					\node[chrontickslabel] at (\xstop,0) [above=.2\chronounit] {\x};%
+				\else%
+					\node[chrontickslabel] at (\xstop,0) [below=.2\chronounit] {\x};%
+				\fi%
+			}%
+}%
+%
+%  Event (legacy code for compatibility)
+%
+\makeatother%
+\DeclareDocumentCommand \event {o m m}{%                    [Startdate] Enddate Label
+	\pgfmathsetlength\xstop{(#2-\theyearstart)*\chronounit}%
+	\IfNoValueTF {#1} {%
+		\ifflipped%
+			\draw[chronevent]%
+			(\xstop, 0) circle (.2\chronounit)%
+			node[flippedeventlabel] {#3};%
+		\else%
+			\draw[chronevent]%
+			(\xstop, 0) circle (.2\chronounit)%
+			node[eventlabel] {#3};%
+		\fi%
+	}{%
+		\pgfmathsetlength\xstart{(#1-\theyearstart)*\chronounit}%
+		\ifflipped%
+			\draw[chronevent,rounded corners=.2\chronounit]%
+			(\xstart,-.2\chronounit) rectangle%
+			node[flippedeventlabel] {#3} (\xstop,.2\chronounit);%
+		\else%
+			\draw[chronevent,rounded corners=.2\chronounit]%
+			(\xstart,-.2\chronounit) rectangle%
+			node[eventlabel] {#3} (\xstop,.2\chronounit);%
+		\fi%
+	}%
+}
+%
+%   Eventspan
+%
+\DeclareDocumentCommand \eventspan {m m m O{black} O{0.3} O{0.2} o}{%   Startdate Enddate Label Fill Opacity Height Bottom?
+	\pgfmathsetlength\xstop{(#2-\theyearstart)*\chronounit}%
+		\pgfmathsetlength\xstart{(#1-\theyearstart)*\chronounit}%
+	    \IfNoValueTF {#7} {%
+			\draw[style={fill=#4,draw=none,opacity=#5},rounded corners=.05\chronounit]% 
+			(\xstart,-#6\chronounit) rectangle node[eventlabel] {#3} (\xstop,.2\chronounit);%
+	    }{%
+			\draw[style={fill=#4,draw=none,opacity=#5},rounded corners=.05\chronounit]%   Event, bottom label 
+			(\xstart,-#6\chronounit) rectangle node[eventlabelbottom, anchor=center]{#3} (\xstop,.2\chronounit);%
+	}%
+}
+%
+%    Eventpoint
+%
+\DeclareDocumentCommand \eventpoint {m m O{red} O{1} O{0.3}}{%          Date Label Fill Opacity Height             
+	\pgfmathsetlength\xstop{(#1-\theyearstart)*\chronounit}%
+		\draw[style={fill=#3,draw=none,opacity=#4},rounded corners=0\chronounit]%
+		(\xstop, .1\chronounit) coordinate(A) -- (\xstop-.2*#5\chronounit,#5\chronounit) coordinate(B) -- (\xstop+.2*#5\chronounit,#5\chronounit)coordinate(C)%
+         -- cycle node[eventlabel] {#2};% 
+}
+%
+\newcommand{\decimaldate}[3]{(#1-1)/31/12+(#2-1)/12+#3}%
+%
+\endinput%

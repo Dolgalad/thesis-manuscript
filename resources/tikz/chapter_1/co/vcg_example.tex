@@ -1,0 +1,180 @@
+% \begin{figure}[H]
+%     \centering
+
+%     % ---------------- LEFT PANEL ----------------
+%     \begin{minipage}[c]{0.42\textwidth}
+%     \centering
+%     \begin{tikzpicture}
+%         \node[
+%             draw,
+%             rounded corners=4pt,
+%             align=left,
+%             inner sep=10pt,
+%             text width=0.9\linewidth,
+%             font=\small
+%         ] {
+%         \textbf{ILP}\\[0.4em]
+%         $\max \quad x_1 + x_2 + x_3$\\[0.4em]
+%         \text{s.t.}\quad $x_1 + x_2 \leq 1,$\\
+%         \hspace*{2.35em}$x_2 + x_3 \leq 1,$\\
+%         \hspace*{2.35em}$x_1 + x_2 + x_3 \leq 3,$\\[0.3em]
+%         \hspace*{2.35em}$x_i \in \{0,1\}, \quad i=1,2,3.$
+%         };
+%     \end{tikzpicture}
+%     \end{minipage}
+%     \hspace{2em}
+%     % ---------------- RIGHT PANEL ----------------
+%     \begin{minipage}[c]{0.48\textwidth}
+%     \centering
+%     \begin{tikzpicture}[
+%         x=1.3cm, y=1.2cm,
+%         var/.style={
+%             circle,
+%             draw,
+%             thick,
+%             minimum size=8mm,
+%             inner sep=0pt,
+%             fill=blue!15
+%         },
+%         con/.style={
+%             rectangle,
+%             draw,
+%             thick,
+%             minimum width=8mm,
+%             minimum height=8mm,
+%             inner sep=1pt,
+%             fill=orange!20
+%         },
+%         edge/.style={draw, thick}
+%     ]
+
+%     % Variable nodes
+%     \node[var] (x1) at (0,2) {$x_1$};
+%     \node[var] (x2) at (0,1) {$x_2$};
+%     \node[var] (x3) at (0,0) {$x_3$};
+
+%     % Constraint nodes
+%     \node[con] (c1) at (3,2) {$c_1$};
+%     \node[con] (c2) at (3,1) {$c_2$};
+%     \node[con] (c3) at (3,0) {$c_3$};
+
+%     % Edges
+%     \draw[edge] (x1) -- (c1);
+%     \draw[edge] (x2) -- (c1);
+
+%     \draw[edge] (x2) -- (c2);
+%     \draw[edge] (x3) -- (c2);
+
+%     \draw[edge] (x1) -- (c3);
+%     \draw[edge] (x2) -- (c3);
+%     \draw[edge] (x3) -- (c3);
+
+%     % Optional labels
+%     \node[anchor=west, font=\scriptsize] at (3.35,2) {$x_1+x_2\leq 1$};
+%     \node[anchor=west, font=\scriptsize] at (3.35,1) {$x_2+x_3\leq 1$};
+%     \node[anchor=west, font=\scriptsize] at (3.35,0) {$x_1+x_2+x_3\leq 3$};
+
+%     \end{tikzpicture}
+%     \end{minipage}
+
+%     \caption{Illustration of an integer linear program and its associated variable-constraint bipartite graph representation. Variable nodes are connected to the constraints in which they appear.}
+%     \label{fig:vcg_example}
+% \end{figure}
+
+\begin{figure}[H]
+    \centering
+
+    % ================= LEFT PANEL =================
+    \begin{minipage}[c]{0.44\textwidth}
+        \centering
+        \begin{tikzpicture}
+            \node[
+                draw=black!70,
+                rounded corners=6pt,
+                line width=0.8pt,
+                fill=gray!5,
+                inner sep=10pt,
+                text width=0.9\linewidth,
+                align=left
+            ] (ilpbox) {%
+                {\bfseries Small binary ILP}\\[0.6em]
+                $\displaystyle \max \; 6x_1 + 5x_2 + 4x_3$\\[0.6em]
+                \text{s.t.}\\[0.2em]
+                $\displaystyle 2x_1 + x_2 + x_3 \le 3,$\\[0.3em]
+                $\displaystyle x_1 + 2x_2 + x_3 \le 3,$\\[0.3em]
+                $\displaystyle x_1,x_2,x_3 \in \{0,1\}.$
+            };
+
+            \node[font=\scriptsize, text=black!60, below=4pt of ilpbox.south] {};
+        \end{tikzpicture}
+    \end{minipage}
+    \hspace{2em}
+    % ================= RIGHT PANEL =================
+    \begin{minipage}[c]{0.48\textwidth}
+        \centering
+        \begin{tikzpicture}[
+            x=1.35cm,
+            y=1.25cm,
+            var/.style={
+                circle,
+                draw=blue!60!black,
+                fill=blue!12,
+                thick,
+                minimum size=9mm,
+                inner sep=0pt,
+                font=\small
+            },
+            con/.style={
+                rounded rectangle,
+                draw=orange!70!black,
+                fill=orange!18,
+                thick,
+                minimum width=10mm,
+                minimum height=8mm,
+                inner sep=2pt,
+                font=\small
+            },
+            ed/.style={
+                draw=black!65,
+                line width=0.9pt
+            },
+            lab/.style={
+                font=\scriptsize,
+                text=black!70,
+                align=left
+            }
+        ]
+
+            % Variables
+            \node[var] (x1) at (0,2) {$x_1$};
+            \node[var] (x2) at (0,1) {$x_2$};
+            \node[var] (x3) at (0,0) {$x_3$};
+
+            % Constraints
+            \node[con] (c1) at (3,1.5) {$c_1$};
+            \node[con] (c2) at (3,0.5) {$c_2$};
+
+            % Edges for c1: 2x1 + x2 + x3 <= 3
+            \draw[ed] (x1) -- (c1);
+            \draw[ed] (x2) -- (c1);
+            \draw[ed] (x3) -- (c1);
+
+            % Edges for c2: x1 + 2x2 + x3 <= 3
+            \draw[ed] (x1) -- (c2);
+            \draw[ed] (x2) -- (c2);
+            \draw[ed] (x3) -- (c2);
+
+            % Constraint labels
+            \node[lab, anchor=west] at (3.45,1.5) {$2x_1 + x_2 + x_3 \le 3$};
+            \node[lab, anchor=west] at (3.45,0.5) {$x_1 + 2x_2 + x_3 \le 3$};
+
+            % Small headers
+            \node[font=\scriptsize\bfseries, text=blue!60!black] at (0,2.7) {Variables};
+            \node[font=\scriptsize\bfseries, text=orange!70!black] at (3,2.7) {Constraints};
+
+        \end{tikzpicture}
+    \end{minipage}
+
+    \caption{A small binary integer linear program and its variable-constraint bipartite graph representation. Variable nodes are connected to the constraint nodes in which they appear.}
+    \label{fig:vcg_example}
+\end{figure}

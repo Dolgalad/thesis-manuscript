@@ -1,0 +1,139 @@
+\begin{figure}[t]
+\centering
+\definecolor{GNNEGGColor}{RGB}{0,102,204}
+\definecolor{MRFEGGColor}{RGB}{200,60,40}
+\definecolor{PairMRFEGGColor}{RGB}{230,120,20}
+\definecolor{PreprocessColor}{RGB}{180,180,180}
+\definecolor{PredictionColor}{RGB}{66,133,244}
+\definecolor{DecodeColor}{RGB}{244,160,0}
+\definecolor{ProjectionColor}{RGB}{15,157,88}
+\definecolor{darkgray176}{RGB}{110,110,110}
+\begin{tikzpicture}
+\begin{groupplot}[group style={group size=2 by 2, horizontal sep=0.55cm, vertical sep=2.7cm, y descriptions at=edge left, ylabels at=edge left}]
+\nextgroupplot[
+    ybar stacked,
+    /pgf/bar width=10pt,
+    title={\tiny MIS $\left(\begin{array}{l}n=100\\ p=0.15\end{array}\right)$},
+    width=0.31\textwidth,
+    height=0.36\textwidth,
+    scale only axis,
+    tick align=outside,
+    tick pos=left,
+    x grid style={darkgray176},
+    y grid style={darkgray176},
+    ymajorgrids,
+    xmin=-0.8, xmax=5.8,
+    xtick={0,1,2,3,4,5},
+    xticklabels={GNN-EGG,GNN-GD,GNN-Diff,Full-EGG,Full-GD,Full-Diff},
+    x tick label style={rotate=55, anchor=east, font=\scriptsize},
+    xtick style={draw=none},
+    ytick style={color=black},
+    xlabel={},
+    ymin=0.000,
+    ymax=4.526,
+    ylabel={Runtime (s)}
+]
+\addplot+[draw=black, line width=0.15pt, fill=PreprocessColor] coordinates { (0,0.289598) (1,0.289598) (2,0.289598) (3,0.507803) (4,0.507803) (5,0.507803) };
+\addplot+[draw=black, line width=0.15pt, fill=PredictionColor] coordinates { (0,0.007139) (1,0.007139) (2,0.000000) (3,0.029323) (4,0.029323) (5,0.000000) };
+\addplot+[draw=black, line width=0.15pt, fill=DecodeColor] coordinates { (0,0.064512) (1,0.057537) (2,0.096423) (3,0.253722) (4,0.633981) (5,0.426237) };
+\addplot+[draw=black, line width=0.15pt, fill=ProjectionColor] coordinates { (0,0.000000) (1,0.000000) (2,0.000365) (3,0.000000) (4,0.000000) (5,0.000382)};
+
+\nextgroupplot[
+    ybar stacked,
+    /pgf/bar width=10pt,
+    title={\tiny MIS $\left(\begin{array}{l}n\in \mathcal{U}[200\text{--}300]\\ p=0.15\end{array}\right)$},
+    width=0.31\textwidth,
+    height=0.36\textwidth,
+    scale only axis,
+    tick align=outside,
+    tick pos=left,
+    x grid style={darkgray176},
+    y grid style={darkgray176},
+    ymajorgrids,
+    xmin=-0.8, xmax=5.8,
+    xtick={0,1,2,3,4,5},
+    xticklabels={GNN-EGG,GNN-GD,GNN-Diff,Full-EGG,Full-GD,Full-Diff},
+    x tick label style={rotate=55, anchor=east, font=\scriptsize},
+    xtick style={draw=none},
+    ytick style={color=black},
+    xlabel={},
+    ymin=0.000,
+    ymax=4.550,
+    ylabel={}
+]
+\addplot+[draw=black, line width=0.15pt, fill=PreprocessColor] coordinates { (0,1.467920) (1,1.467920) (2,1.467920) (3,2.384850) (4,2.384850) (5,2.384850) };
+\addplot+[draw=black, line width=0.15pt, fill=PredictionColor] coordinates { (0,0.007379) (1,0.007379) (2,0.000000) (3,0.030416) (4,0.030416) (5,0.000000) };
+\addplot+[draw=black, line width=0.15pt, fill=DecodeColor] coordinates { (0,0.294381) (1,0.282910) (2,0.112154) (3,0.704819) (4,1.911848) (5,0.484737) };
+\addplot+[draw=black, line width=0.15pt, fill=ProjectionColor] coordinates { (0,0.000000) (1,0.000000) (2,0.001175) (3,0.000000) (4,0.000000) (5,0.001236) };
+
+\nextgroupplot[
+    ybar stacked,
+    /pgf/bar width=10pt,
+    title={\tiny SCP $\left(\begin{array}{l}n=50\\ m=50\\ k=5\end{array}\right)$},
+    width=0.31\textwidth,
+    height=0.36\textwidth,
+    scale only axis,
+    tick align=outside,
+    tick pos=left,
+    x grid style={darkgray176},
+    y grid style={darkgray176},
+    ymajorgrids,
+    xmin=-0.8, xmax=8.8,
+    xtick={0,1,2,3,4,5,6,7,8},
+    xticklabels={GNN-EGG,GNN-GD,GNN-Diff,Pair-EGG,Pair-GD,Pair-Diff,Full-EGG,Full-GD,Full-Diff},
+    x tick label style={rotate=55, anchor=east, font=\scriptsize},
+    xtick style={draw=none},
+    ytick style={color=black},
+    xlabel={},
+    ymin=0.000,
+    ymax=4.526,
+    ylabel={Runtime (s)},
+    ytick style={draw=none}
+]
+\addplot+[draw=black, line width=0.15pt, fill=PreprocessColor] coordinates { (0,0.130412) (1,0.130412) (2,0.130412) (3,0.240600) (4,0.240600) (5,0.240600) (6,0.247196) (7,0.247196) (8,0.247196) };
+\addplot+[draw=black, line width=0.15pt, fill=PredictionColor] coordinates { (0,0.004576) (1,0.004576) (2,0.000000) (3,0.033901) (4,0.033901) (5,0.000000) (6,0.028957) (7,0.028957) (8,0.000000) };
+\addplot+[draw=black, line width=0.15pt, fill=DecodeColor] coordinates { (0,0.052439) (1,0.046160) (2,0.077647) (3,0.169045) (4,0.934508) (5,0.444091) (6,0.159069) (7,0.975702) (8,0.393478) };
+\addplot+[draw=black, line width=0.15pt, fill=ProjectionColor] coordinates { (0,0.000000) (1,0.000000) (2,0.005266) (3,0.000000) (4,0.000000) (5,0.004839) (6,0.000000) (7,0.000000) (8,0.005116) };
+
+\nextgroupplot[
+    ybar stacked,
+    /pgf/bar width=10pt,
+    title={\tiny SCP $\left(\begin{array}{l}n\in\mathcal{U}[120,180]\\ m\in\mathcal{U}[150,250]\\ k=5\end{array}\right)$},
+    width=0.31\textwidth,
+    height=0.36\textwidth,
+    scale only axis,
+    tick align=outside,
+    tick pos=left,
+    x grid style={darkgray176},
+    y grid style={darkgray176},
+    ymajorgrids,
+    xmin=-0.8, xmax=8.8,
+    xtick={0,1,2,3,4,5,6,7,8},
+    xticklabels={GNN-EGG,GNN-GD,GNN-Diff,Pair-EGG,Pair-GD,Pair-Diff,Full-EGG,Full-GD,Full-Diff},
+    x tick label style={rotate=55, anchor=east, font=\scriptsize},
+    xtick style={draw=none},
+    ytick style={color=black},
+    xlabel={},
+    ymin=0.000,
+    ymax=4.526,
+    ylabel={},
+    ytick style={draw=none}
+]
+\addplot+[draw=black, line width=0.15pt, fill=PreprocessColor] coordinates { (0,0.270822) (1,0.270822) (2,0.270822) (3,0.989743) (4,0.989743) (5,0.989743)  (6,0.768606) (7,0.768606) (8,0.768606) };
+\addplot+[draw=black, line width=0.15pt, fill=PredictionColor] coordinates {  (0,0.006802) (1,0.006802) (2,0.000000) (3,0.039750) (4,0.039750) (5,0.000000) (6,0.035445) (7,0.035445) (8,0.000000) };
+\addplot+[draw=black, line width=0.15pt, fill=DecodeColor] coordinates { (0,0.305624) (1,0.298832) (2,0.080766) (3,0.748856) (4,3.072322) (5,0.475267) (6,0.559176) (7,3.310044) (8,0.404281) };
+\addplot+[draw=black, line width=0.15pt, fill=ProjectionColor] coordinates { (0,0.000000) (1,0.000000) (2,0.050557) (3,0.000000) (4,0.000000) (5,0.047994)  (6,0.000000) (7,0.000000) (8,0.046921)};
+
+\end{groupplot}
+\node[anchor=north] at ($(group c1r2.south)!0.5!(group c2r2.south)+(0,-1.50cm)$) {%
+\begin{tabular}{@{}c c c c@{}}
+\tikz \draw[fill=PreprocessColor,draw=black] (0,0) rectangle (0.25,0.12);~Preprocess &
+\tikz \draw[fill=PredictionColor,draw=black] (0,0) rectangle (0.25,0.12);~Prediction &
+\tikz \draw[fill=DecodeColor,draw=black] (0,0) rectangle (0.25,0.12);~Decode &
+\tikz \draw[fill=ProjectionColor,draw=black] (0,0) rectangle (0.25,0.12);~Projection
+\end{tabular}%
+};
+\end{tikzpicture}
+\caption{Runtime decomposition of the diffusion-based pipelines. Each stacked bar shows the mean preprocessing, prediction, decoding, and projection times, aggregated over all available evaluated instances and seeds.}
+\label{fig:diffusion_runtime_bars}
+\end{figure}

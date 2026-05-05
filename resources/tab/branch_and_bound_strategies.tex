@@ -1,0 +1,48 @@
+\begin{table}[H]
+    \centering
+    \begin{tabular}{l|l|l}
+        \textbf{Choice category} & \textbf{Description} & \textbf{Methods} \\
+        \hline
+        \multirow{5}{*}{Node selection} & \multirow{5}{*}{Which node to expand next} 
+        &  Best-bound / Best-first search \cite{land_automatic_1960} \\
+        & & Depth/Breadth-first search \cite{golomb_backtrack_1965,moore_shortest_1959} \\
+        & & Hybrid strategies \cite{achterberg_branching_2005,van_hoeve_hybrid_2009} \\
+        & & Local best-bound \\
+        & & Diving heuristics \cite{achterberg_constraint_2007} \\
+        \hline
+        \multirow{7}{*}{Variable selection} & \multirow{7}{*}{Which variable to branch on} 
+        & Most/least fractional \cite{driebeek_algorithm_1966} \\
+        & & Strong branching \\
+        & & Pseudo-cost branching \\
+        & & Reliability branching \\
+        & & Inference-based branching \\
+        & & Conflict-based branching \\
+        & & Machine Learning–based branching \\ 
+        \hline
+        \multirow{4}{*}{Branch direction}   & \multirow{4}{*}{Which child to explore first} 
+        & Follow-the-reference solution \\
+        & & Pseudo-cost direction \\
+        & & Inference direction \\
+        & & Randomized direction\\ 
+        \hline
+        \multirow{6}{*}{Pruning rules}      & \multirow{6}{*}{When to prune nodes} 
+        & Infeasibility of relaxation or constraints \\
+        & & Bound dominance \\
+        & & Integrality \\
+        & & Logical inference \\
+        & & Filtering \\
+        & & Reduced-cost fixing\\ 
+        \hline
+        %Preprocessing      & Local simplification & \\ \hline
+        %Relaxation         & LP / CP / etc. & \\ \hline
+        \multirow{5}{*}{Heuristics}         & \multirow{5}{*}{How to find incumbents} 
+        & RINS \\
+        & & Local branching \\
+        & & Feasibility pump \\
+        & & Diving heuristics \\
+        & & Randomized or ML-guided heuristics \\ \hline
+        %Branching factor   & How many children & \\
+    \end{tabular}
+    \caption{Summary of choices made during the exploration of the B\&B tree with description and a selection of available methods.}
+    \label{tab:branch_and_bound_choices}
+\end{table}

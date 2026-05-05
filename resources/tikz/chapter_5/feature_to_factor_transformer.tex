@@ -1,0 +1,53 @@
+\begin{figure}[H]
+\centering
+\resizebox{0.95\textwidth}{!}{
+\begin{tikzpicture}[
+    font=\small,
+    arrow/.style={-Latex, thick},
+    lab/.style={align=center},
+    slice/.style={draw, rounded corners, minimum width=3.8cm, minimum height=2.2cm, fill=blue!6},
+    plane/.style={draw, rounded corners, fill=white},
+]
+
+% --- Slice 1: Input ---
+\node[slice] (S0) {};
+\node[plane, minimum width=3.2cm, minimum height=1.8cm, anchor=center] (P0) at (S0.center) {};
+% a bit of "3D" effect (three sheets)
+\begin{scope}
+  \draw[rounded corners] ([xshift=-6pt,yshift=6pt]P0.north west) rectangle ([xshift=-6pt,yshift=6pt]P0.south east);
+  \draw[rounded corners] ([xshift=-3pt,yshift=3pt]P0.north west) rectangle ([xshift=-3pt,yshift=3pt]P0.south east);
+\end{scope}
+\node[lab] at (P0.center) {$g_0$\\$\in \mathbb{R}^{N\times 3h}$};
+\node[lab, above=6pt of S0.north] {Input slice};
+
+% --- Slice 2: After one layer ---
+\node[slice, right=3.2cm of S0] (S1) {};
+\node[plane, minimum width=3.2cm, minimum height=1.8cm, anchor=center] (P1) at (S1.center) {};
+\begin{scope}
+  \draw[rounded corners] ([xshift=-6pt,yshift=6pt]P1.north west) rectangle ([xshift=-6pt,yshift=6pt]P1.south east);
+  \draw[rounded corners] ([xshift=-3pt,yshift=3pt]P1.north west) rectangle ([xshift=-3pt,yshift=3pt]P1.south east);
+\end{scope}
+\node[lab] at (P1.center) {$g_{1}$\\$\in \mathbb{R}^{N\times 3h}$};
+\node[lab, above=6pt of S1.north] {After 1 layer};
+
+% Arrow + label between S0 and S1
+\draw[arrow] (S0.east) -- (S1.west)
+  node[midway, above=2pt, lab] {Transformer layer\\(MHA + FFN + LN)};
+
+% --- Slice 3: After L layers ---
+\node[slice, right=3.2cm of S1] (SL) {};
+\node[plane, minimum width=3.2cm, minimum height=1.8cm, anchor=center] (PL) at (SL.center) {};
+\begin{scope}
+  \draw[rounded corners] ([xshift=-6pt,yshift=6pt]PL.north west) rectangle ([xshift=-6pt,yshift=6pt]PL.south east);
+  \draw[rounded corners] ([xshift=-3pt,yshift=3pt]PL.north west) rectangle ([xshift=-3pt,yshift=3pt]PL.south east);
+\end{scope}
+\node[lab] at (PL.center) {$g_{L}$\\$\in \mathbb{R}^{N\times 3h}$};
+\node[lab, above=6pt of SL.north] {After $L$ layers};
+
+% Arrow + label between S1 and SL
+\draw[arrow] (S1.east) -- (SL.west)
+  node[midway, above=2pt, lab] {$L-1$ more layers};
+
+\end{tikzpicture}}
+\caption{Schematic view of representations through a Transformer stack: the input $g_{0}\in\mathbb{R}^{N\times 3h}$ is mapped to $g_{1}$ after one layer, and to $g_{L}$ after $L$ layers.}
+\end{figure}

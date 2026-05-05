@@ -1,0 +1,131 @@
+\begin{figure}[t]
+\centering
+
+\definecolor{GNNEGGColor}{RGB}{0,102,204}
+\definecolor{MRFEGGColor}{RGB}{200,60,40}
+\definecolor{PairMRFEGGColor}{RGB}{230,120,20}
+\definecolor{darkgray176}{RGB}{110,110,110}
+
+\begin{tikzpicture}
+\begin{groupplot}[
+    group style={group size=2 by 2, vertical sep=2cm, horizontal sep=0.7cm, y descriptions at=edge left, ylabels at=edge left},
+    width=0.3\textwidth,
+    height=0.34\textwidth,
+    scale only axis,
+    tick align=outside,
+    tick pos=left,
+    x grid style={darkgray176},
+    y grid style={darkgray176},
+    xmajorgrids,
+    ymajorgrids,
+    xmode=log,
+    log basis x={10},
+    xmin=0.11218169452256213, xmax=5.14261717803136,
+    ymin=-1.6855946525390895, ymax=27.687433994348538,
+    xlabel={Runtime (s)},
+    ylabel={Gap (\%)},
+    xtick style={color=black},
+    ytick style={color=black},
+]
+\nextgroupplot[
+    title={\tiny MIS $\left(\begin{array}{l}n=100\\ p=0.15\end{array}\right)$},
+    xlabel={},
+]
+\addplot [only marks, semithick, GNNEGGColor, mark=x, mark size=3.2, mark options={solid}] coordinates {(0.361249,20.895477)};
+\addplot [only marks, semithick, GNNEGGColor, mark=square*, mark size=3.2, mark options={solid}] coordinates {(0.354274,20.895477)};
+\addplot [only marks, semithick, GNNEGGColor, mark=triangle*, mark size=3.2, mark options={solid}] coordinates {(0.386386,21.373178)};
+\addplot [only marks, semithick, MRFEGGColor, mark=x, mark size=3.2, mark options={solid}] coordinates {(1.455938,16.828605)};
+\addplot [only marks, semithick, MRFEGGColor, mark=square*, mark size=3.2, mark options={solid}] coordinates {(1.854365,3.863369)};
+\addplot [only marks, semithick, MRFEGGColor, mark=triangle*, mark size=3.2, mark options={solid}] coordinates {(1.475611,7.500502)};
+\addplot [thick, black, dashed] table {%
+0.354274 20.895477
+0.361249 20.895477
+1.455938 16.828605
+1.474421 7.786688
+1.475611 7.500502
+1.854365 3.863369
+};
+
+\nextgroupplot[
+    title={\tiny MIS $\left(\begin{array}{l}n\in \mathcal{U}[200\text{--}300]\\ p=0.15\end{array}\right)$},
+    ylabel={},
+    ytick style={draw=none},
+    xlabel={},
+]
+\addplot [only marks, semithick, GNNEGGColor, mark=x, mark size=3.2, mark options={solid}] coordinates {(1.769680,22.685534)};
+\addplot [only marks, semithick, GNNEGGColor, mark=square*, mark size=3.2, mark options={solid}] coordinates {(1.758209,22.685534)};
+\addplot [only marks, semithick, GNNEGGColor, mark=triangle*, mark size=3.2, mark options={solid}] coordinates {(1.581250,18.913013)};
+\addplot [only marks, semithick, MRFEGGColor, mark=x, mark size=3.2, mark options={solid}] coordinates {(3.120085,18.578585)};
+\addplot [only marks, semithick, MRFEGGColor, mark=square*, mark size=3.2, mark options={solid}] coordinates {(4.327114,2.910464)};
+\addplot [only marks, semithick, MRFEGGColor, mark=triangle*, mark size=3.2, mark options={solid}] coordinates {(2.870822,11.394425)};
+\addplot [only marks, semithick, PairMRFEGGColor, mark=x, mark size=3.2, mark options={solid}] coordinates {(2.670708,14.462411)};
+\addplot [only marks, semithick, PairMRFEGGColor, mark=square*, mark size=3.2, mark options={solid}] coordinates {(3.686559,4.619269)};
+\addplot [only marks, semithick, PairMRFEGGColor, mark=triangle*, mark size=3.2, mark options={solid}] coordinates {(2.464056,13.768461)};
+\addplot [thick, black, dashed] table {%
+1.581250 18.913013
+2.870822 11.394425
+3.686559 4.619269
+4.327114 2.910464
+};
+
+
+
+\nextgroupplot[
+    title={\tiny SCP $\left(\begin{array}{l}n=50\\ m=50\\ k=5\end{array}\right)$},
+    ylabel={Gap (\%)},
+    ytick style={draw=none},
+]
+\addplot [only marks, semithick, GNNEGGColor, mark=x, mark size=3.2, mark options={solid}] coordinates {(0.187426,8.305859)};
+\addplot [only marks, semithick, GNNEGGColor, mark=square*, mark size=3.2, mark options={solid}] coordinates {(0.181148,8.305859)};
+\addplot [only marks, semithick, GNNEGGColor, mark=triangle*, mark size=3.2, mark options={solid}] coordinates {(0.213326,21.001953)};
+\addplot [only marks, semithick, MRFEGGColor, mark=x, mark size=3.2, mark options={solid}] coordinates {(0.435222,3.505455)};
+\addplot [only marks, semithick, MRFEGGColor, mark=square*, mark size=3.2, mark options={solid}] coordinates {(1.251855,0.654343)};
+\addplot [only marks, semithick, MRFEGGColor, mark=triangle*, mark size=3.2, mark options={solid}] coordinates {(0.645789,1.637172)};
+\addplot [only marks, semithick, PairMRFEGGColor, mark=x, mark size=3.2, mark options={solid}] coordinates {(0.443547,5.564848)};
+\addplot [only marks, semithick, PairMRFEGGColor, mark=square*, mark size=3.2, mark options={solid}] coordinates {(1.209009,2.891313)};
+\addplot [only marks, semithick, PairMRFEGGColor, mark=triangle*, mark size=3.2, mark options={solid}] coordinates {(0.689530,5.310842)};
+\addplot [thick, black, dashed] table {%
+0.181148 8.305859
+0.187426 8.305859
+0.281293 5.728889
+0.435222 3.505455
+0.645069 1.764444
+0.645789 1.637172
+1.251855 0.654343
+};
+
+\nextgroupplot[
+    title={\tiny SCP $\left(\begin{array}{l}n\in\mathcal{U}[120,180]\\ m\in\mathcal{U}[150,250]\\ k=5\end{array}\right)$},
+    ylabel={},
+    ytick style={draw=none},
+]
+\addplot [only marks, semithick, GNNEGGColor, mark=x, mark size=3.2, mark options={solid}] coordinates {(0.583248,10.569335)};
+\addplot [only marks, semithick, GNNEGGColor, mark=square*, mark size=3.2, mark options={solid}] coordinates {(0.576456,10.569335)};
+\addplot [only marks, semithick, GNNEGGColor, mark=triangle*, mark size=3.2, mark options={solid}] coordinates {(0.402145,25.852494)};
+\addplot [only marks, semithick, MRFEGGColor, mark=x, mark size=3.2, mark options={solid}] coordinates {(1.363226,5.206983)};
+\addplot [only marks, semithick, MRFEGGColor, mark=square*, mark size=3.2, mark options={solid}] coordinates {(4.114094,-0.185595)};
+\addplot [only marks, semithick, MRFEGGColor, mark=triangle*, mark size=3.2, mark options={solid}] coordinates {(1.219807,1.003393)};
+\addplot [only marks, semithick, PairMRFEGGColor, mark=x, mark size=3.2, mark options={solid}] coordinates {(1.778349,7.690221)};
+\addplot [only marks, semithick, PairMRFEGGColor, mark=square*, mark size=3.2, mark options={solid}] coordinates {(4.101815,3.666615)};
+\addplot [only marks, semithick, PairMRFEGGColor, mark=triangle*, mark size=3.2, mark options={solid}] coordinates {(1.513004,19.655381)};
+\addplot [thick, black, dashed] table {%
+0.402145 25.852494
+0.576456 10.569335
+1.219063 0.997054
+4.114094 -0.185595
+};
+\end{groupplot}
+\node[anchor=north] at ($(group c1r2.south)!0.5!(group c2r2.south)+(0,-1.5cm)$) {%
+\begin{tabular}{@{}c c c c c@{}}
+\multicolumn{5}{c}{\textbf{Decoding markers}}\\[0.2em]
+& \tikz \draw[black] plot[only marks, mark=x, mark size=3.2] coordinates {(0,0)};~EGG & 
+\tikz \draw[black] plot[only marks, mark=square*, mark size=3.2] coordinates {(0,0)};~GD & 
+\tikz \draw[black] plot[only marks, mark=triangle*, mark size=3.2] coordinates {(0,0)};~Diff & \\[0.5em]
+\multicolumn{5}{c}{\textbf{Model colors}}\\[0.2em]
+\tikz \draw[GNNEGGColor, line width=1.5pt] (0,0)--(0.35,0);~GNN & \tikz \draw[MRFEGGColor, line width=1.5pt] (0,0)--(0.35,0);~Full & \tikz \draw[PairMRFEGGColor, line width=1.5pt] (0,0)--(0.35,0);~Pair & \multicolumn{2}{c}{\tikz \draw[black,dashed, line width=1.2pt] (0,0)--(0.45,0);~Pareto frontier}
+\end{tabular}%
+};
+\end{tikzpicture}
+\caption{Pareto-style comparison of diffusion-era decoding results on the MIS and SCP test sets. Each point reports the mean runtime and mean relative optimality gap aggregated over available seeds. Colors identify the predictive model, markers identify the decoding strategy, and the dashed curve shows the non-dominated frontier within each dataset.}
+\label{fig:diffusion_pareto}
+\end{figure}

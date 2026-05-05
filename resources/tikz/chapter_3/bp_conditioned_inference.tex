@@ -1,0 +1,69 @@
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  font=\footnotesize, >=latex,
+  var/.style={circle, draw, minimum size=5mm, inner sep=0pt},
+  varfix/.style={circle, draw, fill=gray!30, minimum size=5mm, inner sep=0pt},
+  fac/.style={rectangle, draw, minimum size=3mm, inner sep=1pt},
+  box/.style={rounded corners, draw, inner sep=3pt},
+  legendbox/.style={draw, rounded corners, inner sep=2pt}
+]
+
+% (a) Conditioned factor graph
+\node[box, minimum width=3.8cm, minimum height=2.1cm] (G) {};
+\node at ([yshift=1.2cm]G.north) {\textbf{(a) Conditioned graph}};
+
+\node[varfix] (x1) at ([xshift=-1.2cm,yshift=0.4cm]G.center) {$x_1$};
+\node[var]    (x2) at ([xshift= 0.0cm,yshift=0.4cm]G.center) {$x_2$};
+\node[var]    (x3) at ([xshift= 1.2cm,yshift=0.4cm]G.center) {$x_3$};
+\node[var]    (x4) at ([xshift=-0.6cm,yshift=-0.5cm]G.center) {$x_4$};
+\node[varfix] (x5) at ([xshift= 0.9cm,yshift=-0.5cm]G.center) {$x_5$};
+
+\node[fac] (f12) at ([xshift=-0.6cm,yshift=0.0cm]G.center) {};
+\node[fac] (f23) at ([xshift= 0.6cm,yshift=0.0cm]G.center) {};
+\node[fac] (f24) at ([xshift=-0.2cm,yshift=-0.2cm]G.center) {};
+\node[fac] (f35) at ([xshift= 0.9cm,yshift=-0.2cm]G.center) {};
+
+\draw (x1)--(f12)--(x2);
+\draw (x2)--(f23)--(x3);
+\draw (x2)--(f24)--(x4);
+\draw (x3)--(f35)--(x5);
+
+% BP box
+\node[box, right=8mm of G, align=center] (BP) {BP on\\ fixed graph};
+\draw[->, thick] (G) -- (BP);
+
+% marginals + selection
+\node[box, right=8mm of BP, align=left] (SEL) {cond.\ marginals $\Rightarrow$ select $x_2$};
+\draw[->, thick] (BP) -- (SEL);
+
+% (b) Branch step (tiny tree)
+\node at ([yshift=1.2cm]SEL.north) {\textbf{(b) Guided branching}};
+\node[box, right=8mm of SEL, align=center, inner sep=2pt] (NODE) {$x_1{=}0,\,x_5{=}1$};
+\node[box, below left=5mm and 4mm of NODE, inner sep=2pt] (L) {$x_2{=}0$};
+\node[box, below right=5mm and 4mm of NODE, inner sep=2pt] (R) {$x_2{=}1$};
+\draw[->, thick] (SEL) -- (NODE);
+\draw[->, thick] (NODE) -- (L);
+\draw[->, thick] (NODE) -- (R);
+
+%----- Legend ------------------------------------------------------------------
+%\node[legendbox, below=12mm of SEL, align=left] (leg) {
+%\begin{tabular}{@{}ll@{}}
+%\raisebox{0.6ex}{\tikz{\node[varfix, minimum size=3mm]{};}} & fixed variable\\
+%\raisebox{0.6ex}{\tikz{\node[var, minimum size=3mm]{};}} & free variable\\
+%\raisebox{0.6ex}{\tikz{\node[draw, rectangle, minimum width=3mm, minimum height=3mm]{};}} & factor/constraint \\
+%\raisebox{0.6ex}{%
+%  \tikz[baseline=-0.5ex]{\draw (0,0) rectangle (3mm,3mm);}}& hh
+%\end{tabular}
+%};
+
+\node[varfix, below=12mm of G, minimum size=3mm] (varfix_legend) {};
+\node[right=2mm of varfix_legend, align=left]   (varfix_legend_label) {Fixed variable};
+\node[var, right=of varfix_legend_label, minimum size=3mm] (var_legend) {};
+\node[right=2mm of var_legend, align=left]   (var_legend_label) {Free variable};
+\node[fac, right=of var_legend_label, minimum size=3mm] (fac_legend) {};
+\node[right=2mm of fac_legend, align=left]   (fac_legend_label) {Factor/constraint};
+
+\end{tikzpicture}
+\caption{Run BP on the factor graph conditioned by current fixes to obtain conditional marginals over free variables; use them to select the next branching/diving variable and split.}
+\end{figure}

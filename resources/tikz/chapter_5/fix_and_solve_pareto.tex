@@ -1,0 +1,383 @@
+\begin{figure}[t]
+\centering
+
+% --- GNN (anchor) ---
+\definecolor{GNNEGGColor}{RGB}{0,102,204}      % strong blue
+% --- EGG family (warm + green) ---
+\definecolor{MRFEGGColor}{RGB}{200,60,40}      % red
+\definecolor{PairMRFEGGColor}{RGB}{230,120,20} % dark orange
+\definecolor{TreeMRFEGGColor}{RGB}{0,140,100}  % teal green
+% --- GD family (cool / distinct) ---
+\definecolor{MRFGDColor}{RGB}{140,80,160}      % purple
+\definecolor{PairMRFGDColor}{RGB}{0,150,180}   % cyan (dark enough)
+\definecolor{TreeMRFGDColor}{RGB}{120,120,40}  % olive
+% --- neutrals ---
+\definecolor{darkgray176}{RGB}{110,110,110}
+\definecolor{lightgray204}{RGB}{200,200,200}
+\definecolor{OptTimeoutColor}{RGB}{31,119,180}
+
+%\resizebox{.99\linewidth}{!}{
+\begin{tikzpicture}
+\begin{groupplot}[
+    group style={
+        group size=3 by 1,
+        horizontal sep=0.2cm,
+        y descriptions at=edge left,
+        ylabels at=edge left,
+    },
+    width=0.29\textwidth,
+    height=0.30\textwidth,
+    scale only axis,
+    tick align=outside,
+    tick pos=left,
+    x grid style={darkgray176},
+    y grid style={darkgray176},
+    ymajorgrids,
+    xmin=-0.64, xmax=4.64,
+    xtick={0,1,2,3,4},
+    xticklabels={0.5,0.6,0.7,0.8,0.9},
+    ymin=-2, ymax=12,
+    xlabel={p},
+    xtick style={color=black},
+    ytick style={color=black},
+]
+
+% =========================
+% --- Plot 1 (left) ---
+% =========================
+\nextgroupplot[
+log basis x={10},
+tick align=outside,
+tick pos=left,
+title={\tiny SCP $\left(\begin{array}{l}n=50\\ m=50\\ k=5\end{array}\right)$},
+x grid style={darkgray176},
+xlabel={Runtime (s)},
+xmajorgrids,
+xmin=0.0377569620762479, xmax=1.13876313962515,
+xmode=log,
+xtick style={color=black},
+xtick={0.001,0.01,0.1,1,10,100},
+xticklabels={
+  \(\displaystyle {10^{-3}}\),
+  \(\displaystyle {10^{-2}}\),
+  \(\displaystyle {10^{-1}}\),
+  \(\displaystyle {10^{0}}\),
+  \(\displaystyle {10^{1}}\),
+  \(\displaystyle {10^{2}}\)
+},
+y grid style={darkgray176},
+ylabel={Gap (\%)},
+ymajorgrids,
+ymin=-1.32857039043252, ymax=12.1956979447318,
+ytick style={color=black}
+]
+\addplot [semithick, GNNEGGColor, mark=+, mark size=3, mark options={solid}]
+table {%
+0.0533245112893637 1.24148148148148
+0.0484016584903002 2.13198653198653
+0.0440802603455571 3.33414141414141
+0.0462508742042507 5.36632996632997
+0.0491994086856333 8.0179797979798
+};
+\addplot [semithick, MRFEGGColor, mark=+, mark size=3, mark options={solid}]
+table {%
+0.198730551554356 1.12175084175084
+0.193984107262377 1.60848484848485
+0.187810402909061 2.23609427609428
+0.185868649822796 3.1813468013468
+0.185528761211433 4.4813468013468
+};
+\addplot [semithick, MRFGDColor, mark=x, mark size=3, mark options={solid}]
+table {%
+0.6551034182502 0.997912457912458
+0.718739751438591 1.40720538720539
+0.802940038194472 1.8030303030303
+0.902496745711406 2.18309764309764
+0.975407956749725 2.30188552188552
+};
+\addplot [semithick, PairMRFEGGColor, mark=+, mark size=3, mark options={solid}]
+table {%
+0.207979984676116 1.03508417508418
+0.201760217719847 1.5956228956229
+0.195374109272593 2.57003367003367
+0.193831948051578 4.16835016835017
+0.193776467216279 5.84215488215488
+};
+\addplot [semithick, PairMRFGDColor, mark=x, mark size=3, mark options={solid}]
+table {%
+0.680887668373393 0.899259259259259
+0.739528259253246 1.49744107744108
+0.81098568918587 2.31427609427609
+0.888220174737663 3.36794612794613
+0.939163050241691 4.01151515151515
+};
+\addplot [semithick, TreeMRFEGGColor, mark=+, mark size=3, mark options={solid}]
+table {%
+0.116848685780618 1.21259259259259
+0.110586624882262 2.14208754208754
+0.100251256865973 3.43124579124579
+0.0986573176543267 5.70242424242424
+0.0982304374060671 8.21050505050505
+};
+\addplot [semithick, TreeMRFGDColor, mark=x, mark size=3, mark options={solid}]
+table {%
+0.528045266076651 1.20592592592593
+0.571362851270067 2.14208754208754
+0.6258097499258 3.35279461279461
+0.681302578628083 5.67925925925926
+0.713120733383597 7.9186531986532
+};
+\addplot [thick, black, dashed]
+table {%
+0.0440802603455571 3.33414141414141
+0.0484016584903002 2.13198653198653
+0.0533245112893637 1.24148148148148
+0.116848685780618 1.21259259259259
+0.198730551554356 1.12175084175084
+0.207979984676116 1.03508417508418
+0.6551034182502 0.997912457912458
+0.680887668373393 0.899259259259259
+};
+\addplot [thick, OptTimeoutColor]
+table {%
+0.203329526273565 -1.32857039043252
+0.203329526273565 12.1956979447318
+};
+
+% =========================
+% --- Plot 2 (middle) ---
+% =========================
+\nextgroupplot[
+log basis x={10},
+tick align=outside,
+tick pos=left,
+title={\tiny SCP $\left(\begin{array}{l}n\in\mathcal{U}[120,180]\\ m\in\mathcal{U}[150,250]\\ k=5\end{array}\right)$},
+x grid style={darkgray176},
+xlabel={Runtime (s)},
+xmajorgrids,
+xmin=0.138539095288683, xmax=262.153011161254,
+xmode=log,
+xtick style={color=black},
+xtick={0.01,0.1,1,10,100,1000,10000},
+xticklabels={
+  \(\displaystyle {10^{-2}}\),
+  \(\displaystyle {10^{-1}}\),
+  \(\displaystyle {10^{0}}\),
+  \(\displaystyle {10^{1}}\),
+  \(\displaystyle {10^{2}}\),
+  \(\displaystyle {10^{3}}\),
+  \(\displaystyle {10^{4}}\)
+},
+y grid style={darkgray176},
+ylabel={},
+ymajorgrids,
+ymin=-1.32857039043252, ymax=12.1956979447318,
+ytick style={draw=none},
+]
+\addplot [semithick, GNNEGGColor, mark=+, mark size=3, mark options={solid}]
+table {%
+1.96907315925429 1.28719735181417
+0.732472870745447 2.59584652368798
+0.279249582721552 4.21909092212313
+0.267458853804523 6.38368701478653
+0.292708522956569 9.3106593303389
+};
+\addplot [semithick, MRFEGGColor, mark=+, mark size=3, mark options={solid}]
+table {%
+1.6730662012185 0.577553537449138
+0.995601446142069 1.15188593869782
+0.619555215489226 1.89569241500485
+0.581869352880803 3.05445896569175
+0.577772019992501 4.69141659395269
+};
+\addplot [semithick, MRFGDColor, mark=x, mark size=3, mark options={solid}]
+table {%
+3.01121424521869 0.477907217357616
+2.69477828552309 0.804356019668834
+2.67642191142276 1.12484380371488
+2.92416254803807 1.49018147812082
+3.17868616388175 1.825156217929
+};
+\addplot [semithick, PairMRFEGGColor, mark=+, mark size=3, mark options={solid}]
+table {%
+2.23450523363524 0.674819673498569
+1.27800238460558 1.44459236523204
+0.809254288107445 2.68372812567816
+0.766184920218674 4.5916086955107
+0.763438748084631 6.67579142661191
+};
+\addplot [semithick, PairMRFGDColor, mark=x, mark size=3, mark options={solid}]
+table {%
+3.77531535804112 0.60207547171976
+3.03735339149695 1.25865723300985
+2.75087897941261 2.2267453558002
+2.90029858637036 3.43868022415078
+3.0502454863091 4.40915887208487
+};
+\addplot [semithick, TreeMRFEGGColor, mark=+, mark size=3, mark options={solid}]
+table {%
+1.95103512095999 1.12170704080413
+0.740809914553688 2.44922673532684
+0.239313433689242 4.18794645908774
+0.198672967441399 6.4686331142369
+0.195220804140409 9.19252391858699
+};
+\addplot [semithick, TreeMRFGDColor, mark=x, mark size=3, mark options={solid}]
+table {%
+2.97298311037417 1.11819391190169
+1.92098520785325 2.44554022903442
+1.57115452207427 4.17137113556915
+1.65273706393727 6.43799249685541
+1.73539029717504 9.02571909744575
+};
+\addplot [thick, black, dashed]
+table {%
+0.195220804140409 9.19252391858699
+0.198672967441399 6.4686331142369
+0.239313433689242 4.18794645908774
+0.581869352880803 3.05445896569175
+0.619555215489226 1.89569241500485
+0.995601446142069 1.15188593869782
+1.6730662012185 0.577553537449138
+3.01121424521869 0.477907217357616
+};
+\addplot [thick, OptTimeoutColor]
+table {%
+186.037759415039 -1.32857039043252
+186.037759415039 12.1956979447318
+};
+
+
+% =========================
+% --- Plot 3 (right) ---
+% =========================
+\nextgroupplot[
+log basis x={10},
+tick align=outside,
+tick pos=left,
+title={\tiny SCP $\left(\begin{array}{l}n\in\mathcal{U}[150,300]\\ m\in\mathcal{U}[150,300]\\ k=15\end{array}\right)$},
+x grid style={darkgray176},
+xlabel={Runtime (s)},
+xmajorgrids,
+xmin=0.302681657894276, xmax=417.836886563493,
+xmode=log,
+xtick style={color=black},
+xtick={0.01,0.1,1,10,100,1000,10000},
+xticklabels={
+  \(\displaystyle {10^{-2}}\),
+  \(\displaystyle {10^{-1}}\),
+  \(\displaystyle {10^{0}}\),
+  \(\displaystyle {10^{1}}\),
+  \(\displaystyle {10^{2}}\),
+  \(\displaystyle {10^{3}}\),
+  \(\displaystyle {10^{4}}\)
+},
+y grid style={darkgray176},
+ylabel={},
+ymajorgrids,
+ymin=-1.32857039043252, ymax=12.1956979447318,
+ytick style={draw=none}
+]
+\addplot [semithick, GNNEGGColor, mark=+, mark size=3, mark options={solid}]
+table {%
+264.314597640982 -0.231796792737634
+210.555325569484 -0.190619417450081
+32.6090567713293 0.823717244912897
+1.9873966218244 4.98338152439983
+0.848374719514201 11.5809584749516
+};
+\addplot [semithick, PairMRFEGGColor, mark=+, mark size=3, mark options={solid}]
+table {%
+260.025338782895 -0.625169650027992
+185.540497529038 -0.306424279795207
+32.2995428642067 1.22561163054946
+15.6619189844517 3.72491361094364
+14.6759794251823 10.1844560315356
+};
+\addplot [semithick, PairMRFGDColor, mark=x, mark size=3, mark options={solid}]
+table {%
+260.550353792311 -0.713830920652322
+185.335650776036 -0.00953976097677741
+35.4304041350808 1.12226497476307
+25.5528139069157 3.52466791532344
+25.6350884799499 8.0024321832451
+};
+\addplot [semithick, TreeMRFEGGColor, mark=+, mark size=3, mark options={solid}]
+table {%
+270.806128532314 -0.147626873110041
+211.241682244951 0.042896698224041
+35.7595375988263 1.38388520668618
+1.73256051217074 4.58849383925429
+0.42044996095093 10.9352460239886
+};
+\addplot [semithick, TreeMRFGDColor, mark=x, mark size=3, mark options={solid}]
+table {%
+272.346657243463 -0.0797318441973558
+217.606262397366 0.153990976868691
+35.9576975817074 1.38388520668618
+3.90992203871925 4.70349681083202
+2.7805738191109 10.8878919901413
+};
+\addplot [thick, black, dashed]
+table {%
+0.42044996095093 10.9352460239886
+1.73256051217074 4.58849383925429
+15.6619189844517 3.72491361094364
+25.5528139069157 3.52466791532344
+32.2995428642067 1.22561163054946
+32.6090567713293 0.823717244912897
+185.335650776036 -0.00953976097677741
+185.540497529038 -0.306424279795207
+260.025338782895 -0.625169650027992
+260.550353792311 -0.713830920652322
+};
+\addplot [thick, OptTimeoutColor]
+table {%
+300.800507314546 -1.32857039043252
+300.800507314546 12.1956979447318
+};
+
+\end{groupplot}
+
+\node[
+    anchor=north,
+    draw=lightgray204,
+    fill=white,
+    fill opacity=0.85,
+    text opacity=1,
+    inner sep=1pt
+] at ($(group c1r1.south west)!0.5!(group c3r1.south east) + (0,-1.45cm)$) {
+\begin{tikzpicture}[baseline]
+\matrix[
+    matrix of nodes,
+    nodes={anchor=west, font=\scriptsize},
+    column sep=10pt,
+    row sep=0pt
+] {
+    \draw[semithick, GNNEGGColor] (0,0) -- (0.45,0);
+    \draw[GNNEGGColor,mark=+,mark size=3] plot coordinates {(0.225,0)}; & GNN EGG &
+    \draw[semithick, MRFEGGColor] (0,0) -- (0.45,0);
+    \draw[MRFEGGColor,mark=+,mark size=3] plot coordinates {(0.225,0)}; & MRF EGG &
+    \draw[semithick, PairMRFEGGColor] (0,0) -- (0.45,0);
+    \draw[PairMRFEGGColor,mark=+,mark size=3] plot coordinates {(0.225,0)}; & Pair MRF EGG &
+    \draw[semithick, TreeMRFEGGColor] (0,0) -- (0.45,0);
+    \draw[TreeMRFEGGColor,mark=+,mark size=3] plot coordinates {(0.225,0)}; & Tree MRF EGG \\
+    & &     \draw[semithick, MRFGDColor] (0,0) -- (0.45,0);
+    \draw[MRFGDColor,mark=x,mark size=3] plot coordinates {(0.225,0)}; & MRF GD &
+    \draw[semithick, PairMRFGDColor] (0,0) -- (0.45,0);
+    \draw[PairMRFGDColor,mark=x,mark size=3] plot coordinates {(0.225,0)}; & Pair MRF GD &
+    \draw[semithick, TreeMRFGDColor] (0,0) -- (0.45,0);
+    \draw[TreeMRFGDColor,mark=x,mark size=3] plot coordinates {(0.225,0)}; & Tree MRF GD \\
+    \draw[thick, OptTimeoutColor] (0,0) -- (0.45,0); & Timeout &
+    \draw[thick, black, dashed] (0,0) -- (0.45,0); & Pareto front & & & & \\
+};
+\end{tikzpicture}
+};
+
+\end{tikzpicture}
+%}
+
+\caption{
+Pareto frontiers illustrating the trade-off between runtime and optimality gap for different fixing policies across three SCP test distributions. Each point corresponds to a fixing ratio $p$, with smaller $p$ yielding faster but less accurate solutions. Lines with markers represent different models and decoding strategies. The dashed black curve denotes the empirical Pareto frontier, highlighting the best achievable trade-offs across all methods. Vertical blue lines indicate the time limit beyond which runs are considered timed out.}
+\label{fig:chapter_5_fix_and_solve_pareto}
+\end{figure}

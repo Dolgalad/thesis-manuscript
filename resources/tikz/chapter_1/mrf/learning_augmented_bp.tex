@@ -1,0 +1,24 @@
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[node distance=2cm, every node/.style={font=\small}]
+  % Variable nodes
+  \node[circle,draw,minimum size=0.8cm] (x1) {$x_1$};
+  \node[circle,draw,minimum size=0.8cm, right of=x1] (x2) {$x_2$};
+  \node[circle,draw,minimum size=0.8cm, right of=x2] (x3) {$x_3$};
+  % Factor nodes
+  \node[rectangle,draw,minimum width=0.9cm,minimum height=0.6cm,below of=x1,node distance=1.5cm] (f1) {$\psi_1$};
+  \node[rectangle,draw,minimum width=0.9cm,minimum height=0.6cm,below of=x2,node distance=1.5cm] (f2) {$\psi_{12}$};
+  \node[rectangle,draw,minimum width=0.9cm,minimum height=0.6cm,below of=x3,node distance=1.5cm] (f3) {$\psi_2$};
+  % Edges
+  \draw (x1) -- (f1);
+  \draw (x1) -- (f2);
+  \draw (x2) -- (f2);
+  \draw (x2) -- (f3);
+  \draw (x3) -- (f3);
+  % Neural annotation
+  \node[below=0.8cm of f2,font=\footnotesize,align=center] (nn) {Neural module \\ adapting messages};
+  \draw[->,dashed] (nn.north) -- (f2.south);
+\end{tikzpicture}
+\caption{Schematic illustration of learning-augmented Belief Propagation. 
+Classical messages (solid edges) are complemented by neural modules (dashed arrow) that reweight or adapt updates.}
+\end{figure}

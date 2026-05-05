@@ -1,0 +1,44 @@
+
+\begin{table}[H]
+    \centering
+    \resizebox{\textwidth}{!}{
+    \begin{tabular}{l|l|l}
+        \textbf{Choice category} & \textbf{Description} & \textbf{Methods} \\
+        \hline
+
+        %===========================
+        % CUT SEPARATION
+        %===========================
+        \multirow{5}{*}{Cut separation} 
+        & \multirow{5}{*}{How to identify violated inequalities} 
+        & Gomory cuts \cite{gomory_outline_1958} \\
+        & & MIR / MIR+ cuts \cite{nemhauser_integer_1988} \\
+        & & Flow cover cuts \cite{atamturk_cover_2005} \\
+        & & Clique and lift-and-project cuts \cite{balas_mixed_1996} \\
+        & & Disjunctive cuts \cite{balas_disjunctive_1979,floudas_generalized_2008} \\
+        \hline
+
+        %===========================
+        % CUTTING STRATEGY
+        %===========================
+        \multirow{2}{*}{Cutting strategy} 
+        & \multirow{2}{*}{When to apply cutting-plane rounds}
+        & Root-node cutting \cite{caprara_0_1996} \\
+        & & Hybrid cut+branch strategies \cite{padberg_facet_1990} \\
+        \hline
+
+        %===========================
+        % SEPARATION SCOPE
+        %===========================
+        \multirow{4}{*}{Separation scope} 
+        & \multirow{4}{*}{Where cuts are valid}
+        & Global cuts \\
+        & & Local (node-specific) cuts \\
+        & & Path-dependent cuts \\
+        & & Hybrid global/local cut handling \\
+        \hline
+
+    \end{tabular}}
+    \caption{Summary of choices and strategies specific to Branch-and-Cut, structured by decision category and representative methods.}
+    \label{tab:branch_and_cut_choices}
+\end{table}

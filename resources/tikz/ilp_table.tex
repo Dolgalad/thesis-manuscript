@@ -1,0 +1,47 @@
+	\begin{tikzpicture}[
+			remember picture,
+			every node/.style={
+				minimum height=2em,
+				minimum width=2em,
+				inner sep=0pt,
+			},
+			ampersand replacement=\&,
+			row 1/.style={
+				%nodes={fill=blue!20},
+				minimum height=2em,
+			},
+			var/.style={fill=blue!20},
+			cost/.style={fill=purple!20},
+			clabel/.style={fill=green!20},
+			constr/.style={fill=red!20},
+			rhs/.style={fill=orange!20},
+		]
+
+
+		\matrix [column sep=0em] 
+  		{
+			\node[var] (x1) {$x_{1}$}; \& \node[var]{$\dots$}; \& \node[var] (mx1) {$x_j$}; \& \node[var]{$\dots$}; \& \node[var] (xn) {$x_{n}$}; \&[1mm] \& \\
+			\node[cost] (c1) {$c_{1}$}; \& \node[cost]{$\dots$}; \& \node[cost] {$c_j$}; \& \node[cost]{$\dots$}; \& \node[cost] (cn) {$c_{n}$}; \&[1mm] \& \\[1mm]
+		\node[constr] (a11) {$a_{11}$}; \& \node[constr]{}; \& \node[constr]{$\dots$}; \& \node[constr]{}; \& \node[constr] {$a_{1n}$}; \&[1mm] \node[rhs] (b1) {$b_1$}; \& \node[clabel] (r1) {$(r_1)$}; \\
+		\node[constr]{}; \& \node[constr]{$\ddots$}; \& \node[constr]{};\& \node[constr]{};\& \node[constr]{}; \&[1mm] \node[rhs]{$\vdots$}; \& \node[clabel]{$\vdots$}; \\
+		\node[constr] (mc1) {$\vdots$}; \& \node[constr]{};\& \node[constr] (aij) {$a_{ij}$}; \& \node[constr]{};\& \node[constr]{$\vdots$}; \&[1mm] \node[rhs]{$b_i$}; \& \node[clabel] (mc2) {$(r_i)$}; \\
+		\node[constr]{};  \& \node[constr]{}; \& \node[constr]{}; \& \node[constr]{$\ddots$}; \& \node[constr]{}; \&[1mm] \node[rhs]{$\vdots$}; \& \node[clabel]{$\vdots$}; \\
+		\node[constr] {$a_{m1}$}; \& \node[constr]{};\& \node[constr] (mx2) {$\ldots$}; \& \node[constr] {};\& \node[constr] (amn) {$a_{mn}$}; \&[1mm] \node[rhs] (bm) {$b_m$}; \& \node[clabel] (rm) {$(r_m)$}; \\
+		};
+		\node[fit={(x1.north west) (xn.south east)}, inner sep=0pt, draw]{};
+		\node[fit={(c1.north west) (cn.south east)}, inner sep=0pt, draw]{};
+		\node[fit={(r1.north west) (rm.south east)}, inner sep=0pt, draw]{};
+		\node[fit={(b1.north west) (bm.south east)}, inner sep=0pt, draw]{};
+
+		\node[fit={(a11.north west) (amn.south east)}, inner sep=0pt, draw]{};
+
+
+		\node[fit={(mx1.north west) (mx2.south east)}, ultra thick, inner sep=0pt, rounded corners=1mm, draw=cyan]{};
+		\node[fit={(mc1.north west) (mc2.south east)}, ultra thick, inner sep=0pt, rounded corners=1mm, draw=magenta]{};
+
+                \node[above=0.1em of mx1] {Variables};
+                \node[below=0.1em of mx2] {Constraint matrix};
+		\node[right=0.8em of mc2,rotate=90] (rhs) {RHS};
+
+\end{tikzpicture}
+
