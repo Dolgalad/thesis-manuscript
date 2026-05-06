@@ -1,4 +1,11 @@
-The present thesis combines methods from the fields of integer linear programs (ILP), machine learning and statistical inference. This chapter aims to provide the reader with sufficient background information and notations to tackle the following chapters. In the first section we will give a presentation of ILPs and their formal definition as well as a brief overview of strategies for solving such problems, emphasizing the elements that could be subject to integration of ML techniques. Machine learning, being the central approach that we aim to study in relation to ILPs will be presented in the following section. We follow this presentation by defining Markov Random Fields and the general inference problem that will be required and refered to throughout the contribution work of this thesis.
+\chapter{Background}\label{chap1:background}
+\chaptermark{Background}
+
+\section{Chapter overview}
+
+This thesis studies how machine learning can be combined with structured inference to support the solution of integer linear programs (ILPs). The problems considered in later chapters are combinatorial: feasible solutions are discrete, highly constrained, and often expensive to search over directly. For this reason, the thesis draws on three complementary areas. Integer linear programming provides the formal optimization setting; machine learning provides tools for learning from families of problem instances; and Markov Random Fields (MRFs) provide a probabilistic language for representing dependencies among discrete decision variables.
+
+This chapter introduces the background needed to connect these areas. We first review ILPs, their formal definition, and the main algorithmic ideas behind modern solution methods, with particular attention to the components where learned predictions may be useful. We then introduce the machine-learning concepts used later in the thesis, including neural networks and graph neural networks, which are well suited to data defined on combinatorial structures. Finally, we present MRFs, energy-based models, and approximate inference methods, since these provide the structured probabilistic framework used to transform local learned information into globally coherent predictions.
 
 
 \input{chapters/1.1-background_co}
@@ -6,11 +13,3 @@ The present thesis combines methods from the fields of integer linear programs (
 \input{chapters/1.2-background_ml}
 
 \input{chapters/1.3-background_mrf}
-
-In this chapter, we introduced the fundamental concepts required for the remainder of this thesis. First, we reviewed Integer Linear Programming (ILP) and the general algorithmic frameworks used to solve such problems, highlighting how modern ILP solvers rely on numerous heuristic design choices while still preserving optimality guarantees. This motivates the possibility of integrating learning components into these pipelines.
-
-We then presented core ideas from machine learning and deep learning, with an emphasis on neural networks and Graph Neural Networks (GNNs). These architectures will form the basis of the learned predictors developed later in this thesis, enabling models that exploit the structure of combinatorial instances.
-
-Finally, we discussed energy-based modeling through Boltzmann distributions, exponential-family representations, and Markov Random Fields (MRFs). We introduced inference procedures—particularly message-passing algorithms such as Belief Propagation—which provide a powerful mechanism for reasoning over structured distributions and will play a central role in our proposed methodology.
-
-The next chapter builds upon these foundations by examining how learning and inference can be applied to the solution of ILPs. We will outline the challenges associated with predicting highly structured combinatorial solutions and show how these difficulties can be mitigated by leveraging deep learning and differentiable inference.

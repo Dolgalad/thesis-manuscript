@@ -6,7 +6,7 @@ This section introduces the integer linear programming framework used in the mai
 
 \subsection{Combinatorial optimization and ILP formulations}
 
-Combinatorial optimization (CO) concerns optimization problems whose feasible solutions are discrete objects, such as subsets, paths, matchings, or assignments. Many such problems can be formulated as integer linear programs, which makes ILP a convenient common language for both classical optimization algorithms and learning-based methods. In this thesis, we focus on binary ILP formulations that explicitly expose variables and constraints, since this structure can be represented as a graph and used as input to neural and graphical-model methods.
+Combinatorial optimization (CO) concerns optimization problems whose feasible solutions are discrete objects, such as subsets, paths, matchings, or assignments. Many such problems can be formulated as integer linear programs, which makes ILPs a convenient common language for both classical optimization algorithms and learning-based methods. In this thesis, we focus on binary ILP formulations that explicitly expose variables and constraints, since this structure can be represented as a graph and used as input to neural and graphical-model methods.
 
 \subsection{Problem definition}
 The \emph{canonical form} of an ILP is given as
@@ -176,7 +176,7 @@ Unlike the edge-based MIS formulation, a single SC constraint may involve many v
 
 \input{resources/tikz/chapter_1/co/set_cover_example}
 
-\subsection{Summary and transition}
+\subsection{Summary: ILPs as structured prediction inputs}
 
 This section introduced BILP formulations, the classical solver context, and the graph representation used to encode ILP structure. The key point for the remainder of the thesis is that feasibility constraints couple the binary decision variables: predicting each variable independently is generally insufficient to obtain a valid solution. The variable-constraint graph provides a natural input representation for learning models, while later sections will show how related graphical structures can represent interactions between solution variables.
 

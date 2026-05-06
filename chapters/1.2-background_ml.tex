@@ -285,7 +285,7 @@ In addition to optimization-derived quantities, one may use purely structural gr
 
 Random node features can also be added to break symmetries or increase the expressive power of message-passing GNNs~\cite{sato_random_2021,abboud_surprising_2021}. These features are used later as inputs to neural encoders, which transform them into embeddings for variable scoring, MRF parameter prediction, denoising updates, or feature-to-factor mappings.
 
-\subsection{Summary and transition}
+\subsection{Summary: Learning structured predictors}
 
 This section introduced the machine-learning concepts used in the remainder of the thesis. Supervised learning provides the basic framework for training direct variable-level predictors and learned MRF parameterizations from reference solutions. Binary cross-entropy will be used for direct binary prediction, while later chapters use inference-based surrogate losses to train structured MRF predictors.
 
