@@ -117,7 +117,7 @@ It is important to distinguish this representation from the factor graphs introd
 
 The graph $\VCGFULL$ can be enriched with node and edge features. Node features may encode quantities associated with variables or constraints, such as objective coefficients, right-hand-side values, slack values, fractional values, dual information, or basis status. Edge features may similarly encode the coefficient $A_{ji}$ associated with variable $i$ in constraint $j$.
 
-This representation offers several advantages. First, it provides a sparse and permutation-invariant encoding of the optimization problem structure, making it well suited to graph-based learning architectures. Second, it allows instances of different sizes to be processed within a common framework and to be batched together as disconnected components of a larger graph. Finally, this representation is closely related to the factor graph formalism introduced later in Section~\ref{sec:mrf_intro}, which will be central to our Markov random field models.
+This representation offers several advantages. First, it provides a sparse encoding whose structure is independent of the ordering of variables and constraints of the optimization problem structure, making it well suited to graph-based learning architectures. Second, it allows instances of different sizes to be processed within a common framework and to be batched together as disconnected components of a larger graph. Finally, this representation is closely related to the factor graph formalism introduced later in Section~\ref{sec:mrf_intro}, which will be central to our Markov random field models.
 
 
 \subsection{Representative problems}

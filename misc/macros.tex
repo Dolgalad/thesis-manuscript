@@ -39,6 +39,46 @@
 \newcommand\VCGE{\mathcal{E}_{\mathrm{vc}}}
 \newcommand\VCGFULL{\VCG=(\VCGV \cup \VCGC, \VCGE)}
 
+% ML
+\newcommand\GENENNPARAM{\omega}
+\newcommand\GENENNPARAMSPACE{\mathcal{W}}
+
+% ML datasets and examples
+\newcommand\DATASET{\mathcal{D}}
+\newcommand\TRAINDATA{\mathcal{D}_{\mathrm{train}}}
+\newcommand\VALDATA{\mathcal{D}_{\mathrm{val}}}
+\newcommand\TESTDATA{\mathcal{D}_{\mathrm{test}}}
+\newcommand\NSAMPLES{N}
+
+% Generic input/output spaces and samples
+\newcommand\INPUTSPACE{\mathcal{X}}
+\newcommand\OUTPUTSPACE{\mathcal{Y}}
+\newcommand\INPUT{x}
+\newcommand\TARGET{y}
+\newcommand\PRED{\hat{y}}
+
+% Generic ML model and probabilities
+\newcommand\MLMODEL{f_{\GENENNPARAM}}
+\newcommand\MODELDIST{p_{\GENENNPARAM}}
+
+% Losses
+\newcommand\LOSS{\mathcal{L}}
+\newcommand\EMPLOSS{\widehat{\mathcal{L}}}
+\newcommand\SUPLOSS{\mathcal{L}_{\mathrm{sup}}}
+\newcommand\BCELOSS{\mathcal{L}_{\mathrm{BCE}}}
+\newcommand\NLLLOSS{\mathcal{L}_{\mathrm{NLL}}}
+\newcommand\DENOISELOSS{\mathcal{L}_{\mathrm{denoise}}}
+\newcommand\FMLOSS{\mathcal{L}_{\mathrm{FM}}}
+
+% Denoising / diffusion / flow matching
+\newcommand\NOISY{\tilde{y}}
+\newcommand\NOISELEVEL{t}
+\newcommand\SOURCEDIST{p_0}
+\newcommand\DATADIST{p_{\mathrm{data}}}
+\newcommand\DENOISER{D_{\GENENNPARAM}}
+\newcommand\VELOCITY{v_{\GENENNPARAM}}
+\newcommand\TARGETVELOCITY{u}
+
 % MRFs
 \newcommand\FACTORSET{\mathcal{F}}
 \newcommand\FG{H_{\mathrm{F}}}

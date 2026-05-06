@@ -1,0 +1,131 @@
+\begin{figure}[H]
+\centering
+
+% -------------------------------------------------
+% Layer sizes
+% -------------------------------------------------
+\def\nI{3}    % inputs
+\def\nH{5}    % hidden layer 1
+\def\nHtwo{4} % hidden layer 2
+\def\nO{2}    % outputs
+
+% Spacing
+\def\xsep{3.1}
+\def\ysep{0.9}
+
+\begin{tikzpicture}[
+  >=Latex,
+  every node/.style={font=\small},
+  edge/.style={-{Latex[length=2mm,width=1.4mm]}, line width=0.55pt, draw=blue!50!black},
+  inputneuron/.style={circle, draw=blue!55!black, fill=blue!15, line width=0.8pt, minimum size=7.5mm, inner sep=0pt},
+  hiddenneuron/.style={circle, draw=green!50!black, fill=green!25, line width=0.8pt, minimum size=7.5mm, inner sep=0pt},
+  outputneuron/.style={circle, draw=purple!60!black, fill=purple!20, line width=0.8pt, minimum size=7.5mm, inner sep=0pt},
+  bias/.style={circle, draw=gray!65, fill=gray!18, line width=0.8pt, minimum size=6.2mm, inner sep=0pt},
+  layerbox/.style={rounded corners=8pt, line width=0.9pt, inner sep=6pt}
+]
+
+% -------------------------------------------------
+% Colors, matching graph_denoising_illustration.tex
+% -------------------------------------------------
+\definecolor{TitleColor}{RGB}{10,25,70}
+\definecolor{PurplePanel}{RGB}{130,100,200}
+\definecolor{BluePanel}{RGB}{65,130,200}
+\definecolor{GreenPanel}{RGB}{40,135,85}
+
+% -------------------------------------------------
+% Helper: centered vertical stack of neurons
+% #1 = count, #2 = x-coordinate, #3 = name prefix, #4 = node style
+% -------------------------------------------------
+\newcommand{\stacknodes}[4]{%
+  \pgfmathsetmacro{\N}{#1}
+  \foreach \i in {1,...,#1} {%
+    \node[#4] (#3\i) at (#2,{-(\i-1)*\ysep + 0.5*(\N-1)*\ysep}) {};
+  }%
+}
+
+% -------------------------------------------------
+% Layer x-coordinates and fixed label/parameter rows
+% -------------------------------------------------
+\coordinate (XInput)  at (0,0);
+\coordinate (XHiddenA) at (\xsep,0);
+\coordinate (XHiddenB) at (2*\xsep,0);
+\coordinate (XOutput) at (3*\xsep,0);
+\def\labelY{3.45}
+\def\paramY{-2.85}
+
+% -------------------------------------------------
+% Layers
+% -------------------------------------------------
+\stacknodes{\nI}{0}{I}{inputneuron}
+\node[bias] (b0) at (0,2.15) {$1$};
+
+\stacknodes{\nH}{\xsep}{H}{hiddenneuron}
+\node[bias] (b1) at (\xsep,2.65) {$1$};
+
+\stacknodes{\nHtwo}{2*\xsep}{G}{hiddenneuron}
+\node[bias] (b2) at (2*\xsep,2.20) {$1$};
+
+\stacknodes{\nO}{3*\xsep}{O}{outputneuron}
+
+% -------------------------------------------------
+% Dense connections
+% -------------------------------------------------
+\foreach \i in {1,...,\nI} {
+  \foreach \j in {1,...,\nH} {
+    \draw[edge] (I\i) -- (H\j);
+  }
+}
+\foreach \j in {1,...,\nH} {
+  \draw[edge] (b0) -- (H\j);
+}
+
+\foreach \i in {1,...,\nH} {
+  \foreach \j in {1,...,\nHtwo} {
+    \draw[edge] (H\i) -- (G\j);
+  }
+}
+\foreach \j in {1,...,\nHtwo} {
+  \draw[edge] (b1) -- (G\j);
+}
+
+\foreach \i in {1,...,\nHtwo} {
+  \foreach \j in {1,...,\nO} {
+    \draw[edge] (G\i) -- (O\j);
+  }
+}
+\foreach \j in {1,...,\nO} {
+  \draw[edge] (b2) -- (O\j);
+}
+
+% -------------------------------------------------
+% Aligned layer labels: all on the same horizontal row
+% -------------------------------------------------
+\node[font=\bfseries, text=TitleColor, align=center] at (0,\labelY)
+  {Input layer\\[-1pt]$x$};
+\node[font=\bfseries, text=TitleColor, align=center] at (\xsep,\labelY)
+  {Hidden 1\\[-1pt]$\sigma\!\left(W^{(1)}x+b^{(1)}\right)$};
+\node[font=\bfseries, text=TitleColor, align=center] at (2*\xsep,\labelY)
+  {Hidden 2\\[-1pt]$\sigma\!\left(W^{(2)}h^{(1)}+b^{(2)}\right)$};
+\node[font=\bfseries, text=TitleColor, align=center] at (3*\xsep,\labelY)
+  {Output\\[-1pt]$\hat y=f_{\theta}(x)$};
+
+% -------------------------------------------------
+% Aligned parameter labels: all on the same horizontal row
+% -------------------------------------------------
+\node[font=\bfseries, text=TitleColor] at (0.5*\xsep,\paramY) {$W^{(1)},\ b^{(1)}$};
+\node[font=\bfseries, text=TitleColor] at (1.5*\xsep,\paramY) {$W^{(2)},\ b^{(2)}$};
+\node[font=\bfseries, text=TitleColor] at (2.5*\xsep,\paramY) {$W^{(3)},\ b^{(3)}$};
+
+% -------------------------------------------------
+% Layer boxes, using the same palette as the other NN
+% -------------------------------------------------
+% \node[layerbox, draw=BluePanel, fill=BluePanel!6, fit=(I1) (I\nI) (b0)] {};
+% \node[layerbox, draw=GreenPanel, fill=GreenPanel!6, fit=(H1) (H\nH) (b1)] {};
+% \node[layerbox, draw=GreenPanel, fill=GreenPanel!6, fit=(G1) (G\nHtwo) (b2)] {};
+% \node[layerbox, draw=PurplePanel, fill=PurplePanel!6, fit=(O1) (O\nO)] {};
+
+\end{tikzpicture}
+
+\caption{Feed-forward neural network with two hidden layers, bias units, and dense connections. Activations $\sigma(\cdot)$ are applied element-wise; $W^{(l)}$ and $b^{(l)}$ denote weights and biases.}
+\label{fig:nn_tikz}
+\end{figure}

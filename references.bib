@@ -1,3 +1,20 @@
+@misc{abboud_surprising_2021,
+  title = {The {{Surprising Power}} of {{Graph Neural Networks}} with {{Random Node Initialization}}},
+  author = {Abboud, Ralph and Ceylan, {\.I}smail {\.I}lkan and Grohe, Martin and Lukasiewicz, Thomas},
+  year = 2021,
+  month = jun,
+  number = {arXiv:2010.01179},
+  eprint = {2010.01179},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2010.01179},
+  urldate = {2026-05-06},
+  abstract = {Graph neural networks (GNNs) are effective models for representation learning on relational data. However, standard GNNs are limited in their expressive power, as they cannot distinguish graphs beyond the capability of the Weisfeiler-Leman graph isomorphism heuristic. In order to break this expressiveness barrier, GNNs have been enhanced with random node initialization (RNI), where the idea is to train and run the models with randomized initial node features. In this work, we analyze the expressive power of GNNs with RNI, and prove that these models are universal, a first such result for GNNs not relying on computationally demanding higher-order properties. This universality result holds even with partially randomized initial node features, and preserves the invariance properties of GNNs in expectation. We then empirically analyze the effect of RNI on GNNs, based on carefully constructed datasets. Our empirical findings support the superior performance of GNNs with RNI over standard GNNs.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Machine Learning,Statistics - Machine Learning},
+  file = {/home/crazycat/Zotero/storage/LUPMUDBS/Abboud et al. - 2021 - The Surprising Power of Graph Neural Networks with Random Node Initialization.pdf;/home/crazycat/Zotero/storage/SYLUAPD6/2010.html}
+}
+
 @article{achterberg_branching_2005,
   title = {Branching Rules Revisited},
   author = {Achterberg, Tobias and Koch, Thorsten and Martin, Alexander},
@@ -948,6 +965,21 @@
   urldate = {2025-11-24},
   abstract = {An algorithm is presented for the solution of mixed integer programming problems. The method was developed to solve primarily those programming problems which contain a large number of continuous variables in addition to a few variables that are restricted to discrete values. The algorithm solves a continuous, non-integer constrained problem first. Subsequently, a search for the optimum integer solution is made on the basis of those changes in the value of the objective function that are produced by activating integer constraints.},
   langid = {english}
+}
+
+@inproceedings{eliasof_graph_2023,
+  title = {Graph {{Positional Encoding}} via {{Random Feature Propagation}}},
+  booktitle = {Proceedings of the 40th {{International Conference}} on {{Machine Learning}}},
+  author = {Eliasof, Moshe and Frasca, Fabrizio and Bevilacqua, Beatrice and Treister, Eran and Chechik, Gal and Maron, Haggai},
+  year = 2023,
+  month = jul,
+  pages = {9202--9223},
+  publisher = {PMLR},
+  issn = {2640-3498},
+  urldate = {2026-05-06},
+  abstract = {Two main families of node feature augmentation schemes have been explored for enhancing GNNs: random features and spectral positional encoding. Surprisingly, however, there is still no clear understanding of the relation between these two augmentation schemes. Here we propose a novel family of positional encoding schemes which draws a link between the above two approaches and improves over both. The new approach, named Random Feature Propagation (RFP), is inspired by the power iteration method and its generalizations. It concatenates several intermediate steps of an iterative algorithm for computing the dominant eigenvectors of a propagation matrix, starting from random node features. Notably, these propagation steps are based on graph-dependent propagation operators that can be either predefined or learned. We explore the theoretical and empirical benefits of RFP. First, we provide theoretical justifications for using random features, for incorporating early propagation steps, and for using multiple random initializations. Then, we empirically demonstrate that RFP significantly outperforms both spectral PE and random features in multiple node classification and graph classification benchmarks.},
+  langid = {english},
+  file = {/home/crazycat/Zotero/storage/RKQPGPZM/Eliasof et al. - 2023 - Graph Positional Encoding via Random Feature Propagation.pdf}
 }
 
 @incollection{falkner_learning_2023,
@@ -2249,6 +2281,18 @@
   abstract = {The main purpose of this paper is to describe a process for partitioning an N-dimensional population into k sets on the basis of a sample. The process, which is called 'k-means,' appears to give partitions which are reasonably efficient in the sense of within-class variance. That is, if p is the probability mass function for the population, S = \textbraceleft S1, S2, * *, Sk\textbraceright{} is a partition of EN, and ui, i = 1, 2, * , k, is the conditional mean of p over the set Si, then W2(S) = ff=ISi f z u42 dp(z) tends to be low for the partitions S generated by the method. We say 'tends to be low,' primarily because of intuitive considerations, corroborated to some extent by mathematical analysis and practical computational experience. Also, the k-means procedure is easily programmed and is computationally economical, so that it is feasible to process very large samples on a digital computer. Possible applications include methods for similarity grouping, nonlinear prediction, approximating multivariate distributions, and nonparametric tests for independence among several variables. In addition to suggesting practical classification methods, the study of k-means has proved to be theoretically interesting. The k-means concept represents a generalization of the ordinary sample mean, and one is naturally led to study the pertinent asymptotic behavior, the object being to establish some sort of law of large numbers for the k-means. This problem is sufficiently interesting, in fact, for us to devote a good portion of this paper to it. The k-means are defined in section 2.1, and the main results which have been obtained on the asymptotic behavior are given there. The rest of section 2 is devoted to the proofs of these results. Section 3 describes several specific possible applications, and reports some preliminary results from computer experiments conducted to explore the possibilities inherent in the k-means idea. The extension to general metric spaces is indicated briefly in section 4. The original point of departure for the work described here was a series of problems in optimal classification (MacQueen [9]) which represented special}
 }
 
+@inproceedings{maskey_generalized_2022,
+  title = {Generalized {{Laplacian Positional Encoding}} for {{Graph Representation Learning}}},
+  booktitle = {{{NeurIPS}} 2022 {{Workshop}} on {{Symmetry}} and {{Geometry}} in {{Neural Representations}}},
+  author = {Maskey, Sohir and Parviz, Ali and Thiessen, Maximilian and St{\"a}rk, Hannes and Sadikaj, Ylli and Maron, Haggai},
+  year = 2022,
+  month = nov,
+  urldate = {2026-05-06},
+  abstract = {Graph neural networks (GNNs) are the primary tool for processing graph-structured data. Unfortunately, the most commonly used GNNs, called Message Passing Neural Networks (MPNNs) suffer from several fundamental limitations. To overcome these limitations, recent works have adapted the idea of positional encodings to graph data. This paper draws inspiration from the recent success of Laplacian-based positional encoding and defines a novel family of positional encoding schemes for graphs. We accomplish this by generalizing the optimization problem that defines the Laplace embedding to more general dissimilarity functions rather than the 2-norm used in the original formulation. This family of positional encodings is then instantiated by considering p-norms. We discuss a method for calculating these positional encoding schemes, implement it in PyTorch and demonstrate how the resulting positional encoding captures different properties of the graph. Furthermore, we demonstrate that this novel family of positional encodings can improve the expressive power of MPNNs. Lastly, we present preliminary experimental results.},
+  langid = {english},
+  file = {/home/crazycat/Zotero/storage/KKUJ7RRH/Maskey et al. - 2022 - Generalized Laplacian Positional Encoding for Graph Representation Learning.pdf}
+}
+
 @misc{meltzer_convergent_2012,
   title = {Convergent Message Passing Algorithms - a Unifying View},
   author = {Meltzer, Talya and Globerson, Amir and Weiss, Yair},
@@ -2681,6 +2725,21 @@
   file = {/home/crazycat/Zotero/storage/IVXVZJ8J/Qin et al. - 2025 - DeFoG Discrete Flow Matching for Graph Generation.pdf;/home/crazycat/Zotero/storage/LPQA3TD3/2410.html}
 }
 
+@inproceedings{rampasek_recipe_2022,
+  title = {Recipe for a General, Powerful, Scalable Graph Transformer},
+  booktitle = {Proceedings of the 36th {{International Conference}} on {{Neural Information Processing Systems}}},
+  author = {Ramp{\'a}{\v s}ek, Ladislav and Galkin, Mikhail and Dwivedi, Vijay Prakash and Luu, Anh Tuan and Wolf, Guy and Beaini, Dominique},
+  year = 2022,
+  month = nov,
+  series = {{{NIPS}} '22},
+  pages = {14501--14515},
+  publisher = {Curran Associates Inc.},
+  address = {Red Hook, NY, USA},
+  urldate = {2026-05-06},
+  abstract = {We propose a recipe on how to build a general, powerful, scalable (GPS) graph Transformer with linear complexity and state-of-the-art results on a diverse set of benchmarks. Graph Transformers (GTs) have gained popularity in the field of graph representation learning with a variety of recent publications but they lack a common foundation about what constitutes a good positional or structural encoding, and what differentiates them. In this paper, we summarize the different types of encodings with a clearer definition and categorize them as being local, global or relative. The prior GTs are constrained to small graphs with a few hundred nodes, here we propose the first architecture with a complexity linear in the number of nodes and edges O(N + E) by decoupling the local real-edge aggregation from the fully-connected Transformer. We argue that this decoupling does not negatively affect the expressivity, with our architecture being a universal function approximator on graphs. Our GPS recipe consists of choosing 3 main ingredients: (i) positional/structural encoding, (ii) local message-passing mechanism, and (iii) global attention mechanism. We provide a modular framework GRAPHGPS1 that supports multiple types of encodings and that provides efficiency and scalability both in small and large graphs. We test our architecture on 16 benchmarks and show highly competitive results in all of them, show-casing the empirical benefits gained by the modularity and the combination of different strategies.},
+  isbn = {978-1-7138-7108-8}
+}
+
 @inproceedings{ross_learning_2011,
   title = {Learning Message-Passing Inference Machines for Structured Prediction},
   booktitle = {{{CVPR}} 2011},
@@ -2757,6 +2816,23 @@
   booktitle = {The {{Thirteenth International Conference}} on {{Learning Representations}}},
   author = {Sanokowski, Sebastian and Berghammer, Wilhelm Franz and Wang, Haoyu Peter and Ennemoser, Martin and Hochreiter, Sepp and Lehner, Sebastian},
   year = 2025
+}
+
+@misc{sato_random_2021,
+  title = {Random {{Features Strengthen Graph Neural Networks}}},
+  author = {Sato, Ryoma and Yamada, Makoto and Kashima, Hisashi},
+  year = 2021,
+  month = jan,
+  number = {arXiv:2002.03155},
+  eprint = {2002.03155},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2002.03155},
+  urldate = {2026-05-06},
+  abstract = {Graph neural networks (GNNs) are powerful machine learning models for various graph learning tasks. Recently, the limitations of the expressive power of various GNN models have been revealed. For example, GNNs cannot distinguish some non-isomorphic graphs and they cannot learn efficient graph algorithms. In this paper, we demonstrate that GNNs become powerful just by adding a random feature to each node. We prove that the random features enable GNNs to learn almost optimal polynomial-time approximation algorithms for the minimum dominating set problem and maximum matching problem in terms of approximation ratios. The main advantage of our method is that it can be combined with off-the-shelf GNN models with slight modifications. Through experiments, we show that the addition of random features enables GNNs to solve various problems that normal GNNs, including the graph convolutional networks (GCNs) and graph isomorphism networks (GINs), cannot solve.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Machine Learning,Statistics - Machine Learning},
+  file = {/home/crazycat/Zotero/storage/F9D3F4FE/Sato et al. - 2021 - Random Features Strengthen Graph Neural Networks.pdf;/home/crazycat/Zotero/storage/R4KVLRMT/2002.html}
 }
 
 @misc{satorras_neural_2021,
@@ -3108,6 +3184,17 @@
   isbn = {978-1-4419-3160-3 978-1-4757-3264-1}
 }
 
+@inproceedings{vaswani_attention_2017,
+  title = {Attention Is {{All}} You {{Need}}},
+  booktitle = {Advances in {{Neural Information Processing Systems}}},
+  author = {Vaswani, Ashish and Shazeer, Noam and Parmar, Niki and Uszkoreit, Jakob and Jones, Llion and Gomez, Aidan N and ukasz Kaiser, {\L} and Polosukhin, Illia},
+  year = 2017,
+  volume = {30},
+  publisher = {Curran Associates, Inc.},
+  urldate = {2026-05-06},
+  file = {/home/crazycat/Zotero/storage/KA7N3RD4/Vaswani et al. - 2017 - Attention is All you Need.pdf}
+}
+
 @misc{velickovic_graph_2017,
   title = {Graph {{Attention Networks}}},
   author = {Veli{\v c}kovi{\'c}, Petar and Cucurull, Guillem and Casanova, Arantxa and Romero, Adriana and Li{\`o}, Pietro and Bengio, Yoshua},
@@ -3118,6 +3205,23 @@
   abstract = {We present graph attention networks (GATs), novel neural network architectures that operate on graph-structured data, leveraging masked self-attentional layers to address the shortcomings of prior methods based on graph convolutions or their approximations. By stacking layers in which nodes are able to attend over their neighborhoods' features, we enable (implicitly) specifying different weights to different nodes in a neighborhood, without requiring any kind of costly matrix operation (such as inversion) or depending on knowing the graph structure upfront. In this way, we address several key challenges of spectral-based graph neural networks simultaneously, and make our model readily applicable to inductive as well as transductive problems. Our GAT models have achieved or matched state-of-the-art results across four established transductive and inductive graph benchmarks: the Cora, Citeseer and Pubmed citation network datasets, as well as a protein-protein interaction dataset (wherein test graphs remain unseen during training).},
   copyright = {arXiv.org perpetual, non-exclusive license},
   keywords = {Artificial Intelligence (cs.AI),FOS: Computer and information sciences,Machine Learning (cs.LG),Machine Learning (stat.ML),Social and Information Networks (cs.SI)}
+}
+
+@misc{velickovic_graph_2018,
+  title = {Graph {{Attention Networks}}},
+  author = {Veli{\v c}kovi{\'c}, Petar and Cucurull, Guillem and Casanova, Arantxa and Romero, Adriana and Li{\`o}, Pietro and Bengio, Yoshua},
+  year = 2018,
+  month = feb,
+  number = {arXiv:1710.10903},
+  eprint = {1710.10903},
+  primaryclass = {stat},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.1710.10903},
+  urldate = {2026-05-06},
+  abstract = {We present graph attention networks (GATs), novel neural network architectures that operate on graph-structured data, leveraging masked self-attentional layers to address the shortcomings of prior methods based on graph convolutions or their approximations. By stacking layers in which nodes are able to attend over their neighborhoods' features, we enable (implicitly) specifying different weights to different nodes in a neighborhood, without requiring any kind of costly matrix operation (such as inversion) or depending on knowing the graph structure upfront. In this way, we address several key challenges of spectral-based graph neural networks simultaneously, and make our model readily applicable to inductive as well as transductive problems. Our GAT models have achieved or matched state-of-the-art results across four established transductive and inductive graph benchmarks: the Cora, Citeseer and Pubmed citation network datasets, as well as a protein-protein interaction dataset (wherein test graphs remain unseen during training).},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Machine Learning,Computer Science - Social and Information Networks,Statistics - Machine Learning},
+  file = {/home/crazycat/Zotero/storage/6IW9PKTT/Veličković et al. - 2018 - Graph Attention Networks.pdf;/home/crazycat/Zotero/storage/6CUMDNKY/1710.html}
 }
 
 @misc{verdu_scaling_2024,

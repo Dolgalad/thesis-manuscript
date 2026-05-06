@@ -1,0 +1,84 @@
+\begin{figure}[H]
+\centering
+\resizebox{0.96\linewidth}{!}{
+\begin{tikzpicture}[
+    >=Latex,
+    font=\small,
+    every path/.style={line width=0.9pt},
+    mat/.style={draw, rounded corners=2pt, minimum width=16mm, minimum height=32mm, inner sep=2pt, fill=gray!10},
+    block/.style={draw, rounded corners=3pt, minimum width=22mm, minimum height=10mm, align=center, fill=orange!15},
+    opblock/.style={draw, rounded corners=3pt, minimum width=24mm, minimum height=10mm, align=center, fill=blue!12},
+    tiny/.style={font=\scriptsize},
+    lbl/.style={font=\small}
+]
+
+% Left: input embeddings H^(l)
+\node[mat] (Hin) at (0,0) {};
+\draw (-0.8,0.8) -- (0.8,0.8);
+\draw (-0.8,0.4) -- (0.8,0.4);
+\draw (-0.8,0.0) -- (0.8,0.0);
+\draw (-0.8,-0.4) -- (0.8,-0.4);
+\draw (-0.8,-0.8) -- (0.8,-0.8);
+\node[lbl] at (0,-2.1) {$H^{(l)} \in \mathbb{R}^{n\times d}$};
+
+% Q K V projections
+\node[opblock] (qproj) at (3.2,1.6) {$Q = H^{(l)}W_Q$};
+\node[opblock] (kproj) at (3.2,0.0) {$K = H^{(l)}W_K$};
+\node[opblock] (vproj) at (3.2,-1.6) {$V = H^{(l)}W_V$};
+
+\draw[->] (Hin.east) -- ++(0.7,0) |- (qproj.west);
+\draw[->] (Hin.east) -- ++(0.7,0) -- (kproj.west);
+\draw[->] (Hin.east) -- ++(0.7,0) |- (vproj.west);
+
+% attention formula block
+\node[block, minimum width=35mm, minimum height=16mm] (attn) at (7.4,0){$\operatorname{Attn}(H^{(l)})$};
+
+\draw[->] (qproj.east) -- ++(0.8,0) |- (attn.west);
+\draw[->] (kproj.east) -- (attn.west);
+\draw[->] (vproj.east) -- ++(0.8,0) |- (attn.west);
+
+
+
+% First residual + norm
+\node[block] (addnorm1) at (11.2,0) {Add \& Norm};
+
+%\draw[->] (attn.east) -- (mha.west);
+\draw[->] ($(attn.east)+(0,-0.2)$) -- ($(addnorm1.west)+(0,-0.2)$);
+
+% residual from H^(l)
+\draw[->] (Hin.north) |- ++(0,1.2) -| ($(addnorm1.west)+(-0.4,0.2)$) -- ($(addnorm1.west)+(0,0.2)$);
+
+\node[lbl] at (13.2,-2.1) {$\tilde H^{(l)}$};
+
+% FFN block
+\node[block] (ffn) at (14.4,0) {FFN};
+
+% Second residual + norm
+\node[block] (addnorm2) at (17.6,0) {Add \& Norm};
+
+\draw[->] ($(addnorm1.east)+(0,-0.2)$) -- ($(ffn.west)+(0,-0.2)$);
+\draw[->] 
+    ($(addnorm1.east)+(0,0.2)$) 
+    -- ++(0.4,0)
+    -- ++(0,2.6)
+    -| ($(addnorm2.west)+(-0.4,0.2)$) 
+    -- ($(addnorm2.west)+(0,0.2)$);
+
+\draw[->] ($(ffn.east)+(0,-0.2)$) -- ($(addnorm2.west)+(0,-0.2)$);
+
+% Output H^(l+1)
+\node[mat] (Hout) at (21.0,0) {};
+\draw (20.2,0.8) -- (21.8,0.8);
+\draw (20.2,0.4) -- (21.8,0.4);
+\draw (20.2,0.0) -- (21.8,0.0);
+\draw (20.2,-0.4) -- (21.8,-0.4);
+\draw (20.2,-0.8) -- (21.8,-0.8);
+
+\draw[->] (addnorm2.east) -- (Hout.west);
+
+\node[lbl] at (21.0,-2.1) {$H^{(l+1)} \in \mathbb{R}^{n\times d}$};
+
+\end{tikzpicture}}
+\caption{Generic transformer layer with a single self-attention head. Starting from input embeddings $H^{(l)}$, learned projections produce queries, keys, and values. Self-attention aggregates information across the input elements, after which residual connections, normalization, and a position-wise feed-forward network produce the updated embeddings $H^{(l+1)}$.}
+\label{fig:background_transformer_layer}
+\end{figure}

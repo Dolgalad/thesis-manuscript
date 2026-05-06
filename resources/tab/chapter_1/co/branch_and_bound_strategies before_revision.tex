@@ -1,0 +1,49 @@
+\begin{table}[H]
+    \centering
+    \resizebox{\linewidth}{!}{
+    \begin{tabular}{l|l|l}
+        \textbf{Choice category} & \textbf{Description} & \textbf{Methods} \\
+        \hline
+        \multirow{5}{*}{Node selection} & \multirow{5}{*}{Which node to expand next} 
+        &  Best-bound / Best-first search \cite{land_automatic_1960} \\
+        & & Depth/Breadth-first search \cite{golomb_backtrack_1965,moore_shortest_1959} \\
+        & & Hybrid strategies \cite{achterberg_branching_2005,van_hoeve_hybrid_2009} \\
+        & & Local best-bound \cite{ching-jong_new_1994}\\
+        & & Diving heuristics \cite{achterberg_constraint_2007} \\
+        \hline
+        \multirow{7}{*}{Variable selection} & \multirow{7}{*}{Which variable to branch on} 
+        & Most/least fractional \cite{driebeek_algorithm_1966} \\
+        & & Strong branching \cite{achterberg_branching_2005}\\
+        & & Pseudo-cost branching \cite{benichou_experiments_1971}\\
+        & & Reliability branching \cite{achterberg_branching_2005} \\
+        & & Inference-based branching \cite{van_hoeve_hybrid_2009} \\
+        & & Conflict-based branching \cite{van_hoeve_hybrid_2009}\\
+        & & Machine Learning–based branching \cite{khalil_learning_2016,gasse_exact_2019}\\ 
+        \hline
+        \multirow{3}{*}{Branch direction}   & \multirow{3}{*}{Which child to explore first} 
+        & Follow-the-reference solution \cite{kalcsics_heuristics_2008}\\
+        & & Pseudo-cost direction \cite{benichou_experiments_1971,achterberg_branching_2005}\\
+        & & Inference direction \cite{achterberg_constraint_2007} \\
+        %& & Randomized direction\\ 
+        \hline
+        \multirow{6}{*}{Pruning rules}      & \multirow{6}{*}{When to prune nodes} 
+        & Infeasibility of relaxation or constraints \\
+        & & Bound dominance \\
+        & & Integrality \\
+        & & Logical inference \\
+        & & Filtering \\
+        & & Reduced-cost fixing\\ 
+        \hline
+        %Preprocessing      & Local simplification & \\ \hline
+        %Relaxation         & LP / CP / etc. & \\ \hline
+        \multirow{5}{*}{Heuristics}         & \multirow{5}{*}{How to find incumbents} 
+        & RINS \cite{danna_exploring_2005} \\
+        & & Local branching \cite{fischetti_local_2003}\\
+        & & Feasibility pump \cite{fischetti_feasibility_2005} \\
+        & & Diving heuristics \cite{kalcsics_heuristics_2008} \\
+        & & Randomized or ML-guided heuristics \cite{shen_learning_2021,liu_learning_2022} \\ \hline
+        %Branching factor   & How many children & \\
+    \end{tabular}}
+    \caption{Summary of choices made during the exploration of the B\&B tree with description and a selection of available methods.}
+    \label{tab:branch_and_bound_choices}
+\end{table}
