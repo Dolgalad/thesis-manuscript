@@ -1,7 +1,3 @@
-% In your preamble:
-% \usepackage{tikz}
-% \usetikzlibrary{backgrounds,fit}
-
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}[scale=1.0]
@@ -15,10 +11,10 @@
 
     % Styles for the sets
     \tikzset{
-        setS1/.style={draw=blue!60,   fill=blue!40,   ellipse, opacity=0.25, inner sep=10pt},
-        setS2/.style={draw=red!70,    fill=red!50,    ellipse, opacity=0.25, inner sep=10pt},
-        setS3/.style={draw=green!60!black, fill=green!50, ellipse, opacity=0.25, inner sep=10pt},
-        setS4/.style={draw=orange!80!black, fill=orange!70, ellipse, opacity=0.25, inner sep=10pt}
+        setS1/.style={draw=green!60!black,   fill=blue!40,   ellipse, opacity=0.25, inner sep=8pt, line width=2.2pt},
+        setS2/.style={draw=red!60!black,    fill=red!50,    ellipse, opacity=0.25, inner sep=8pt},
+        setS3/.style={draw=green!60!black, fill=green!50, ellipse, opacity=0.25, inner sep=8pt},
+        setS4/.style={draw=green!60!black, fill=orange!70, ellipse, opacity=0.25, inner sep=8pt, line width=2.2pt}
     }
 
     % Sets as transparent ellipses fitted around the nodes
@@ -30,15 +26,16 @@
         % S3 = {1,4,5}
         \node[setS3,fit=(e4)(e5)] (S3box) {};
         % S4 = {3,4}
-        \node[setS4,fit=(e3)(e5)]     (S4box) {};
+        \node[setS4,rotate=-30,fit=(e3)(e5)]     (S4box) {};
     \end{scope}
 
     % Labels for the sets (placed near ellipse anchors)
     \node[blue!70!black,anchor=south west]  at (S1box.north west) {\scriptsize $S_1=\{1,2,4\}$};
-    \node[red!80!black,anchor=south east]   at (S2box.north east) {\scriptsize $S_2=\{2,3,5\}$};
-    \node[green!70!black,anchor=north west] at (S3box.south west) {\scriptsize $S_3=\{1,4,5\}$};
-    \node[orange!80!black,anchor=north east]at (S4box.south east) {\scriptsize $S_4=\{3,4\}$};
+    \node[red!80!black,anchor=south east]   at (S2box.north east) {\scriptsize $S_2=\{2,3\}$};
+    \node[green!70!black,anchor=north west] at (S3box.south west) {\scriptsize $S_3=\{4,5\}$};
+    \node[orange!80!black,anchor=north east]at (S4box.south east) {\scriptsize $S_4=\{3,5\}$};
 
 \end{tikzpicture}
-\caption{Set covering illustration with sets $S_1,\dots,S_4$ covering the universe $U=\{1,2,3,4,5\}$.}
+\caption{Set covering illustration with sets $S_1,\dots,S_4$ covering the universe $U=\{1,2,3,4,5\}$. The minimal set cover is $\{ S_1, S_4 \}$.}
+\label{fig:set_cover_example}
 \end{figure}

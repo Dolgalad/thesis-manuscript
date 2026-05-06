@@ -1,165 +1,132 @@
-\section{Integer Linear Programing}
+\section{Integer Linear Programming}
 \label{sec:co_intro}
+\label{chap:chapter_1.1_integer_linear_programming}
 
-Contributions of this thesis focus on the problem of solving Integer Linear programming problems (ILPs) that are commonly encountered in the field of combinatorial optimization. We particularly focus on \emph{binary integer linear programs} which is the class of problems for which all decision variables are binary and is a class of problems listed in \cite{bohlinger_complexity_1972} as one of Karp's 21 NP-Complete problems. In our work we do not delve deeply into the approaches used to solve ILPs, but certain algorithms do play a central role in the frameworks presented. In this section we will give an overview of ILPs, their definition as an optimization problem, methods for solving them either exact or heuristic, areas that could potentialy be subject to improvement using learning techniques and an introduction to the particular classes of problems we will be dealing with.
+This section introduces the integer linear programming framework used in the main contributions of this thesis. We focus mainly on binary integer linear programs (BILPs), in which decision variables take values in $\{0,1\}$ and feasibility is determined by a system of linear constraints. This setting is general enough to encode many classical combinatorial optimization problems, while also exposing the central difficulty studied in this thesis: predicting or constructing binary assignments whose variables are strongly coupled by feasibility constraints. We first define the ILP formalism, then briefly review classical solver components, and finally introduce the graph representations and benchmark problems used in later chapters.
 
-\subsection{A brief historical overview}
-Combinatorial optimization has a long history, with problems arising naturally in tasks such as finding efficient paths for foraging or planning routes. A systematic mathematical study of CO emerged in the 20th century, leading to a unified field encompassing graph theory, operations research, and integer programming \cite{schrijver_history_2005}. 
+\subsection{Combinatorial optimization and ILP formulations}
 
-% \input{resources/tikz/chapter_1/co/co_event_timeline}
+Combinatorial optimization (CO) concerns optimization problems whose feasible solutions are discrete objects, such as subsets, paths, matchings, or assignments. Many such problems can be formulated as integer linear programs, which makes ILP a convenient common language for both classical optimization algorithms and learning-based methods. In this thesis, we focus on binary ILP formulations that explicitly expose variables and constraints, since this structure can be represented as a graph and used as input to neural and graphical-model methods.
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=.99\linewidth]{resources/img/chapter_1/co_event_timeline.png}
-    \caption{Timeline of major milestones in linear and integer programming, cutting planes, and modern MILP solvers.}
-    \label{fig:co_event_timeline}
-\end{figure}
-
-The terms \emph{combinatorial optimization} and \emph{discrete optimization} are often used interchangeably. The former emphasizes that the underlying search space is combinatorial, e.g.\ involving subsets of vertices, edges, or paths, while the latter stresses the distinction from continuous optimization. Indeed, many discrete optimization methods borrow tools from continuous optimization, such as linear programming relaxations and polyhedral methods.
-
-Formally, combinatorial optimization problems are typically expressed as the minimization of a cost function defined over binary or integer decision variables. The problems of interest in this work can be written as integer linear programs with binary variables. While the methods presented are broadly applicable to discrete optimization, in specific applications we exploit the combinatorial structure of the solution space to design more effective solvers.
-
-\subsection{Problem Definition}
-The \emph{canonical form} of an ILP program is given as
-\begin{align}
+\subsection{Problem definition}
+The \emph{canonical form} of an ILP is given as
+\begin{equation}
     \label{equ:ilp_canonical_form}
-    \begin{array}{ll}
-        \max & c^T x \\
-        \text{s.t.}              & A x \leq b \\
-                                 & x \in \mathcal{X}
-    \end{array}
-\end{align}
-where $x\in \mathcal{X} \subseteq \Z^n$ are the \emph{decision variables} of the problem, $c\in\R^n$ a vector of costs and $A,b\in\R^{m\times n} \times \R^m$ define the constraints of the problem. Binary integer linear programs (BILP), on which we will be focusing on in the following work, are problems for which $\mathcal{X} = \{0,1\}^n$. An assignment $x$ is called \emph{feasible} if it belongs to the set $\mathcal{F} := \{ x | A x \leq b \}$ (hereafter referred to as the feasible set) of assignments that do not violate the constraints of the problem.
+    (P) \Leftrightarrow \left\{
+    \begin{aligned}
+        \max \quad & c^\top x \\
+        \text{s.t.} \quad & Ax \leq b, \\
+        & x \in \mathcal{X}
+    \end{aligned} \right. ,
+    % \begin{array}{ll}
+    %     \max & c^T x \\
+    %     \text{s.t.}              & A x \leq b \\
+    %                              & x \in \mathcal{X}
+    % \end{array}
+\end{equation}
+where $x\in \mathcal{X} \subseteq \Z^n$ denotes the vector of decision variables, $c\in\R^n$ is the objective coefficient vector, and $A\in\R^{m\times n}$ and $b\in\R^m$ define the linear constraints. We write $A_j$ for the $j$-th row of $A$, so that the $j$-th constraint is $A_jx \leq b_j$. 
 
-An LP is said to be \emph{compact} (\cite{yannakakis_expressing_1988,carr_compact_2000} if the number of constraints $m$ used to defined the feasible set $\mathcal{F}$ is polynomial in the size of the input. The work presented in this thesis makes extensive use of methods for representing problems as graphs, as such the number of variables and constraints of the problems must be of reasonable size. In non-compact LPs the number of constraints needed to defined the feasible set may be so large that it cannot be reasonably be represented in memory. Mainly we will focus our work on problems for which a compact formulation exists.
+Binary integer linear programs (BILPs), which are the main focus of this thesis, are problems for which $\mathcal{X}=\{0,1\}^n$. An assignment $x$ is called \emph{feasible} if it satisfies both the domain restrictions and the linear constraints; the feasible set is therefore $\mathcal{F} := \{x\in\mathcal{X} : Ax \leq b\}$.
+
+A formulation is said to be \emph{compact} if the number of variables and constraints is polynomial in the size of the input~\cite{yannakakis_expressing_1988,carr_compact_2000}. This assumption is important for the methods developed in this thesis, since the variable-constraint graph must be represented explicitly. We therefore focus mainly on problems that admit compact BILP formulations. Compactness, however, does not imply that every constraint is small: a compact formulation may still contain constraints involving many variables. This distinction will become important later when we represent constraints through graphical-model structures.
+
+\subsubsection{LP relaxations and solver-state quantities}
+Given a BILP with feasible set $\mathcal{X}=\{0,1\}^n$, its linear programming relaxation is obtained by replacing the integrality constraints with continuous bounds:
+\begin{equation}
+(P_{\mathrm{LP}}) \Leftrightarrow \left\{
+\begin{aligned}
+\max \quad & c^\top x \\
+\text{s.t.} \quad & Ax \leq b, \\
+& 0 \leq x \leq 1 .
+\end{aligned} \right. .
+\end{equation}
+The resulting LP provides a continuous approximation of the original integer problem. A point is LP-feasible if it satisfies the linear constraints and the relaxed bounds; it is integer-feasible if it also satisfies the original integrality restrictions. Thus, an LP-feasible solution may be fractional, meaning that some variables satisfy $0<x_i^{\mathrm{LP}}<1$.
+
+LP relaxations provide both bounds for exact solvers and useful information for heuristics and learning models. For a constraint $A_jx\leq b_j$, the slack at an LP solution $x^{\mathrm{LP}}$ is
+\begin{equation*}
+s_j = b_j - A_jx^{\mathrm{LP}}.
+\end{equation*}
+A constraint is active, or tight, when $s_j=0$. LP solvers also return dual values associated with constraints, which can be interpreted as sensitivities of the LP objective to changes in the right-hand side, and reduced costs associated with variables, which indicate how variable movements would affect the LP objective around the current optimum.
+
+When the relaxation is solved by the simplex method, the solution is represented by a basis. The corresponding basis status of a variable or constraint records whether it is basic or nonbasic, and, if nonbasic, which bound is active. These quantities are often exposed by MILP solvers and will later be used as optimization-aware features in the variable-constraint graph representation.
 
 
 \subsection{Solving ILPs}
-Solving ILPs problems efficiently has been the subject of extensive work since the formalization of the field of research. These types of problems may often be tackled by multiple methods, either exploiting the specifics of the problem at hand or by using a more general approach. Consider shortest path problems for example; the structure of the solutions of these problems can be easily represented as a collection of constraints representing the conservation of flow at each node, leading to the formalization of the problem as an ILP. The state of the art methods for solving ILPs can be used to solve such problems. However in practice it is better to leverage the specifics of the problem to define a solving approach that makes direct use of the solution structure to solve the problem, in this case the Dijkstra algorithm is a much more efficient method of solving the problem than using a generic ILP solver. Leveraging knowledge of the structure of the solution space can lead to large improvements of the solver capabilities when compared to generic approaches and can also lead to very efficient approximation schemes. As pointed out these approaches for solving these problems rely on knowledge of the structure of the problem and can thus not be used for general CO problems. In the works presented in further sections we have chosen to consider the problem of solving ILPs in their general framework, and thus we focus on general approaches for solving ILPs relying on domain specific knowledge mostly as a corrective measure to ensure that the solutions provided by our frameworks do not violate the constraints of the problem.
 
-In the following subsection we will give a brief review of solving strategies that can be applied to ILPs, both exact and heuristic.
+ILPs can be approached either with algorithms tailored to a specific combinatorial problem or with general-purpose optimization methods. Specialized algorithms can be highly efficient when they exploit additional structure, but they do not provide a uniform framework for arbitrary ILP formulations. In contrast, general-purpose ILP solvers operate directly on the algebraic formulation. This thesis largely follows the latter perspective: the methods developed later take a BILP formulation as input, while using its constraint structure to build graph-based learning and inference models. We therefore briefly review the main solver components that motivate learning-augmented ILP methods.
 
 \subsubsection{Exact approaches}
 The most straightforward but impractical approach is exhaustive enumeration of all candidate solutions. More sophisticated exact algorithms exploit structure to prune the search space.
 
-\paragraph{Branch-and-Bound}  
+\paragraph{Branch-and-Bound} The Branch-and-Bound (B\&B) method~\cite{land_automatic_1960,dakin_tree-search_1965} explores the solution space through a search tree. At each node, the problem is restricted by branching on a decision variable, yielding subproblems that can be pruned using bounds, infeasibility, or integrality. Figure~\ref{fig:branch_and_bound_tree} illustrates this search-tree structure.
 
-The Branch-and-Bound (B\&B) (\cite{land_automatic_1960,dakin_tree-search_1965} method explores the solution space using a tree search. At each node, the problem is restricted by fixing a decision variable, yielding two subproblems (in the case of BILPs). Although the B\&B algorithm is an exact method it can be viewed as a sophisticated enumeration strategy and in worse case scenarios take very long to solve a given ILP. B\&B rely's on a number of choices such as which node to expand next, which variables should be fixed at the next node, etc. and these choices have a significant impact on the size of the B\&B tree (see Figure~\ref{fig:branch_and_bound_tree} constructed. Finding the best suited strategies for each of these components has been the subject of alot of work and a summary of choices and available methods in the current state of the art is presented in Table~\ref{tab:branch_and_bound_choices}
+Although B\&B is exact, its worst-case complexity remains exponential, and its practical performance depends heavily on choices such as variable selection, node selection, branching direction, and primal heuristics. These choices provide natural points of intervention for learning-augmented solvers, as reviewed in Chapter~\ref{chap:chapter_2_related_work}. Table~\ref{tab:branch_and_bound_strategies} summarizes these decision points, many of which have been targeted by learning-based methods. Classical examples include strong branching, pseudo-cost and reliability branching, feasibility-pump heuristics, RINS, and local branching~\cite{achterberg_branching_2005,benichou_experiments_1971,fischetti_feasibility_2005,danna_exploring_2005,fischetti_local_2003}.
 
 \input{resources/tikz/chapter_1/co/generic_branch_and_bound}
 
 \input{resources/tab/chapter_1/co/branch_and_bound_strategies}
 
-\paragraph{Cutting planes}  
-The introduction of cutting planes in 1958 by R. E. Gomory, marked a turning point in the study of linear programs and lead to an increased interest in particularities linked to dealing with integer variables in these types of problems. Cutting planes strengthen the continuous relaxation by iteratively adding linear inequalities (cuts) that remove infeasible fractional solutions while preserving all integer feasible solutions. Since their introduction, cutting-plane methods have since been refined and are widely used in practice, often in combination with B\&B (the Branch-and-Cut framework). Consider an LP problem with a set of binary decision variables $x \in \Z^n$ and a feasible set defined by a set of linear inequalities $\mathcal{F} = \{ x | A x \leq b \}$. $\mathcal{F}$ is a polyhedron who's vertices are not necessarily integer points and thus not solutions to the ILP. If $\mathcal{F}$'s vertices were integer points the problems would be easily solvable by relying on LP solver literature. In practice this is not the case. The set of integer points that are within the feasible set is $\mathcal{F} \cap \Z^n$. It would thus be desirable to solve the optimization problem over the set $\text{Conv}(\mathcal{F}\cap \Z^n)$, the convex hull of all integer feasible solutions. Cutting plane methods aim to successively "cut" the feasible space eliminating non-integer feasible solutions so that the feasible set converges to the convex hull of integer feasible solutions. 
+\paragraph{Cutting planes and Branch-and-Cut}
+Cutting planes strengthen the continuous relaxation of an ILP by adding valid inequalities that remove fractional LP solutions while preserving all integer-feasible solutions~\cite{gomory_outline_1958}. Modern MILP solvers combine this idea with B\&B in a Branch-and-Cut framework~\cite{balas_mixed_1996,cochran_branch_2011}: at each node, the LP relaxation is solved, violated cuts may be added to tighten the relaxation, and branching is applied if the relaxed solution remains fractional. Figure~\ref{fig:cutting_plane} illustrates the geometric role of a cut. As with branching, cut separation, cut selection, and cut scheduling involve heuristic choices that can be targeted by learning-based methods. 
 
-Figure~\ref{fig:cutting_plane} illustrates this process geometrically. The blue shaded region represents the feasible region of the LP relaxation, whose current optimum $x^{\mathrm{LP}}$ is attained at a fractional vertex. The dashed red line represents a valid cut: it removes this fractional solution while preserving all integer-feasible points. In the illustrated example, after adding the cut, the next fractional LP optimum would occur at the intersection between the newly added cut and the first constraint. Repeating this procedure progressively removes fractional portions of the relaxation and yields tighter approximations of $\operatorname{conv}(\mathcal{F} \cap \mathbb{Z}^n)$.
+Other exact frameworks, such as Branch-and-Price~\cite{barnhart_branch-and-price_1998,cochran_branchpriceandcut_2011}, combine branching with column generation and are particularly useful for formulations with a very large number of variables. They are not central to the methods developed in this thesis, so we do not discuss them further.
 
 \input{resources/tikz/chapter_1/co/cutting_plane}
 
-In B\&B, the search space is recursively partitioned by branching on variables. Branch-and-Cut extends this framework by strengthening the LP relaxation at each node using cutting planes: valid inequalities that remove fractional LP solutions without excluding any integer-feasible points. At a node, the LP relaxation is solved and a separation routine attempts to identify violated cuts. These cuts are added to tighten the relaxation, which is then re-optimized. If no further violated cuts can be found and the LP solution is still fractional, the algorithm proceeds to branch, thereby creating subproblems exactly as in B\&B. If the LP relaxation becomes integer-feasible, the node can be pruned or its solution used as an incumbent. A selection of choices and implementation strategies available in the literature is presented in Table~\ref{tab:branch_and_cut_choices}.
+\subsubsection{Primal heuristics and solution construction}
 
-\input{resources/tab/chapter_1/co/branch_and_cut_choices}
+Because exact ILP solving can be computationally expensive, modern solvers rely heavily on primal heuristics to quickly construct feasible incumbent solutions. Examples include diving heuristics, rounding and repair procedures such as the feasibility pump~\cite{fischetti_feasibility_2005}, and neighborhood-based methods such as RINS~\cite{danna_exploring_2005} and VNS~\cite{mladenovic_variable_1997,hansen_variable_2008}. These methods are relevant to this thesis because they highlight a central difficulty: a useful prediction is not merely a vector of independent variable scores, but a coherent assignment that satisfies the constraints. Later chapters address this difficulty by using MRF inference and denoising-based decoding to produce more structured solution predictions.
 
-
-
-\subsubsection{Heuristics}
-Heuristics play a crucial role in solving ILPs. It is important to make the distinction with approximation schemes for which approximation bounds are known. Heuristics are methods for creating feasible solutions to the problem, that is finding a point that lies withing the feasible region and is integer. They can be used within exact solvers to generate candidate solutions, approximate lower bounds at a node of a B\&B tree. In this section we will give a brief presentation of a selection of heuristics. 
-
-Because exact approaches scale poorly, approximate methods are indispensable in practice.  
-
-\paragraph{Diving/Depth-First Search/Breadth-First Search} These are among the simplest node-selection strategies used to traverse a B\&B tree.
-Diving refers to following a single branch of the tree downward as far as possible—typically by repeatedly selecting a child node with the smallest estimated bound—until reaching a leaf node or an infeasible relaxation. It does not allow backtracking within the heuristic; once the dive ends, control returns to the general B\&B search strategy.
-
-By contrast, Depth-First Search (DFS) and Breadth-First Search (BFS) are full-fledged search strategies that do support backtracking. DFS prioritizes exploring the deepest unexplored node first, systematically backtracking when a subtree is exhausted. BFS explores the tree level by level, expanding all nodes at depth $d$ before moving to depth $d+1$. Both DFS and BFS ensure completeness of the search, unlike diving, which is a heuristic used only to obtain feasible solutions quickly or guide the search in promising directions.
+\paragraph{Diving and tree traversal}
+Diving heuristics follow a single branch of the B\&B tree downward, repeatedly selecting promising child nodes until a leaf or infeasible relaxation is reached. This differs from complete traversal strategies such as depth-first search and breadth-first search, which systematically backtrack to explore the tree. Figure~\ref{fig:diving_dfs_bfs} illustrates these different traversal patterns. Diving is particularly relevant in this thesis because several decoding procedures can be interpreted as learned or inference-guided forms of sequential solution construction.
 
 \input{resources/tikz/chapter_1/co/bfs_path}
 
-\paragraph{Rounding/Feasibility Pump}
+\paragraph{Rounding and feasibility pump}
 Another class of primal heuristics attempts to construct an integer solution that is close to a fractional solution of the LP relaxation. Simple rounding strategies directly round fractional variables to nearby integer values and may apply repair procedures to restore feasibility. However, independently rounding the variables of an LP solution can easily produce an integer point that violates the original constraints.
 
-The Feasibility Pump~\cite{fischetti_feasibility_2005} addresses this issue through an alternating projection scheme. Starting from a fractional LP-feasible solution $\bar{x}$, the method first computes an integer point $x^I$ by rounding the integer-constrained components. If $x^I$ satisfies the original constraints, the procedure terminates with an integer-feasible solution. Otherwise, $x^I$ is projected back onto the LP relaxation by solving a continuous proximity optimization problem, yielding a new LP-feasible point $x^{\mathrm{proj}}$:
-\begin{align}
-    x^{\mathrm{proj}} \in 
-    \arg\min_{x} \quad 
-        & \sum_{i \in I} \left| x_i - x^{I}_i \right|  \label{eq:fp_proximity_obj} \\
-    \text{s.t.} \quad
-        & A x \le b, \label{eq:fp_constraints} \\
-\end{align}
+The Feasibility Pump~\cite{fischetti_feasibility_2005} addresses this issue through an alternating projection scheme. Starting from a fractional LP-feasible solution $x^{\mathrm{LP}}$, the method first computes an integer point $x^I$ by rounding the integer-constrained components. If $x^I$ satisfies the original constraints, the procedure terminates with an integer-feasible solution. Otherwise, $x^I$ is projected back onto the LP relaxation by solving a continuous proximity optimization problem, yielding a new LP-feasible point $x^{\mathrm{proj}}$. The method then repeats by rounding $x^{\mathrm{proj}}$ to a new integer point. If the algorithm detects cycling or stalling, the current integer point may be perturbed before the projection step is performed.
 
-The method then repeats by rounding $x^{\mathrm{proj}}$ to a new integer point. If the algorithm detects cycling or stalling, the current integer point may be perturbed before the projection step is performed.
+\paragraph{Neighborhood-based improvement heuristics}
+Neighborhood-based improvement heuristics attempt to refine a current incumbent integer solution by exploring a restricted subset of the feasible region. Two representative methods are \emph{Relaxation Induced Neighborhood Search} (RINS)~\cite{danna_exploring_2005} and \emph{Variable Neighborhood Search} (VNS)~\cite{mladenovic_variable_1997,hansen_variable_2008}.
 
-Figure~\ref{fig:rounding_vs_fp} illustrates the difference between simple rounding and a schematic feasibility-pump trajectory. Simple rounding maps the fractional solution $\bar{x}$ directly to an integer point $x^{\mathrm{round}}$, which may be infeasible. In contrast, the feasibility-pump path first rounds $\bar{x}$ to an integer point $x^I$. In the illustrated example, a cycle is assumed to be detected, so $x^I$ is perturbed to $x^{\mathrm{pert}}$. This perturbed point is then projected back onto the LP relaxation by solving a proximity problem, producing the LP-feasible point $x^{\mathrm{proj}}$. A subsequent rounding step yields the integer-feasible point $x^{\mathrm{FP}}$.
+Let $\operatorname{round}(x^{\mathrm{LP}}_i)$ denote a nearest integer value to $x^{\mathrm{LP}}$. RINS fixes the variables whose incumbent value agrees with the rounded LP-relaxation value. It then fixes this agreement set and solves a reduced MILP, searching within a neighborhood containing all feasible solutions consistent with the common components of $x^{\mathrm{inc}}$ and $x^{\mathrm{LP}}$.
 
+VNS, in contrast, explores a sequence of expanding neighborhoods around the incumbent. For binary or integer variables, a typical choice is a $k$-flip neighborhood. A generic VNS iteration consists of: (i) a \emph{shaking} step that selects a point at distance $k$ from the incumbent, (ii) a local improvement phase, and (iii) an update rule that either accepts the improved solution and resets the neighborhood size, or increases it. This systematic enlargement helps escape local minima while intensifying search around promising regions.
 
-\input{resources/tikz/chapter_1/co/rounding_vs_fp}
+Both RINS and VNS follow the large-neighborhood search philosophy: they construct a restricted subproblem around the incumbent, attempt to improve it, and update the incumbent whenever a better solution is found.
 
-
-
-
-
-\paragraph{Neighborhood-Based Improvement Heuristics.}
-Neighborhood-based improvement heuristics attempt to refine a current incumbent integer solution by exploring a restricted subset of the feasible region. Two representative methods are \emph{Relaxation Induced Neighborhood Search} (RINS) \cite{danna_exploring_2005} and \emph{Variable Neighborhood Search} (VNS) \cite{mladenovic_variable_1997,hansen_variable_2008}.
-
-Let $\operatorname{round}(\bar{x}_i)$ denote a nearest integer value to $\bar{x}_i$. RINS fixes the integer variables for which the incumbent agrees with this rounded
-LP value:
-\begin{equation}
-    F =
-    \left\{
-        i \in I :
-        x^{\mathrm{inc}}_i = \operatorname{round}(\bar{x}_i)
-    \right\}.
-\end{equation}
-
-RINS then fixes the variables in $F$ and solves the reduced MILP
-\begin{equation}
-    \min\{\, c^\top x : Ax \le b,\; x_i = x^{\text{inc}}_i \ (i \in F),\; x_j \in \mathbb{Z} \ (j \in I \setminus F)\,\},
-\end{equation}
-which defines a neighborhood containing all feasible solutions consistent with the common components of $x^{\text{inc}}$ and $\bar{x}$.
-
-VNS, in contrast, defines a sequence of expanding combinatorial neighborhoods around the incumbent. For binary or integer variables, a typical choice is the $k$-flip neighborhood
-\begin{equation}
-    \mathcal{N}_k(x^{\text{inc}}) = \{\, x \in X : \Delta(x, x^{\text{inc}}) = k \,\},
-\end{equation}
-where $\Delta(\cdot,\cdot)$ denotes the Hamming distance. A generic VNS iteration consists of:
-(i) a \emph{shaking} step that selects a point $x' \in \mathcal{N}_k(x^{\text{inc}})$,
-(ii) a local improvement phase applied to $x'$, and
-(iii) an update rule that either accepts the improved solution (and resets $k=1$) or increases the neighborhood size $k \leftarrow k+1$.
-This systematic enlargement of neighborhoods allows VNS to escape local minima while intensifying search around promising regions.
-
-Both RINS and VNS follow the large-neighborhood search philosophy: they construct a restricted subproblem around the incumbent, attempt to improve it, and update the incumbent whenever a better solution is found. Figure~\ref{fig:neighborhood_search_rins_vns} illustrates this distinction schematically: RINS defines a restricted neighborhood using agreement between the incumbent and the LP relaxation, whereas VNS explores increasingly large neighborhoods around the incumbent through shaking and local improvement.
-
-
-\input{resources/tikz/chapter_1/co/neighborhood_search_rins_vs_vns.tex}
-
-\subsection{Variable-Constraint Bipartite Representation}
+\subsection{Variable-constraint bipartite representation}
 \label{sec:vcg_definition}
 
-Representing an ILP as a graph will be central to several of the methods studied in this thesis. A graph representation of mixed-integer linear optimization problems was notably used in \cite{gasse_exact_2019} through the \emph{variable-constraint bipartite graph}.
+Representing an ILP as a graph is central to several methods studied in this thesis. A graph representation of mixed-integer linear optimization problems was notably used by Gasse et al.~\cite{gasse_exact_2019} through the \emph{variable-constraint bipartite graph}.
 
 \begin{definition}[Variable-constraint bipartite representation of an ILP]
-Given an ILP instance $(P)$ in canonical form~\eqref{equ:ilp_canonical_form}, its \emph{variable-constraint bipartite representation} is the bipartite graph $\VCGFULL$, where the set $\VCGV$ contains one node for each decision variable and the set $\VCGC$ contains one node for each constraint, i.e., each row $A_i x \leq b_i$. The edge set $\VCGE \subseteq \VCGV \times \VCGC$ is defined by
-\[
-(i,j)\in \VCGE
-\quad \Longleftrightarrow \quad
-A_{ji} \neq 0,
-\]
-that is, a variable node is connected to a constraint node whenever the corresponding variable appears with nonzero coefficient in that constraint.
+    Given an ILP instance $(P)$ in canonical form~\eqref{equ:ilp_canonical_form}, its \emph{variable-constraint bipartite representation} is the bipartite graph $\VCGFULL$, where $\VCGV$ contains one node for each decision variable and $\VCGC$ contains one node for each constraint, i.e., each row $A_j x \leq b_j$. The edge set $\VCGE \subseteq \VCGV \times \VCGC$ is defined by
+    \begin{equation*}
+        (i,j)\in \VCGE
+        \quad \Longleftrightarrow \quad
+        A_{ji} \neq 0,
+    \end{equation*}
+    that is, a variable node is connected to a constraint node whenever the corresponding variable appears with nonzero coefficient in that constraint.
 \end{definition}
+
+It is important to distinguish this representation from the factor graphs introduced later. The variable-constraint graph is an input representation of the ILP, typically used by GNN encoders. A factor graph, by contrast, will later be used to define the factorization of a probability distribution or energy model over solution variables. In many of our models the two graphs are closely related, because constraints in the ILP will later give rise to factors in the MRF, but they play different roles.
 
 \input{resources/tikz/chapter_1/co/vcg_example}
 
-The graph $\VCGFULL$ can be enriched with node and edge features. Node features may encode quantities associated with variables or constraints, such as objective coefficients, right-hand-side values, slack values, fractional values, dual information, or basis status. Edge features may similarly be used to encode the coefficients $A_{ij}$.
+The graph $\VCGFULL$ can be enriched with node and edge features. Node features may encode quantities associated with variables or constraints, such as objective coefficients, right-hand-side values, slack values, fractional values, dual information, or basis status. Edge features may similarly encode the coefficient $A_{ji}$ associated with variable $i$ in constraint $j$.
 
-This representation offers several advantages. First, it provides a sparse and permutation-invariant encoding of the optimization problem structure, making it well suited to graph-based learning architectures. Second, it allows instances of different sizes to be processed within a common framework, and batched together as disconnected components of a larger graph. Finally, this representation is closely related to the factor graph formalism introduced later in Section~\ref{sec:mrf_intro}, which will be central to our Markov random field models.
+This representation offers several advantages. First, it provides a sparse and permutation-invariant encoding of the optimization problem structure, making it well suited to graph-based learning architectures. Second, it allows instances of different sizes to be processed within a common framework and to be batched together as disconnected components of a larger graph. Finally, this representation is closely related to the factor graph formalism introduced later in Section~\ref{sec:mrf_intro}, which will be central to our Markov random field models.
 
 
 \subsection{Representative problems}
+We use Maximum Independent Set (MIS) and Set Cover (SC) as representative BILP families. Both are classical NP-hard combinatorial optimization problems~\cite{miller_reducibility_1972}, and together they illustrate two different constraint structures: pairwise exclusion constraints for MIS and potentially high-arity coverage constraints for SC.
 
-\subsubsection{Maximum Independent Set (MIS)}  
-The Maximum Independent Set problem is a classical NP-hard problem: given an undirected graph $\GFULL$, find the largest subset $S \subseteq \GV$ such that no two vertices in $S$ are adjacent. MIS is equivalent to finding the maximum clique in the complement graph, with applications in network analysis, scheduling, and computational biology. By introducing for each vertex a binary decision variable $x_i, i\in \GV$ the ILP formulation of the problem is
+\subsubsection{Maximum Independent Set}  
+Given an undirected graph $\GFULL$, find the largest subset $S \subseteq \GV$ such that no two vertices in $S$ are adjacent. MIS is equivalent to finding the maximum clique in the complement graph, with applications in network analysis, scheduling, and computational biology. Introducing a binary decision variable $x_i$ for each vertex $i\in\GV$, the standard edge-based BILP formulation is
 \begin{align}
-    \label{equ:mis_formuation_edges}
+    \label{equ:mis_formulation_edges}
     (P_\text{MIS}) \Leftrightarrow \left\{
     \begin{array}{lll}
         \max        & \mathds{1}^T x   & \\
@@ -168,20 +135,21 @@ The Maximum Independent Set problem is a classical NP-hard problem: given an und
     \end{array}
     \right.
 \end{align}
+Figure~\ref{fig:mis_example} illustrates an independent set and a maximum independent set on a small graph.
 
 \begin{figure}[H]
 	\centering
 	\input{resources/tikz/chapter_1/co/mis_example}
 	\hspace{2em}
 	\input{resources/tikz/chapter_1/co/mis_example_max}
-	\caption{Maximum Independent Set example: on the left is an independent and on the right a maximal independent set.}
+	\caption{Maximum Independent Set example. The left set is independent, while the right set is a maximum independent set for this graph.}
 	\label{fig:mis_example}
 \end{figure}
 
-Notice that each constraint $x_i + x_j \leq 1$ ensures that no two adjacent vertices can belong to the independent set $S$ at the same time. The set $\{x | x_i + x_j \leq 1, \forall (i,j) \in E\}$ contains all independent sets. Although correct this formulation is not very strong as the constraints do not tightly surround the set of feasible solutions to the problem. The formulation can be strengthened by noticing that for all cliques $c \subseteq V$ there can be only one vertex belonging to $S$. By denoting $\mathcal{C}$ the set of cliques in $G$ we obtain the following formulation
+Each constraint $x_i+x_j\leq 1$ prevents adjacent vertices from being selected simultaneously. Together with the binary constraints, these inequalities encode the independent sets of $\G$. Although correct, the edge formulation can have a weak LP relaxation. It can be strengthened using clique inequalities: in any clique $c\subseteq\GV$, at most one vertex can belong to an independent set. Let $\mathcal{C}$ denote a collection of cliques in $\G$; this yields the formulation
 \begin{align}
-    \label{equ:mis_formuation_cliques}
-    (P_\text{MIS}) \Leftrightarrow \left\{
+    \label{equ:mis_formulation_cliques}
+    (P_\mathrm{MIS}) \Leftrightarrow \left\{
     \begin{array}{lll}
         \max        & \mathds{1}^T x   & \\
         \text{s.t.} & \sum_{i\in c} x_i \leq 1 & \forall c \in \mathcal{C} \\
@@ -189,22 +157,27 @@ Notice that each constraint $x_i + x_j \leq 1$ ensures that no two adjacent vert
     \end{array}
     \right.
 \end{align}
-The number of cliques in an undirected graph can however be exponential in $n$ meaning that it may not be feasible to use this formulation. The set $\mathcal{C}$ can further be restricted to the set of \emph{maximal} cliques, i.e. cliques that are not strictly contained in another clique of the graph. Enumerating all maximal cliques is a difficult task in itself, however clique contraints can be added as needed to strengthen the formulation during solving. 
+The number of cliques can, however, be exponential in $n$, so the full clique formulation is generally not compact. In practice, one may restrict attention to maximal cliques or add violated clique constraints dynamically. This example illustrates a recurring trade-off: stronger formulations may introduce larger or more numerous constraints, which later affects the graphical models built from these constraints.
 
-\subsubsection{Set Covering Problem (SC)}  
-The Set Covering problem is defined as follows: given a set of items $\ITEMS = \{\ITEM_i\}_{1\leq i\leq m}$ and a collection of sets $\SCSETS$ the objective is to find the smallest subset of $\SCSETS = \{\SCSET_i\}_{1\leq i\leq n}$ such that each item in $\ITEMS$ belongs to at least one set $\SCSET_i$. For each set $\SCSET\in\SCSETS$ introduce a binary decision variable $x_{\SCSET}$ and denoting by $\SCSETI$ the sets that contain the $i$-th item, then the corresponding ILP is :
+\subsubsection{Set Cover} 
+Given a universe of items $\ITEMS=\{\ITEM_i\}_{i=1}^m$ and a collection of sets $\SCSETS=\{\SCSET_j\}_{j=1}^n$, the objective is to select as few sets as possible while covering every item. We introduce a binary variable $x_j$ for each set $\SCSET_j \in \SCSETS$, and denote by $\SCSETI$ the collection of sets that contain item $\ITEM_i$. The BILP formulation is:
 \begin{align}
-    \label{equ:sc_formuation_cliques}
-    (P_\text{SC}) \Leftrightarrow \left\{
+    \label{equ:sc_formulation}
+    (P_\mathrm{SC}) \Leftrightarrow \left\{
     \begin{array}{lll}
         \min        & \mathds{1}^T x   & \\
-        \text{s.t.} & \sum_{\SCSET\in\SCSETI} x_{\SCSET} \geq 1 & \forall 1 \leq i \leq m \\
+        \text{s.t.} & \sum_{j:\SCSET_j \in \SCSETI} x_j \geq 1 & \forall 1 \leq i \leq m \\
                     & x \in \{0,1\}^n
     \end{array}
     \right.
 \end{align}
 
+Unlike the edge-based MIS formulation, a single SC constraint may involve many variables, since an item can belong to many sets. This makes SC a useful benchmark for feasibility-aware prediction and also foreshadows a scalability issue studied later in the thesis: graphical models built directly from such constraints must handle interactions among many variables at once. Figure~\ref{fig:set_cover_example} illustrates a small SC instance.
+
 \input{resources/tikz/chapter_1/co/set_cover_example}
 
 \subsection{Summary and transition}
-In this section we introduced integer linear programs, classical solution methods, and representative problems,  such as MIS and SC. All of these problems can be expressed as minimizing an energy function over discrete variables, an observation that will serve as the bridge to the next chapter. In particular, we will see that many CO problems can be reformulated as inference tasks in Markov Random Fields, enabling us to leverage probabilistic graphical models and message-passing algorithms in their solution.
+
+This section introduced BILP formulations, the classical solver context, and the graph representation used to encode ILP structure. The key point for the remainder of the thesis is that feasibility constraints couple the binary decision variables: predicting each variable independently is generally insufficient to obtain a valid solution. The variable-constraint graph provides a natural input representation for learning models, while later sections will show how related graphical structures can represent interactions between solution variables.
+
+The next sections build on this view by introducing neural models for structured prediction and Markov Random Fields for representing and inferring over coupled solution variables. The high-arity constraints that arise in problems such as Set Cover will later motivate approximate graphical parameterizations.
