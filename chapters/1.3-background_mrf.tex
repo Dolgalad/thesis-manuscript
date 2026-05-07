@@ -22,6 +22,30 @@ p_\GENEPARAM(x) = \exp\!\left(\GENEPARAM^\top \SSTAT(x) - A(\GENEPARAM)\right),
 
 where $\SSTAT(x)$ is a vector of sufficient statistics, $\GENEPARAM$ is the vector of natural parameters, and $A(\GENEPARAM)=\log \sum_{x\in\mathcal{X}} \exp(\GENEPARAM^\top \SSTAT(x))$ is the log-partition function. This formulation generalizes the Boltzmann distribution by emphasizing the role of feature functions $\SSTAT(x)$, which capture local interactions or structural properties of $x$. The log-partition function $A(\GENEPARAM)$ ensures normalization and is also the cumulant-generating function of the sufficient statistics. Its convexity is central to the theory of exponential-family learning, although maximum-likelihood estimation remains computationally challenging in MRFs because the required model expectations are generally intractable \citep{wainwright_graphical_2007}. In this convention, $\GENEPARAM^\top\SSTAT(x)$ is an unnormalized log-probability, or score. Equivalently, if one writes the model in Boltzmann form, then $E(x)=-\GENEPARAM^\top\SSTAT(x)$ up to an additive constant. This sign convention is used later when learned MRF parameters are interpreted as defining negative energies.
 
+\paragraph{Variational characterization of the log-partition}
+
+A useful property of exponential-family models is that the log-partition function admits a variational characterization. Let
+\begin{equation}
+    \mu = \mathbb{E}_{p}[\SSTAT(X)]
+\end{equation}
+denote the vector of mean parameters, and let $\MARGINALP$ be the \emph{marginal polytope}, defined as the set of all mean-parameter vectors that can arise from some distribution over $\mathcal{X}$:
+\begin{equation}
+    \MARGINALP = \left\{
+        \mu \in \mathbb{R}^d : \exists q \in \Delta(\mathcal{X}) \ \text{such that}\ \mu = \mathbb{E}_{q}[\SSTAT(X)]
+    \right\}.
+\end{equation}
+Equivalently, in a discrete graphical model with indicator sufficient statistics, $\MARGINALP$ is the set of all collections of unary and factor marginals that are globally consistent with some joint distribution.
+
+The log-partition function can then be written as the solution of the variational optimization problem
+\begin{equation}
+    A(\GENEPARAM) = \max_{\mu\in\MARGINALP} \left\{ \GENEPARAM^\top \mu + H(\mu) \right\},
+\end{equation}
+where $H(\mu)$ denotes the entropy of a joint distribution realizing the mean parameters $\mu$. In energy notation, with $E(x)=-\GENEPARAM^\top\SSTAT(x)$, this becomes
+\begin{equation}
+    \log Z = \max_{\mu\in\MARGINALP} \left\{ H(\mu) - \mathbb{E}_{\mu}[E(X)] \right\}.
+\end{equation}
+This formulation shows that the log-partition function is not merely a normalizing constant: it is the convex dual object that relates natural parameters $\GENEPARAM$ to mean parameters \(\mu\). This relationship is central to maximum-likelihood learning, because learning depends on matching empirical sufficient statistics to model expectations.
+
 Classical maximum-likelihood estimation in exponential-family models is often described through moment matching. For a dataset $\DATASET=\{x^{(1)},\dots,x^{(N)}\}$, the gradient of the log-likelihood contains an empirical term and a model-expectation term:
 \begin{equation}
 \nabla_\GENEPARAM \log p_\GENEPARAM(\mathcal{D}) 
@@ -30,7 +54,7 @@ Classical maximum-likelihood estimation in exponential-family models is often de
 - 
 N \,\mathbb{E}_{p_\GENEPARAM}[\SSTAT(X)] .
 \end{equation}
-The empirical sufficient statistics are directly available from data, but the model expectation is generally intractable because it depends on the normalized distribution. This difficulty motivates the approximate inference methods introduced later in this section, which return structured marginal information without requiring exact summation over all assignments.
+The empirical sufficient statistics are directly available from data, but the model expectation is generally intractable because it depends on the normalized distribution. This difficulty motivates the approximate inference methods introduced later in this section. From the variational perspective, these methods approximate the exact optimization problem defining $A(\GENEPARAM)$, either by restricting the family of admissible distributions, by replacing the marginal polytope with a simpler outer approximation, or by approximating the entropy term.
 
 \subsubsection{Sampling from Boltzmann distributions}
 
@@ -266,35 +290,53 @@ The log-messages are initialized to zero. In the probability domain, this corres
     \label{alg:sum_product_bp}
     \KwData{Factor graph $\FG=(\FGV\cup\FGF,\FGE)$, log-potentials $\{\GENEPARAM_{\FACTOR}\}_{\FACTOR\in\FGF}$, number of iterations $T$, damping coefficient $\BPDAMPING\in[0,1]$}
     \KwResult{Approximate beliefs $\{\BELIEF_i\}_{i\in\FGV}$ and $\{\BELIEF_{\FACTOR}\}_{\FACTOR\in\FGF}$}
-    Initialize all variable-to-factor log-messages $q_{i\to \FACTOR}^{(0)}(x_i)=0$, for $(i,\FACTOR)\in\FGE$ and all states $x_i$\;
+    Initialize all variable-to-factor log-messages $m_{i\to \FACTOR}^{(0)}(x_i)=0$, for $(i,\FACTOR)\in\FGE$ and all states $x_i$\;
     \For{$t=1,\dots,T$}{
         \ForEach{$(i,\FACTOR)\in\FGE$}{
-            Compute $r_{\FACTOR\to i}^{(t)}$ using Equation~\eqref{equ:lbp_log_factor_to_variable}\;
-            Compute $\widetilde{q}_{i\to \FACTOR}^{(t+1)}$ using Equation~\eqref{equ:lbp_log_variable_to_factor}\;
-            Update $q_{i\to \FACTOR}^{(t+1)}$ using Equation~\eqref{equ:lbp_damping}\;
+            Compute $m_{\FACTOR\to i}^{(t)}$ using Equation~\eqref{equ:lbp_log_factor_to_variable}\;
+            Compute $\widetilde{m}_{i\to \FACTOR}^{(t+1)}$ using Equation~\eqref{equ:lbp_log_variable_to_factor}\;
+            Update $m_{i\to \FACTOR}^{(t+1)}$ using Equation~\eqref{equ:lbp_damping}\;
         }
     }
     Compute beliefs $\BELIEF_i$ and $\BELIEF_{\FACTOR}$ from the final log-messages by normalizing the corresponding log-beliefs\;
 \end{algorithm}
 
 \paragraph{Bethe free energy and approximate marginals}
-Belief Propagation can also be understood through a variational approximation to the log-partition function. Exact marginal inference can be characterized by an optimization problem over the marginal polytope, where the log-partition function is obtained from an energy term and an entropy term. This exact problem is generally intractable because the marginal polytope and the entropy of the full joint distribution are difficult to represent.
+The variational view introduced in the exponential-family discussion provides another interpretation of BP. Exact computation of the log-partition function can be expressed as an entropy-regularized optimization problem over the marginal polytope. The Bethe approximation makes this problem tractable by replacing the exact marginal polytope with a set of locally consistent beliefs and by replacing the exact joint entropy with a locally decomposed entropy approximation.
 
-The Bethe approximation replaces the exact entropy with a locally decomposed entropy written in terms of unary and factor beliefs. For a factor graph, the Bethe free-energy objective can be written schematically as
+Let $\BELIEF_i(x_i)$ denote a belief over variable $i$, and let $\BELIEF_{\FACTOR}(x_{\FACTOR})$ denote a belief over the variables adjacent to factor $\FACTOR$. These beliefs are required to satisfy normalization constraints
 \begin{equation}
-\mathcal{F}_{\mathrm{Bethe}}(b)
-=
-\sum_{\FACTOR\in\FGF}
-\sum_{x_{\FACTOR}}
-b_{\FACTOR}(x_{\FACTOR})
-E_{\FACTOR}(x_{\FACTOR})
--
-H_{\mathrm{Bethe}}(b),
+    \sum_{x_i} \BELIEF_i(x_i) = 1, \qquad \sum_{x_{\FACTOR}} \BELIEF_{\FACTOR}(x_{\FACTOR}) = 1,
 \end{equation}
-subject to local consistency and normalization constraints on the beliefs. Stationary points of this variational objective correspond to fixed points of loopy BP \citep{yedidia_understanding_2003}. This provides a variational interpretation of BP: the beliefs produced by message passing can be viewed as approximate marginals obtained by optimizing a tractable approximation to the exact inference problem.
+and local consistency constraints
+\begin{equation}
+    \sum_{x_{\FACTOR\setminus i}} \BELIEF_{\FACTOR}(x_{\FACTOR}) = \BELIEF_i(x_i), \qquad \text{for all } i\in N(\FACTOR).
+\end{equation}
+The set of beliefs satisfying these constraints is called the \emph{local polytope}, denoted by $\LOCALP$. It is easier to describe than the marginal polytope because it enforces consistency only between variables and their neighboring factors, rather than requiring that all local beliefs arise from a globally consistent joint distribution.
 
-\paragraph{Max--product BP for MAP inference}
-Replacing summations by maximizations yields max--product BP, or max--sum BP in the log domain. On trees, this recovers dynamic programming for MAP inference. On loopy graphs, convergence is not guaranteed; convex variants such as tree-reweighted message passing (TRW/TRW-S) provide bounds and convergence guarantees for specific classes of energies \citep{kolmogorov_convergent_2006}.
+Let $d_i = |N(i)|$ be the degree of variable \(i\) in the factor graph. The Bethe entropy is defined as
+\begin{equation}
+    H_{\mathrm{Bethe}}(\BELIEF) = \sum_{\FACTOR\in\FGF} H(\BELIEF_{\FACTOR}) - \sum_{i\in\FGV} (d_i - 1) H(\BELIEF_i),
+\end{equation}
+where
+\begin{equation}
+    H(\BELIEF_{\FACTOR}) = -\sum_{x_{\FACTOR}} \BELIEF_{\FACTOR}(x_{\FACTOR}) \log \BELIEF_{\FACTOR}(x_{\FACTOR}), \qquad H(\BELIEF_i) = -\sum_{x_i} \BELIEF_i(x_i) \log \BELIEF_i(x_i).
+\end{equation}
+The correction term subtracts repeated counts of variable entropies that appear across neighboring factor beliefs.
+
+The Bethe free energy is
+\begin{equation}
+    \mathcal{F}_{\mathrm{Bethe}}(\BELIEF) = \sum_{\FACTOR\in\FGF} \sum_{x_{\FACTOR}} \BELIEF_{\FACTOR}(x_{\FACTOR}) E_{\FACTOR}(x_{\FACTOR}) - H_{\mathrm{Bethe}}(\BELIEF).
+\end{equation}
+The Bethe approximation to the log-partition function is obtained from
+\begin{equation}
+    \log Z \approx -\min_{\BELIEF\in\LOCALP} \mathcal{F}_{\mathrm{Bethe}}(\BELIEF).
+\end{equation}
+If $\BELIEF^\star$ is a stationary point of this constrained problem, then
+\begin{equation}
+\widehat{\log Z}_{\mathrm{Bethe}} = -\mathcal{F}_{\mathrm{Bethe}}(\BELIEF^\star).
+\end{equation}
+Stationary points of the Bethe free energy correspond to fixed points of loopy BP \citep{yedidia_understanding_2003}. Thus, the beliefs produced by message passing can be interpreted as approximate marginals, while the value of the Bethe free energy at those beliefs provides an approximation to the log-partition function.
 
 \subsubsection{Mean--field inference}
 
