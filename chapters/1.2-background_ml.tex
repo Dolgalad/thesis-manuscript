@@ -238,38 +238,39 @@ In the context of this thesis, GNNs provide one of the main neural representatio
 
 \paragraph{Transformers and attention}
 
-Transformers are neural architectures based on self-attention, originally introduced for sequence modeling~\cite{vaswani_attention_2017}. Given a collection of $n$ input embeddings of dimension $d$, arranged as rows of a matrix $H\in\mathbb{R}^{n\times d}$, a self-attention layer first computes queries, keys, and values
+Transformers are neural architectures based on self-attention, originally introduced for sequence modeling~\cite{vaswani_attention_2017}. Given a collection of $n$ input embeddings of dimension $d$, arranged as rows of a matrix $\TRFH\in\mathbb{R}^{n\times d}$, a self-attention layer first computes queries, keys, and values
 \begin{equation}
-    Q = H W_Q,
+    \TRFQ = \TRFH \TRFWQ,
     \qquad
-    K = H W_K,
+    \TRFK = \TRFH \TRFWK,
     \qquad
-    V = H W_V,
+    \TRFV = \TRFH \TRFWV,
 \end{equation}
-where $W_Q\in\mathbb{R}^{d\times d_k}$, $W_K\in\mathbb{R}^{d\times d_k}$, and $W_V\in\mathbb{R}^{d\times d_v}$ are learned projection matrices. The quantity $d_k$ denotes the key/query dimension and is used to scale the dot products. The representations are then updated through scaled dot-product attention:
+where $\TRFWQ\in\mathbb{R}^{d\times d_k}$, $\TRFWK\in\mathbb{R}^{d\times d_k}$, and $\TRFWV\in\mathbb{R}^{d\times d_v}$ are learned projection matrices. The quantity $d_k$ denotes the key/query dimension and is used to scale the dot products. The representations are then updated through scaled dot-product attention:
 \begin{equation}
-    \operatorname{Attn}(H)
+    \ATTN(\TRFH)
     =
-    \operatorname{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right)V.
+    \SOFTMAX\!\left(\frac{\TRFQ \TRFK^\top}{\sqrt{d_k}}\right)\TRFV. 
 \end{equation}
+
 The attention matrix assigns a data-dependent weight to each pair of input elements, allowing each representation to aggregate information from all others. Multi-head attention repeats this computation with several learned projections and concatenates the resulting outputs, allowing the model to capture different types of interactions in parallel.
 
-A transformer layer typically combines multi-head self-attention with a position-wise feed-forward network, residual connections, and normalization. For stacked transformer layers, let $H^{(l)}$ denote the sequence of embeddings at layer $l$. A transformer layer computes
+A transformer layer typically combines multi-head self-attention with a position-wise feed-forward network, residual connections, and normalization. For stacked transformer layers, let $\TRFH^{(l)}$ denote the sequence of embeddings at layer $l$. A transformer layer computes
 \begin{equation}
-    \tilde{H}^{(l)}
+    \tilde{\TRFH}^{(l)}
     =
-    \operatorname{Norm}\!\left(
-        H^{(l)} + \operatorname{MHA}(H^{(l)})
+    \NORM\!\left(
+        \TRFH^{(l)} + \MHA(\TRFH^{(l)})
     \right),
 \end{equation}
 \begin{equation}
-    H^{(l+1)}
+    \TRFH^{(l+1)}
     =
-    \operatorname{Norm}\!\left(
-        \tilde{H}^{(l)} + \operatorname{FFN}(\tilde{H}^{(l)})
+    \NORM\!\left(
+        \tilde{\TRFH}^{(l)} + \FFN(\tilde{\TRFH}^{(l)})
     \right),
 \end{equation}
-where $\operatorname{MHA}$ denotes multi-head attention and $\operatorname{FFN}$ denotes the position-wise feed-forward network, implemented as an MLP applied independently to each element of the sequence. Figure~\ref{fig:background_transformer_layer} summarizes the structure of a generic transformer layer.
+where $\MHA$ denotes multi-head attention and $\FFN$ denotes the position-wise feed-forward network, implemented as an MLP applied independently to each element of the sequence. Figure~\ref{fig:background_transformer_layer} summarizes the structure of a generic transformer layer.
 
 Although transformers were first developed for sequences, the same mechanism can be applied to sets or graph-derived collections of embeddings when suitable structural or positional information is provided. From this viewpoint, self-attention acts as a learned aggregation operator over a dense dependency structure.
 

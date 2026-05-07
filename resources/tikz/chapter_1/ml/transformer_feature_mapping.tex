@@ -19,19 +19,19 @@
 \draw (-0.8,0.0) -- (0.8,0.0);
 \draw (-0.8,-0.4) -- (0.8,-0.4);
 \draw (-0.8,-0.8) -- (0.8,-0.8);
-\node[lbl] at (0,-2.1) {$H^{(l)} \in \mathbb{R}^{n\times d}$};
+\node[lbl] at (0,-2.1) {$\TRFH^{(l)} \in \mathbb{R}^{n\times d}$};
 
 % Q K V projections
-\node[opblock] (qproj) at (3.2,1.6) {$Q = H^{(l)}W_Q$};
-\node[opblock] (kproj) at (3.2,0.0) {$K = H^{(l)}W_K$};
-\node[opblock] (vproj) at (3.2,-1.6) {$V = H^{(l)}W_V$};
+\node[opblock] (qproj) at (3.2,1.6) {$\TRFQ = \TRFH^{(l)}\TRFWQ$};
+\node[opblock] (kproj) at (3.2,0.0) {$\TRFK = \TRFH^{(l)}\TRFWK$};
+\node[opblock] (vproj) at (3.2,-1.6) {$\TRFV = \TRFH^{(l)}\TRFWV$};
 
 \draw[->] (Hin.east) -- ++(0.7,0) |- (qproj.west);
 \draw[->] (Hin.east) -- ++(0.7,0) -- (kproj.west);
 \draw[->] (Hin.east) -- ++(0.7,0) |- (vproj.west);
 
 % attention formula block
-\node[block, minimum width=35mm, minimum height=16mm] (attn) at (7.4,0){$\operatorname{Attn}(H^{(l)})$};
+\node[block, minimum width=35mm, minimum height=16mm] (attn) at (7.4,0){$\ATTN(\TRFH^{(l)})$};
 
 \draw[->] (qproj.east) -- ++(0.8,0) |- (attn.west);
 \draw[->] (kproj.east) -- (attn.west);
@@ -48,7 +48,7 @@
 % residual from H^(l)
 \draw[->] (Hin.north) |- ++(0,1.2) -| ($(addnorm1.west)+(-0.4,0.2)$) -- ($(addnorm1.west)+(0,0.2)$);
 
-\node[lbl] at (13.2,-2.1) {$\tilde H^{(l)}$};
+\node[lbl] at (13.2,-2.1) {$\tilde \TRFH^{(l)}$};
 
 % FFN block
 \node[block] (ffn) at (14.4,0) {FFN};
@@ -76,9 +76,9 @@
 
 \draw[->] (addnorm2.east) -- (Hout.west);
 
-\node[lbl] at (21.0,-2.1) {$H^{(l+1)} \in \mathbb{R}^{n\times d}$};
+\node[lbl] at (21.0,-2.1) {$\TRFH^{(l+1)} \in \mathbb{R}^{n\times d}$};
 
 \end{tikzpicture}}
-\caption{Generic transformer layer with a single self-attention head. Starting from input embeddings $H^{(l)}$, learned projections produce queries, keys, and values. Self-attention aggregates information across the input elements, after which residual connections, normalization, and a position-wise feed-forward network produce the updated embeddings $H^{(l+1)}$.}
+\caption{Generic transformer layer with a single self-attention head. Starting from input embeddings $\TRFH^{(l)}$, learned projections produce queries, keys, and values. Self-attention aggregates information across the input elements, after which residual connections, normalization, and a position-wise feed-forward network produce the updated embeddings $\TRFH^{(l+1)}$.}
 \label{fig:background_transformer_layer}
 \end{figure}

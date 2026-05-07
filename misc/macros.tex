@@ -43,6 +43,24 @@
 \newcommand\GENENNPARAM{\omega}
 \newcommand\GENENNPARAMSPACE{\mathcal{W}}
 
+% Operations
+\newcommand\ATTN{\operatorname{Attn}}
+\newcommand\MLP{\operatorname{MLP}}
+\newcommand\FFN{\operatorname{FNN}}
+\newcommand\MHA{\operatorname{MHA}}
+\newcommand\SOFTMAX{\operatorname{softmax}}
+\newcommand\NORM{\operatorname{Norm}}
+
+% Transformer input output parameters
+\newcommand\TRFQ{\mathbf{Q}}
+\newcommand\TRFH{\mathbf{H}}
+\newcommand\TRFK{\mathbf{K}}
+\newcommand\TRFV{\mathbf{V}}
+\newcommand\TRFPARAM{\mathbf{W}}
+\newcommand\TRFWQ{\TRFPARAM_{\TRFQ}}
+\newcommand\TRFWK{\TRFPARAM_{\TRFK}}
+\newcommand\TRFWV{\TRFPARAM_{\TRFV}}
+
 % ML datasets and examples
 \newcommand\DATASET{\mathcal{D}}
 \newcommand\TRAINDATA{\mathcal{D}_{\mathrm{train}}}
@@ -107,8 +125,8 @@
 \newcommand\BPDAMPING{\lambda_{\mathrm{BP}}}
 \newcommand\MFDAMPING{\lambda_{\mathrm{MF}}}
 \newcommand\PROPOSAL{Q}
-\newcommand\LOCALP{\mathfrak{L}}
-\newcommand\MARGINALP{\mathfrak{M}}
+\newcommand\LOCALP{\mathscr{L}}
+\newcommand\MARGINALP{\mathscr{M}}
 
 % MRF parameter variants
 \newcommand\GENEPARAM{\theta}

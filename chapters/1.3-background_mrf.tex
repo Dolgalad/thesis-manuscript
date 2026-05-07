@@ -28,7 +28,7 @@ A useful property of exponential-family models is that the log-partition functio
 \begin{equation}
     \mu = \mathbb{E}_{p}[\SSTAT(X)]
 \end{equation}
-denote the vector of mean parameters, and let $\MARGINALP$ be the \emph{marginal polytope}, defined as the set of all mean-parameter vectors that can arise from some distribution over $\mathcal{X}$:
+denote the vector of mean parameters, and let $\MARGINALP$ be the \emph{marginal polytope}, defined as the set of all mean-parameter vectors that can arise from some probability distribution over $\mathcal{X}$. Writing $\Delta(\mathcal{X})$ for the probability simplex over $\mathcal{X}$, we define
 \begin{equation}
     \MARGINALP = \left\{
         \mu \in \mathbb{R}^d : \exists q \in \Delta(\mathcal{X}) \ \text{such that}\ \mu = \mathbb{E}_{q}[\SSTAT(X)]
@@ -38,11 +38,11 @@ Equivalently, in a discrete graphical model with indicator sufficient statistics
 
 The log-partition function can then be written as the solution of the variational optimization problem
 \begin{equation}
-    A(\GENEPARAM) = \max_{\mu\in\MARGINALP} \left\{ \GENEPARAM^\top \mu + H(\mu) \right\},
+    A(\GENEPARAM) = \sup_{\mu\in\MARGINALP} \left\{ \GENEPARAM^\top \mu + H(\mu) \right\},
 \end{equation}
-where $H(\mu)$ denotes the entropy of a joint distribution realizing the mean parameters $\mu$. In energy notation, with $E(x)=-\GENEPARAM^\top\SSTAT(x)$, this becomes
+where $H(\mu)$ denotes the entropy of a joint distribution realizing the mean parameters $\mu$. For finite discrete models, this supremum is attained when $\MARGINALP$ is taken to be the closed marginal polytope. In energy notation, with $E(x)=-\GENEPARAM^\top\SSTAT(x)$, this becomes
 \begin{equation}
-    \log Z = \max_{\mu\in\MARGINALP} \left\{ H(\mu) - \mathbb{E}_{\mu}[E(X)] \right\}.
+    \log Z = \sup_{\mu\in\MARGINALP} \left\{ H(\mu) - \mathbb{E}_{\mu}[E(X)] \right\}.
 \end{equation}
 This formulation shows that the log-partition function is not merely a normalizing constant: it is the convex dual object that relates natural parameters $\GENEPARAM$ to mean parameters \(\mu\). This relationship is central to maximum-likelihood learning, because learning depends on matching empirical sufficient statistics to model expectations.
 
