@@ -35,7 +35,7 @@ The contributions of this chapter are as follows:
 
 \subsection{Positioning with respect to related work}
 
-The broader landscape of learning-based optimization methods and graphical-model approaches was reviewed in Chapter~\ref{chap2:related_work}.
+The broader landscape of learning-based optimization methods and graphical-model approaches was reviewed in Chapter~\ref{chap:chapter_2_related_work}.
 Here, we focus only on the works most directly connected to the MRF-based BILP predictor developed in this chapter.
 
 The closest starting point is the class of neural methods that represent an optimization instance by its variable--constraint graph and predict variable-level scores. In particular, the framework of Nair et al.~\cite{nair_solving_2020} uses a neural predictor to guide the search for high-quality solutions. Similar graph-based learning ideas have also been used for construction heuristics and solver guidance \cite{dai_learning_2017,gasse_exact_2019}. These approaches demonstrate the usefulness of learned variable scores, but the prediction model used for decoding is typically factorized across variables. The method in this chapter keeps the same graph-based neural input representation, but replaces the factorized output distribution with an MRF over binary assignments.
@@ -183,7 +183,7 @@ Thus larger values of the parameter score correspond to lower energy and higher 
 
 \paragraph{Canonical over-complete sufficient statistics.} We use the \emph{canonical over-complete representation}~\cite{wainwright_graphical_2007} (see Section~\ref{sec:mrf_intro}). For each factor $\FACTOR \in \FGF$, the over-complete indicator representation contains one sufficient statistic for each local assignment $\XVEC_{\FACTOR}$. Since the variables are binary, this gives
 \begin{equation*}
-    \FDIM_{\FACTOR} = 2^{|N(\FACTOR)|}.
+    \FDIM_{\FACTOR} = 2^{|\FACTOR|}.
 \end{equation*}
 The total number of parameters of the MRF corresponding to a problem $(\PROB)$ is denoted $\SSDIM$. The associated factor parameter vector
 $\EPARAM_{\FACTOR} \in \R^{\FDIM_{\FACTOR}}$ has one entry per local assignment. We refer to these as \emph{over-complete factor parameters} as shorthand: the over-completeness belongs to the sufficient-statistic representation, while the parameters are indexed by that representation.
@@ -196,7 +196,7 @@ We refer to this construction as the \emph{canonical feasibility-cost parameteri
 
 Let $\XVEC = (\XVEC_1,\ldots,\XVEC_{\NVAR})$ denote the binary decision variables of an ILP. Each constraint factor $\FACTOR \in \FGF$ is associated with a constraint of the ILP and has scope $N(\FACTOR) \subseteq \{ 1,\ldots, \NVAR\}$. We write $\XVEC_{\FACTOR} = (\XVEC_i)_{i \in N(\FACTOR)}$ for a local assignment to the variables appearing in constraint $\FACTOR$. The set of locally feasible assignments for this constraint is denoted by 
 \begin{equation}
-    \mathcal{X}_{\FACTOR}
+    \FEASIBLESET_{\FACTOR}
     =
     \{\XVEC_{\FACTOR} : \XVEC_{\FACTOR}
     \text{ satisfies constraint } \FACTOR\}.
@@ -207,8 +207,8 @@ The corresponding MRF constraint potential is the feasibility indicator
     \POTENTIAL_{\FACTOR}(\XFACT)
     =
     \begin{cases}
-        1, & \XVEC_{\FACTOR} \in \mathcal{X}_{\FACTOR},\\
-        0, & \XVEC_{\FACTOR} \notin \mathcal{X}_{\FACTOR}.
+        1, & \XVEC_{\FACTOR} \in \FEASIBLESET_{\FACTOR},\\
+        0, & \XVEC_{\FACTOR} \notin \FEASIBLESET_{\FACTOR}.
     \end{cases}
 \end{equation}
 
@@ -223,8 +223,8 @@ constraint-factor log-potentials by
     \CANEPARAM_{\FACTOR}(\XFACT)
     =
     \begin{cases}
-        0, & \XFACT \in \mathcal{X}_{\FACTOR},\\
-        -\infty, & \XFACT \notin \mathcal{X}_{\FACTOR},
+        0, & \XFACT \in \FEASIBLESET_{\FACTOR},\\
+        -\infty, & \XFACT \notin \FEASIBLESET_{\FACTOR},
     \end{cases}
     \qquad \FACTOR \in \FGF,
 \end{equation}
@@ -257,8 +257,8 @@ In practice, using $-\infty$ is numerically inconvenient. We therefore use a lar
     \CANEPARAM_{\FACTOR}(\XFACT)
     =
     \begin{cases}
-        0, & \XFACT \in \mathcal{X}_{\FACTOR},\\
-        -M, & \XFACT \notin \mathcal{X}_{\FACTOR}.
+        0, & \XFACT \in \FEASIBLESET_{\FACTOR},\\
+        -M, & \XFACT \notin \FEASIBLESET_{\FACTOR}.
     \end{cases}
 \end{equation}
 The finite value $-M$ is a numerical approximation to the hard infeasibility penalty $-\infty$. It assigns infeasible local configurations very small, rather than zero, probability mass. Larger values of $M$ make the finite model closer to the hard-constraint model, but do not make the constraint exact unless the limit $M \to \infty$ is taken.
@@ -285,12 +285,12 @@ The LMRF models use the predicted parameter vector $\PREEPARAM(\PROB;\NNPARAM)$,
 
 In practice $\GNNEMB$ is defined as a sequence of $\NUMGNNLAYERS$ graph convolution layers (see experimental results for details on the GNN implementation). 
 
-\paragraph{Parameter prediction head.} The parameter prediction head transforms the vertex embeddings produced by the graph encoder into factor-specific input embeddings and then into predicted over-complete factor parameters $\PREEPARAM(\EMB)$. We denote this function as $\FPARAMPRED$ and its set of trainable parameters $\FPARAMPREDPARAM$. For each factor arity $k \in \{1,\ldots,\max_{\FACTOR\in\FGF}|N(\FACTOR)|\}$, we define a predictor
-$\FPARAMPRED_k : \R^{\EMBDIM} \rightarrow \R^{2^k}$. Thus, for a factor $\FACTOR$ with $k=|N(\FACTOR)|$ adjacent binary variables, the head outputs one log-potential parameter for each of the $2^k$ local assignments.
+\paragraph{Parameter prediction head.} The parameter prediction head transforms the vertex embeddings produced by the graph encoder into factor-specific input embeddings and then into predicted over-complete factor parameters $\PREEPARAM(\EMB)$. We denote this function as $\FPARAMPRED$ and its set of trainable parameters $\FPARAMPREDPARAM$. For each factor arity $k \in \{1,\ldots,\max_{\FACTOR\in\FGF}|\FACTOR|\}$, we define a predictor
+$\FPARAMPRED_k : \R^{\EMBDIM} \rightarrow \R^{2^k}$. Thus, for a factor $\FACTOR$ with $k=|\FACTOR|$ adjacent binary variables, the head outputs one log-potential parameter for each of the $2^k$ local assignments.
 
 The final parameter vector is obtained as 
 \begin{equation}
-    \PREEPARAM = \{\FPARAMPRED_{|N(\FACTOR)|} (\FEMB; \FPARAMPREDPARAM)\}_{\FACTOR\in \FGF}.
+    \PREEPARAM = \{\FPARAMPRED_{|\FACTOR|} (\FEMB; \FPARAMPREDPARAM)\}_{\FACTOR\in \FGF}.
 \end{equation}
 
 Unary and non-unary factors are handled by the same over-complete representation, but correspond to different factor arities. For a unary factor associated with variable $i$, the predictor outputs two parameters, one for $\XVEC_i=0$ and one for $\XVEC_i=1$. For a non-unary constraint factor $\FACTOR$, the predictor outputs one parameter for every joint assignment of the variables in $N(\FACTOR)$. These non-unary tables allow the LMRF to learn interactions between variables that participate in the same constraint.
@@ -389,11 +389,7 @@ distribution; it is a tractable supervised marginal-likelihood surrogate defined
 \begin{equation*}
     \NNPARAM = (\GNNEMBPARAM, \FPARAMPREDPARAM).
 \end{equation*}
-Given an instance $\PROB$, these parameters define predicted MRF parameters
-\begin{equation*}
-    \PREEPARAM(\PROB;\NNPARAM),
-\end{equation*}
-which are then used by LBP or NMF to compute approximate marginals. The symbol $\CANEPARAM(\PROB)$ is reserved for the fixed canonical feasibility-cost parameters used by the non-learned CMRF baselines.
+Given an instance $\PROB$, these parameters define predicted MRF parameters $\PREEPARAM(\PROB;\NNPARAM)$,which are then used by LBP or NMF to compute approximate marginals. The symbol $\CANEPARAM(\PROB)$ is reserved for the fixed canonical feasibility-cost parameters used by the non-learned CMRF baselines.
 
 We train the model in a supervised learning setting. Given a dataset
 \begin{equation*}
@@ -476,7 +472,7 @@ The table separates the quantity used by the decoder from the quantity used for 
 \toprule
 \textbf{Method}    & \textbf{Trained} & \textbf{MRF parameters}    & \textbf{Inference} & \textbf{Loss} & \textbf{Decoder input} \\
 \midrule
-DGN      & Yes     & --              & -- & BCE & Logits \\
+DGN      & Yes     & --              & -- & $\BCELOSSF$ & Logits \\
 CMRF-LBP & No      & $\CANEPARAM(\PROB)$     & LBP & -- & $\MARGINAL_i$ \\
 CMRF-NMF & No      & $\CANEPARAM(\PROB)$     & NMF & -- & $\MARGINAL_i$ \\
 LMRF-LBP & Yes     & $\PREEPARAM(\PROB;\NNPARAM)$     & LBP & $\LOSSF^{\mathrm{LBP}}$ & $\MARGINAL_i$ \\

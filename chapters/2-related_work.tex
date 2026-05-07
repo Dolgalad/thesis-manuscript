@@ -1,9 +1,6 @@
 \chapter{Related Work}\label{chap:chapter_2_related_work}
 \chaptermark{Related Work}
 
-\section{Positioning the Thesis}
-\label{sec:rw_positioning}
-
 The previous chapter introduced the three ingredients used throughout this thesis: binary integer programming as a representation of discrete optimization problems, neural models as trainable predictors on variable--constraint graphs, and MRFs as structured probabilistic models over coupled decision variables. This chapter positions the thesis with respect to the literature that combines these ingredients.
 
 The central question is not simply whether machine learning can improve ILPs or CO, but how learned models should represent and use the dependencies induced by constraints. Existing methods answer this question in different ways. Learning-augmented solvers use machine learning to guide decisions inside branch-and-bound or related optimization pipelines. Neural construction methods predict or build solutions directly, often relying on problem-specific architectures or repair procedures. Energy-based and graphical-model approaches encode optimization as inference over structured distributions. More recent denoising, diffusion, and flow-based methods view solution generation as iterative refinement.

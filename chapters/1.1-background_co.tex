@@ -26,7 +26,7 @@ The \emph{canonical form} of an ILP is given as
 \end{equation}
 where $x\in \mathcal{X} \subseteq \Z^n$ denotes the vector of decision variables, $c\in\R^n$ is the objective coefficient vector, and $A\in\R^{m\times n}$ and $b\in\R^m$ define the linear constraints. We write $A_j$ for the $j$-th row of $A$, so that the $j$-th constraint is $A_jx \leq b_j$. 
 
-Binary integer linear programs (BILPs), which are the main focus of this thesis, are problems for which $\mathcal{X}=\{0,1\}^n$. An assignment $x$ is called \emph{feasible} if it satisfies both the domain restrictions and the linear constraints; the feasible set is therefore $\mathcal{F} := \{x\in\mathcal{X} : Ax \leq b\}$.
+Binary integer linear programs (BILPs), which are the main focus of this thesis, are problems for which $\mathcal{X}=\{0,1\}^n$. An assignment $x$ is called \emph{feasible} if it satisfies both the domain restrictions and the linear constraints; the feasible set is therefore $\FEASIBLESET := \{x\in\mathcal{X} : Ax \leq b\}$.
 
 A formulation is said to be \emph{compact} if the number of variables and constraints is polynomial in the size of the input~\cite{yannakakis_expressing_1988,carr_compact_2000}. This assumption is important for the methods developed in this thesis, since the variable-constraint graph must be represented explicitly. We therefore focus mainly on problems that admit compact BILP formulations. Compactness, however, does not imply that every constraint is small: a compact formulation may still contain constraints involving many variables. This distinction will become important later when we represent constraints through graphical-model structures.
 
