@@ -472,7 +472,7 @@ The table separates the quantity used by the decoder from the quantity used for 
 \toprule
 \textbf{Method}    & \textbf{Trained} & \textbf{MRF parameters}    & \textbf{Inference} & \textbf{Loss} & \textbf{Decoder input} \\
 \midrule
-DGN      & Yes     & --              & -- & $\BCELOSSF$ & Logits \\
+DGN      & Yes     & --              & -- & $\BCELOSS$ & Logits \\
 CMRF-LBP & No      & $\CANEPARAM(\PROB)$     & LBP & -- & $\MARGINAL_i$ \\
 CMRF-NMF & No      & $\CANEPARAM(\PROB)$     & NMF & -- & $\MARGINAL_i$ \\
 LMRF-LBP & Yes     & $\PREEPARAM(\PROB;\NNPARAM)$     & LBP & $\LOSSF^{\mathrm{LBP}}$ & $\MARGINAL_i$ \\
