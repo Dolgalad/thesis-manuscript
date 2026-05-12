@@ -54,19 +54,19 @@ Classical maximum-likelihood estimation in exponential-family models is often de
 - 
 N \,\mathbb{E}_{p_\GENEPARAM}[\SSTAT(X)] .
 \end{equation}
-The empirical sufficient statistics are directly available from data, but the model expectation is generally intractable because it depends on the normalized distribution. This difficulty motivates the approximate inference methods introduced in Section~\ref{sec:background_approximate_inference}. From the variational perspective, these methods approximate the exact optimization problem defining $A(\GENEPARAM)$, either by restricting the family of admissible distributions, by replacing the marginal polytope with a simpler outer approximation, or by approximating the entropy term.
+The empirical sufficient statistics are directly available from data, but the model expectation is generally intractable because it depends on the normalized distribution. This difficulty motivates the approximate inference methods introduced in Section~\ref{subsec:background_approximate_inference}. From the variational perspective, these methods approximate the exact optimization problem defining $A(\GENEPARAM)$, either by restricting the family of admissible distributions, by replacing the marginal polytope with a simpler outer approximation, or by approximating the entropy term.
 
 \subsubsection{Sampling from Boltzmann distributions}
 
 Sampling methods provide a classical approach to approximate inference in Boltzmann distributions and MRFs. Since the partition function is usually intractable, these methods construct a stochastic process whose stationary distribution is the target distribution, and then approximate expectations using samples from that process. The most common examples are Markov Chain Monte Carlo (MCMC) methods such as Metropolis--Hastings (MH) and Gibbs sampling \citep{metropolis_monte_1949,hastings_monte_1970,geman_stochastic_1984}.
 
-Metropolis--Hastings proposes a new state $x'$ from a proposal distribution $\PROPOSAL(x'|x)$ and accepts it with probability
+Metropolis--Hastings proposes a new state $\XVEC'$ from a proposal distribution $\PROPOSAL(\XVEC'|\XVEC)$ and accepts it with probability
 \begin{equation}
-\alpha(x,x')
+\alpha(\XVEC,\XVEC')
 =
 \min\!\left(
 1,
-\frac{p_\beta(x')\PROPOSAL(x|x')}{p_\beta(x)\PROPOSAL(x'|x)}
+\frac{p_\beta(\XVEC')\PROPOSAL(\XVEC|\XVEC')}{p_\beta(\XVEC)\PROPOSAL(\XVEC'|\XVEC)}
 \right).
 \end{equation}
 For a symmetric proposal this reduces to an acceptance rule depending only on the energy difference, so lower-energy moves are always accepted and higher-energy moves are accepted with probability controlled by the temperature. This makes MH very general, but its efficiency depends strongly on the proposal distribution.

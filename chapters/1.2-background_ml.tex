@@ -125,55 +125,81 @@ In the context of this thesis, this perspective is useful because it connects ge
 This general principle underlies both diffusion models, which learn to reverse a stochastic noising process, and flow-based formulations, which learn a deterministic or approximately deterministic transformation from a simple initial distribution toward the data distribution.
 
 \paragraph{Flow matching and velocity prediction models}
+\label{par:background_flow_matching}
 
-Flow matching is a generative modeling framework in which the model learns a time-dependent transformation between a simple source distribution and the data distribution. Instead of learning a reverse stochastic denoising chain, as in diffusion models, flow matching trains a neural network to predict a velocity field that transports samples from an initial distribution toward the target distribution.
+Flow matching is a simulation-free training framework for continuous normalizing flows. This presentation follows the flow matching framework of Lipman et al.~\cite{lipman_flow_2022} and the conditional flow matching formulation of Tong et al.~\cite{kerrigan_dynamic_2024}. The goal is to learn a time-dependent vector field that transports a simple source distribution $p_0$ to a target data distribution $p_1=\DATADIST$. Let $p_t$ denote a probability path on the solution space, with $t\in[0,1]$, satisfying $p_{t=0}=p_0$ and $p_{t=1}=p_1$. A vector field $u_t$ is said to generate this path if it satisfies the continuity equation
+\begin{equation}
+    \partial_t p_t(y) + \nabla_y \cdot \bigl(p_t(y) u_t(y)\bigr) = 0.
+\end{equation}
+Flow matching trains a parameterized vector field $v_{\GENENNPARAM}(y,t)$ to match such a target vector field along the chosen probability path.
 
-Let $y_0 \sim p_0$ denote a sample from a simple source distribution, such as Gaussian noise, and let $y_1 \sim \DATADIST$ denote a target data sample. Flow matching defines a family of intermediate states $y_t$ for $t \in [0,1]$ that interpolate between $y_0$ and $y_1$. A common choice is the linear interpolation path
+In practice, the marginal path $p_t$ and its corresponding marginal vector field $u_t$ are not directly available from finite data. Flow matching therefore uses conditional probability paths. Given a data sample $y_1 \sim \DATADIST$, one defines a conditional path $p_t(y\mid y_1)$ that starts from a simple distribution at $t=0$ and concentrates around $y_1$ at $t=1$, together with a conditional vector field $u_t(y\mid y_1)$ that generates this conditional path. The marginal path is then
+\begin{equation}
+    p_t(y) = \int p_t(y\mid y_1) \, \DATADIST(y_1) \, dy_1.
+\end{equation}
+The corresponding marginal vector field is obtained by averaging the conditional vector fields under the posterior over conditioning samples,
+\begin{equation}
+    u_t(y)
+    =
+    \mathbb{E}_{y_1 \sim \DATADIST}
+    \left[
+        u_t(y\mid y_1)
+        \frac{p_t(y\mid y_1)}{p_t(y)}
+    \right].
+\end{equation}
+The key result behind conditional flow matching is that one can train using samples from the conditional paths without explicitly computing this marginal vector field.
+
+A common choice is an optimal-transport-style conditional path obtained by pairing a source sample $y_0\sim p_0$ with a target sample $y_1\sim\DATADIST$ and setting
 \begin{equation}
     y_t = (1-t)y_0 + t y_1.
 \end{equation}
-Along this path, the corresponding target velocity is
+For this particular path, the conditional target velocity is
 \begin{equation}
-    u_t = \frac{d y_t}{dt} = y_1 - y_0.
+    u_t(y_t \mid y_0,y_1) = y_1-y_0.
 \end{equation}
-The learning problem is then to train a parameterized model $v_{\GENENNPARAM}$ to predict this velocity from the current state and time:
-\begin{equation}
-    v_{\GENENNPARAM}(y_t,t) \approx u_t.
-\end{equation}
-In a conditional setting, where generation depends on an input instance $x$, the model is instead written as
-\begin{equation}
-    v_{\GENENNPARAM}(y_t,t,x) \approx u_t.
-\end{equation}
-For example, in combinatorial optimization, $x$ may represent the optimization instance and $y_1$ may represent an optimal or high-quality solution. When the target output is discrete, as in BILP solution generation, the flow is typically defined on a continuous relaxation or embedding of the solution, and a decoding step is required to obtain a discrete assignment.
+This straight-line construction should be understood as one possible conditional path, not as the definition of flow matching itself.
 
-The standard conditional flow-matching objective takes the form
+In a conditional generation setting, the target distribution depends on an input instance $x$. For example, in combinatorial optimization, $x$ may represent the optimization instance and $y_1$ may represent an optimal or high-quality solution. The model is then written as $v_{\GENENNPARAM}(y,t,x)$, and the conditional flow-matching objective becomes
 \begin{equation}
     \FMLOSS(\GENENNPARAM)
     =
-    \mathbb{E}_{(x,y_1)\sim\DATADIST,\, y_0\sim p_0,\, t\sim U[0,1]}
+    \mathbb{E}_{(x,y_1)\sim\DATADIST,\; y_t\sim p_t(\cdot\mid y_1),\; t\sim U[0,1]}
     \left[
         \left\|
-            v_{\GENENNPARAM}(y_t,t,x) - u_t
+            v_{\GENENNPARAM}(y_t,t,x) - u_t(y_t\mid y_1)
         \right\|_2^2
-    \right],
+    \right].
 \end{equation}
-where $y_t$ is obtained from the chosen interpolation path. The model is therefore trained by supervised regression onto a known velocity target.
-
-Once the velocity field has been learned, samples can be generated by starting from $y_0 \sim p_0$ and solving the ordinary differential equation (see Algorithm~\ref{alg:flow_sampling})
+For the straight-line path above, this can equivalently be written by sampling $y_0\sim p_0$, setting $y_t=(1-t)y_0+ty_1$, and using the target velocity $u_t=y_1-y_0$:
 \begin{equation}
-    \frac{d y_t}{dt} = v_{\GENENNPARAM}(y_t,t,x),
-    \qquad y_0 \sim p_0.
+    \FMLOSS(\GENENNPARAM)
+    =
+    \mathbb{E}_{(x,y_1)\sim\DATADIST,\; y_0\sim p_0,\; t\sim U[0,1]}
+    \left[
+        \left\|
+            v_{\GENENNPARAM}(y_t,t,x) - (y_1-y_0)
+        \right\|_2^2
+    \right].
 \end{equation}
-The final state $y_{t=1}$ of this trajectory is then expected to follow the learned data distribution. In practice, this ODE is solved numerically using a finite number of integration steps. Compared with diffusion models, this formulation often leads to a more direct generative procedure, since the model predicts a deterministic direction of motion rather than the parameters of a stochastic reverse transition.
+
+Once the velocity field has been learned, samples are generated by drawing an initial state $y(0)\sim p_0$ and solving the ordinary differential equation
+\begin{equation}
+    \frac{d y(t)}{dt}
+    =
+    v_{\GENENNPARAM}(y(t),t,x),
+    \qquad
+    y(0)\sim p_0.
+\end{equation}
+The final state $y(1)$ is then decoded, if necessary, into a feasible discrete solution. When the target output is discrete, as in BILP solution generation, the flow is defined on a continuous relaxation or embedding of the solution space, and a decoding or rounding step is required to obtain a discrete assignment. Algorithm~\ref{alg:flow_sampling} summarizes the resulting sampling procedure using a simple explicit Euler discretization of the learned flow ODE.
 
 \begin{algorithm}[t]
-\caption{Sample generation with a learned velocity field}
+\caption{Conditional generation with a learned flow}
 \label{alg:flow_sampling}
 \DontPrintSemicolon
 
 \KwIn{
     Problem instance $x$;
-    learned velocity field $v_{\GENENNPARAM}$;
+    learned vector field $v_{\GENENNPARAM}$;
     source distribution $p_0$;
     number of integration steps $K$;
     decoding operator $\mathrm{Dec}$
@@ -188,12 +214,13 @@ Set $\Delta t \leftarrow 1/K$\;
 \For{$k = 0,\ldots,K-1$}{
     Set $t_k \leftarrow k \Delta t$\;
     
-    Predict the velocity $\hat{u}^{(k)} \leftarrow v_{\GENENNPARAM}(y^{(k)}, t_k, x)$\;
+    Evaluate the vector field $\hat{u}^{(k)} \leftarrow v_{\GENENNPARAM}(y^{(k)}, t_k, x)$\;
     
-    Update state using an Euler step $y^{(k+1)} \leftarrow y^{(k)} + \Delta t \, \hat{u}^{(k)} $ \;
+    Update the state using an Euler step:
+    $y^{(k+1)} \leftarrow y^{(k)} + \Delta t \, \hat{u}^{(k)}$\;
 }
 
-Decode the final state $\hat{y} \leftarrow \mathrm{Dec}(y^{(K)}, x)$ \;
+Decode the final state $\hat{y} \leftarrow \mathrm{Dec}(y^{(K)}, x)$\;
 
 \Return{$\hat{y}$}\;
 
@@ -234,7 +261,7 @@ After several message-passing iterations, the node representations can be used d
 
 GNNs are especially useful for structured prediction problems in which the input is naturally relational or graph-structured~\cite{gilmer_neural_2017,battaglia_relational_2018}. In combinatorial optimization, they provide a way to learn heuristics or prediction rules that operate directly on graph-structured problem instances.
 
-In the context of this thesis, GNNs provide one of the main neural representation mechanisms for BILP instances. They process the variable-constraint graph and produce embeddings that can be used for direct variable-level prediction, MRF factor-parameter prediction, denoising updates, or as inputs to subsequent feature-to-factor mapping modules. This distinction motivates the feasibility-preserving decoding procedures in Section~\ref{subsec:chapter_3_solution_decoding} and the refinement-based decoding procedures in Section~\ref{sec:chapter_4_unrolling_decoding}.
+In the context of this thesis, GNNs provide one of the main neural representation mechanisms for BILP instances. They process the variable-constraint graph and produce embeddings that can be used for direct variable-level prediction, MRF factor-parameter prediction, denoising updates, or as inputs to subsequent feature-to-factor mapping modules. This distinction motivates the feasibility-preserving decoding procedures in Section~\ref{subsubsec:chapter_3_egg_gd} and the refinement-based decoding procedures in Section~\ref{sec:chapter_4_unrolling_decoding}.
 
 \paragraph{Transformers and attention}
 

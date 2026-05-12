@@ -4,15 +4,15 @@
 \section{Introduction}
 \label{sec:chapter_4_intro}
 
-The previous chapter introduced MRF-based structured prediction models for BILPs. In that setting, a variable--constraint graph was mapped to MRF factor parameters, approximate inference produced unary marginals, and feasibility-preserving decoders converted these scores into binary assignments.
+Chapter~\ref{chapter:3_differentiable_mrf_inference_for_BILPs} introduced MRF-based structured prediction models for BILPs. In that setting, a variable--constraint graph was mapped to MRF factor parameters, approximate inference produced unary marginals, and feasibility-preserving decoders converted these scores into binary assignments.
 
 This chapter keeps the same separation between prediction, structured inference, and decoding, but changes how the prediction signal is produced. Instead of obtaining one score vector from a single forward pass, we study learned refinement dynamics over candidate solution states. A candidate state is represented as a vector in $[0,1]^n$, interpreted as Bernoulli parameters for the binary decision variables. The model is conditioned on the BILP instance, the current state, and a refinement time or noise level.
 
-The motivation comes from the generative and denoising viewpoint introduced in Section~\ref{sec:generative_denoising}. Here, however, the generated object is not evaluated as an unconstrained sample. It is used as a score signal for the same feasibility-preserving decoders used in the previous chapter. The question is therefore whether learned refinement produces better decoding scores than one-shot prediction.
+The motivation comes from the generative and denoising viewpoint introduced in Section~\ref{sec:generative_denoising}. Here, however, the generated object is not evaluated as an unconstrained sample. It is used as a score signal for the feasibility-preserving EGG and GD decoders introduced in Section~\ref{subsubsec:chapter_3_egg_gd}. The question is therefore whether learned refinement produces better decoding scores than one-shot prediction.
 
 We study two refinement objectives. The first is flow-based: it defines a linear path between a random Bernoulli-parameter source state and a reference solution, and trains the model either to predict the velocity along this path or to predict the clean endpoint. The second is diffusion-inspired: it corrupts reference solutions by replacement noise and trains the model to reconstruct the clean assignment. In both cases, the new feature is state conditioning: the MRF parameters depend not only on the instance, but also on the current candidate state.
 
-The test-time budget also changes. In the previous chapter, the main inference budget came from approximate inference and repeated GD updates. Here, the learned model itself is iterative, so the number of refinement steps becomes an additional runtime--quality parameter.
+The test-time budget also changes. In the decoding experiments of Section~\ref{subsec:chapter_3_main_results}, the main inference budget came from fixed-iteration approximate inference and repeated GD updates. Here, the learned model itself is iterative, so the number of refinement steps becomes an additional runtime--quality parameter.
 
 The experiments use Set Cover (SC) and Maximum Independent Set (MIS), as before. These two families are useful because their decoding errors behave differently. In SC, adding sets can repair uncovered elements. In MIS, selecting one vertex immediately excludes its neighbors, making early ranking errors harder to recover from.
 
@@ -24,7 +24,7 @@ The contributions of this chapter are:
 
     \item a diffusion-inspired denoising objective based on replacement corruption of reference solutions;
 
-    \item a unified decoding protocol that evaluates refined states with the same feasibility-preserving decoders as the previous chapter;
+    \item a unified decoding protocol that evaluates refined states with the EGG and GD feasibility-preserving decoders introduced in Section~\ref{subsubsec:chapter_3_egg_gd};
 
     \item an empirical comparison of direct, LBP-based, and NMF-based refinement models on SC and MIS, including the effect of unrolling and backend reinference.
 \end{enumerate}
@@ -32,7 +32,9 @@ The contributions of this chapter are:
 \section{State-Conditioned MRF Refinement Models}
 \label{sec:state_conditioned_mrf_refinement}
 
-We first adapt the denoising and flow-matching framework of Section~\ref{sec:generative_denoising} to BILP solution prediction. The state space is the relaxed hypercube $[0,1]^n$, whose coordinates are interpreted as Bernoulli parameters for the binary decision variables. Unlike the predictors of the previous chapter, the MRF parameters are now conditioned on the current state of the refinement process. The graph encoder therefore predicts factor parameters for an MRF that changes along the refinement trajectory.
+The general flow-matching and denoising viewpoints were introduced in Section~\ref{sec:generative_denoising}, in particular in Paragraph~\ref{par:background_flow_matching} for flow-based generation. This chapter does not repeat that general construction. Instead, it specifies how the flow idea is instantiated for BILP solution prediction and how the resulting refinement states are combined with MRF-based structured inference.
+
+The state space is the relaxed hypercube $[0,1]^n$, whose coordinates are interpreted as Bernoulli parameters for the binary decision variables. Unlike the one-shot predictors of Chapter~\ref{chapter:3_differentiable_mrf_inference_for_BILPs}, the MRF parameters are now conditioned on the current state of the refinement process. The graph encoder therefore predicts factor parameters for an MRF that changes along the refinement trajectory.
 
 \subsection{Refinement states and probability path}
 
@@ -50,12 +52,12 @@ The source state $\FMSOURCESTATE$ is sampled componentwise from an uninformative
 \end{equation}
 This provides an initial point in $[0,1]^n$ with no instance-specific information.
 
-Given $\FMSOURCESTATE$, the reference solution $\FMPREF$, and a time $t\in[0,1]$, we use the linear probability path
+For the flow-based models, we use the straight-line conditional path discussed in Paragraph~\ref{par:background_flow_matching}, specialized to relaxed binary assignments. Given $\FMSOURCESTATE$, the reference solution $\FMPREF$, and a time $t\in[0,1]$, the intermediate state is
 \begin{equation}
     \FMP_t = (1-t)\FMSOURCESTATE + t \FMPREF .
     \label{eq:flow_probability_path}
 \end{equation}
-Thus $\FMP_0=\FMSOURCESTATE$ and $\FMP_1=\FMPREF$. Intermediate states $\FMP_t$ are relaxed assignments in $[0,1]^n$. This is the binary-solution analogue of the interpolation path introduced in Section~\ref{sec:generative_denoising}.
+Thus $\FMP_t$ remains in $[0,1]^n$ and can be used as a time-dependent score vector for the binary decision variables.
 
 \subsection{State-conditioned MRF architecture}
 \label{sec:state_conditioned_mrf_architecture}
@@ -105,16 +107,16 @@ This follows the approximate-inference perspective introduced in Section~\ref{se
 \end{equation}
 Thus, the endpoint estimate is not produced independently for each variable. It is the result of approximate inference in a factor graph whose potentials are conditioned on the current state of the refinement trajectory.
 
-This gives the model two mechanisms for incorporating structure. First, the neural network observes the current relaxed assignment through the appended state features. Second, the MRF layer propagates local factor information through LBP or NMF before the decoder fixes variables. The flow model therefore acts as a learned refinement map over solution states, while the MRF layer preserves the constraint-aware inference mechanism introduced in the previous chapter.
+This gives the model two mechanisms for incorporating structure. First, the neural network observes the current relaxed assignment through the appended state features. Second, the MRF layer propagates local factor information through LBP or NMF before the decoder fixes variables. The flow model therefore acts as a learned refinement map over solution states, while the MRF layer preserves the constraint-aware inference mechanism introduced in Section~\ref{subsec:chapter_3_differentiable_inference}.
 
 \subsection{Velocity prediction by flow matching}
 
-The first training objective follows the flow-matching viewpoint. Along the linear path in Equation~\eqref{eq:flow_probability_path}, the ideal velocity is
+The first training objective is the BILP-specific version of the conditional flow-matching objective introduced in Paragraph~\ref{par:background_flow_matching}. For the straight-line path in Equation~\eqref{eq:flow_probability_path}, the target velocity reduces to
 \begin{equation}
     \FMVELOCITY_t = \frac{d \FMP_t}{dt} = \FMPREF - \FMSOURCESTATE .
     \label{eq:flow_target_velocity}
 \end{equation}
-This target does not depend on $t$ for the linear path, but the model must infer it from the current state $\FMP_t$, the time $t$, and the problem instance $\PROB$.
+Although this target is constant along the chosen path, the model only observes the current state $\FMP_t$, the time $t$, and the problem instance $\PROB$.
 
 In the implementation used here, the model predicts an endpoint estimate and the velocity is obtained from that endpoint. Given the fixed graph and the time-dependent feature collection, let
 \begin{equation}
@@ -297,7 +299,7 @@ Partial unrolling is useful for two reasons. First, it defines a runtime--qualit
 \subsection{Backend reinference during decimation}
 \label{subsec:backend_reinference_decimation}
 
-For MRF-based refinement models, we also evaluate a backend variant in which GD requests updated beliefs during decimation. This follows the same decimation interface as the previous chapter, but the backend is now state-conditioned.
+For MRF-based refinement models, we also evaluate a backend variant in which GD requests updated beliefs during decimation. This follows the guided-decimation interface introduced in Section~\ref{subsubsec:chapter_3_egg_gd}, but the backend is now state-conditioned.
 
 When GD has fixed a partial assignment $S\subseteq \VCGV\times\{0,1\}$, the backend constructs an evidence-consistent source state:
 \begin{equation}
@@ -309,7 +311,7 @@ When GD has fixed a partial assignment $S\subseteq \VCGV\times\{0,1\}$, the back
     \end{cases}
     \label{eq:evidence_conditioned_source_state}
 \end{equation}
-The refinement model is then evaluated from this state, and approximate inference is run under the same evidence-clamping mechanism used previously. The resulting beliefs are returned to the GD rule.
+The refinement model is then evaluated from this state, and approximate inference is run under the same evidence-clamping mechanism described in Section~\ref{subsec:background_conditional_clamping} and used for GD in Section~\ref{subsubsec:chapter_3_egg_gd}. The resulting beliefs are returned to the GD rule.
 
 This variant tests whether learned refinement remains useful when combined with adaptive decimation. It is more expensive than decoding a single refined score vector, because the backend may repeat refinement and inference during one GD pass.
 
@@ -377,7 +379,7 @@ The backend GD variant provides a different trade-off. On SC-S, recomputing the 
 
 \subsection{Maximum Independent Set Results}
 
-The Maximum Independent Set results are more mixed. On MIS-S, the direct DGN flow baselines obtain gaps above $22\%$, which is comparable to the difficulty of factorized prediction observed in the previous chapter. The FMRF-LBP models improve over these baselines, especially when decoded with EGG. In particular, the direct endpoint FMRF-LBP model obtains an EGG gap around $14.3\%$, which is the best flow result reported for MIS-S in Table~\ref{tab:flow_inference_results}.
+The Maximum Independent Set results are more mixed. On MIS-S, the direct DGN flow baselines obtain gaps above $22\%$, which is comparable to the difficulty of factorized prediction observed in the MIS results of Section~\ref{subsec:chapter_3_main_results}. The FMRF-LBP models improve over these baselines, especially when decoded with EGG. In particular, the direct endpoint FMRF-LBP model obtains an EGG gap around $14.3\%$, which is the best flow result reported for MIS-S in Table~\ref{tab:flow_inference_results}.
 
 However, the behavior of GD is less favorable on MIS than on SC. For FMRF-LBP, moving from EGG to GD does not consistently improve the result, and for the NMF variants it substantially worsens the gap. This contrasts with the results of Chapter~\ref{chapter:3_differentiable_mrf_inference_for_BILPs}, where GD was often beneficial because conditioning the MRF on partial assignments provided updated marginals for the remaining variables. In the flow setting, the additional refinement and conditioning steps appear to be less stable for MIS.
 
@@ -422,7 +424,7 @@ The completed experiments show that learned refinement is most effective when it
 
 The difference between LBP and NMF is important. On SC-M, the FMRF-LBP flow models obtain gaps around $2.9\%$, whereas the FMRF-NMF variants remain around $6.6$--$6.7\%$ under EGG or GD. The completed denoising rows show the same ordering, with DLBP outperforming DNMF on both SC-S and SC-M. This difference is consistent with the approximate-inference discussion in Section~\ref{sec:mrf_intro}: LBP propagates factor-level information through the graph, whereas NMF uses a factorized approximation that weakens dependencies between variables.
 
-The main problem-dependent limitation is the interaction between refinement and decoding. On Set Cover, refined scores work well with feasibility-preserving decoding because mistakes can often be repaired by selecting additional sets. On MIS, the situation is more brittle: selecting one vertex immediately excludes its neighbors, so early ranking errors can permanently remove good candidates. This helps explain why the MIS-S flow results improve over direct prediction but remain weaker than the strongest adaptive GD results from the previous chapter.
+The main problem-dependent limitation is the interaction between refinement and decoding. On Set Cover, refined scores work well with feasibility-preserving decoding because mistakes can often be repaired by selecting additional sets. On MIS, the situation is more brittle: selecting one vertex immediately excludes its neighbors, so early ranking errors can permanently remove good candidates. This helps explain why the MIS-S flow results improve over direct prediction but remain weaker than the strongest adaptive GD results reported in Section~\ref{subsec:chapter_3_main_results}.
 
 A second limitation is computational. Refinement introduces an additional test-time budget through the number of unrolling steps. Backend GD variants are even more expensive because they may repeat refinement and approximate inference during decimation. The results therefore suggest a trade-off: single-rollout refinement is attractive when a strong fixed score vector is needed, while adaptive MRF-GD remains preferable when the additional inference cost is justified.
 
@@ -439,4 +441,4 @@ The main empirical finding is that refinement is most effective when combined wi
 
 The results also show that refinement is not a universal replacement for adaptive MRF-guided decimation. It is particularly effective as a way to improve one-shot decoding scores, whereas repeated reinference remains costly and problem-dependent. MIS highlights this limitation because hard exclusion constraints make sequential decoding sensitive to early ranking errors.
 
-The next chapter addresses a complementary scalability issue: how to map neural features to factor potentials more efficiently. This is important because the effectiveness of the refinement models in this chapter depends on the ability to construct useful MRF parameters at each refinement step.
+Chapter~\ref{chapter:5_feature-to-factor_mappings_for_approximate_mrf_inference} addresses a complementary scalability issue: how to map neural features to factor potentials more efficiently. This is important because the effectiveness of the refinement models in this chapter depends on the ability to construct useful MRF parameters at each refinement step.

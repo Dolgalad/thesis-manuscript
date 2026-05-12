@@ -42,11 +42,7 @@ Given a BILP with feasible set $\mathcal{X}=\{0,1\}^n$, its linear programming r
 \end{equation}
 The resulting LP provides a continuous approximation of the original integer problem. A point is LP-feasible if it satisfies the linear constraints and the relaxed bounds; it is integer-feasible if it also satisfies the original integrality restrictions. Thus, an LP-feasible solution may be fractional, meaning that some variables satisfy $0<x_i^{\mathrm{LP}}<1$.
 
-LP relaxations provide both bounds for exact solvers and useful information for heuristics and learning models. For a constraint $A_jx\leq b_j$, the slack at an LP solution $x^{\mathrm{LP}}$ is
-\begin{equation*}
-s_j = b_j - A_jx^{\mathrm{LP}}.
-\end{equation*}
-A constraint is active, or tight, when $s_j=0$. LP solvers also return dual values associated with constraints, which can be interpreted as sensitivities of the LP objective to changes in the right-hand side, and reduced costs associated with variables, which indicate how variable movements would affect the LP objective around the current optimum.
+For a detailed introduction to linear programming, including LP relaxations, duality, reduced costs, and sensitivity analysis, we refer the reader to the textbook of Bertsimas and Tsitsiklis~\cite{bertsimas_introduction_1997}.
 
 When the relaxation is solved by the simplex method, the solution is represented by a basis. The corresponding basis status of a variable or constraint records whether it is basic or nonbasic, and, if nonbasic, which bound is active. These quantities are often exposed by MILP solvers and are used as optimization-aware features in the variable-constraint graph representation described in Section~\ref{sec:vcg_definition} and in the learned predictors evaluated in Chapter~\ref{chapter:3_differentiable_mrf_inference_for_BILPs}.
 
@@ -121,6 +117,7 @@ This representation offers several advantages. First, it provides a sparse encod
 
 
 \subsection{Representative problems}
+\label{subsec:background_representative_problems}
 We use Maximum Independent Set (MIS) and Set Cover (SC) as representative BILP families. Both are classical NP-hard combinatorial optimization problems~\cite{miller_reducibility_1972}, and together they illustrate two different constraint structures: pairwise exclusion constraints for MIS and potentially high-arity coverage constraints for SC.
 
 \subsubsection{Maximum Independent Set}  
