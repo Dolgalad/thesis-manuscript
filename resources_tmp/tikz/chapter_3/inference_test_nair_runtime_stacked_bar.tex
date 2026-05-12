@@ -1,0 +1,782 @@
+\begin{figure}[t]
+\centering
+% Requires: \usepackage{pgfplots}
+% Requires: \usepgfplotslibrary{groupplots}
+% Requires: \usetikzlibrary{calc, matrix, patterns}
+\definecolor{darkgray176}{RGB}{110,110,110}
+\definecolor{lightgray204}{RGB}{200,200,200}
+\begin{tikzpicture}
+\begin{groupplot}[
+    group style={group size=2 by 2, horizontal sep=0.75cm, vertical sep=0.75cm, y descriptions at=edge left, ylabels at=edge left},
+    width=0.42\textwidth,
+    height=0.30\textwidth,
+    scale only axis,
+    tick align=outside,
+    tick pos=left,
+    xmajorgrids,
+    ymajorgrids,
+    x grid style={darkgray176},
+    y grid style={darkgray176},
+]
+
+\nextgroupplot[
+    title={SC-S},
+    xmin=-0.6, xmax=4.6,
+    xtick={0,1,2,3,4},
+    xticklabels={0.5,0.6,0.7,0.8,0.9},
+    xticklabels=\empty,
+    xtick style={draw=none},
+    ylabel={Runtime (s)},
+    ymin=0, ymax=0.927853959137,
+]
+% manual stacked bars for scp_n50_m50_k5
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:-0.41,0) rectangle (axis cs:-0.246,0.00015294267796);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:-0.41,0) rectangle (axis cs:-0.246,0.00015294267796);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:-0.41,0.00015294267796) rectangle (axis cs:-0.246,0.00869262564927);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:-0.41,0.00015294267796) rectangle (axis cs:-0.246,0.00869262564927);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:-0.41,0.00869262564927) rectangle (axis cs:-0.246,0.0344405241404);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:-0.41,0.00869262564927) rectangle (axis cs:-0.246,0.0344405241404);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:-0.41,0.0344405241404) rectangle (axis cs:-0.246,0.0787783249654);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:0.59,0) rectangle (axis cs:0.754,0.000162499984726);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:0.59,0) rectangle (axis cs:0.754,0.000162499984726);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:0.59,0.000162499984726) rectangle (axis cs:0.754,0.00961068046279);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:0.59,0.000162499984726) rectangle (axis cs:0.754,0.00961068046279);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:0.59,0.00961068046279) rectangle (axis cs:0.754,0.0399759972747);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:0.59,0.00961068046279) rectangle (axis cs:0.754,0.0399759972747);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:0.59,0.0399759972747) rectangle (axis cs:0.754,0.0681075306609);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:1.59,0) rectangle (axis cs:1.754,0.000149902999401);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:1.59,0) rectangle (axis cs:1.754,0.000149902999401);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:1.59,0.000149902999401) rectangle (axis cs:1.754,0.0090507899411);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:1.59,0.000149902999401) rectangle (axis cs:1.754,0.0090507899411);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:1.59,0.0090507899411) rectangle (axis cs:1.754,0.0463407443929);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:1.59,0.0090507899411) rectangle (axis cs:1.754,0.0463407443929);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:1.59,0.0463407443929) rectangle (axis cs:1.754,0.0694122564141);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:2.59,0) rectangle (axis cs:2.754,0.000144605236128);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:2.59,0) rectangle (axis cs:2.754,0.000144605236128);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:2.59,0.000144605236128) rectangle (axis cs:2.754,0.00875863385387);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:2.59,0.000144605236128) rectangle (axis cs:2.754,0.00875863385387);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:2.59,0.00875863385387) rectangle (axis cs:2.754,0.0519442486484);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:2.59,0.00875863385387) rectangle (axis cs:2.754,0.0519442486484);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:2.59,0.0519442486484) rectangle (axis cs:2.754,0.073212749958);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:3.59,0) rectangle (axis cs:3.754,0.000147059364244);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:3.59,0) rectangle (axis cs:3.754,0.000147059364244);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:3.59,0.000147059364244) rectangle (axis cs:3.754,0.00901701148599);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:3.59,0.000147059364244) rectangle (axis cs:3.754,0.00901701148599);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:3.59,0.00901701148599) rectangle (axis cs:3.754,0.0552464465797);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:3.59,0.00901701148599) rectangle (axis cs:3.754,0.0552464465797);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:3.59,0.0552464465797) rectangle (axis cs:3.754,0.075686957147);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:-0.246,0) rectangle (axis cs:-0.082,0.000574040822685);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:-0.246,0) rectangle (axis cs:-0.082,0.000574040822685);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:-0.246,0.000574040822685) rectangle (axis cs:-0.082,0.0349722305592);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:-0.246,0.000574040822685) rectangle (axis cs:-0.082,0.0349722305592);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:-0.246,0.0349722305592) rectangle (axis cs:-0.082,0.145011260528);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:-0.246,0.0349722305592) rectangle (axis cs:-0.082,0.145011260528);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:-0.246,0.145011260528) rectangle (axis cs:-0.082,0.184668398621);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:0.754,0) rectangle (axis cs:0.918,0.000586733724922);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:0.754,0) rectangle (axis cs:0.918,0.000586733724922);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:0.754,0.000586733724922) rectangle (axis cs:0.918,0.0362859093957);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:0.754,0.000586733724922) rectangle (axis cs:0.918,0.0362859093957);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:0.754,0.0362859093957) rectangle (axis cs:0.918,0.146559172487);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:0.754,0.0362859093957) rectangle (axis cs:0.918,0.146559172487);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:0.754,0.146559172487) rectangle (axis cs:0.918,0.179667182742);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:1.754,0) rectangle (axis cs:1.918,0.000594568913803);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:1.754,0) rectangle (axis cs:1.918,0.000594568913803);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:1.754,0.000594568913803) rectangle (axis cs:1.918,0.036884955531);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:1.754,0.000594568913803) rectangle (axis cs:1.918,0.036884955531);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:1.754,0.036884955531) rectangle (axis cs:1.918,0.146412357269);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:1.754,0.036884955531) rectangle (axis cs:1.918,0.146412357269);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:1.754,0.146412357269) rectangle (axis cs:1.918,0.169764551008);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:2.754,0) rectangle (axis cs:2.918,0.000654697911814);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:2.754,0) rectangle (axis cs:2.918,0.000654697911814);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:2.754,0.000654697911814) rectangle (axis cs:2.918,0.0370895783789);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:2.754,0.000654697911814) rectangle (axis cs:2.918,0.0370895783789);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:2.754,0.0370895783789) rectangle (axis cs:2.918,0.147571128067);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:2.754,0.0370895783789) rectangle (axis cs:2.918,0.147571128067);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:2.754,0.147571128067) rectangle (axis cs:2.918,0.169559630128);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:3.754,0) rectangle (axis cs:3.918,0.000609968723729);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:3.754,0) rectangle (axis cs:3.918,0.000609968723729);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:3.754,0.000609968723729) rectangle (axis cs:3.918,0.0366515633184);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:3.754,0.000609968723729) rectangle (axis cs:3.918,0.0366515633184);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:3.754,0.0366515633184) rectangle (axis cs:3.918,0.147886066278);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:3.754,0.0366515633184) rectangle (axis cs:3.918,0.147886066278);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:3.754,0.147886066278) rectangle (axis cs:3.918,0.168967585973);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:-0.082,0) rectangle (axis cs:0.082,0.000577725535259);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:-0.082,0) rectangle (axis cs:0.082,0.000577725535259);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:-0.082,0.000577725535259) rectangle (axis cs:0.082,0.031472833911);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:-0.082,0.000577725535259) rectangle (axis cs:0.082,0.031472833911);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:-0.082,0.031472833911) rectangle (axis cs:0.082,0.493727807971);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:-0.082,0.031472833911) rectangle (axis cs:0.082,0.493727807971);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:-0.082,0.493727807971) rectangle (axis cs:0.082,0.532932139486);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:0.918,0) rectangle (axis cs:1.082,0.000721687087789);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:0.918,0) rectangle (axis cs:1.082,0.000721687087789);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:0.918,0.000721687087789) rectangle (axis cs:1.082,0.0379300758429);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:0.918,0.000721687087789) rectangle (axis cs:1.082,0.0379300758429);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:0.918,0.0379300758429) rectangle (axis cs:1.082,0.568933670251);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:0.918,0.0379300758429) rectangle (axis cs:1.082,0.568933670251);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:0.918,0.568933670251) rectangle (axis cs:1.082,0.603092093375);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:1.918,0) rectangle (axis cs:2.082,0.000629034610465);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:1.918,0) rectangle (axis cs:2.082,0.000629034610465);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:1.918,0.000629034610465) rectangle (axis cs:2.082,0.0389021271467);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:1.918,0.000629034610465) rectangle (axis cs:2.082,0.0389021271467);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:1.918,0.0389021271467) rectangle (axis cs:2.082,0.641517090658);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:1.918,0.0389021271467) rectangle (axis cs:2.082,0.641517090658);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:1.918,0.641517090658) rectangle (axis cs:2.082,0.665446116244);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:2.918,0) rectangle (axis cs:3.082,0.000644823387265);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:2.918,0) rectangle (axis cs:3.082,0.000644823387265);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:2.918,0.000644823387265) rectangle (axis cs:3.082,0.0381559681334);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:2.918,0.000644823387265) rectangle (axis cs:3.082,0.0381559681334);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:2.918,0.0381559681334) rectangle (axis cs:3.082,0.724889580384);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:2.918,0.0381559681334) rectangle (axis cs:3.082,0.724889580384);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:2.918,0.724889580384) rectangle (axis cs:3.082,0.746985982442);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:3.918,0) rectangle (axis cs:4.082,0.000648161265999);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:3.918,0) rectangle (axis cs:4.082,0.000648161265999);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:3.918,0.000648161265999) rectangle (axis cs:4.082,0.0368453156576);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:3.918,0.000648161265999) rectangle (axis cs:4.082,0.0368453156576);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:3.918,0.0368453156576) rectangle (axis cs:4.082,0.785697316509);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:3.918,0.0368453156576) rectangle (axis cs:4.082,0.785697316509);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:3.918,0.785697316509) rectangle (axis cs:4.082,0.806829529684);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:0.082,0) rectangle (axis cs:0.246,0.000429730452597);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:0.082,0) rectangle (axis cs:0.246,0.000429730452597);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:0.082,0.000429730452597) rectangle (axis cs:0.246,0.0169352405611);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:0.082,0.000429730452597) rectangle (axis cs:0.246,0.0169352405611);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:0.082,0.0169352405611) rectangle (axis cs:0.246,0.115546180746);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:0.082,0.0169352405611) rectangle (axis cs:0.246,0.115546180746);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:0.082,0.115546180746) rectangle (axis cs:0.246,0.152687040232);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:1.082,0) rectangle (axis cs:1.246,0.000431691808626);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:1.082,0) rectangle (axis cs:1.246,0.000431691808626);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:1.082,0.000431691808626) rectangle (axis cs:1.246,0.0167087014392);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:1.082,0.000431691808626) rectangle (axis cs:1.246,0.0167087014392);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:1.082,0.0167087014392) rectangle (axis cs:1.246,0.116545310272);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:1.082,0.0167087014392) rectangle (axis cs:1.246,0.116545310272);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:1.082,0.116545310272) rectangle (axis cs:1.246,0.149587717596);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:2.082,0) rectangle (axis cs:2.246,0.000433994289488);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:2.082,0) rectangle (axis cs:2.246,0.000433994289488);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:2.082,0.000433994289488) rectangle (axis cs:2.246,0.017138371598);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:2.082,0.000433994289488) rectangle (axis cs:2.246,0.017138371598);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:2.082,0.017138371598) rectangle (axis cs:2.246,0.118315308057);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:2.082,0.017138371598) rectangle (axis cs:2.246,0.118315308057);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:2.082,0.118315308057) rectangle (axis cs:2.246,0.14597484515);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:3.082,0) rectangle (axis cs:3.246,0.000412727259099);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:3.082,0) rectangle (axis cs:3.246,0.000412727259099);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:3.082,0.000412727259099) rectangle (axis cs:3.246,0.0167793848738);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:3.082,0.000412727259099) rectangle (axis cs:3.246,0.0167793848738);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:3.082,0.0167793848738) rectangle (axis cs:3.246,0.118855957147);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:3.082,0.0167793848738) rectangle (axis cs:3.246,0.118855957147);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:3.082,0.118855957147) rectangle (axis cs:3.246,0.145795099419);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:4.082,0) rectangle (axis cs:4.246,0.000427796440199);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:4.082,0) rectangle (axis cs:4.246,0.000427796440199);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:4.082,0.000427796440199) rectangle (axis cs:4.246,0.0181925807986);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:4.082,0.000427796440199) rectangle (axis cs:4.246,0.0181925807986);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:4.082,0.0181925807986) rectangle (axis cs:4.246,0.120538565442);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:4.082,0.0181925807986) rectangle (axis cs:4.246,0.120538565442);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:4.082,0.120538565442) rectangle (axis cs:4.246,0.146500766343);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:0.246,0) rectangle (axis cs:0.41,0.000382839553058);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:0.246,0) rectangle (axis cs:0.41,0.000382839553058);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:0.246,0.000382839553058) rectangle (axis cs:0.41,0.0154163602833);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:0.246,0.000382839553058) rectangle (axis cs:0.41,0.0154163602833);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:0.246,0.0154163602833) rectangle (axis cs:0.41,0.199530966552);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:0.246,0.0154163602833) rectangle (axis cs:0.41,0.199530966552);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:0.246,0.199530966552) rectangle (axis cs:0.41,0.229067553487);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:1.246,0) rectangle (axis cs:1.41,0.000432839877903);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:1.246,0) rectangle (axis cs:1.41,0.000432839877903);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:1.246,0.000432839877903) rectangle (axis cs:1.41,0.016655498147);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:1.246,0.000432839877903) rectangle (axis cs:1.41,0.016655498147);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:1.246,0.016655498147) rectangle (axis cs:1.41,0.215822813185);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:1.246,0.016655498147) rectangle (axis cs:1.41,0.215822813185);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:1.246,0.215822813185) rectangle (axis cs:1.41,0.244152145693);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:2.246,0) rectangle (axis cs:2.41,0.000431327689439);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:2.246,0) rectangle (axis cs:2.41,0.000431327689439);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:2.246,0.000431327689439) rectangle (axis cs:2.41,0.0170815445855);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:2.246,0.000431327689439) rectangle (axis cs:2.41,0.0170815445855);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:2.246,0.0170815445855) rectangle (axis cs:2.41,0.230628097784);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:2.246,0.0170815445855) rectangle (axis cs:2.41,0.230628097784);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:2.246,0.230628097784) rectangle (axis cs:2.41,0.256363744838);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:3.246,0) rectangle (axis cs:3.41,0.000426053591073);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:3.246,0) rectangle (axis cs:3.41,0.000426053591073);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:3.246,0.000426053591073) rectangle (axis cs:3.41,0.0166748267133);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:3.246,0.000426053591073) rectangle (axis cs:3.41,0.0166748267133);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:3.246,0.0166748267133) rectangle (axis cs:3.41,0.245998627339);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:3.246,0.0166748267133) rectangle (axis cs:3.41,0.245998627339);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:3.246,0.245998627339) rectangle (axis cs:3.41,0.27106491507);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:4.246,0) rectangle (axis cs:4.41,0.000435096779838);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:4.246,0) rectangle (axis cs:4.41,0.000435096779838);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:4.246,0.000435096779838) rectangle (axis cs:4.41,0.0172695167083);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:4.246,0.000435096779838) rectangle (axis cs:4.41,0.0172695167083);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:4.246,0.0172695167083) rectangle (axis cs:4.41,0.257234887946);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:4.246,0.0172695167083) rectangle (axis cs:4.41,0.257234887946);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:4.246,0.257234887946) rectangle (axis cs:4.41,0.281218038946);
+
+\nextgroupplot[
+    title={SC-M},
+    xmin=-0.6, xmax=4.6,
+    xtick={0,1,2,3,4},
+    xticklabels={0.5,0.6,0.7,0.8,0.9},
+    xticklabels=\empty,
+    xtick style={draw=none},
+    ylabel={},
+    ymin=0, ymax=2.86212014834,
+]
+% manual stacked bars for scp_n120-180_m150-250_k5
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:-0.41,0) rectangle (axis cs:-0.246,0.000279161334038);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:-0.41,0) rectangle (axis cs:-0.246,0.000279161334038);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:-0.41,0.000279161334038) rectangle (axis cs:-0.246,0.0125680821203);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:-0.41,0.000279161334038) rectangle (axis cs:-0.246,0.0125680821203);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:-0.41,0.0125680821203) rectangle (axis cs:-0.246,0.144255901733);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:-0.41,0.0125680821203) rectangle (axis cs:-0.246,0.144255901733);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:-0.41,0.144255901733) rectangle (axis cs:-0.246,1.38755885688);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:0.59,0) rectangle (axis cs:0.754,0.000250269407406);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:0.59,0) rectangle (axis cs:0.754,0.000250269407406);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:0.59,0.000250269407406) rectangle (axis cs:0.754,0.00981148372404);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:0.59,0.000250269407406) rectangle (axis cs:0.754,0.00981148372404);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:0.59,0.00981148372404) rectangle (axis cs:0.754,0.179039870314);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:0.59,0.00981148372404) rectangle (axis cs:0.754,0.179039870314);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:0.59,0.179039870314) rectangle (axis cs:0.754,0.558267956171);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:1.59,0) rectangle (axis cs:1.754,0.000228754943237);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:1.59,0) rectangle (axis cs:1.754,0.000228754943237);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:1.59,0.000228754943237) rectangle (axis cs:1.754,0.00931939470582);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:1.59,0.000228754943237) rectangle (axis cs:1.754,0.00931939470582);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:1.59,0.00931939470582) rectangle (axis cs:1.754,0.218356352253);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:1.59,0.00931939470582) rectangle (axis cs:1.754,0.218356352253);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:1.59,0.218356352253) rectangle (axis cs:1.754,0.285838667946);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:2.59,0) rectangle (axis cs:2.754,0.000226540034637);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:2.59,0) rectangle (axis cs:2.754,0.000226540034637);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:2.59,0.000226540034637) rectangle (axis cs:2.754,0.0098369608447);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:2.59,0.000226540034637) rectangle (axis cs:2.754,0.0098369608447);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:2.59,0.0098369608447) rectangle (axis cs:2.754,0.251996792071);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:2.59,0.0098369608447) rectangle (axis cs:2.754,0.251996792071);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:2.59,0.251996792071) rectangle (axis cs:2.754,0.287667967388);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:3.59,0) rectangle (axis cs:3.754,0.000217350367457);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:3.59,0) rectangle (axis cs:3.754,0.000217350367457);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:3.59,0.000217350367457) rectangle (axis cs:3.754,0.00930896139704);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:3.59,0.000217350367457) rectangle (axis cs:3.754,0.00930896139704);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:3.59,0.00930896139704) rectangle (axis cs:3.754,0.282525767712);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:3.59,0.00930896139704) rectangle (axis cs:3.754,0.282525767712);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:3.59,0.282525767712) rectangle (axis cs:3.754,0.315015469976);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:-0.246,0) rectangle (axis cs:-0.082,0.00114166343585);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:-0.246,0) rectangle (axis cs:-0.082,0.00114166343585);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:-0.246,0.00114166343585) rectangle (axis cs:-0.082,0.0349181990512);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:-0.246,0.00114166343585) rectangle (axis cs:-0.082,0.0349181990512);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:-0.246,0.0349181990512) rectangle (axis cs:-0.082,0.407571241008);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:-0.246,0.0349181990512) rectangle (axis cs:-0.082,0.407571241008);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:-0.246,0.407571241008) rectangle (axis cs:-0.082,1.16839256794);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:0.754,0) rectangle (axis cs:0.918,0.00110146805644);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:0.754,0) rectangle (axis cs:0.918,0.00110146805644);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:0.754,0.00110146805644) rectangle (axis cs:0.918,0.0346895638388);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:0.754,0.00110146805644) rectangle (axis cs:0.918,0.0346895638388);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:0.754,0.0346895638388) rectangle (axis cs:0.918,0.410350592211);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:0.754,0.0346895638388) rectangle (axis cs:0.918,0.410350592211);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:0.754,0.410350592211) rectangle (axis cs:0.918,0.715190988826);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:1.754,0) rectangle (axis cs:1.918,0.0010632774327);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:1.754,0) rectangle (axis cs:1.918,0.0010632774327);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:1.754,0.0010632774327) rectangle (axis cs:1.918,0.0353116493579);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:1.754,0.0010632774327) rectangle (axis cs:1.918,0.0353116493579);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:1.754,0.0353116493579) rectangle (axis cs:1.918,0.40776192653);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:1.754,0.0353116493579) rectangle (axis cs:1.918,0.40776192653);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:1.754,0.40776192653) rectangle (axis cs:1.918,0.472384071313);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:2.754,0) rectangle (axis cs:2.918,0.00108232046477);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:2.754,0) rectangle (axis cs:2.918,0.00108232046477);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:2.754,0.00108232046477) rectangle (axis cs:2.918,0.0357045350876);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:2.754,0.00108232046477) rectangle (axis cs:2.918,0.0357045350876);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:2.754,0.0357045350876) rectangle (axis cs:2.918,0.413560590344);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:2.754,0.0357045350876) rectangle (axis cs:2.918,0.413560590344);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:2.754,0.413560590344) rectangle (axis cs:2.918,0.450558456732);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:3.754,0) rectangle (axis cs:3.918,0.00122416552156);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:3.754,0) rectangle (axis cs:3.918,0.00122416552156);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:3.754,0.00122416552156) rectangle (axis cs:3.918,0.0353361992911);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:3.754,0.00122416552156) rectangle (axis cs:3.918,0.0353361992911);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:3.754,0.0353361992911) rectangle (axis cs:3.918,0.412756152749);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:3.754,0.0353361992911) rectangle (axis cs:3.918,0.412756152749);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:3.754,0.412756152749) rectangle (axis cs:3.918,0.446217714958);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:-0.082,0) rectangle (axis cs:0.082,0.00104951356538);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:-0.082,0) rectangle (axis cs:0.082,0.00104951356538);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:-0.082,0.00104951356538) rectangle (axis cs:0.082,0.029926658133);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:-0.082,0.00104951356538) rectangle (axis cs:0.082,0.029926658133);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:-0.082,0.029926658133) rectangle (axis cs:0.082,1.54710758543);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:-0.082,0.029926658133) rectangle (axis cs:0.082,1.54710758543);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:-0.082,1.54710758543) rectangle (axis cs:0.082,2.19993154359);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:0.918,0) rectangle (axis cs:1.082,0.00123366747051);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:0.918,0) rectangle (axis cs:1.082,0.00123366747051);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:0.918,0.00123366747051) rectangle (axis cs:1.082,0.0353280788101);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:0.918,0.00123366747051) rectangle (axis cs:1.082,0.0353280788101);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:0.918,0.0353280788101) rectangle (axis cs:1.082,1.79085599823);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:0.918,0.0353280788101) rectangle (axis cs:1.082,1.79085599823);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:0.918,1.79085599823) rectangle (axis cs:1.082,2.09245301466);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:1.918,0) rectangle (axis cs:2.082,0.00115618556738);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:1.918,0) rectangle (axis cs:2.082,0.00115618556738);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:1.918,0.00115618556738) rectangle (axis cs:2.082,0.0352430491243);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:1.918,0.00115618556738) rectangle (axis cs:2.082,0.0352430491243);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:1.918,0.0352430491243) rectangle (axis cs:2.082,2.03494450299);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:1.918,0.0352430491243) rectangle (axis cs:2.082,2.03494450299);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:1.918,2.03494450299) rectangle (axis cs:2.082,2.10865637533);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:2.918,0) rectangle (axis cs:3.082,0.00114747701213);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:2.918,0) rectangle (axis cs:3.082,0.00114747701213);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:2.918,0.00114747701213) rectangle (axis cs:3.082,0.0354325340223);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:2.918,0.00114747701213) rectangle (axis cs:3.082,0.0354325340223);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:2.918,0.0354325340223) rectangle (axis cs:3.082,2.24480515704);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:2.918,0.0354325340223) rectangle (axis cs:3.082,2.24480515704);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:2.918,2.24480515704) rectangle (axis cs:3.082,2.28544654797);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:3.918,0) rectangle (axis cs:4.082,0.00121906081215);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:3.918,0) rectangle (axis cs:4.082,0.00121906081215);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:3.918,0.00121906081215) rectangle (axis cs:4.082,0.0351420363877);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:3.918,0.00121906081215) rectangle (axis cs:4.082,0.0351420363877);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:3.918,0.0351420363877) rectangle (axis cs:4.082,2.45407758016);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:3.918,0.0351420363877) rectangle (axis cs:4.082,2.45407758016);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:3.918,2.45407758016) rectangle (axis cs:4.082,2.48880012899);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:0.082,0) rectangle (axis cs:0.246,0.00100123605691);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:0.082,0) rectangle (axis cs:0.246,0.00100123605691);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:0.082,0.00100123605691) rectangle (axis cs:0.246,0.018774042204);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:0.082,0.00100123605691) rectangle (axis cs:0.246,0.018774042204);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:0.082,0.018774042204) rectangle (axis cs:0.246,0.388557002591);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:0.082,0.018774042204) rectangle (axis cs:0.246,0.388557002591);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:0.082,0.388557002591) rectangle (axis cs:0.246,1.10374479127);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:1.082,0) rectangle (axis cs:1.246,0.000995094468817);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:1.082,0) rectangle (axis cs:1.246,0.000995094468817);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:1.082,0.000995094468817) rectangle (axis cs:1.246,0.0183712244593);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:1.082,0.000995094468817) rectangle (axis cs:1.246,0.0183712244593);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:1.082,0.0183712244593) rectangle (axis cs:1.246,0.392771183234);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:1.082,0.0183712244593) rectangle (axis cs:1.246,0.392771183234);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:1.082,0.392771183234) rectangle (axis cs:1.246,0.614911401691);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:2.082,0) rectangle (axis cs:2.246,0.000965191451833);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:2.082,0) rectangle (axis cs:2.246,0.000965191451833);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:2.082,0.000965191451833) rectangle (axis cs:2.246,0.0184585738461);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:2.082,0.000965191451833) rectangle (axis cs:2.246,0.0184585738461);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:2.082,0.0184585738461) rectangle (axis cs:2.246,0.391577279344);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:2.082,0.0184585738461) rectangle (axis cs:2.246,0.391577279344);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:2.082,0.391577279344) rectangle (axis cs:2.246,0.437423482118);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:3.082,0) rectangle (axis cs:3.246,0.00096416012384);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:3.082,0) rectangle (axis cs:3.246,0.00096416012384);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:3.082,0.00096416012384) rectangle (axis cs:3.246,0.0186362649966);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:3.082,0.00096416012384) rectangle (axis cs:3.246,0.0186362649966);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:3.082,0.0186362649966) rectangle (axis cs:3.246,0.39388378731);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:3.082,0.0186362649966) rectangle (axis cs:3.246,0.39388378731);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:3.082,0.39388378731) rectangle (axis cs:3.246,0.429974199682);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:4.082,0) rectangle (axis cs:4.246,0.000950860120356);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:4.082,0) rectangle (axis cs:4.246,0.000950860120356);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:4.082,0.000950860120356) rectangle (axis cs:4.246,0.0182721248455);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:4.082,0.000950860120356) rectangle (axis cs:4.246,0.0182721248455);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:4.082,0.0182721248455) rectangle (axis cs:4.246,0.396427068664);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:4.082,0.0182721248455) rectangle (axis cs:4.246,0.396427068664);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:4.082,0.396427068664) rectangle (axis cs:4.246,0.429524863893);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:0.246,0) rectangle (axis cs:0.41,0.000826901998371);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:0.246,0) rectangle (axis cs:0.41,0.000826901998371);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:0.246,0.000826901998371) rectangle (axis cs:0.41,0.0162681298051);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:0.246,0.000826901998371) rectangle (axis cs:0.41,0.0162681298051);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:0.246,0.0162681298051) rectangle (axis cs:0.41,0.647076434484);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:0.246,0.0162681298051) rectangle (axis cs:0.41,0.647076434484);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:0.246,0.647076434484) rectangle (axis cs:0.41,0.939948068885);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:1.246,0) rectangle (axis cs:1.41,0.000990686286241);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:1.246,0) rectangle (axis cs:1.41,0.000990686286241);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:1.246,0.000990686286241) rectangle (axis cs:1.41,0.0183621146064);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:1.246,0.000990686286241) rectangle (axis cs:1.41,0.0183621146064);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:1.246,0.0183621146064) rectangle (axis cs:1.41,0.70092071618);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:1.246,0.0183621146064) rectangle (axis cs:1.41,0.70092071618);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:1.246,0.70092071618) rectangle (axis cs:1.41,0.773951410726);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:2.246,0) rectangle (axis cs:2.41,0.000978027824312);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:2.246,0) rectangle (axis cs:2.41,0.000978027824312);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:2.246,0.000978027824312) rectangle (axis cs:2.41,0.0184480168205);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:2.246,0.000978027824312) rectangle (axis cs:2.41,0.0184480168205);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:2.246,0.0184480168205) rectangle (axis cs:2.41,0.750085281748);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:2.246,0.0184480168205) rectangle (axis cs:2.41,0.750085281748);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:2.246,0.750085281748) rectangle (axis cs:2.41,0.787512016948);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:3.246,0) rectangle (axis cs:3.41,0.000972483977675);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:3.246,0) rectangle (axis cs:3.41,0.000972483977675);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:3.246,0.000972483977675) rectangle (axis cs:3.41,0.0187348574679);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:3.246,0.000972483977675) rectangle (axis cs:3.41,0.0187348574679);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:3.246,0.0187348574679) rectangle (axis cs:3.41,0.79174340318);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:3.246,0.0187348574679) rectangle (axis cs:3.41,0.79174340318);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:3.246,0.79174340318) rectangle (axis cs:3.41,0.82689855298);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:4.246,0) rectangle (axis cs:4.41,0.000968883931637);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:4.246,0) rectangle (axis cs:4.41,0.000968883931637);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:4.246,0.000968883931637) rectangle (axis cs:4.41,0.0188154314552);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:4.246,0.000968883931637) rectangle (axis cs:4.41,0.0188154314552);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:4.246,0.0188154314552) rectangle (axis cs:4.41,0.830002450999);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:4.246,0.0188154314552) rectangle (axis cs:4.41,0.830002450999);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:4.246,0.830002450999) rectangle (axis cs:4.41,0.862844122704);
+
+\nextgroupplot[
+    title={MIS-S},
+    xmin=-0.6, xmax=4.6,
+    xtick={0,1,2,3,4},
+    xticklabels={0.5,0.6,0.7,0.8,0.9},
+    xlabel={Fixed-variable proportion},
+    ylabel={Runtime (s)},
+    ymin=0, ymax=0.517544205651,
+]
+% manual stacked bars for mis_n100_p0.15
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:-0.41,0) rectangle (axis cs:-0.246,0.000194406798109);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:-0.41,0) rectangle (axis cs:-0.246,0.000194406798109);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:-0.41,0.000194406798109) rectangle (axis cs:-0.246,0.00963280759752);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:-0.41,0.000194406798109) rectangle (axis cs:-0.246,0.00963280759752);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:-0.41,0.00963280759752) rectangle (axis cs:-0.246,0.0149764630012);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:-0.41,0.00963280759752) rectangle (axis cs:-0.246,0.0149764630012);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:-0.41,0.0149764630012) rectangle (axis cs:-0.246,0.250872918982);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:0.59,0) rectangle (axis cs:0.754,0.000187663659453);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:0.59,0) rectangle (axis cs:0.754,0.000187663659453);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:0.59,0.000187663659453) rectangle (axis cs:0.754,0.0100550039858);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:0.59,0.000187663659453) rectangle (axis cs:0.754,0.0100550039858);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:0.59,0.0100550039858) rectangle (axis cs:0.754,0.0190812562872);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:0.59,0.0100550039858) rectangle (axis cs:0.754,0.0190812562872);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:0.59,0.0190812562872) rectangle (axis cs:0.754,0.103543401416);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:1.59,0) rectangle (axis cs:1.754,0.000184563901275);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:1.59,0) rectangle (axis cs:1.754,0.000184563901275);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:1.59,0.000184563901275) rectangle (axis cs:1.754,0.0097460510768);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:1.59,0.000184563901275) rectangle (axis cs:1.754,0.0097460510768);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:1.59,0.0097460510768) rectangle (axis cs:1.754,0.0238526604883);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:1.59,0.0097460510768) rectangle (axis cs:1.754,0.0238526604883);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:1.59,0.0238526604883) rectangle (axis cs:1.754,0.0906998283323);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:2.59,0) rectangle (axis cs:2.754,0.000191847793758);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:2.59,0) rectangle (axis cs:2.754,0.000191847793758);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:2.59,0.000191847793758) rectangle (axis cs:2.754,0.0104187589604);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:2.59,0.000191847793758) rectangle (axis cs:2.754,0.0104187589604);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:2.59,0.0104187589604) rectangle (axis cs:2.754,0.0361761875078);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:2.59,0.0104187589604) rectangle (axis cs:2.754,0.0361761875078);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:2.59,0.0361761875078) rectangle (axis cs:2.754,0.0896722405311);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:3.59,0) rectangle (axis cs:3.754,0.000184484627098);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:3.59,0) rectangle (axis cs:3.754,0.000184484627098);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:3.59,0.000184484627098) rectangle (axis cs:3.754,0.0100220500398);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:3.59,0.000184484627098) rectangle (axis cs:3.754,0.0100220500398);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:3.59,0.0100220500398) rectangle (axis cs:3.754,0.051799598122);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:3.59,0.0100220500398) rectangle (axis cs:3.754,0.051799598122);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:3.59,0.051799598122) rectangle (axis cs:3.754,0.0999157025479);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:-0.246,0) rectangle (axis cs:-0.082,0.0012671752274);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:-0.246,0) rectangle (axis cs:-0.082,0.0012671752274);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:-0.246,0.0012671752274) rectangle (axis cs:-0.082,0.0356889975071);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:-0.246,0.0012671752274) rectangle (axis cs:-0.082,0.0356889975071);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:-0.246,0.0356889975071) rectangle (axis cs:-0.082,0.226531763244);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:-0.246,0.0356889975071) rectangle (axis cs:-0.082,0.226531763244);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:-0.246,0.226531763244) rectangle (axis cs:-0.082,0.392076725475);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:0.754,0) rectangle (axis cs:0.918,0.00117637879215);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:0.754,0) rectangle (axis cs:0.918,0.00117637879215);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:0.754,0.00117637879215) rectangle (axis cs:0.918,0.0378735800181);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:0.754,0.00117637879215) rectangle (axis cs:0.918,0.0378735800181);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:0.754,0.0378735800181) rectangle (axis cs:0.918,0.230012249369);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:0.754,0.0378735800181) rectangle (axis cs:0.918,0.230012249369);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:0.754,0.230012249369) rectangle (axis cs:0.918,0.301800253782);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:1.754,0) rectangle (axis cs:1.918,0.00130704353563);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:1.754,0) rectangle (axis cs:1.918,0.00130704353563);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:1.754,0.00130704353563) rectangle (axis cs:1.918,0.035463144714);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:1.754,0.00130704353563) rectangle (axis cs:1.918,0.035463144714);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:1.754,0.035463144714) rectangle (axis cs:1.918,0.229430655781);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:1.754,0.035463144714) rectangle (axis cs:1.918,0.229430655781);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:1.754,0.229430655781) rectangle (axis cs:1.918,0.281387479687);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:2.754,0) rectangle (axis cs:2.918,0.00120732876472);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:2.754,0) rectangle (axis cs:2.918,0.00120732876472);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:2.754,0.00120732876472) rectangle (axis cs:2.918,0.0360947628133);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:2.754,0.00120732876472) rectangle (axis cs:2.918,0.0360947628133);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:2.754,0.0360947628133) rectangle (axis cs:2.918,0.230422148006);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:2.754,0.0360947628133) rectangle (axis cs:2.918,0.230422148006);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:2.754,0.230422148006) rectangle (axis cs:2.918,0.276892601419);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:3.754,0) rectangle (axis cs:3.918,0.0012540597748);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:3.754,0) rectangle (axis cs:3.918,0.0012540597748);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:3.754,0.0012540597748) rectangle (axis cs:3.918,0.0356819160562);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:3.754,0.0012540597748) rectangle (axis cs:3.918,0.0356819160562);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:3.754,0.0356819160562) rectangle (axis cs:3.918,0.228673434816);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:3.754,0.0356819160562) rectangle (axis cs:3.918,0.228673434816);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:3.754,0.228673434816) rectangle (axis cs:3.918,0.274943064805);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:-0.082,0) rectangle (axis cs:0.082,0.00112870130688);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:-0.082,0) rectangle (axis cs:0.082,0.00112870130688);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:-0.082,0.00112870130688) rectangle (axis cs:0.082,0.0338690509088);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:-0.082,0.00112870130688) rectangle (axis cs:0.082,0.0338690509088);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:-0.082,0.0338690509088) rectangle (axis cs:0.082,0.273899205979);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:-0.082,0.0338690509088) rectangle (axis cs:0.082,0.273899205979);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:-0.082,0.273899205979) rectangle (axis cs:0.082,0.450038439697);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:0.918,0) rectangle (axis cs:1.082,0.00126303797588);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:0.918,0) rectangle (axis cs:1.082,0.00126303797588);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:0.918,0.00126303797588) rectangle (axis cs:1.082,0.036416030908);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:0.918,0.00126303797588) rectangle (axis cs:1.082,0.036416030908);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:0.918,0.036416030908) rectangle (axis cs:1.082,0.291145984475);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:0.918,0.036416030908) rectangle (axis cs:1.082,0.291145984475);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:0.918,0.291145984475) rectangle (axis cs:1.082,0.351304507982);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:1.918,0) rectangle (axis cs:2.082,0.00114108426496);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:1.918,0) rectangle (axis cs:2.082,0.00114108426496);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:1.918,0.00114108426496) rectangle (axis cs:2.082,0.0356631738786);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:1.918,0.00114108426496) rectangle (axis cs:2.082,0.0356631738786);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:1.918,0.0356631738786) rectangle (axis cs:2.082,0.307099096496);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:1.918,0.0356631738786) rectangle (axis cs:2.082,0.307099096496);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:1.918,0.307099096496) rectangle (axis cs:2.082,0.361190973213);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:2.918,0) rectangle (axis cs:3.082,0.00120001677424);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:2.918,0) rectangle (axis cs:3.082,0.00120001677424);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:2.918,0.00120001677424) rectangle (axis cs:3.082,0.0363934481423);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:2.918,0.00120001677424) rectangle (axis cs:3.082,0.0363934481423);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:2.918,0.0363934481423) rectangle (axis cs:3.082,0.321925924756);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:2.918,0.0363934481423) rectangle (axis cs:3.082,0.321925924756);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:2.918,0.321925924756) rectangle (axis cs:3.082,0.367729880763);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:3.918,0) rectangle (axis cs:4.082,0.00119842787273);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:3.918,0) rectangle (axis cs:4.082,0.00119842787273);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:3.918,0.00119842787273) rectangle (axis cs:4.082,0.0355849663913);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:3.918,0.00119842787273) rectangle (axis cs:4.082,0.0355849663913);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:3.918,0.0355849663913) rectangle (axis cs:4.082,0.349792526187);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:3.918,0.0355849663913) rectangle (axis cs:4.082,0.349792526187);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:3.918,0.349792526187) rectangle (axis cs:4.082,0.393231845275);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:0.082,0) rectangle (axis cs:0.246,0.00091619794257);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:0.082,0) rectangle (axis cs:0.246,0.00091619794257);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:0.082,0.00091619794257) rectangle (axis cs:0.246,0.0174902456813);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:0.082,0.00091619794257) rectangle (axis cs:0.246,0.0174902456813);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:0.082,0.0174902456813) rectangle (axis cs:0.246,0.0951607447211);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:0.082,0.0174902456813) rectangle (axis cs:0.246,0.0951607447211);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:0.082,0.0951607447211) rectangle (axis cs:0.246,0.302443445437);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:1.082,0) rectangle (axis cs:1.246,0.000912764584646);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:1.082,0) rectangle (axis cs:1.246,0.000912764584646);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:1.082,0.000912764584646) rectangle (axis cs:1.246,0.0181176109985);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:1.082,0.000912764584646) rectangle (axis cs:1.246,0.0181176109985);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:1.082,0.0181176109985) rectangle (axis cs:1.246,0.0952451993432);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:1.082,0.0181176109985) rectangle (axis cs:1.246,0.0952451993432);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:1.082,0.0952451993432) rectangle (axis cs:1.246,0.165100769121);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:2.082,0) rectangle (axis cs:2.246,0.000882501555607);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:2.082,0) rectangle (axis cs:2.246,0.000882501555607);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:2.082,0.000882501555607) rectangle (axis cs:2.246,0.0180393128097);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:2.082,0.000882501555607) rectangle (axis cs:2.246,0.0180393128097);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:2.082,0.0180393128097) rectangle (axis cs:2.246,0.0994281785563);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:2.082,0.0180393128097) rectangle (axis cs:2.246,0.0994281785563);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:2.082,0.0994281785563) rectangle (axis cs:2.246,0.156231435072);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:3.082,0) rectangle (axis cs:3.246,0.000991740720347);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:3.082,0) rectangle (axis cs:3.246,0.000991740720347);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:3.082,0.000991740720347) rectangle (axis cs:3.246,0.0182589946594);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:3.082,0.000991740720347) rectangle (axis cs:3.246,0.0182589946594);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:3.082,0.0182589946594) rectangle (axis cs:3.246,0.0989913023543);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:3.082,0.0182589946594) rectangle (axis cs:3.246,0.0989913023543);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:3.082,0.0989913023543) rectangle (axis cs:3.246,0.147697388129);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:4.082,0) rectangle (axis cs:4.246,0.00087747479789);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:4.082,0) rectangle (axis cs:4.246,0.00087747479789);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:4.082,0.00087747479789) rectangle (axis cs:4.246,0.0179082593415);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:4.082,0.00087747479789) rectangle (axis cs:4.246,0.0179082593415);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:4.082,0.0179082593415) rectangle (axis cs:4.246,0.10128089875);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:4.082,0.0179082593415) rectangle (axis cs:4.246,0.10128089875);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:4.082,0.10128089875) rectangle (axis cs:4.246,0.147118802406);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:0.246,0) rectangle (axis cs:0.41,0.000918103279546);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:0.246,0) rectangle (axis cs:0.41,0.000918103279546);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:0.246,0.000918103279546) rectangle (axis cs:0.41,0.0178741070814);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:0.246,0.000918103279546) rectangle (axis cs:0.41,0.0178741070814);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:0.246,0.0178741070814) rectangle (axis cs:0.41,0.106766122505);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:0.246,0.0178741070814) rectangle (axis cs:0.41,0.106766122505);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:0.246,0.106766122505) rectangle (axis cs:0.41,0.267593712918);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:1.246,0) rectangle (axis cs:1.41,0.00102978684939);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:1.246,0) rectangle (axis cs:1.41,0.00102978684939);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:1.246,0.00102978684939) rectangle (axis cs:1.41,0.0180163179431);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:1.246,0.00102978684939) rectangle (axis cs:1.41,0.0180163179431);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:1.246,0.0180163179431) rectangle (axis cs:1.41,0.112290280554);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:1.246,0.0180163179431) rectangle (axis cs:1.41,0.112290280554);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:1.246,0.112290280554) rectangle (axis cs:1.41,0.18062867986);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:2.246,0) rectangle (axis cs:2.41,0.000899848071858);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:2.246,0) rectangle (axis cs:2.41,0.000899848071858);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:2.246,0.000899848071858) rectangle (axis cs:2.41,0.0177946420386);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:2.246,0.000899848071858) rectangle (axis cs:2.41,0.0177946420386);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:2.246,0.0177946420386) rectangle (axis cs:2.41,0.117016208107);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:2.246,0.0177946420386) rectangle (axis cs:2.41,0.117016208107);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:2.246,0.117016208107) rectangle (axis cs:2.41,0.169285198441);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:3.246,0) rectangle (axis cs:3.41,0.00088534956798);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:3.246,0) rectangle (axis cs:3.41,0.00088534956798);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:3.246,0.00088534956798) rectangle (axis cs:3.41,0.017747256197);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:3.246,0.00088534956798) rectangle (axis cs:3.41,0.017747256197);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:3.246,0.017747256197) rectangle (axis cs:3.41,0.124726821622);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:3.246,0.017747256197) rectangle (axis cs:3.41,0.124726821622);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:3.246,0.124726821622) rectangle (axis cs:3.41,0.173552551465);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:4.246,0) rectangle (axis cs:4.41,0.00097057050094);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:4.246,0) rectangle (axis cs:4.41,0.00097057050094);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:4.246,0.00097057050094) rectangle (axis cs:4.41,0.0183862726204);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:4.246,0.00097057050094) rectangle (axis cs:4.41,0.0183862726204);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:4.246,0.0183862726204) rectangle (axis cs:4.41,0.136147128996);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:4.246,0.0183862726204) rectangle (axis cs:4.41,0.136147128996);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:4.246,0.136147128996) rectangle (axis cs:4.41,0.180730663929);
+
+\nextgroupplot[
+    title={MIS-M},
+    xmin=-0.6, xmax=4.6,
+    xtick={0,1,2,3,4},
+    xticklabels={0.5,0.6,0.7,0.8,0.9},
+    xlabel={Fixed-variable proportion},
+    ylabel={},
+    ymin=0, ymax=16.758679486,
+]
+% manual stacked bars for mis_n200-300_p0.15
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:-0.41,0) rectangle (axis cs:-0.246,0.000291748140007);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:-0.41,0) rectangle (axis cs:-0.246,0.000291748140007);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:-0.41,0.000291748140007) rectangle (axis cs:-0.246,0.00762270020321);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:-0.41,0.000291748140007) rectangle (axis cs:-0.246,0.00762270020321);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:-0.41,0.00762270020321) rectangle (axis cs:-0.246,0.0411948206183);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:-0.41,0.00762270020321) rectangle (axis cs:-0.246,0.0411948206183);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:-0.41,0.0411948206183) rectangle (axis cs:-0.246,11.0335016845);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:0.59,0) rectangle (axis cs:0.754,0.000255964752287);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:0.59,0) rectangle (axis cs:0.754,0.000255964752287);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:0.59,0.000255964752287) rectangle (axis cs:0.754,0.00754871773534);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:0.59,0.000255964752287) rectangle (axis cs:0.754,0.00754871773534);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:0.59,0.00754871773534) rectangle (axis cs:0.754,0.0686968067661);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:0.59,0.00754871773534) rectangle (axis cs:0.754,0.0686968067661);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:0.59,0.0686968067661) rectangle (axis cs:0.754,1.78259315029);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:1.59,0) rectangle (axis cs:1.754,0.000232874481007);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:1.59,0) rectangle (axis cs:1.754,0.000232874481007);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:1.59,0.000232874481007) rectangle (axis cs:1.754,0.00789630922489);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:1.59,0.000232874481007) rectangle (axis cs:1.754,0.00789630922489);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:1.59,0.00789630922489) rectangle (axis cs:1.754,0.0976758291293);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:1.59,0.00789630922489) rectangle (axis cs:1.754,0.0976758291293);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:1.59,0.0976758291293) rectangle (axis cs:1.754,0.34190088545);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:2.59,0) rectangle (axis cs:2.754,0.00023256461136);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:2.59,0) rectangle (axis cs:2.754,0.00023256461136);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:2.59,0.00023256461136) rectangle (axis cs:2.754,0.0076251286827);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:2.59,0.00023256461136) rectangle (axis cs:2.754,0.0076251286827);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:2.59,0.0076251286827) rectangle (axis cs:2.754,0.128973197872);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:2.59,0.0076251286827) rectangle (axis cs:2.754,0.128973197872);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:2.59,0.128973197872) rectangle (axis cs:2.754,0.263501779744);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:3.59,0) rectangle (axis cs:3.754,0.000232827384025);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:3.59,0) rectangle (axis cs:3.754,0.000232827384025);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:3.59,0.000232827384025) rectangle (axis cs:3.754,0.00773787568323);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:3.59,0.000232827384025) rectangle (axis cs:3.754,0.00773787568323);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:3.59,0.00773787568323) rectangle (axis cs:3.754,0.1782257568);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:3.59,0.00773787568323) rectangle (axis cs:3.754,0.1782257568);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:3.59,0.1782257568) rectangle (axis cs:3.754,0.29789187612);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:-0.246,0) rectangle (axis cs:-0.082,0.00265300472267);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:-0.246,0) rectangle (axis cs:-0.082,0.00265300472267);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:-0.246,0.00265300472267) rectangle (axis cs:-0.082,0.0397396301106);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:-0.246,0.00265300472267) rectangle (axis cs:-0.082,0.0397396301106);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:-0.246,0.0397396301106) rectangle (axis cs:-0.082,0.499424924208);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:-0.246,0.0397396301106) rectangle (axis cs:-0.082,0.499424924208);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:-0.246,0.499424924208) rectangle (axis cs:-0.082,10.3492337061);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:0.754,0) rectangle (axis cs:0.918,0.00203060668893);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:0.754,0) rectangle (axis cs:0.918,0.00203060668893);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:0.754,0.00203060668893) rectangle (axis cs:0.918,0.0384310465027);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:0.754,0.00203060668893) rectangle (axis cs:0.918,0.0384310465027);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:0.754,0.0384310465027) rectangle (axis cs:0.918,0.486638518516);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:0.754,0.0384310465027) rectangle (axis cs:0.918,0.486638518516);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:0.754,0.486638518516) rectangle (axis cs:0.918,2.24075148937);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:1.754,0) rectangle (axis cs:1.918,0.00198014466092);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:1.754,0) rectangle (axis cs:1.918,0.00198014466092);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:1.754,0.00198014466092) rectangle (axis cs:1.918,0.0391916076001);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:1.754,0.00198014466092) rectangle (axis cs:1.918,0.0391916076001);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:1.754,0.0391916076001) rectangle (axis cs:1.918,0.499189466555);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:1.754,0.0391916076001) rectangle (axis cs:1.918,0.499189466555);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:1.754,0.499189466555) rectangle (axis cs:1.918,0.727858938621);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:2.754,0) rectangle (axis cs:2.918,0.00195810562931);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:2.754,0) rectangle (axis cs:2.918,0.00195810562931);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:2.754,0.00195810562931) rectangle (axis cs:2.918,0.0387253388017);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:2.754,0.00195810562931) rectangle (axis cs:2.918,0.0387253388017);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:2.754,0.0387253388017) rectangle (axis cs:2.918,0.493126835208);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:2.754,0.0387253388017) rectangle (axis cs:2.918,0.493126835208);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:2.754,0.493126835208) rectangle (axis cs:2.918,0.623492141711);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:3.754,0) rectangle (axis cs:3.918,0.00192436962388);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:3.754,0) rectangle (axis cs:3.918,0.00192436962388);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:3.754,0.00192436962388) rectangle (axis cs:3.918,0.038810391752);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:3.754,0.00192436962388) rectangle (axis cs:3.918,0.038810391752);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:3.754,0.038810391752) rectangle (axis cs:3.918,0.497931324989);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:3.754,0.038810391752) rectangle (axis cs:3.918,0.497931324989);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:3.754,0.497931324989) rectangle (axis cs:3.918,0.614156571571);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:-0.082,0) rectangle (axis cs:0.082,0.00263623092324);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:-0.082,0) rectangle (axis cs:0.082,0.00263623092324);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:-0.082,0.00263623092324) rectangle (axis cs:0.082,0.0359880203195);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:-0.082,0.00263623092324) rectangle (axis cs:0.082,0.0359880203195);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:-0.082,0.0359880203195) rectangle (axis cs:0.082,0.624697561637);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:-0.082,0.0359880203195) rectangle (axis cs:0.082,0.624697561637);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:-0.082,0.624697561637) rectangle (axis cs:0.082,13.199324917);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:0.918,0) rectangle (axis cs:1.082,0.00217390427366);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:0.918,0) rectangle (axis cs:1.082,0.00217390427366);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:0.918,0.00217390427366) rectangle (axis cs:1.082,0.0377252615802);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:0.918,0.00217390427366) rectangle (axis cs:1.082,0.0377252615802);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:0.918,0.0377252615802) rectangle (axis cs:1.082,0.649110892918);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:0.918,0.0377252615802) rectangle (axis cs:1.082,0.649110892918);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:0.918,0.649110892918) rectangle (axis cs:1.082,3.17061926485);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:1.918,0) rectangle (axis cs:2.082,0.001992563596);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:1.918,0) rectangle (axis cs:2.082,0.001992563596);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:1.918,0.001992563596) rectangle (axis cs:2.082,0.0390208080783);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:1.918,0.001992563596) rectangle (axis cs:2.082,0.0390208080783);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:1.918,0.0390208080783) rectangle (axis cs:2.082,0.682252309779);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:1.918,0.0390208080783) rectangle (axis cs:2.082,0.682252309779);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:1.918,0.682252309779) rectangle (axis cs:2.082,1.16670275325);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:2.918,0) rectangle (axis cs:3.082,0.0019682300929);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:2.918,0) rectangle (axis cs:3.082,0.0019682300929);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:2.918,0.0019682300929) rectangle (axis cs:3.082,0.0378326079063);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:2.918,0.0019682300929) rectangle (axis cs:3.082,0.0378326079063);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:2.918,0.0378326079063) rectangle (axis cs:3.082,0.741404442415);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:2.918,0.0378326079063) rectangle (axis cs:3.082,0.741404442415);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:2.918,0.741404442415) rectangle (axis cs:3.082,0.879490011595);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:3.918,0) rectangle (axis cs:4.082,0.00196420455351);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:3.918,0) rectangle (axis cs:4.082,0.00196420455351);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:3.918,0.00196420455351) rectangle (axis cs:4.082,0.0394425776228);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:3.918,0.00196420455351) rectangle (axis cs:4.082,0.0394425776228);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:3.918,0.0394425776228) rectangle (axis cs:4.082,0.803153582001);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:3.918,0.0394425776228) rectangle (axis cs:4.082,0.803153582001);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:3.918,0.803153582001) rectangle (axis cs:4.082,0.926267506052);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:0.082,0) rectangle (axis cs:0.246,0.00243849098682);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:0.082,0) rectangle (axis cs:0.246,0.00243849098682);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:0.082,0.00243849098682) rectangle (axis cs:0.246,0.0252851828095);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:0.082,0.00243849098682) rectangle (axis cs:0.246,0.0252851828095);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:0.082,0.0252851828095) rectangle (axis cs:0.246,0.213633080414);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:0.082,0.0252851828095) rectangle (axis cs:0.246,0.213633080414);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:0.082,0.213633080414) rectangle (axis cs:0.246,10.0382176303);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:1.082,0) rectangle (axis cs:1.246,0.00218611254357);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:1.082,0) rectangle (axis cs:1.246,0.00218611254357);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:1.082,0.00218611254357) rectangle (axis cs:1.246,0.0250544263609);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:1.082,0.00218611254357) rectangle (axis cs:1.246,0.0250544263609);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:1.082,0.0250544263609) rectangle (axis cs:1.246,0.209192699948);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:1.082,0.0250544263609) rectangle (axis cs:1.246,0.209192699948);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:1.082,0.209192699948) rectangle (axis cs:1.246,1.97072449696);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:2.082,0) rectangle (axis cs:2.246,0.0019501724001);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:2.082,0) rectangle (axis cs:2.246,0.0019501724001);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:2.082,0.0019501724001) rectangle (axis cs:2.246,0.0237899157777);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:2.082,0.0019501724001) rectangle (axis cs:2.246,0.0237899157777);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:2.082,0.0237899157777) rectangle (axis cs:2.246,0.207026508404);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:2.082,0.0237899157777) rectangle (axis cs:2.246,0.207026508404);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:2.082,0.207026508404) rectangle (axis cs:2.246,0.446648773886);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:3.082,0) rectangle (axis cs:3.246,0.00191053464077);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:3.082,0) rectangle (axis cs:3.246,0.00191053464077);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:3.082,0.00191053464077) rectangle (axis cs:3.246,0.0244582747482);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:3.082,0.00191053464077) rectangle (axis cs:3.246,0.0244582747482);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:3.082,0.0244582747482) rectangle (axis cs:3.246,0.207613515677);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:3.082,0.0244582747482) rectangle (axis cs:3.246,0.207613515677);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:3.082,0.207613515677) rectangle (axis cs:3.246,0.337374844709);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:4.082,0) rectangle (axis cs:4.246,0.00190850636922);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:4.082,0) rectangle (axis cs:4.246,0.00190850636922);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:4.082,0.00190850636922) rectangle (axis cs:4.246,0.0242000451125);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:4.082,0.00190850636922) rectangle (axis cs:4.246,0.0242000451125);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:4.082,0.0242000451125) rectangle (axis cs:4.246,0.214195172731);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:4.082,0.0242000451125) rectangle (axis cs:4.246,0.214195172731);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:4.082,0.214195172731) rectangle (axis cs:4.246,0.334473370891);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:0.246,0) rectangle (axis cs:0.41,0.00269102578051);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:0.246,0) rectangle (axis cs:0.41,0.00269102578051);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:0.246,0.00269102578051) rectangle (axis cs:0.41,0.0238755284436);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:0.246,0.00269102578051) rectangle (axis cs:0.41,0.0238755284436);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:0.246,0.0238755284436) rectangle (axis cs:0.41,0.241901025884);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:0.246,0.0238755284436) rectangle (axis cs:0.41,0.241901025884);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:0.246,0.241901025884) rectangle (axis cs:0.41,14.5727647705);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:1.246,0) rectangle (axis cs:1.41,0.0020495858416);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:1.246,0) rectangle (axis cs:1.41,0.0020495858416);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:1.246,0.0020495858416) rectangle (axis cs:1.41,0.0242944950424);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:1.246,0.0020495858416) rectangle (axis cs:1.41,0.0242944950424);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:1.246,0.0242944950424) rectangle (axis cs:1.41,0.245096817836);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:1.246,0.0242944950424) rectangle (axis cs:1.41,0.245096817836);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:1.246,0.245096817836) rectangle (axis cs:1.41,2.84389608843);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:2.246,0) rectangle (axis cs:2.41,0.00198397389613);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:2.246,0) rectangle (axis cs:2.41,0.00198397389613);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:2.246,0.00198397389613) rectangle (axis cs:2.41,0.0241354905628);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:2.246,0.00198397389613) rectangle (axis cs:2.41,0.0241354905628);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:2.246,0.0241354905628) rectangle (axis cs:2.41,0.253399616927);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:2.246,0.0241354905628) rectangle (axis cs:2.41,0.253399616927);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:2.246,0.253399616927) rectangle (axis cs:2.41,0.72806713962);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:3.246,0) rectangle (axis cs:3.41,0.00192161621526);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:3.246,0) rectangle (axis cs:3.41,0.00192161621526);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:3.246,0.00192161621526) rectangle (axis cs:3.41,0.0229290557094);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:3.246,0.00192161621526) rectangle (axis cs:3.41,0.0229290557094);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:3.246,0.0229290557094) rectangle (axis cs:3.41,0.270086291432);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:3.246,0.0229290557094) rectangle (axis cs:3.41,0.270086291432);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:3.246,0.270086291432) rectangle (axis cs:3.41,0.404604695598);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:4.246,0) rectangle (axis cs:4.41,0.00193206188269);
+\draw[draw=none, pattern=grid, pattern color=black] (axis cs:4.246,0) rectangle (axis cs:4.41,0.00193206188269);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:4.246,0.00193206188269) rectangle (axis cs:4.41,0.0231640400272);
+\draw[draw=none, pattern=north east lines, pattern color=black] (axis cs:4.246,0.00193206188269) rectangle (axis cs:4.41,0.0231640400272);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:4.246,0.0231640400272) rectangle (axis cs:4.41,0.30251357913);
+\draw[draw=none, pattern=crosshatch, pattern color=black] (axis cs:4.246,0.0231640400272) rectangle (axis cs:4.41,0.30251357913);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:4.246,0.30251357913) rectangle (axis cs:4.41,0.4266044279);
+
+\end{groupplot}
+\node[anchor=north, draw=lightgray204, fill=white, fill opacity=0.9, text opacity=1, inner sep=3pt] at ($(current bounding box.south) + (0cm, -0.55cm)$) {
+\begin{tikzpicture}[baseline]
+\matrix[matrix of nodes, nodes={anchor=west, font=\scriptsize}, column sep=8pt, row sep=3pt] {
+\tikz[baseline=-0.55ex]{\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (0,0) rectangle (0.38,0.16);} & GNN+EGG & \tikz[baseline=-0.55ex]{\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (0,0) rectangle (0.38,0.16);} & LBP+EGG & \tikz[baseline=-0.55ex]{\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (0,0) rectangle (0.38,0.16);} & LBP+GD \\
+\tikz[baseline=-0.55ex]{\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (0,0) rectangle (0.38,0.16);} & NMF+EGG & \tikz[baseline=-0.55ex]{\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (0,0) rectangle (0.38,0.16);} & NMF+GD &  &  \\
+\\[-1pt]
+\tikz[baseline=-0.55ex]{\draw[draw=black, line width=0.3pt, fill=white, fill opacity=0.55] (0,0) rectangle (0.38,0.16);\draw[draw=none, pattern=grid, pattern color=black] (0,0) rectangle (0.38,0.16);} & Preprocess & \tikz[baseline=-0.55ex]{\draw[draw=black, line width=0.3pt, fill=white, fill opacity=0.55] (0,0) rectangle (0.38,0.16);\draw[draw=none, pattern=north east lines, pattern color=black] (0,0) rectangle (0.38,0.16);} & Forward & \tikz[baseline=-0.55ex]{\draw[draw=black, line width=0.3pt, fill=white, fill opacity=0.55] (0,0) rectangle (0.38,0.16);\draw[draw=none, pattern=crosshatch, pattern color=black] (0,0) rectangle (0.38,0.16);} & Decoding & \tikz[baseline=-0.55ex]{\draw[draw=black, line width=0.3pt, fill=white, fill opacity=0.55] (0,0) rectangle (0.38,0.16);} & Solver \\
+};
+\end{tikzpicture}
+};
+\end{tikzpicture}
+\caption{Runtime decomposition for fix-and-solve inference. For each dataset and fixed-variable proportion, grouped bars show total runtime split into preprocessing, forward, decoding, and reduced-solver contributions.}
+\label{fig:inference_test_nair_runtime_stacked_bar}
+\end{figure}

@@ -54,7 +54,7 @@ Classical maximum-likelihood estimation in exponential-family models is often de
 - 
 N \,\mathbb{E}_{p_\GENEPARAM}[\SSTAT(X)] .
 \end{equation}
-The empirical sufficient statistics are directly available from data, but the model expectation is generally intractable because it depends on the normalized distribution. This difficulty motivates the approximate inference methods introduced later in this section. From the variational perspective, these methods approximate the exact optimization problem defining $A(\GENEPARAM)$, either by restricting the family of admissible distributions, by replacing the marginal polytope with a simpler outer approximation, or by approximating the entropy term.
+The empirical sufficient statistics are directly available from data, but the model expectation is generally intractable because it depends on the normalized distribution. This difficulty motivates the approximate inference methods introduced in Section~\ref{sec:background_approximate_inference}. From the variational perspective, these methods approximate the exact optimization problem defining $A(\GENEPARAM)$, either by restricting the family of admissible distributions, by replacing the marginal polytope with a simpler outer approximation, or by approximating the entropy term.
 
 \subsubsection{Sampling from Boltzmann distributions}
 
@@ -206,7 +206,87 @@ For binary variables, the size of an over-complete factor table grows exponentia
 \end{equation*}
 Thus, representing a separate parameter for every local assignment requires $2^{|\FACTOR|}$ factor parameters. The same exponential dependence appears in exact factor-to-variable message updates: for a binary factor $\FACTOR$, computing one outgoing message generally requires summing or maximizing over $2^{|\FACTOR|-1}$ assignments of the remaining variables in the factor scope. This scaling is manageable for unary and pairwise factors but becomes problematic for high-arity constraints, such as set-cover constraints involving many variables. This limitation motivates the approximate factor-graph constructions studied later in the thesis.
 
+\subsubsection{Canonical feasibility-cost parameterization for BILPs}
+\label{subsec:canonical-feasibility-cost-param}
+In \citep{park_max-product_2017} the authors show that certain ILPs can be solved efficiently using the Max-Product algorithm. They define a potential for each constraint that encodes local feasibility and assigns $0$ probability to all infeasible assignments. In the following we derive what we call the \emph{feasibility-cost parameterization}, a parameterization for the canonical-over complete representation of the same model. 
+
+We now define a fixed, non-learned choice of the generic parameters $\EPARAM$ introduced above. This parameterization maps an integer linear program to an MRF by encoding feasibility through constraint factors and objective value through unary factors. Local assignments that satisfy a constraint receive larger log-potential values than assignments that violate it, thereby increasing the probability of globally feasible assignments.
+
+We refer to the resulting fixed model as the \emph{canonical Markov random field} (CMRF), and to its parameter choice as the \emph{canonical feasibility-cost parameterization}. We denote the corresponding parameters by $\CANEPARAM$.
+
+Let $\XVEC = (\XVEC_1,\ldots,\XVEC_{\NVAR})$ denote the binary decision variables of an ILP. Each constraint factor $\FACTOR \in \FGF$ is associated with a constraint of the ILP and has scope $N(\FACTOR) \subseteq \{ 1,\ldots, \NVAR\}$. We write $\XVEC_{\FACTOR} = (\XVEC_i)_{i \in N(\FACTOR)}$ for a local assignment to the variables appearing in constraint $\FACTOR$. The set of locally feasible assignments for this constraint is denoted by 
+\begin{equation}
+    \FEASIBLESET_{\FACTOR}
+    =
+    \{\XVEC_{\FACTOR} : \XVEC_{\FACTOR}
+    \text{ satisfies constraint } \FACTOR\}.
+\end{equation}
+
+The corresponding MRF constraint potential is the feasibility indicator
+\begin{equation}
+    \POTENTIAL_{\FACTOR}(\XFACT)
+    =
+    \begin{cases}
+        1, & \XVEC_{\FACTOR} \in \FEASIBLESET_{\FACTOR},\\
+        0, & \XVEC_{\FACTOR} \notin \FEASIBLESET_{\FACTOR}.
+    \end{cases}
+\end{equation}
+
+Unary factors encode the contribution of individual variables to the objective. For a maximization problem with objective $\sum_{i=1}^{\NVAR} c_i \XVEC_i$, the unary potential can be written as
+\begin{equation}
+    \POTENTIAL_i(\XVEC_i) = \exp(c_i \XVEC_i).
+\end{equation}
+
+In the over-complete exponential-family representation, each factor has one parameter for each possible local configuration. We therefore define the
+constraint-factor log-potentials by 
+\begin{equation}
+    \CANEPARAM_{\FACTOR}(\XFACT)
+    =
+    \begin{cases}
+        0, & \XFACT \in \FEASIBLESET_{\FACTOR},\\
+        -\infty, & \XFACT \notin \FEASIBLESET_{\FACTOR},
+    \end{cases}
+    \qquad \FACTOR \in \FGF,
+\end{equation}
+and the unary log-potentials by
+\begin{equation}
+    \CANEPARAM_i(\XVEC_i) = c_i \XVEC_i.
+\end{equation}
+The resulting MRF defines the unnormalized distribution
+\begin{equation}
+    p_{\CANEPARAM}(\XVEC)
+    \propto
+    \exp \left(
+        \sum_{i=1}^{\NVAR} \CANEPARAM_i(\XVEC_i)
+        +
+        \sum_{\FACTOR \in \FGF} \CANEPARAM_{\FACTOR}(\XFACT)
+    \right).
+\end{equation}
+
+Under this parameterization, every globally infeasible assignment receives zero probability mass, since it violates at least one constraint factor and therefore obtains log-potential $-\infty$. Among feasible assignments, the probability mass is proportional to the exponential of the ILP objective value. Under exact MAP inference in the hard-constraint model, the maximizer of the MRF probability therefore recovers an optimal feasible solution with respect to the encoded score:
+\begin{equation}
+    \argmax_{\XVEC} p_{\CANEPARAM}(\XVEC)
+    =
+    \argmax_{\XVEC \in \mathcal{X}}
+    \sum_{i=1}^{\NVAR} c_i \XVEC_i,
+\end{equation}
+where $\mathcal{X}$ denotes the global feasible set.
+
+In practice, using $-\infty$ is numerically inconvenient. We therefore use a large finite penalty $M \gg 0$ and replace the hard infeasibility parameter by
+\begin{equation}
+    \CANEPARAM_{\FACTOR}(\XFACT)
+    =
+    \begin{cases}
+        0, & \XFACT \in \FEASIBLESET_{\FACTOR},\\
+        -M, & \XFACT \notin \FEASIBLESET_{\FACTOR}.
+    \end{cases}
+\end{equation}
+The finite value $-M$ is a numerical approximation to the hard infeasibility penalty $-\infty$. It assigns infeasible local configurations very small, rather than zero, probability mass. Larger values of $M$ make the finite model closer to the hard-constraint model, but do not make the constraint exact unless the limit $M \to \infty$ is taken.
+
+The canonical feasibility-cost parameterization provides a direct over-complete MRF representation of the ILP. It is fixed by the constraint structure and objective coefficients, and therefore does not involve learned parameters. Its parameter vector $\CANEPARAM(\PROB)$ is constructed directly from the BILP constraints and objective, and contains no learned factor parameters.
+
 \subsection{Approximate inference}
+\label{subsec:background_approximate_inference}
 
 In graphical models, \emph{inference} refers to the set of tasks through which one extracts useful probabilistic information from a factorized distribution. The most common forms are: computing marginal distributions of individual variables or subsets of variables, estimating conditional probabilities given evidence, evaluating the partition function, and solving for the maximum a posteriori (MAP) configuration. Each of these problems is central to applications of Markov Random Fields: marginals provide uncertainty estimates, the partition function controls normalization and likelihood evaluation, and MAP inference directly corresponds to combinatorial optimization by identifying the lowest-energy configuration.
 
@@ -216,6 +296,7 @@ For this thesis, inference plays a dual role. It provides approximate marginal i
 
 
 \subsubsection{Sum--product belief propagation}
+\label{subsec:background_lbp}
 The sum--product algorithm, also known as Belief Propagation (BP), is a message-passing procedure for computing marginal distributions in factor graphs. Its central idea is that local computations on the bipartite structure of the factor graph can be combined to produce beliefs over variables and factors. On tree-structured graphs, the algorithm is exact and runs in time linear in the number of edges; on graphs with cycles it becomes an approximation, known as \emph{loopy BP} \citep{yedidia_understanding_2003,kschischang_factor_2001}.
 
 Formally, let $\FG=(\FGV\cup\FGF,\FGE)$ be a factor graph. Messages are passed iteratively along edges from variables to factors and from factors to variables:
@@ -339,6 +420,7 @@ If $\BELIEF^\star$ is a stationary point of this constrained problem, then
 Stationary points of the Bethe free energy correspond to fixed points of loopy BP \citep{yedidia_understanding_2003}. Thus, the beliefs produced by message passing can be interpreted as approximate marginals, while the value of the Bethe free energy at those beliefs provides an approximation to the log-partition function.
 
 \subsubsection{Mean--field inference}
+\label{subsec:background_mean_field}
 
 Mean-Field (MF) methods approximate an intractable distribution $p(\XVEC)$ by a distribution $q(\XVEC)$ from a tractable family $\mathcal{Q}$. The approximation is commonly chosen by minimizing the Kullback--Leibler divergence
 \begin{equation}
@@ -443,6 +525,7 @@ Both LBP and NMF can be viewed as iterative algorithms composed of differentiabl
 This perspective is important for learning to solve BILPs. A neural network can predict local MRF parameters from an instance graph, approximate inference can transform those parameters into structured marginal information, and a decoder can use the resulting marginals to construct a candidate solution. The inference layer therefore acts as an inductive bias: it forces predictions to pass through the dependency structure encoded by the factor graph, rather than treating variables as independent labels. Although we do not incorporate Domke's correction-based learning scheme in the present work, it provides a natural direction for future extensions, where the training objective could explicitly compensate for the approximation errors induced by truncated LBP or NMF inference.
 
 \subsubsection{Conditioning and clamping}
+\label{subsec:background_conditional_clamping}
 
 Inference is often performed not only on the original MRF, but also on a conditional distribution where some variables are fixed. Given a set of fixed variables $X_A=x_A$, conditional inference asks for marginals or MAP assignments over the remaining variables $X_{V\setminus A}$ under
 \begin{equation}
@@ -461,4 +544,7 @@ This chapter introduced the three foundations used throughout the remainder of t
 
 Markov Random Fields then provide the structured probabilistic framework that connects these ingredients. By representing dependencies among BILP solution variables through factors and log-potentials, MRFs make it possible to transform learned local information into structured marginal beliefs using approximate inference methods such as LBP and NMF. This perspective is central to the thesis: learned predictions are not treated as independent variable-wise decisions, but are passed through graphical-model structure that reflects the constraints of the underlying optimization problem.
 
+The canonical feasibility-cost parameterization of Section~\ref{subsec:canonical-feasibility-cost-param} becomes the CMRF baseline in Chapter~\ref{chapter:3_differentiable_mrf_inference_for_BILPs}, while the differentiable LBP and NMF procedures of Sections~\ref{subsec:background_lbp} and~\ref{subsec:background_mean_field} are used as inference layers in Sections~\ref{subsec:chapter_3_differentiable_inference} and~\ref{sec:state_conditioned_mrf_refinement}.
+
 The same framework also exposes two limitations addressed in later chapters. First, exact factor tables scale exponentially with factor arity, which becomes problematic for high-arity constraints such as those appearing in Set Cover. Second, repeated inference under changing conditions can be computationally expensive. These limitations motivate the approximate factor-graph parameterizations and learned inference-based methods developed in the following chapters.
+

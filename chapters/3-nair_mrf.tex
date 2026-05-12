@@ -1,36 +1,33 @@
 \chapter{Differentiable MRF Inference for Binary Integer Linear Programs}
-\label{chapter:3_differentiable_mrf_inference_for_bilps}
+\label{chapter:3_differentiable_mrf_inference_for_BILPs}
 \chaptermark{Differentiable MRFs}
 
 \section{Introduction}
+\label{sec:chapter_3_introduction}
 
-BILPs provide a common mathematical formulation for many combinatorial optimization tasks, including covering, packing, scheduling, and graph optimization. The broader difficulty of large-scale combinatorial optimization has motivated learning-based methods that predict high-quality assignments, construct solutions sequentially, or guide exact solvers toward promising regions of the search space \cite{dai_learning_2017,gasse_exact_2019,nair_solving_2020,sun_difusco_2023}. This chapter focuses on the BILP setting, where the decision variables are binary, the constraints are linear, and the variable--constraint structure of the instance provides a natural graph representation for neural prediction.
+Binary integer linear programs (BILPs) provide a common mathematical formulation for combinatorial optimization tasks in which the decision variables are binary and feasibility is defined by linear constraints. This chapter focuses on BILP solution prediction: given a BILP instance, the goal is not to replace an exact solver, but to produce structured prediction signals over the binary variables that can guide a downstream decoder or solver. The broader difficulty of large-scale combinatorial optimization has motivated learning-based methods that predict high-quality assignments, construct solutions sequentially, or guide exact solvers toward promising regions of the search space~\cite{dai_learning_2017,gasse_exact_2019,nair_solving_2020,sun_difusco_2023}. Here, we restrict attention to the BILP setting, where the variable--constraint structure of the instance provides a natural graph representation for neural prediction.
 
 For linear and integer linear programs more generally, a common strategy is to represent the instance as a variable--constraint bipartite graph and apply a GNN to produce variable-level scores. In the BILP setting considered here, these scores are usually interpreted as independent probabilities that each binary variable should be set to one in an optimal solution. This factorized prediction model is simple and scalable, and it forms the basis of several successful neural approaches. However, it has an important limitation: at decoding time, dependencies between variables are only represented implicitly through the GNN embeddings. The probabilistic model itself does not explicitly encode the constraints that couple variables together. As a result, independent variable predictions can lead to infeasible or low-quality assignments, requiring additional rounding, greedy repair, or solver-based post-processing.
 
-This chapter addresses this limitation by replacing factorized variable predictions with a structured probabilistic model. We use MRFs to represent dependencies between decision variables through constraint factors. In this view, the decision variables of the BILP become random variables in an MRF, while constraints define factors over subsets of variables. Approximate inference algorithms, such as LBP and NMF, can then be used to compute marginals that reflect not only the score of each variable but also its compatibility with neighboring variables and constraints.
+This chapter addresses this limitation by replacing factorized variable predictions with a structured probabilistic model. We use MRFs to represent dependencies between decision variables through constraint factors. In this view, the decision variables of the BILP become random variables in an MRF, while constraints define factors over subsets of variables. Approximate inference algorithms, such as LBP and NMF, can then be used to compute marginals that reflect not only the score of each variable but also its compatibility with neighboring variables and constraints. These marginals are not themselves complete feasible solutions; they are structured signals that guide the decoding and feasibility-propagation procedures described later.
 
-The approach developed in this chapter builds on the neural prediction framework of Nair et al.~\cite{nair_solving_2020}, but changes the probabilistic model used after the GNN encoder. Instead of predicting a fully factorized Bernoulli distribution over variables, the model predicts
-or instantiates the parameters of an exponential-family MRF. We consider two families of MRF predictors. The first, which we call the canonical MRF
-(CMRF), uses a fixed feasibility-cost parameterization derived directly from the BILP constraints and objective. The second, which we call the learned MRF (LMRF), uses a neural parameter predictor to produce over-complete factor parameters from GNN embeddings. Both families can be combined with LBP or NMF inference, yielding the CMRF-LBP, CMRF-NMF, LMRF-LBP, and LMRF-NMF models studied in this chapter.
+The approach developed in this chapter builds on the neural prediction framework of Nair et al.~\cite{nair_solving_2020}, but changes the probabilistic model used after the GNN encoder. Instead of predicting a fully factorized distribution over variables, the model uses an exponential-family MRF over the BILP decision variables. The non-learned canonical Markov random field (CMRF), defined in Section~\ref{subsec:canonical-feasibility-cost-param}, serves as a structured baseline: its local log-potentials are fixed directly by the BILP constraints and objective. The learned MRF (LMRF) studied in this chapter keeps the same factor graph and the same over-complete sufficient-statistic representation, but replaces the fixed canonical parameter vector $\CANEPARAM(\PROB)$ with predicted parameters $\PREEPARAM(\PROB;\NNPARAM)$. In this sense, the learned MRF models can be viewed as relaxations of the canonical feasibility-cost construction: the structure of the MRF is retained, while the log-potential values are learned from data.
 
 A key advantage of this formulation is that fixed-iteration inference can be implemented as a differentiable computation. The output marginals can
 therefore be used both for training and for decoding. During training, approximate marginals define a surrogate objective that encourages the model
 to assign high probability to observed high-quality solutions. During decoding, the same inference procedure provides structured variable marginals that guide solution construction. We use these marginals both to rank variables and, more importantly, in a guided diving strategy that progressively fixes variables and recomputes the remaining marginals under the accumulated evidence.
 
-We evaluate this framework on two canonical NP-hard problems: MIS and SC. These problems provide complementary test cases. MIS has small pairwise constraints and a maximization objective, while SC has higher-order covering constraints and a minimization objective. Across these settings, the experiments compare factorized GNN predictors, non-learned canonical MRF baselines, and learned MRF predictors trained through approximate inference. The results show that explicitly modeling variable dependencies can improve solution quality, especially when inference is coupled with adaptive decoding through guided decimation.
+We evaluate this framework on two synthetic BILP families: MIS and SC. These problems provide complementary test cases. MIS has small pairwise constraints and a maximization objective, while SC has higher-order covering constraints and a minimization objective. Across these settings, the experiments compare factorized GNN predictors, non-learned canonical MRF baselines, and learned MRF predictors trained through approximate inference. The results indicate that learned MRF inference can provide a stronger decoding signal than factorized prediction on these benchmarks, especially when inference is coupled with adaptive decoding through guided decimation.
 
 The contributions of this chapter are as follows:
 \begin{enumerate}
-    \item We formulate BILP solution prediction as inference in an exponential-family MRF defined over the variables and constraints of a BILP.
+    \item We formulate BILP prediction signals as approximate inference outputs in an exponential-family MRF defined over the variables and constraints of a BILP.
 
-    \item We introduce a canonical feasibility-cost parameterization that encodes BILP constraints as hard or finite-penalty factors and objective coefficients as unary log-potentials.
+    \item We extend the background CMRF construction to learned over-complete MRF parameterizations, where a GNN predicts factor parameters and fixed-iteration LBP or NMF produces approximate marginals.
 
-    \item We extend this construction to learned over-complete MRF parameterizations, where a GNN predicts factor parameters and fixed-iteration LBP or NMF produces approximate marginals.
+    \item We study diving-based decoders that convert inferred marginals into feasible solutions, including Entropy-Guided Greedy (EGG) and Guided Decimation (GD). GD differs from EGG by conditioning the MRF on partial assignments and recomputing marginals during the dive.
 
-    \item We study diving-based decoders for constructing feasible solutions from inferred marginals, including Entropy-Guided Greedy (EGG) and Guided Decimation (GD), which differs by conditioning the MRF on partial assignments and recomputing marginals during the dive.
-
-    \item We empirically evaluate the resulting CMRF and LMRF models on MIS and SC, analyzing solution quality, inference budget, factor-potential behavior, and the computational cost of structured inference.
+    \item We empirically evaluate the resulting CMRF and LMRF models on synthetic MIS and SC BILP instances, analyzing solution quality, inference budget, factor-potential behavior, and the computational cost of structured inference.
 \end{enumerate}
 
 \subsection{Positioning with respect to related work}
@@ -40,7 +37,7 @@ Here, we focus only on the works most directly connected to the MRF-based BILP p
 
 The closest starting point is the class of neural methods that represent an optimization instance by its variable--constraint graph and predict variable-level scores. In particular, the framework of Nair et al.~\cite{nair_solving_2020} uses a neural predictor to guide the search for high-quality solutions. Similar graph-based learning ideas have also been used for construction heuristics and solver guidance \cite{dai_learning_2017,gasse_exact_2019}. These approaches demonstrate the usefulness of learned variable scores, but the prediction model used for decoding is typically factorized across variables. The method in this chapter keeps the same graph-based neural input representation, but replaces the factorized output distribution with an MRF over binary assignments.
 
-A second line of work studies message passing as an optimization procedure. Park and Shin~\cite{park_max-product_2017} show that max-product BP can solve certain combinatorial optimization problems when the corresponding graphical model and LP relaxation satisfy specific assumptions. This result motivates the canonical feasibility-cost parameterization introduced below, where constraint factors encode local feasibility and unary factors encode the linear objective. In contrast to the exact-recovery setting analyzed by Park and Shin, the BILP instances considered here are treated with approximate finite-iteration inference.
+A second line of work studies message passing as an optimization procedure. Park and Shin~\cite{park_max-product_2017} show that max-product BP can solve certain combinatorial optimization problems when the corresponding graphical model and LP relaxation satisfy specific assumptions. This result motivates the canonical feasibility-cost parameterization reviewed in Section~\ref{subsec:canonical-feasibility-cost-param}, where constraint factors encode local feasibility and unary factors encode the linear objective. In contrast to the exact-recovery setting analyzed by Park and Shin, the BILP instances considered here are treated with approximate finite-iteration inference.
 
 Our approach is also related to works that unroll or learn BP-style inference procedures \cite{kuck_belief_2020,deng_deep_2022,wiseman_amortized_2019}. Those methods typically aim to improve the inference algorithm itself, for example by learning message updates, damping, or schedules. Here, LBP and NMF are used differently: they are fixed approximate inference layers applied to an MRF whose parameters are either given by the canonical BILP construction or predicted by a neural model. The resulting approximate marginals are used for training and decoding. They should therefore be understood as surrogate inference outputs, not as exact likelihoods or exact marginals.
 
@@ -48,13 +45,15 @@ Finally, the framework studied in this chapter differs from generative, sampling
 
 
 
-\section{Learning MRF Parameters for ILPs}
-In this section we describe the framework used in this chapter, combining GNNs with MRF inference. The central idea is to move beyond fully factorized predictors, which treat variable assignments as independent, and instead define a structured distribution over solutions. This distribution is modeled as an exponential-family MRF whose parameters are predicted by a GNN encoder operating on a graph representation of the problem. Inference in this MRF---via belief propagation or mean-field approximations---yields marginal distributions that capture dependencies between variables and can be used to guide diving-based greedy solution construction. We consider two such decoders: EGG, which uses the initial inferred scores throughout the dive, and GD, which periodically conditions on the current partial assignment and reinfers the remaining marginals.
+\section{Learning MRF parameters for BILPs}
+\label{sec:chapter_3_mrf_parameter_learning}
 
-We formalize this approach by first defining the problem classes we target, and then specifying how their structure is encoded into the GNN–MRF architecture.
+In this section we describe the framework used in this chapter, combining GNNs with MRF inference. The central idea is to move beyond fully factorized predictors, which treat variable assignments as independent, and instead define a structured distribution over binary assignments. This distribution is modeled as an exponential-family MRF whose parameters are either fixed from the BILP formulation or predicted by a GNN encoder operating on the variable--constraint graph. Inference in this MRF---via belief propagation or mean-field approximations---yields marginal distributions that capture dependencies between variables and can be used to guide diving-based solution construction. We consider two decoders: Entropy-Guided Greedy (EGG), which computes scores once and then performs a static dive, and Guided Decimation (GD), which periodically conditions the MRF on the current partial assignment and reinfers the remaining marginals.
+
+We first define the generic BILP representation used by the model, then recall the two benchmark families used in the experiments.
 
 \subsection{Problem class and graph representation}
-We focus on optimization problems that can be formulated as binary integer linear programs of the form
+In this thesis we focus on optimization problems that can be formulated as a BILP of the form
 \begin{equation}
     (\PROB) \Leftrightarrow 
     \left\{ 
@@ -65,13 +64,14 @@ We focus on optimization problems that can be formulated as binary integer linea
     \end{array}
     \right.
 \end{equation}
-with objective coefficients $\CVEC \in \R^\NVAR$ and constraints defined by $(\AMAT,\BVEC) \in \R^{\NCONSTR \times \NVAR} \times \R^{\NCONSTR}$. We denote this family of BILP instances by $\ILPFAM$.
+with objective coefficients $\CVEC \in \R^\NVAR$ and constraints defined by $(\AMAT,\BVEC) \in \R^{\NCONSTR \times \NVAR} \times \R^{\NCONSTR}$. We denote this family of BILP instances by $\ILPFAM$. Minimization problems are handled by the equivalent maximization form obtained by replacing the objective coefficients by their negatives. This convention allows us to use a single notation throughout the MRF construction; when reporting experimental gaps, however, we use the original objective sense of each problem.
 
-For a given instance $(\PROB)$, a solution $\XVEC$ can be viewed as a realization of a binary random vector $\XRAV = (\XRAV_i)_{i=1}^{\NVAR}$. Learning a solution predictor then amounts to approximating a target distribution over high-quality or optimal assignments,
+
+For a given instance $(\PROB)$, a solution $\XVEC$ can be viewed as a realization of a binary random vector $X=(X_i)_{i=1}^{\NVAR}$. Conceptually, one may associate the instance with an unknown target distribution over high-quality or optimal assignments,
 \begin{equation*}
-    \PDIST^*(\XVEC \mid \PROB),
+p^*(\XVEC \mid \PROB).
 \end{equation*}
-from a dataset of solved instances.
+In practice, this distribution is not observed. The training data provide one reference solution, or a small set of reference solutions, for each instance. The learned model is therefore trained to reproduce local information from the available reference solutions, rather than to estimate the full target distribution exactly.
 
 A common neural approach is to represent $(\PROB)$ by its variable--constraint bipartite graph and use a GNN to produce one score $\SCORE_i$ for each decision variable \cite{dai_learning_2017,gasse_exact_2019,nair_solving_2020,sun_difusco_2023}. See Section~\ref{sec:vcg_definition} for details on this construction. In the binary setting, these scores are typically interpreted as Bernoulli probabilities
 \begin{equation*}
@@ -110,8 +110,7 @@ The structured model takes the form
 \end{equation}
 where $\XVEC_{\FACTOR}$ denotes the variables in the scope of factor $\FACTOR$, $\POTENTIAL_{\FACTOR}$ encodes local compatibility, and $Z_{\EPARAM}(\PROB)$ is the partition function. Unlike the factorized model, this distribution explicitly couples variables that participate in the same constraint factor. Approximate inference in this MRF, using LBP or NMF, produces marginals that can then be used for training and decoding.
 
-Figure~\ref{fig:model_design_nair} illustrates the factorized baseline of Nair et al.~\cite{nair_solving_2020}. The following sections introduce the
-MRF-based alternative: first the exponential-family parameterization, then the canonical feasibility-cost parameters, and finally the learned parameter prediction architecture.
+Figure~\ref{fig:model_design_nair} illustrates the factorized baseline of Nair et al.~\cite{nair_solving_2020}. The following sections introduce the MRF-based alternative: first the exponential-family formulation used for BILP prediction, then the learned parameter prediction architecture. The CMRF baseline uses the fixed canonical parameters defined in Section~\ref{subsec:canonical-feasibility-cost-param}, whereas the LMRF variants replace them with predicted parameters.
 
 \input{resources/tikz/chapter_3/model_design_nair}
 
@@ -188,84 +187,7 @@ Thus larger values of the parameter score correspond to lower energy and higher 
 The total number of parameters of the MRF corresponding to a problem $(\PROB)$ is denoted $\SSDIM$. The associated factor parameter vector
 $\EPARAM_{\FACTOR} \in \R^{\FDIM_{\FACTOR}}$ has one entry per local assignment. We refer to these as \emph{over-complete factor parameters} as shorthand: the over-completeness belongs to the sufficient-statistic representation, while the parameters are indexed by that representation.
 
-\subsubsection{Canonical feasibility-cost parameterization}
-\label{subsec:canonical-feasibility-cost-param}
-We now define a fixed, non-learned choice of the generic parameters $\EPARAM$ introduced above. This parameterization maps an integer linear program to an MRF by encoding feasibility through constraint factors and objective value through unary factors. Local assignments that satisfy a constraint receive larger log-potential values than assignments that violate it, thereby increasing the probability of globally feasible assignments.
 
-We refer to this construction as the \emph{canonical feasibility-cost parameterization}, and denote its parameters by $\CANEPARAM$.
-
-Let $\XVEC = (\XVEC_1,\ldots,\XVEC_{\NVAR})$ denote the binary decision variables of an ILP. Each constraint factor $\FACTOR \in \FGF$ is associated with a constraint of the ILP and has scope $N(\FACTOR) \subseteq \{ 1,\ldots, \NVAR\}$. We write $\XVEC_{\FACTOR} = (\XVEC_i)_{i \in N(\FACTOR)}$ for a local assignment to the variables appearing in constraint $\FACTOR$. The set of locally feasible assignments for this constraint is denoted by 
-\begin{equation}
-    \FEASIBLESET_{\FACTOR}
-    =
-    \{\XVEC_{\FACTOR} : \XVEC_{\FACTOR}
-    \text{ satisfies constraint } \FACTOR\}.
-\end{equation}
-
-The corresponding MRF constraint potential is the feasibility indicator
-\begin{equation}
-    \POTENTIAL_{\FACTOR}(\XFACT)
-    =
-    \begin{cases}
-        1, & \XVEC_{\FACTOR} \in \FEASIBLESET_{\FACTOR},\\
-        0, & \XVEC_{\FACTOR} \notin \FEASIBLESET_{\FACTOR}.
-    \end{cases}
-\end{equation}
-
-Unary factors encode the contribution of individual variables to the objective. For a maximization problem with objective $\sum_{i=1}^{\NVAR} c_i \XVEC_i$, the unary potential can be written as
-\begin{equation}
-    \POTENTIAL_i(\XVEC_i) = \exp(c_i \XVEC_i).
-\end{equation}
-
-In the over-complete exponential-family representation, each factor has one parameter for each possible local configuration. We therefore define the
-constraint-factor log-potentials by 
-\begin{equation}
-    \CANEPARAM_{\FACTOR}(\XFACT)
-    =
-    \begin{cases}
-        0, & \XFACT \in \FEASIBLESET_{\FACTOR},\\
-        -\infty, & \XFACT \notin \FEASIBLESET_{\FACTOR},
-    \end{cases}
-    \qquad \FACTOR \in \FGF,
-\end{equation}
-and the unary log-potentials by
-\begin{equation}
-    \CANEPARAM_i(\XVEC_i) = c_i \XVEC_i.
-\end{equation}
-The resulting MRF defines the unnormalized distribution
-\begin{equation}
-    p_{\CANEPARAM}(\XVEC)
-    \propto
-    \exp \left(
-        \sum_{i=1}^{\NVAR} \CANEPARAM_i(\XVEC_i)
-        +
-        \sum_{\FACTOR \in \FGF} \CANEPARAM_{\FACTOR}(\XFACT)
-    \right).
-\end{equation}
-
-Under this parameterization, every globally infeasible assignment receives zero probability mass, since it violates at least one constraint factor and therefore obtains log-potential $-\infty$. Among feasible assignments, the probability mass is proportional to the exponential of the ILP objective value. Under exact MAP inference in the hard-constraint model, the maximizer of the MRF probability therefore recovers an optimal feasible solution with respect to the encoded score:
-\begin{equation}
-    \argmax_{\XVEC} p_{\CANEPARAM}(\XVEC)
-    =
-    \argmax_{\XVEC \in \mathcal{X}}
-    \sum_{i=1}^{\NVAR} c_i \XVEC_i,
-\end{equation}
-where $\mathcal{X}$ denotes the global feasible set.
-
-In practice, using $-\infty$ is numerically inconvenient. We therefore use a large finite penalty $M \gg 0$ and replace the hard infeasibility parameter by
-\begin{equation}
-    \CANEPARAM_{\FACTOR}(\XFACT)
-    =
-    \begin{cases}
-        0, & \XFACT \in \FEASIBLESET_{\FACTOR},\\
-        -M, & \XFACT \notin \FEASIBLESET_{\FACTOR}.
-    \end{cases}
-\end{equation}
-The finite value $-M$ is a numerical approximation to the hard infeasibility penalty $-\infty$. It assigns infeasible local configurations very small, rather than zero, probability mass. Larger values of $M$ make the finite model closer to the hard-constraint model, but do not make the constraint exact unless the limit $M \to \infty$ is taken.
-
-The canonical feasibility-cost parameterization provides a direct over-complete MRF representation of the ILP. It is fixed by the constraint structure and objective coefficients, and therefore does not involve learned parameters. The CMRF baseline uses this fixed parameter vector $\CANEPARAM(\PROB)$, constructed directly from the BILP constraints and objective, and therefore contains no learned factor parameters.
-
-The learned MRF keeps the same factor graph and the same over-complete sufficient-statistic representation, but replaces the fixed canonical parameter vector $\CANEPARAM(\PROB)$ with predicted parameters $\PREEPARAM(\PROB;\NNPARAM)$. Thus, the learned model can be viewed as a relaxation of the canonical feasibility-cost construction: the structure of the MRF is retained, while the log-potential values are learned from data.
 
 \subsection{Neural parameter predictor}
 The LMRF uses a neural network to predict the over-complete factor parameters of the MRF associated with a problem instance $(\PROB)$. The neural network encodes the variable--constraint graph $\VCGFULL$, while the predicted parameters are assigned to factors in the MRF factor graph $\FGFULL$. Our predictor combines two components:
@@ -298,6 +220,7 @@ Unary and non-unary factors are handled by the same over-complete representation
 Unlike the CMRF, the LMRF does not impose a fixed $-M$ penalty or a hard mask on infeasible local assignments. Feasible and infeasible local configurations both receive finite learned parameters. Therefore, global feasibility is not guaranteed by the learned MRF distribution itself; it must be handled by the decoding or repair procedure.
 
 \subsection{Differentiable inference}
+\label{subsec:chapter_3_differentiable_inference}
 
 Once parameters are predicted, inference in the MRF provides structured predictions. Depending on the task, we may:
 \begin{itemize}
@@ -318,6 +241,7 @@ The messages, variational updates, and marginals computed by fixed-iteration LBP
 \paragraph{Conditioning on partial assignments.} During decoding, we sometimes condition the MRF on a partial assignment $\PARTSOL$. This is implemented by modifying the local factor tables: for each factor, local assignments that disagree with the fixed variables in $\PARTSOL$ are masked by assigning them log-potential $-\infty$, or a large negative value in finite-precision implementations. Approximate inference on the resulting conditioned MRF estimates marginals of the remaining variables under the accumulated evidence.
 
 \subsection{Solution decoding}
+\label{subsubsec:chapter_3_egg_gd}
 Having predicted the parameters $\PREEPARAM(\PROB)$ and run approximate inference, we must decode the resulting scores or marginals into a feasible solution of the original problem $(\PROB)$. This section describes the decoding procedures used in our experiments: Entropy-Guided Greedy and Guided Decimation. EGG constructs a solution from a single set of scores or marginals, while GD alternates between variable fixing and conditional reinference.
 
 \subsubsection{Diving-based decoding}
@@ -385,7 +309,8 @@ GD addresses a limitation of EGG. Because EGG uses the initial scores throughout
 The learned MRF models are trained from supervised solution labels. For each training instance, the neural network first predicts MRF parameters from the variable--constraint graph. Approximate inference is then run on the resulting MRF, producing either factor marginals with LBP or variable marginals with NMF. The training loss compares these approximate marginals to a reference solution. Importantly, this loss is not the exact negative log-likelihood of the full MRF
 distribution; it is a tractable supervised marginal-likelihood surrogate defined on the outputs of the chosen inference procedure.
 
-\paragraph{Model parameters.} Throughout this section, $\NNPARAM$ denotes the trainable neural parameters of the learned MRF model, including the GNN encoder parameters and the factor-parameter prediction heads,
+\paragraph{Model parameters} 
+Throughout this section, $\NNPARAM$ denotes the trainable neural parameters of the learned MRF model, including the GNN encoder parameters and the factor-parameter prediction heads,
 \begin{equation*}
     \NNPARAM = (\GNNEMBPARAM, \FPARAMPREDPARAM).
 \end{equation*}
@@ -433,11 +358,13 @@ For NMF-based models, the approximating distribution is fully factorized and inf
 \end{equation}
 where $\MARGINAL_{v}^{(i)}$ is the approximate marginal of variable $v$ obtained after running NMF with parameters $\PREEPARAM(\PROB_i;\NNPARAM)$.
 
-\paragraph{Why this loss?} The purpose of this objective is to train the neural parameterization through the marginals produced by the chosen inference procedure, while avoiding the intractable normalization required by the full MRF likelihood. Instead of assigning probability to an entire solution $\YVEC$ in the exponentially large assignment space, the loss compares local approximate marginals to the corresponding local parts of the reference solution. It should therefore be understood as a tractable supervised marginal-likelihood surrogate, not as exact maximum likelihood training of the MRF.
+\paragraph{Why this loss?} 
+The purpose of this objective is to train the neural parameterization through the marginals produced by the chosen inference procedure, while avoiding the intractable normalization required by the full MRF likelihood. Instead of assigning probability to an entire solution $\YVEC$ in the exponentially large assignment space, the loss compares local approximate marginals to the corresponding local parts of the reference solution. It should therefore be understood as a tractable supervised marginal-likelihood surrogate, not as exact maximum likelihood training of the MRF.
 
-\paragraph{LBP versus NMF.} The form of the local surrogate depends on the inference method. With LBP, inference returns approximate factor marginals, so each factor $\FACTOR$ defines a multi-class prediction problem over the $2^{|\FACTOR|}$ local configurations. With NMF, the approximating distribution is fully factorized and only variable marginals are available, so the loss reduces to variable-level binary classification.
+\paragraph{LBP versus NMF} 
+The form of the local surrogate depends on the inference method. With LBP, inference returns approximate factor marginals, so each factor $\FACTOR$ defines a multi-class prediction problem over the $2^{|\FACTOR|}$ local configurations. With NMF, the approximating distribution is fully factorized and only variable marginals are available, so the loss reduces to variable-level binary classification.
 
-\paragraph{Relation to maximum likelihood.}
+\paragraph{Relation to maximum likelihood}
 The natural training target is to minimize the global negative log-likelihood (NLL) of the MRF:
 \begin{align}
 \mathcal{L}_{\mathrm{NLL}}(\NNPARAM) &= -\log p_{\PREEPARAM(\PROB;\NNPARAM)}(\YVEC), \\
@@ -447,7 +374,8 @@ This objective is not used in this chapter, because evaluating it requires the p
 
 Gradients are computed by backpropagating through the fixed unrolled inference computation. For LBP, this computation consists of a fixed number of differentiable message updates followed by marginal normalization. For NMF, it consists of a fixed number of differentiable mean-field marginal updates. Since the number of iterations is fixed, the inference procedure defines a deterministic differentiable map from $\PREEPARAM(\PROB_i;\NNPARAM)$ to the marginals used in the loss.
 
-\paragraph{Limitations.} A key limitation of the factor-wise loss is that it enforces consistency only locally, at the level of individual factors, without guaranteeing global coherence across the full assignment space. In particular, marginals predicted for different factors may not correspond to any valid joint distribution. While LBP partially mitigates this by promoting local consistency during message passing, the lack of a true likelihood objective means the model may overfit to local patterns that do not translate into improved global solutions. Addressing this limitation through likelihood approximations or structured regularization remains an open direction. Another limitation is that many combinatorial optimization instances may have multiple optimal or near-optimal solutions. Since the supervised target provides only one reference solution $\YVEC_i$, the loss may penalize local configurations that belong to alternative equally good solutions. Thus, the objective trains the model to reproduce the provided reference solution rather than to represent the full set of optimal assignments.
+\paragraph{Limitations} 
+A key limitation of the factor-wise loss is that it enforces consistency only locally, at the level of individual factors, without guaranteeing global coherence across the full assignment space. In particular, marginals predicted for different factors may not correspond to any valid joint distribution. While LBP partially mitigates this by promoting local consistency during message passing, the lack of a true likelihood objective means the model may overfit to local patterns that do not translate into improved global solutions. Addressing this limitation through likelihood approximations or structured regularization remains an open direction. Another limitation is that many combinatorial optimization instances may have multiple optimal or near-optimal solutions. Since the supervised target provides only one reference solution $\YVEC_i$, the loss may penalize local configurations that belong to alternative equally good solutions. Thus, the objective trains the model to reproduce the provided reference solution rather than to represent the full set of optimal assignments.
 
 \input{resources/tikz/chapter_3/model_design_efcanonicalparam}
 
@@ -460,7 +388,7 @@ We evaluate these claims on two families of synthetic combinatorial optimization
 \subsection{Experimental protocol}
 This subsection describes the common experimental protocol used to compare the different prediction and inference methods. We first specify the families of predictors considered in the experiments, including the non-learned probabilistic baselines, the direct GNN logit predictor, and the learned MRF-based models. We then describe the shared training setup, the approximate inference budget, the decoding strategies used to convert scores or marginals into feasible solutions, and the metrics used to evaluate solution quality and runtime. For GD, we also evaluate cheaper update schedules that rerun inference only every $k$ decoding steps.
 
-\paragraph{Compared methods.}
+\paragraph{Compared methods}
 We compare five prediction methods, summarized in Table~\ref{tab:chapter_3_compared_methods}. All method names are defined before the table to make the comparison unambiguous. \emph{CMRF-LBP} and \emph{CMRF-NMF} are non-learned canonical-MRF baselines: their factor parameters are fixed by the feasibility-cost parameterization in Section~\ref{subsec:canonical-feasibility-cost-param}, and LBP or NMF is then used only as an approximate inference procedure. \emph{DGN} is the direct GNN baseline: it uses the same neural backbone as the learned MRF models but outputs one logit per decision variable and does not include an MRF inference layer. \emph{LMRF-LBP} and \emph{LMRF-NMF} are learned-MRF predictors: a GNN predicts over-complete factor parameters, and LBP or NMF converts those parameters into approximate variable marginals.
 
 The table separates the quantity used by the decoder from the quantity used for training. The decoder always receives one scalar score per decision variable: a direct logit for DGN, or an approximate variable marginal for the MRF-based methods. The training signal differs across learned models: DGN is trained from variable-level labels, LMRF-LBP uses the factor-wise marginal surrogate from Section~\ref{sec:chapter_3_training_objective}, and LMRF-NMF uses the variable-wise marginal surrogate. The CMRF variants contain no learned parameters, so they do not have a supervised training objective.
@@ -485,18 +413,19 @@ LMRF-NMF & Yes     & $\PREEPARAM(\PROB;\NNPARAM)$     & NMF & $\LOSSF^{\mathrm{N
 
 Thus, CMRF-LBP and CMRF-NMF test whether the hand-designed canonical MRF parameterization is useful when paired with approximate inference, while LMRF-LBP and LMRF-NMF test whether learned factor parameters produce more useful approximate marginals under the same inference budget. DGN isolates the effect of removing the MRF layer entirely.
 
-\paragraph{Training setup.} All learned models are trained using the supervised objective introduced in Section~\ref{sec:chapter_3_training_objective}. DGN is trained from variable-level labels, whereas the learned MRF models are trained through the marginals returned by the chosen inference procedure: factor marginals for LMRF-LBP and variable marginals for LMRF-NMF.
+\paragraph{Training setup} 
+All learned models are trained using the supervised objective introduced in Section~\ref{sec:chapter_3_training_objective}. DGN is trained from variable-level labels, whereas the learned MRF models are trained through the marginals returned by the chosen inference procedure: factor marginals for LMRF-LBP and variable marginals for LMRF-NMF.
 
 All learned models use the same neural backbone, a four-layer GCN \citep{kipf_semi-supervised_2017} with hidden dimension $\EMBDIM=64$. This shared architecture keeps the comparison computationally tractable and isolates the effect of the prediction head and inference layer. The direct predictor outputs one logit $\SCORE_i$ per decision variable, while the learned MRF models output factor parameters $\EPARAM_{\FACTOR}$ that are passed to either LBP or NMF inference.
 
 Models are optimized with AdamW~\citep{loshchilov_decoupled_2018-1} using a learning rate of $10^{-3}$ across all datasets. Approximate inference is run for at most $10$ iterations, and the LBP damping coefficient is set to $0.5$. Each dataset is split into training, validation, and test sets using an $80/10/10\%$ split. Results are reported over three random seeds, $\{0,1,2\}$.
 
-\paragraph{Inference and decoding.}
+\paragraph{Inference and decoding}
 At test time, each method produces one score per decision variable. DGN outputs logits directly, while CMRF-LBP, CMRF-NMF, LMRF-LBP, and LMRF-NMF obtain variable marginals by running approximate inference on the corresponding MRF. Inference is capped at $10$ iterations for both LBP and NMF, with LBP message damping coefficient set to $0.5$. Since the factor graphs are loopy, LBP beliefs are treated as approximate marginals.
 
 Scores or marginals are converted into feasible solutions using two decoders. EGG is a static decoder: it computes predictions once and fixes variables in decreasing order of confidence, measured by low entropy for marginals or by the sigmoid confidence of the DGN logit. GD (Algorithm~\ref{alg:bp_guided_decimation}) is adaptive: after each assignment, the model is conditioned on the current partial solution and inference is rerun before selecting the next variable. EGG therefore evaluates the quality of the initial predictions, whereas GD evaluates whether the inferred distribution remains useful under iterative partial assignments.
 
-\paragraph{Evaluation metrics.}
+\paragraph{Evaluation metrics}
 Assuming that all problems are given in canonical form, we evaluate solution quality using the relative gap
 \begin{equation}
     \mathrm{gap}(\hat{\YVEC})
@@ -519,20 +448,21 @@ We evaluate this framework on two families of synthetic binary optimization prob
 under different constraint structures. We restrict this chapter to the small and medium regimes; larger instances
 are considered in Chapter~\ref{chapter:5_feature-to-factor_mappings_for_approximate_mrf_inference}.
 
-\paragraph{Maximum Independent Set.}
+\paragraph{Maximum Independent Set}
 MIS instances are generated from Erdős--Rényi random graphs with edge probability $15\%$. We consider two size regimes: $\NVAR = 100$ and $\NVAR \sim \mathcal{U}[200,300]$. For graphs with more than $100$ vertices, node degrees are bounded by $15$ in order to control the density of the resulting factor graph. Reference labels are produced by solving the instances with the KaMIS solver~\citep{lamm_finding_2017}.
 
-\paragraph{Set Cover.}
+\paragraph{Set Cover}
 SC instances are generated using a balanced randomized procedure. For a given number of items $n$, sets $m$, and coverage parameter $k$, we sample an item--set incidence matrix and enforce two validity conditions: no set is empty, and each item is covered by exactly $k$ sets. We consider two size regimes: $n=50$, $m=50$, $k=5$, and $n \sim \mathcal{U}[120,180]$, $m \sim \mathcal{U}[150,250]$, $k=5$. Reference labels are obtained using the SCIP solver~\citep{achterberg_scip_2009}.
 
 \input{resources/tab/chapter_3/dataset_identifiers.tex}
 
-\paragraph{Features.}
+\paragraph{Features}
 The input representation uses $54$ features, divided into two categories. The first $10$ are extracted from the continuous relaxation of the problem, including LP solution values and related simplex information. The remaining $44$ are graph-based features computed from the variable--constraint graph. Together, these features provide both optimization-aware information from the relaxation and structural information from the underlying factor graph. The full list of features is given in Table~\ref{tab:dataset_features}.
 
 \input{resources/tab/chapter_3/dataset_features.tex}
 
 \subsection{Main results: learned inference improves decoding}
+\label{subsec:chapter_3_main_results}
 
 Learned MRF inference improves both static EGG decoding and adaptive GD decoding across the reported SC and MIS benchmarks. Table~\ref{tab:mrf_nair_inference_results} reports the average relative optimality gap and runtime for the evaluated inference and decoding variants. The same results are visualized in Figure~\ref{fig:mrf_nair_inference_grouped_bar_optimality}, which compares optimality gaps, and Figure~\ref{fig:mrf_nair_inference_stacked_grouped_bar_runtime}, which decomposes the runtime. Across the evaluated settings, LMRF-LBP provides the strongest overall decoding signal: it improves over the corresponding canonical LBP baseline and over the direct neural baseline in the SC and MIS-S comparisons.
 

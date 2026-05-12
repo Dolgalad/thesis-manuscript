@@ -1,0 +1,148 @@
+\begin{figure}[t]
+\centering
+% Requires: \usepackage{pgfplots}
+% Requires: \usepgfplotslibrary{groupplots}
+% Requires: \usetikzlibrary{calc, matrix}
+\definecolor{darkgray176}{RGB}{110,110,110}
+\definecolor{lightgray204}{RGB}{200,200,200}
+\begin{tikzpicture}
+\begin{groupplot}[
+    group style={group size=2 by 2, horizontal sep=0.75cm, vertical sep=0.75cm, y descriptions at=edge left, ylabels at=edge left},
+    width=0.42\textwidth,
+    height=0.30\textwidth,
+    scale only axis,
+    tick align=outside,
+    tick pos=left,
+    xmajorgrids,
+    ymajorgrids,
+    x grid style={darkgray176},
+    y grid style={darkgray176},
+]
+
+\nextgroupplot[
+    title={SC-S},
+    xmin=-0.6, xmax=4.6,
+    xtick={0,1,2,3,4},
+    xticklabels={0.5,0.6,0.7,0.8,0.9},
+    ylabel={Gap (\%)},
+    ymin=0, ymax=9.85282828283,
+]
+% manual grouped bars for scp_n50_m50_k5
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:-0.41,0) rectangle (axis cs:-0.246,2);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:0.59,0) rectangle (axis cs:0.754,3.42222222222);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:1.59,0) rectangle (axis cs:1.754,5.18585858586);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:2.59,0) rectangle (axis cs:2.754,7.36767676768);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:3.59,0) rectangle (axis cs:3.754,8.56767676768);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:-0.246,0) rectangle (axis cs:-0.082,1.4);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:0.754,0) rectangle (axis cs:0.918,2.2);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:1.754,0) rectangle (axis cs:1.918,2.82222222222);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:2.754,0) rectangle (axis cs:2.918,3.80404040404);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:3.754,0) rectangle (axis cs:3.918,5.00404040404);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:-0.082,0) rectangle (axis cs:0.082,1.6);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:0.918,0) rectangle (axis cs:1.082,2.2);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:1.918,0) rectangle (axis cs:2.082,2.6);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:2.918,0) rectangle (axis cs:3.082,3);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:3.918,0) rectangle (axis cs:4.082,3.2);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:0.082,0) rectangle (axis cs:0.246,2.6);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:1.082,0) rectangle (axis cs:1.246,3.22222222222);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:2.082,0) rectangle (axis cs:2.246,3.62222222222);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:3.082,0) rectangle (axis cs:3.246,5.20404040404);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:4.082,0) rectangle (axis cs:4.246,7.96767676768);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:0.246,0) rectangle (axis cs:0.41,2.4);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:1.246,0) rectangle (axis cs:1.41,3.02222222222);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:2.246,0) rectangle (axis cs:2.41,4.42222222222);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:3.246,0) rectangle (axis cs:3.41,4.62222222222);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:4.246,0) rectangle (axis cs:4.41,5.02222222222);
+
+\nextgroupplot[
+    title={SC-M},
+    xmin=-0.6, xmax=4.6,
+    xtick={0,1,2,3,4},
+    xticklabels={0.5,0.6,0.7,0.8,0.9},
+    ylabel={},
+    ymin=0, ymax=12.7071478138,
+]
+% manual grouped bars for scp_n120-180_m150-250_k5
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:-0.41,0) rectangle (axis cs:-0.246,1.97150696257);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:0.59,0) rectangle (axis cs:0.754,3.35460189684);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:1.59,0) rectangle (axis cs:1.754,5.28993569488);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:2.59,0) rectangle (axis cs:2.754,7.54278964599);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:3.59,0) rectangle (axis cs:3.754,11.0496937511);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:-0.246,0) rectangle (axis cs:-0.082,0.943201221769);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:0.754,0) rectangle (axis cs:0.918,1.48284329891);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:1.754,0) rectangle (axis cs:1.918,2.36333058343);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:2.754,0) rectangle (axis cs:2.918,3.17386936897);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:3.754,0) rectangle (axis cs:3.918,4.77014495999);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:-0.082,0) rectangle (axis cs:0.082,1.14011241868);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:0.918,0) rectangle (axis cs:1.082,1.38096739704);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:1.918,0) rectangle (axis cs:2.082,1.63264488621);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:2.918,0) rectangle (axis cs:3.082,1.97578562757);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:3.918,0) rectangle (axis cs:4.082,2.39176307118);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:0.082,0) rectangle (axis cs:0.246,1.30229092645);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:1.082,0) rectangle (axis cs:1.246,2.21011711497);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:2.082,0) rectangle (axis cs:2.246,3.57793053906);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:3.082,0) rectangle (axis cs:3.246,5.16827411425);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:4.082,0) rectangle (axis cs:4.246,7.87951209799);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:0.246,0) rectangle (axis cs:0.41,1.47754313718);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:1.246,0) rectangle (axis cs:1.41,2.47832903651);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:2.246,0) rectangle (axis cs:2.41,3.31945058464);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:3.246,0) rectangle (axis cs:3.41,4.4659997016);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:4.246,0) rectangle (axis cs:4.41,4.93397243339);
+
+\nextgroupplot[
+    title={MIS-S},
+    xmin=-0.6, xmax=4.6,
+    xtick={0,1,2,3,4},
+    xticklabels={0.5,0.6,0.7,0.8,0.9},
+    xlabel={Fixed-variable proportion},
+    ylabel={Gap (\%)},
+    ymin=0, ymax=47.2287878788,
+]
+% manual grouped bars for mis_n100_p0.15
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:-0.41,0) rectangle (axis cs:-0.246,10.3143233578);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:0.59,0) rectangle (axis cs:0.754,13.0242800678);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:1.59,0) rectangle (axis cs:1.754,16.0517598344);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:2.59,0) rectangle (axis cs:2.754,19.8447204969);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:3.59,0) rectangle (axis cs:3.754,23.5766986637);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:-0.246,0) rectangle (axis cs:-0.082,9.00658761528);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:0.754,0) rectangle (axis cs:0.918,12.236777715);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:1.754,0) rectangle (axis cs:1.918,13.9121023904);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:2.754,0) rectangle (axis cs:2.918,17.5322793149);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:3.754,0) rectangle (axis cs:3.918,20.6058723885);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:-0.082,0) rectangle (axis cs:0.082,17.2725390551);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:0.918,0) rectangle (axis cs:1.082,22.1780538302);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:1.918,0) rectangle (axis cs:2.082,27.0135516657);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:2.918,0) rectangle (axis cs:3.082,34.1193299454);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:3.918,0) rectangle (axis cs:4.082,41.0685111989);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:0.082,0) rectangle (axis cs:0.246,9.02785620177);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:1.082,0) rectangle (axis cs:1.246,11.2446828534);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:2.082,0) rectangle (axis cs:2.246,14.1069075852);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:3.082,0) rectangle (axis cs:3.246,16.8699416526);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:4.082,0) rectangle (axis cs:4.246,20.187088274);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:0.246,0) rectangle (axis cs:0.41,17.7310370789);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:1.246,0) rectangle (axis cs:1.41,20.5853566723);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:2.246,0) rectangle (axis cs:2.41,24.3732354602);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:3.246,0) rectangle (axis cs:3.41,28.8198757764);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:4.246,0) rectangle (axis cs:4.41,29.3783173348);
+
+\nextgroupplot[
+    title={MIS-M},
+    xlabel={Fixed-variable proportion},
+    ylabel={},
+    ymin=0, ymax=1,
+]
+% manual grouped bars for mis_n200-300_p0.15
+
+\end{groupplot}
+\node[anchor=north, draw=lightgray204, fill=white, fill opacity=0.9, text opacity=1, inner sep=3pt] at ($(current bounding box.south) + (0cm, -0.45cm)$) {
+\begin{tikzpicture}[baseline]
+\matrix[matrix of nodes, nodes={anchor=west, font=\scriptsize}, column sep=8pt, row sep=3pt] {
+\tikz[baseline=-0.55ex]{\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (0,0) rectangle (0.32,0.16);} & GNN+EGG & \tikz[baseline=-0.55ex]{\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (0,0) rectangle (0.32,0.16);} & LBP+EGG & \tikz[baseline=-0.55ex]{\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (0,0) rectangle (0.32,0.16);} & LBP+GD \\
+\tikz[baseline=-0.55ex]{\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (0,0) rectangle (0.32,0.16);} & NMF+EGG & \tikz[baseline=-0.55ex]{\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (0,0) rectangle (0.32,0.16);} & NMF+GD &  &  \\
+};
+\end{tikzpicture}
+};
+\end{tikzpicture}
+\caption{Optimality gaps for fix-and-solve inference. For each dataset, bars are grouped by fixed-variable proportion.}
+\label{fig:inference_test_nair_gap_bar}
+\end{figure}

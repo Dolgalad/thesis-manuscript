@@ -1,221 +1,205 @@
 \chapter{From Structured Inference to Learned Refinement Dynamics}\label{chapter:4_denoising_and_mrf_inference}
-\chaptermark{Learned MRF Refinement}
+\chaptermark{Refinement Dynamics}
 
 \section{Introduction}
+\label{sec:chapter_4_intro}
 
-The previous chapter studied how Markov Random Fields can be used as structured prediction models for binary integer linear programs. Instead of predicting independent variable scores, the models introduced there first predicted or instantiated factor potentials and then used approximate inference to obtain marginals that reflect the dependencies induced by the constraints. These marginals were finally converted into feasible assignments by decoding procedures such as EGG and GD. This showed that graphical-model inference can provide a useful intermediate representation between neural prediction and solution construction.
+The previous chapter introduced MRF-based structured prediction models for BILPs. In that setting, a variable--constraint graph was mapped to MRF factor parameters, approximate inference produced unary marginals, and feasibility-preserving decoders converted these scores into binary assignments.
 
-This chapter moves from structured prediction by inference to structured prediction by iterative refinement. Rather than producing a single set of MRF parameters or variable marginals and decoding them immediately, we train models that define dynamics over candidate solutions. Starting from a noisy, relaxed, or randomly initialized assignment, the model is applied repeatedly so as to transform the current state into a cleaner and more solution-like representation. This viewpoint is motivated by recent denoising, diffusion, and flow-based generative models, but the generated object here is not an image or a continuous signal: it is a candidate solution to a constrained combinatorial optimization problem. As a consequence, the learned trajectory must ultimately be coupled with a decoding step that converts the final state into a feasible binary assignment.
+This chapter keeps the same separation between prediction, structured inference, and decoding, but changes how the prediction signal is produced. Instead of obtaining one score vector from a single forward pass, we study learned refinement dynamics over candidate solution states. A candidate state is represented as a vector in $[0,1]^n$, interpreted as Bernoulli parameters for the binary decision variables. The model is conditioned on the BILP instance, the current state, and a refinement time or noise level.
 
-We consider two related families of refinement models. The first family augments the MRF-based architecture of the previous chapter with a flow-based generative objective. Given an initial random assignment and a target solution, we define an interpolation path between the two and train the model either to predict the instantaneous velocity along this path or to predict the clean endpoint directly. In the velocity-prediction setting, the model is trained in a flow-matching fashion: at each time $t$, it receives the current interpolated state and predicts a direction of motion toward the target solution. At test time, generation is performed by initializing from a random Bernoulli distribution and unrolling the learned dynamics for a finite number of steps. In the direct-denoising variant, the model is trained on the same type of intermediate states but predicts the denoised solution itself rather than the velocity.
+The motivation comes from the generative and denoising viewpoint introduced in Section~\ref{sec:generative_denoising}. Here, however, the generated object is not evaluated as an unconstrained sample. It is used as a score signal for the same feasibility-preserving decoders used in the previous chapter. The question is therefore whether learned refinement produces better decoding scores than one-shot prediction.
 
-The second family follows a diffusion-inspired denoising formulation. Clean reference solutions are corrupted according to a forward noising process, and the model is trained to reconstruct the original solution from the corrupted sample, the problem instance, and the noise level. In contrast with the flow-based models, where the interpolation path gives a deterministic relation between the initial and target states, the diffusion-inspired model is trained on independently sampled corruption levels. Thus each minibatch contains reconstruction tasks of different difficulty, ranging from
-lightly corrupted solutions to highly noisy samples. This objective encourages the model to learn a denoising rule that is useful across the whole refinement trajectory. 
+We study two refinement objectives. The first is flow-based: it defines a linear path between a random Bernoulli-parameter source state and a reference solution, and trains the model either to predict the velocity along this path or to predict the clean endpoint. The second is diffusion-inspired: it corrupts reference solutions by replacement noise and trains the model to reconstruct the clean assignment. In both cases, the new feature is state conditioning: the MRF parameters depend not only on the instance, but also on the current candidate state.
 
-A central difference between this chapter and the previous one is the role of the test-time budget. In Chapter~\ref{chapter:3_differentiable_mrf_inference_for_bilps}, the main computational trade-off came from the amount and frequency of approximate inference used during Guided Decimation. Here, the learned model itself is iterative: we may decode after a small number of refinement steps, or continue unrolling the dynamics until the terminal time $t=1$. The number of unrolling steps therefore becomes a new control parameter. It affects both runtime and solution quality, and it determines how much of the final solution is produced by the learned refinement dynamics before the feasibility-preserving decoder is applied.
+The test-time budget also changes. In the previous chapter, the main inference budget came from approximate inference and repeated GD updates. Here, the learned model itself is iterative, so the number of refinement steps becomes an additional runtime--quality parameter.
 
-We keep the decoding stage deliberately close to the one used in the previous chapter. After unrolling the flow or denoising model, the final relaxed state is interpreted as a set of variable scores and decoded using the same problem-specific feasibility propagation rules for SC and MIS. This makes the comparison with the previous chapter direct: the main change is not the final decoder, but the way the scores given to the decoder are produced. As before, we evaluate the resulting assignments using relative optimality gap, feasibility, and runtime.
+The experiments use Set Cover (SC) and Maximum Independent Set (MIS), as before. These two families are useful because their decoding errors behave differently. In SC, adding sets can repair uncovered elements. In MIS, selecting one vertex immediately excludes its neighbors, making early ranking errors harder to recover from.
 
-The experiments are conducted on the same two representative problem families: SC and MIS. These problems expose different forms of constraint structure. SC contains covering constraints that allow gradual accumulation of selected sets, while MIS contains exclusion constraints where selecting one vertex immediately rules out its neighbors. This difference turns out to be important. On SC instances, the refinement models provide consistent improvements over the previous prediction methods. On MIS instances, the behavior is more nuanced: some refinement objectives improve the decoded solutions, while others are more sensitive to initialization, unrolling length, and local mistakes in the trajectory.
-
-The main empirical finding of the chapter is that denoising-based refinement is a strong mechanism for solution prediction. The MRF-augmented flow models show
-that learned continuous-time dynamics can be used to produce useful decoding signals from random Bernoulli initializations. However, the diffusion-inspired
-denoising model is the most robust of the refinement approaches studied here and outperforms most of the models introduced so far. This suggests that training on a range of independently sampled corruption levels provides a more stable learning signal than relying only on a single interpolation-based velocity target.
-
-The contributions of this chapter are as follows:
+The contributions of this chapter are:
 \begin{enumerate}
-    \item We introduce MRF-augmented flow models for binary combinatorial optimization, trained either by velocity prediction or by direct denoising of intermediate states.
+    \item a state-conditioned MRF refinement architecture in which factor parameters depend on the instance, the current Bernoulli-parameter state, and the refinement time;
 
-    \item We adapt diffusion-inspired denoising to the same BILP solution-prediction setting, using independently sampled timesteps and a reconstruction objective over corrupted reference solutions.
+    \item a flow-based refinement objective for BILP solution prediction, using both velocity prediction and direct endpoint prediction;
 
-    \item We define a decoding protocol in which samples are initialized from a random Bernoulli distribution, refined by unrolling the learned dynamics, and then converted into feasible assignments using the decoding procedures introduced in Chapter~\ref{chapter:3_differentiable_mrf_inference_for_bilps}.
+    \item a diffusion-inspired denoising objective based on replacement corruption of reference solutions;
 
-    \item We study the effect of the unrolling budget on solution quality and runtime, highlighting the difference between partial refinement and full unrolling to $t=1$.
+    \item a unified decoding protocol that evaluates refined states with the same feasibility-preserving decoders as the previous chapter;
 
-    \item We evaluate the proposed models on SC and MIS instances, showing consistent gains on SC, more complex behavior on MIS, and strong overall performance for the diffusion-inspired denoising architecture.
+    \item an empirical comparison of direct, LBP-based, and NMF-based refinement models on SC and MIS, including the effect of unrolling and backend reinference.
 \end{enumerate}
 
-\paragraph{Positioning with respect to Chapter~3}
-Chapter~\ref{chapter:3_differentiable_mrf_inference_for_bilps} used MRF inference as a structured prediction layer: a neural model predicted factor potentials, approximate inference transformed these potentials into marginals, and a decoder converted the resulting scores into a feasible assignment. The present chapter keeps the same general goal of producing constraint-aware decoding signals, but changes the role of the model. Instead of using inference to produce a single set of marginals before or during decoding, we train models that define an iterative refinement process over candidate solutions. The MRF-augmented flow and denoising models therefore shift the emphasis from \emph{structured marginal prediction} to \emph{structured trajectory learning}. This also changes the test-time trade-off: in Chapter~3 the main budget was the number and frequency of inference calls, whereas here the main budget is the number of refinement steps before decoding. The chapter can thus be read as a continuation of the previous one: it asks whether the structured information provided by MRF-based representations can be combined with denoising and flow-style dynamics to obtain better solution predictions than a single inference-and-decode pass.
+\section{State-Conditioned MRF Refinement Models}
+\label{sec:state_conditioned_mrf_refinement}
 
-\section{MRF-Augmented Flow Models}
+We first adapt the denoising and flow-matching framework of Section~\ref{sec:generative_denoising} to BILP solution prediction. The state space is the relaxed hypercube $[0,1]^n$, whose coordinates are interpreted as Bernoulli parameters for the binary decision variables. Unlike the predictors of the previous chapter, the MRF parameters are now conditioned on the current state of the refinement process. The graph encoder therefore predicts factor parameters for an MRF that changes along the refinement trajectory.
 
-The previous chapter used MRF inference as a structured prediction layer: a neural network predicted factor parameters, approximate inference transformed these
-parameters into marginal beliefs, and a decoder converted the resulting scores into a feasible assignment. In this section we introduce a refinement-based variant of the same idea. Instead of applying the model once to an instance, we condition the model on a current candidate solution state and use it to define an iterative transformation from a simple source distribution toward a solution-like endpoint.
+\subsection{Refinement states and probability path}
 
-The construction is inspired by flow matching and rectified-flow models, which learn time-dependent vector fields transporting samples from a source distribution to a data distribution \citep{lipman_flow_2022,liu_flow_2022,tong_improving_2023}. In our setting, however, the transported object is not a continuous data point such as an image. It is a relaxed representation of a binary solution to a BILP. The learned trajectory therefore lives in $[0,1]^n$, and the endpoint must still be decoded into a binary feasible assignment.
-
-We consider a supervised setting in which each training instance $\PROB$ is associated with a reference solution $y\in\{0,1\}^n$. A source state $z$ is sampled from a simple distribution over relaxed or binary assignments, and a time $t\in[0,1]$ is sampled independently of the instance data. The model receives the original instance together with an interpolated state $p_t$ and predicts either a denoised endpoint or a velocity derived from this endpoint. When the model is MRF-augmented, the prediction is not only a vector of independent variable scores: the graph encoder predicts factor parameters, LBP or NMF is run on the resulting factor graph, and the unary marginals are used as the denoised variable probabilities.
-
-\subsection{Refinement states and initialization}
-
-Let $\PROB$ be a BILP instance with $n$ binary decision variables and let $y\in\{0,1\}^n$ denote a reference solution. We define a continuous relaxation of the
-solution space by representing an assignment through a vector
+Let $\PROB$ be a BILP instance with $n$ binary decision variables, and let $\FMPREF\in\{0,1\}^n$ denote a reference solution. We represent an intermediate candidate assignment by a relaxed vector
 \begin{equation*}
-    p \in [0,1]^n,
+    \FMP \in [0,1]^n,
 \end{equation*}
-where $p_i$ is interpreted as the current probability or relaxed value assigned to $x_i=1$.
+where $\FMP_i$ is interpreted as the current relaxed score or probability that variable $i$ should be set to one.
 
-The source state $z$ is sampled componentwise from a simple distribution. In the implementation, two source distributions are supported:
+The source state $\FMSOURCESTATE$ is sampled componentwise from an uninformative relaxed distribution:
 \begin{equation}
-    z_i \sim \mathcal{U}(0,1) \qquad\text{or}\qquad z_i \sim \mathrm{Bernoulli}(\rho),
+    \FMSOURCESTATE_i \sim \mathcal{U}(0,1),
+    \qquad i=1,\ldots,n.
+    \label{eq:flow_source_distribution}
 \end{equation}
-where $\rho$ is a configurable source probability, typically $\rho=1/2$. The uniform source is the default in our implementation, while the Bernoulli source corresponds to the purely binary random initialization used in some evaluations. Both choices play the same conceptual role: they provide an unstructured initial state from which the model must recover a solution-like representation.
+This provides an initial point in $[0,1]^n$ with no instance-specific information.
 
-Given $z$, $y$, and a time $t\in[0,1]$, we use the linear probability path
+Given $\FMSOURCESTATE$, the reference solution $\FMPREF$, and a time $t\in[0,1]$, we use the linear probability path
 \begin{equation}
-    p_t = (1-t)z + t y .
+    \FMP_t = (1-t)\FMSOURCESTATE + t \FMPREF .
     \label{eq:flow_probability_path}
 \end{equation}
-Thus $p_0=z$ and $p_1=y$. Intermediate values $p_t$ are relaxed assignments in $[0,1]^n$. This path is the analogue, in the relaxed binary solution space, of the straight interpolation paths used in rectified flow and conditional flow matching.
+Thus $\FMP_0=\FMSOURCESTATE$ and $\FMP_1=\FMPREF$. Intermediate states $\FMP_t$ are relaxed assignments in $[0,1]^n$. This is the binary-solution analogue of the interpolation path introduced in Section~\ref{sec:generative_denoising}.
 
-During training, times are sampled either per problem or per variable. In the per-problem setting, a single time $t$ is sampled for each BILP instance in the minibatch and shared by all its variables. In the per-variable setting, each variable receives its own independently sampled time. Unless otherwise stated, we use the per-problem variant, since it gives each instance a coherent global noise or refinement level.
+\subsection{State-conditioned MRF architecture}
+\label{sec:state_conditioned_mrf_architecture}
 
-To condition the neural model on the current refinement state, we augment the variable--constraint graph representation of $P$. For every variable node $i$, we append the current value $p_{t,i}$ to its feature vector. When enabled, we also append the time value $t_i$. Constraint nodes receive zeros in these appended feature dimensions. The resulting graph is denoted
-\begin{equation}
-    \VCG_t = \mathrm{Augment}(\VCG, p_t, t),
-\end{equation}
-where $\VCG$ is the original variable--constraint graph. The implementation also stores $p_t$, $t$, and the source state $z$ with the augmented batch, because these quantities are needed to form the supervised flow targets. This matches the implementation, where flow features are appended only to variable nodes and where the batch stores $p_t$, $t$, and $z$ for the loss and rollout computations.
+The architecture reuses the structured prediction pipeline from Chapter~\ref{chapter:3_differentiable_mrf_inference_for_BILPs}, with one additional input: the current refinement state. The BILP instance is represented by the fixed variable--constraint graph $\VCGFULL$. As in the graph-feature representation described in Section~\ref{sec:neural_networks}, the graph structure specifies the message-passing topology, while node and edge features carry the numerical information.
 
-At test time, the same representation is used iteratively. We sample an initial state $p^{(0)}=z$, build the augmented graph $\VCG_{t_0}$, evaluate the model, update the state, and repeat this procedure for a fixed number of unrolling steps. The number of steps is therefore a test-time refinement budget. Larger budgets allow the model to move farther along the learned trajectory, but also increase the cost of producing the scores used by the final decoder.
-
-\subsection{Velocity Prediction by Flow Matching}
-
-The first training objective follows the flow-matching viewpoint. Along the linear path in Equation~\eqref{eq:flow_probability_path}, the ideal velocity is
+At time $t$, the graph structure is unchanged. We condition the model through the time-dependent feature collection
 \begin{equation}
-    u_t = \frac{d p_t}{dt} = y - z .
-    \label{eq:flow_target_velocity}
-\end{equation}
-This target does not depend on $t$ for the linear path, but the model must infer it from the current state $p_t$, the time $t$, and the problem instance $\PROB$.
-
-Let $F_\omega$ denote the MRF-augmented flow model. Given the augmented graph $\VCG_t$, the model produces an estimate of the clean endpoint,
-\begin{equation}
-    \widehat q_1 = F_\omega(\VCG_t) \in [0,1]^n .
-\end{equation}
-When the model is an MRF model, this vector is obtained from the inferred unary marginals:
-\begin{equation}
-    \widehat q_{1,i} = \widehat\MARGINAL_i(x_i=1).
-\end{equation}
-The endpoint estimate can be converted into an instantaneous velocity at time $t$ by asking which velocity would move the current point $p_t$ to the predicted endpoint at time $1$:
-\begin{equation}
-    \widehat v_t = \frac{\widehat q_1 - p_t}{1-t}.
-    \label{eq:endpoint_to_velocity}
-\end{equation}
-For numerical stability, the denominator is clipped below by a small constant $\varepsilon>0$ in the implementation.
-
-The instantaneous-velocity objective is therefore
-\begin{equation}
-    \mathcal{L}_{\mathrm{FM}}(\omega) = \mathbb{E}_{(P,y),\,z,\,t}
-    \left[
-        \ell\!\left(
-            \frac{F_\omega(H_t)-p_t}{\max(1-t,\varepsilon)},
-            y-z
-        \right)
-    \right],
-    \label{eq:instant_velocity_loss}
-\end{equation}
-where $\ell$ is a regression loss, such as mean-squared error or $\ell_1$ loss. 
-
-At inference time, we integrate the learned dynamics by an explicit Euler scheme. Starting from $p^{(0)}=z$, choose a grid
-\begin{equation}
-    0=t_0<t_1<\cdots<t_K=t_{\mathrm{end}}\leq 1,
-\end{equation}
-and let $\Delta t_k=t_{k+1}-t_k$. At step $k$, the model predicts an endpoint estimate $\widehat q_1^{(k)}=F_\omega(H_{t_k})$, which is converted into a velocity
-\begin{equation}
-    \widehat v_{t_k} = \frac{\widehat q_1^{(k)}-p^{(k)}}{\max(1-t_k,\varepsilon)}.
-\end{equation}
-The relaxed assignment is then updated as
-\begin{equation}
-    p^{(k+1)} = \Pi_{[0,1]^n}
-    \left(
-        p^{(k)} + \Delta t_k \widehat v_{t_k}
-    \right),
-    \label{eq:flow_euler_update}
-\end{equation}
-where $\Pi_{[0,1]^n}$ denotes coordinatewise clipping to the interval $[0,1]$.
-
-\subsection{Direct Denoising Along the Flow Path}
-
-The second objective uses the same interpolation path but changes the supervision target. Instead of training the model to match the velocity, we train it to predict the clean endpoint directly. The model receives the same input $\VCG_t$, containing the problem instance, the current relaxed state $p_t$, and the time $t$, but the target is now the reference solution $y$:
-\begin{equation}
-    F_\omega(H_t) \approx y .
-\end{equation}
-The corresponding denoising loss is
-\begin{equation}
-    \mathcal{L}_{\mathrm{denoise}}(\omega)
+    \FMFEATURES_t
     =
-    \mathbb{E}_{(P,y),\,z,\,t}
-    \left[
-        \ell\!\left(F_\omega(H_t), y\right)
-    \right].
-    \label{eq:flow_denoising_loss}
+    \left(
+    \{\FEATURES^V_t(i)\}_{i\in\VCGV},
+    \{\FEATURES^C_t(j)\}_{j\in\VCGC},
+    \{\FEATURES^E(i,j)\}_{(i,j)\in\VCGE}
+    \right),
 \end{equation}
-When the model outputs logits, $\ell$ is a binary cross-entropy loss. When the model outputs probabilities or MRF marginals, $\ell$ can be a mean-squared error, an $\ell_1$ loss, or the variational cross-entropy loss used for marginal-based models.
-
-Although the training target is different, the test-time rollout can still use the same endpoint-velocity update as in Equation~\eqref{eq:flow_euler_update}. The reason is that an endpoint predictor implicitly defines a velocity field: if the model believes that the terminal state should be $\widehat q_1$, then the straight-line velocity from the current state $p_t$ to that endpoint is $(\widehat q_1-p_t)/(1-t)$. Thus the direct denoising model is trained as an endpoint predictor but can be unrolled as a flow model.
-
-\subsection{Architecture and MRF-Augmented State Representation}
-
-The MRF-augmented flow architecture reuses the structured prediction pipeline from Chapter~\ref{chapter:3_differentiable_mrf_inference_for_bilps}, with one additional input: the current refinement state. The original BILP instance is represented by its variable--constraint graph $\VCGFULL$ where variable nodes correspond to decision variables and constraint nodes correspond to linear constraints. At time $t$, the graph is augmented into $\VCG_t$ by appending the
-current state $p_t$ and the time $t$ to the variable-node features.
-
-The graph encoder processes $\VCG_t$ and produces node embeddings. These embeddings are then mapped to MRF factor parameters. As in Chapter~3, unary factors are associated with variable nodes and non-unary factors with constraint nodes. The model therefore defines a time-dependent MRF
+with
 \begin{equation}
-    p_{\theta_\omega(t,p_t,\PROB)}(x\mid \PROB,p_t,t)
+    \FEATURES^V_t(i) = [\FEATURES^V(i), \FMP_{t,i}, \FMTIMEEMB(t)],
+    \qquad
+    \FEATURES^C_t(j) = [\FEATURES^C(j), 0, \FMTIMEEMB(t)].
+    \label{eq:flow_state_conditioned_features}
+\end{equation}
+The variable features therefore contain the current relaxed value of each decision variable, while the constraint features receive a zero placeholder in the same coordinate. Both variable and constraint nodes receive the same time embedding.
+
+The graph encoder processes $(\VCG,\FMFEATURES_t)$ and produces node embeddings. These embeddings are mapped to MRF factor parameters. As in Chapter~\ref{chapter:3_differentiable_mrf_inference_for_BILPs}, unary factors are associated with variable nodes and non-unary factors with constraint nodes. The model therefore defines a state-conditioned MRF
+\begin{equation}
+    p_{\EPARAM_{\NNPARAM}(\PROB,\FMP_t,t)}(\XVEC\mid \PROB,\FMP_t,t)
     \propto
     \exp\left(
-        \sum_{\alpha\in F}
+        \sum_{\FACTOR\in\FACTORSET}
         \left\langle
-            \theta_{\omega,\alpha}(\PROB,p_t,t),
-            \phi_\alpha(x_\alpha)
+            \EPARAM_{\NNPARAM,\FACTOR}(\PROB,\FMP_t,t),
+            \SSTAT_{\FACTOR}(\XVEC_{\FACTOR})
         \right\rangle
     \right),
     \label{eq:flow_time_dependent_mrf}
 \end{equation}
-where the factor parameters now depend not only on the instance $\PROB$, but also on the current refinement state $p_t$ and the time $t$.
+where the factor parameters depend on the instance, the current refinement state, and the refinement time.
 
-Approximate inference is then applied to this time-dependent MRF. With LBP, the model returns approximate unary beliefs $\widehat\MARGINAL_i(x_i)$ after a fixed number of message-passing iterations. With NMF, it returns the corresponding factorized marginals. In both cases, the flow score used by the rollout is
+This follows the approximate-inference perspective introduced in Section~\ref{sec:mrf_intro}, where LBP and NMF are used as deterministic iterative inference procedures, and the differentiable-inference viewpoint of \citet{domke_learning_2013}. With LBP, the model returns approximate unary beliefs $\widehat\MARGINAL_i(x_i)$ after a fixed number of message-passing iterations. With NMF, it returns the corresponding factorized marginals. In both cases, the endpoint score used by the rollout is
 \begin{equation}
     \widehat q_{1,i}
     =
     \widehat\MARGINAL_i(x_i=1).
     \label{eq:flow_score_from_marginal}
 \end{equation}
-Thus, the endpoint estimate is not produced independently for each variable: it is the result of running approximate inference in a factor graph whose potentials are conditioned on the current state of the refinement trajectory.
+Thus, the endpoint estimate is not produced independently for each variable. It is the result of approximate inference in a factor graph whose potentials are conditioned on the current state of the refinement trajectory.
 
-This architecture leads to two related evaluation modes. In the first mode, we run a flow rollout once, obtain a final relaxed state $p^{(K)}$, make one final model call at the projection time, and then decode the resulting scores using EGG or GD. In the second mode, used by the flow-conditioned GD backend, the decoder itself calls a flow-conditioned inference backend. Each time GD requests new beliefs, the backend constructs a source state consistent with the current decimation evidence, runs a full flow rollout, extracts the final MRF parameters, applies the evidence mask, and then runs LBP or NMF. This makes the flow model conditional not only on the original instance, but also on the partial assignment accumulated by the decoder.
+This gives the model two mechanisms for incorporating structure. First, the neural network observes the current relaxed assignment through the appended state features. Second, the MRF layer propagates local factor information through LBP or NMF before the decoder fixes variables. The flow model therefore acts as a learned refinement map over solution states, while the MRF layer preserves the constraint-aware inference mechanism introduced in the previous chapter.
 
-More explicitly, suppose that GD has already fixed a partial assignment $S\subseteq V\times\{0,1\}$. The evidence-aware source distribution enforces
+\subsection{Velocity prediction by flow matching}
+
+The first training objective follows the flow-matching viewpoint. Along the linear path in Equation~\eqref{eq:flow_probability_path}, the ideal velocity is
 \begin{equation}
-    z_i =
-    \begin{cases}
-        0, & (i,0)\in S,\\
-        1, & (i,1)\in S,\\
-        \text{random}, & i \text{ unfixed}.
-    \end{cases}
+    \FMVELOCITY_t = \frac{d \FMP_t}{dt} = \FMPREF - \FMSOURCESTATE .
+    \label{eq:flow_target_velocity}
 \end{equation}
-The flow rollout is then initialized from this evidence-aware source. After the rollout, the predicted factor parameters are masked so that assignments inconsistent with the current evidence receive negligible probability, and LBP or NMF is run on the conditioned MRF. The resulting beliefs are returned to the same decimation rule used in Chapter~3.
+This target does not depend on $t$ for the linear path, but the model must infer it from the current state $\FMP_t$, the time $t$, and the problem instance $\PROB$.
 
-This gives the model two mechanisms for incorporating structure. First, the neural network observes the current relaxed assignment through the appended flow features. Second, the MRF layer propagates the resulting local factor information through LBP or NMF before the decoder chooses the next variables to fix. The flow model therefore acts as a learned refinement map over solution states, while the MRF layer preserves the constraint-aware inference mechanism introduced in the previous chapter.
+In the implementation used here, the model predicts an endpoint estimate and the velocity is obtained from that endpoint. Given the fixed graph and the time-dependent feature collection, let
+\begin{equation}
+    \widehat \FMPRED_1 = \FMMODEL(\VCG, \FMFEATURES_t) \in [0,1]^n
+\end{equation}
+denote the predicted clean endpoint. For MRF-augmented models, this endpoint is the vector of unary beliefs defined in Equation~\eqref{eq:flow_score_from_marginal}.
+
+The endpoint estimate defines an instantaneous velocity at time $t$ by asking which straight-line velocity would move the current point $\FMP_t$ to the predicted endpoint at time $1$:
+\begin{equation}
+    \widehat \FMPREDVELOCITY_t = \frac{\widehat \FMPRED_1 - \FMP_t}{1-t}.
+    \label{eq:endpoint_to_velocity}
+\end{equation}
+In practice, this expression is evaluated only for timesteps bounded away from $t=1$ during velocity prediction, or with a small numerical safeguard in the denominator.
+
+The instantaneous-velocity objective is therefore
+\begin{equation}
+    \FMLOSS(\omega) = \mathbb{E}_{(\PROB,\FMPREF),\,\FMSOURCESTATE,\,t}
+    \left[
+        \ell\!\left(
+            \frac{\FMMODEL(\VCG,\FMFEATURES_t)-\FMP_t}{1-t},
+            \FMPREF-\FMSOURCESTATE
+        \right)
+    \right],
+    \label{eq:instant_velocity_loss}
+\end{equation}
+where $\ell$ is a regression loss, such as mean-squared error or $\ell_1$ loss.
+
+At inference time, we integrate the learned dynamics by an explicit Euler scheme. Starting from $\FMP^{(0)}=\FMSOURCESTATE$, choose a grid
+\begin{equation}
+    0=t_0<t_1<\cdots<t_K=t_{\mathrm{end}}\leq 1,
+\end{equation}
+and let $\Delta t_k=t_{k+1}-t_k$. At step $k$, the model predicts an endpoint estimate
+\begin{equation*}
+    \widehat \FMPRED_1^{(k)}
+    =
+    \FMMODEL(\VCG, \FMFEATURES_{t_k}),
+\end{equation*}
+which is converted into a velocity
+\begin{equation}
+    \widehat \FMPREDVELOCITY_{t_k}
+    =
+    \frac{\widehat \FMPRED_1^{(k)}-\FMP^{(k)}}{1-t_k}.
+\end{equation}
+The relaxed assignment is then updated as
+\begin{equation}
+    \FMP^{(k+1)}
+    =
+    \FMP^{(k)} + \Delta t_k \widehat \FMPREDVELOCITY_{t_k}.
+    \label{eq:flow_euler_update}
+\end{equation}
+The state is optionally clipped to $[0,1]^n$ before being passed to the next refinement step.
+
+\subsection{Direct denoising along the flow path}
+
+The second flow objective uses the same interpolation path but changes the supervision target. Instead of training the endpoint-induced velocity to match Equation~\eqref{eq:flow_target_velocity}, we train the model to predict the clean endpoint directly. The model receives the same input $\FMFEATURES_t$, containing the problem instance, the current relaxed state $\FMP_t$, and the time $t$, but the target is now the reference solution:
+\begin{equation}
+    \FMMODEL(\VCG, \FMFEATURES_t) \approx \FMPREF .
+\end{equation}
+The corresponding denoising loss is
+\begin{equation}
+    \FMDLOSS(\omega)
+    =
+    \mathbb{E}_{(\PROB,\FMPREF),\,\FMSOURCESTATE,\,t}
+    \left[
+        \ell\!\left(\FMMODEL(\VCG, \FMFEATURES_t), \FMPREF \right)
+    \right].
+    \label{eq:flow_denoising_loss}
+\end{equation}
+When the model outputs logits, $\ell$ is a binary cross-entropy loss. When the model outputs probabilities or MRF marginals, $\ell$ can be a mean-squared error, an $\ell_1$ loss, or the marginal cross-entropy loss used for the MRF-based models in Chapter~\ref{chapter:3_differentiable_mrf_inference_for_BILPs}.
+
+Although the training target is different, the test-time rollout can still use the same endpoint-velocity update as in Equation~\eqref{eq:flow_euler_update}. The reason is that an endpoint predictor implicitly defines a velocity field: if the model predicts terminal state $\widehat \FMPRED_1$, then the straight-line velocity from the current state $\FMP_t$ to that endpoint is $(\widehat \FMPRED_1-\FMP_t)/(1-t)$. Thus the direct denoising model is trained as an endpoint predictor but can be unrolled as a flow model.
 
 \section{Diffusion-Inspired Denoising Model}
+\label{sec:diffusion_inspired_denoising_model}
 
-The flow models introduced in the previous section define a deterministic refinement path between a simple source state and a reference solution. We now consider a second refinement strategy, inspired by denoising diffusion models. The central idea is to train a model to recover a clean solution from a corrupted one. Instead of learning a velocity field along an interpolation path, the model is exposed to noisy versions of reference solutions and is trained to predict the original assignment.
+The second refinement objective is a pseudo-diffusion denoising task. Unlike the flow models, which train on points along a source-to-solution path, the denoising model is trained on corrupted reference solutions. The goal is to reconstruct the clean assignment from the corrupted state, the timestep, and the BILP instance. We use the term diffusion-inspired because the procedure uses timestep-conditioned corruption and denoising, but the test-time sampler is a heuristic reverse denoising loop rather than an exact learned reverse Markov chain.
 
-This approach is particularly natural for binary combinatorial optimization. A solution can be represented as a binary vector $y\in\{0,1\}^n$, and corruption can be interpreted as randomly destroying part of the information contained in this vector. The denoising model must then infer which variables should be selected by using both the corrupted assignment and the structure of the optimization instance. In this sense, denoising is not merely a variable-wise reconstruction task: the model must learn how feasibility constraints and objective information restrict the set of plausible clean solutions.
+This section only specifies the corruption and evaluation procedure used in our experiments. The general denoising motivation was introduced in Section~\ref{sec:generative_denoising}.
 
-Diffusion-based approaches have recently been adapted to combinatorial optimization by treating candidate solutions as discrete or relaxed objects that can be
-gradually corrupted and reconstructed \citep{sun_difusco_2023}. The model studied here follows this general perspective, but we use it primarily as a learned denoising mechanism for producing solution scores. The final output is still decoded using the same feasibility-preserving procedures as in the previous models. Thus, as with the flow-based approach, the denoising model produces a structured prediction signal, while the decoder is responsible for converting this signal into a feasible binary assignment.
+\subsection{Replacement corruption process}
+\label{subsec:replacement_corruption_process}
 
-\subsection{Forward Corruption Process}
+Let $\PROB$ be a BILP instance and let $y\in\{0,1\}^n$ be a reference solution. We use a discrete timestep $t\in\{0,\ldots,T-1\}$ and a signal-preservation coefficient $\bar{\alpha}_t$. Larger timesteps correspond to stronger corruption.
 
-Let $P$ be a BILP instance and let $y\in\{0,1\}^n$ be a reference solution. The forward corruption process defines a family of noisy assignments
-\begin{equation}
-    y_t \sim q(\cdot \mid y,t),
-\end{equation}
-indexed by a discrete timestep $t\in\{0,\ldots,T-1\}$. Small timesteps correspond to lightly corrupted solutions, while large timesteps correspond to states in which much of the information about the original solution has been removed.
-
-We consider a corruption process acting independently on the components of the solution vector. For each variable $i$, the clean value $y_i$ is either kept or corrupted according to a timestep-dependent noise level. A convenient form is a replacement corruption:
+In the experiments, we use replacement corruption. For each variable $i$,
 \begin{equation}
     y_{t,i}
     =
@@ -224,135 +208,79 @@ We consider a corruption process acting independently on the components of the s
         \xi_i, & \text{with probability } 1-\bar{\alpha}_t,
     \end{cases}
     \qquad
-    \xi_i \sim \mathrm{Bernoulli}(1/2),
+    \xi_i \sim \mathrm{Bernoulli}(1/2).
     \label{eq:diffusion_replace_corruption}
 \end{equation}
-where $\bar{\alpha}_t$ is a decreasing signal-preservation coefficient. At early timesteps, $\bar{\alpha}_t$ is close to one, so the corrupted sample remains close to the reference solution. At late timesteps, $\bar{\alpha}_t$ is smaller, and many variables are replaced by random binary values.
+The corruption acts independently across variables. Thus, the corrupted vector keeps part of the reference solution and replaces the remaining entries by unbiased binary noise.
 
-An alternative corruption mechanism is bit-flipping:
+The schedule is constructed from per-step noise levels $\beta_t$, with $\alpha_t=1-\beta_t$ and
 \begin{equation}
-    y_{t,i}
-    =
-    \begin{cases}
-        1-y_i, & \text{with probability } \beta_t,\\
-        y_i, & \text{with probability } 1-\beta_t,
-    \end{cases}
-    \label{eq:diffusion_flip_corruption}
+    \bar{\alpha}_t = \prod_{\tau=0}^t \alpha_\tau .
 \end{equation}
-where $\beta_t$ increases with $t$. Both views define a sequence of reconstruction tasks of increasing difficulty. The replacement corruption is closer to a masking or information-destruction process, while the flipping corruption creates adversarially wrong binary values. In both cases, the model observes a corrupted solution and must infer a plausible clean assignment from the instance structure.
+We use either a linear or cosine schedule for $\beta_t$. The implementation then corrupts each variable by keeping the clean value with probability $\bar{\alpha}_t$ and otherwise replacing it by a Bernoulli$(1/2)$ draw.
 
-The noise schedule controls how quickly information is destroyed as $t$ increases. For example, one may use a linear schedule, where the corruption level increases at a constant rate, or a smoother nonlinear schedule that corrupts the solution more slowly at the beginning and more strongly near the end. The precise schedule is a hyperparameter of the method. Its role is to distribute training examples across different noise levels, so that the denoiser learns both local repair of nearly correct solutions and global reconstruction from highly noisy inputs.
+The corrupted assignment is appended as an additional variable-node feature. When timestep conditioning is enabled, the normalized timestep $t/(T-1)$ is appended as a second additional variable-node feature. Non-variable nodes receive zeros in these added feature coordinates.
 
-The corrupted vector $y_t$ is then provided to the model as an additional variable-level signal. Conceptually, the input at timestep $t$ is the pair
-\begin{equation*}
-    (\PROB,y_t,t),
-\end{equation*}
-where $\PROB$ gives the optimization instance, $y_t$ gives the current noisy assignment, and $t$ indicates the corruption level. The model must combine these three sources of information: the graph structure and coefficients of the instance, the current state of the candidate solution, and the amount of noise that has been applied.
+\subsection{Denoising objective}
+\label{subsec:diffusion_denoising_objective}
 
-\subsection{Denoising Objective}
+Let $D_\omega(\PROB,y_t,t)$ denote the model output. Depending on the architecture, this output may be direct variable scores or MRF-derived unary marginals. In all cases, it is interpreted as a vector of scores for the clean assignment.
 
-The denoising model is trained to reconstruct the clean solution from its corrupted version. Let
-\begin{equation*}
-    D_\omega(\PROB,y_t,t)
-\end{equation*}
-denote the model prediction at timestep $t$. Depending on the architecture, this prediction may be a vector of variable logits, variable probabilities, or MRF-derived marginals. In all cases, the output is interpreted as a score indicating whether each variable should be set to one in the clean solution.
-
-The basic denoising objective is
+During training, timesteps are sampled independently for the variables, and the model is trained to reconstruct the original solution:
 \begin{equation}
     \mathcal{L}_{\mathrm{diff}}(\omega)
     =
-    \mathbb{E}_{(P,y),\,t,\,y_t\sim q(\cdot\mid y,t)}
-    \left[
-        \ell\bigl(D_\omega(P,y_t,t),y\bigr)
-    \right],
-    \label{eq:diffusion_denoising_loss}
-\end{equation}
-where $\ell$ is a reconstruction loss. For binary outputs, a natural choice is the componentwise binary cross-entropy:
-\begin{equation}
-    \ell(\hat{p},y)
-    =
-    -
-    \sum_{i=1}^n
-    \left[
-        y_i\log \hat{p}_i
-        +
-        (1-y_i)\log(1-\hat{p}_i)
-    \right],
-    \label{eq:diffusion_bce}
-\end{equation}
-where $\hat{p}_i$ is the predicted probability that $x_i=1$. When the model produces MRF marginals, $\hat{p}_i$ corresponds to the inferred unary belief $\hat{\mu}_i(x_i=1)$. Other reconstruction losses can also be used when the output is treated as a relaxed probability vector.
-
-This objective differs from the velocity-prediction objective of the flow model. In flow matching, the target is a direction of motion along a path from noise to data. In the diffusion-inspired denoising model, the target is always the clean solution itself. The timestep changes the difficulty of the reconstruction problem, but not the object being predicted. The model is therefore trained to answer the question: given this instance and this corrupted assignment, what clean solution is most plausible?
-
-At test time, the denoising model can be used in several ways. The simplest use is one-shot denoising: a noisy assignment is provided at a chosen timestep, the model predicts clean variable scores, and these scores are decoded into a feasible solution. A more generative use applies the denoiser iteratively. Starting from a highly corrupted or random assignment, the model is evaluated at decreasing timesteps, producing a sequence
-\begin{equation}
-    y_T \rightarrow y_{T-1} \rightarrow \cdots \rightarrow y_0 .
-\end{equation}
-At each step, the model prediction defines a new candidate assignment, either by thresholding the predicted probabilities or by sampling from them. The final state is then passed to the same feasibility-preserving decoder used for the other models.
-
-This iterative procedure should be understood as a learned refinement heuristic rather than an exact reverse diffusion sampler. The model is trained to reconstruct clean solutions from noisy inputs, and repeated application of this denoising rule provides a way to progressively transform an unstructured binary state into a more solution-like one. The final feasibility and objective quality are then determined by the interaction between the denoising trajectory and the downstream decoder.
-
-\subsection{Independent Timestep Sampling}
-
-A key design choice is how timesteps are sampled during training. Rather than training on a fixed corruption level, we sample timesteps independently for the training examples. This means that each minibatch contains a mixture of reconstruction tasks: some samples are only slightly corrupted, while others are heavily corrupted. The training objective can therefore be written as
-\begin{equation}
-    \mathcal{L}_{\mathrm{diff}}(\omega)
-    =
-    \mathbb{E}_{(P,y)}
-    \mathbb{E}_{t\sim \mathcal{U}\{0,\ldots,T-1\}}
+    \mathbb{E}_{(\PROB,y)}
+    \mathbb{E}_{t}
     \mathbb{E}_{y_t\sim q(\cdot\mid y,t)}
     \left[
-        \ell\bigl(D_\omega(P,y_t,t),y\bigr)
+        \ell\bigl(D_\omega(\PROB,y_t,t),y\bigr)
     \right].
-    \label{eq:diffusion_independent_t_loss}
+    \label{eq:diffusion_denoising_loss}
 \end{equation}
+For binary variable-score outputs, $\ell$ is a reconstruction loss such as binary cross-entropy. For MRF-based models, the predicted scores are the unary marginals produced by LBP or NMF.
 
-This sampling strategy has two advantages. First, it prevents the model from specializing to a single noise level. The denoiser must learn both small corrective
-moves near the data distribution and larger reconstruction moves from strongly corrupted assignments. Second, it makes the training signal more diverse: variables and instances are observed under many different corruption patterns, forcing the model to rely on the optimization structure rather than memorizing a fixed perturbation pattern.
+\subsection{Test-time use}
+\label{subsec:diffusion_test_time_use}
 
-In the context of combinatorial optimization, this is especially useful because different noise levels correspond to different algorithmic regimes. At low noise, the task resembles local repair: most variables are already correct, and the model must identify the few components that are inconsistent with the learned solution structure. At high noise, the task resembles solution construction: the corrupted assignment may contain little reliable information, and the model must infer a high-quality assignment mostly from the instance itself. Training across the full range of timesteps therefore encourages a single model to act both as a repair heuristic and as a global predictor.
+At validation time, the model is evaluated as a one-shot denoiser: a clean reference solution is corrupted at one or more fixed timesteps, the model predicts clean scores, and these scores are greedily decoded. This is not an exact reverse diffusion sampler.
 
-The timestep is also provided to the model as part of the input. This allows the same network to adapt its behavior to the corruption level. For small $t$, the denoiser can trust the input assignment more strongly and focus on correcting local errors. For large $t$, it should rely more heavily on the graph representation, objective coefficients, and constraint structure of the instance. The timestep-conditioned model therefore learns a family of denoising maps indexed by the corruption level:
-\begin{equation}
-    D_\omega(\cdot,\cdot,0),
-    D_\omega(\cdot,\cdot,1),
-    \ldots,
-    D_\omega(\cdot,\cdot,T-1).
-\end{equation}
+At test time, we evaluate two related uses. First, a corrupted reference solution is denoised either directly or through the iterative pseudo-diffusion procedure. Second, a pure random binary state can be used as the initial state. In the iterative procedure, the model is evaluated from the chosen starting timestep down to zero. At each step, the model predicts scores, these scores are converted to probabilities if necessary, and a new binary state is sampled or thresholded. No additional forward corruption is applied inside this reverse loop.
 
-This independent timestep sampling distinguishes the diffusion-inspired model from the flow models of the previous section. The flow models are trained along an
-interpolation path between a sampled source state and a reference solution. The diffusion-inspired model is trained on corrupted versions of the reference solution itself, with the corruption level sampled independently for each training example. Empirically, this produces a robust denoising signal and gives the model a broad range of refinement behaviors, from local correction to near-complete reconstruction.
+The final binary state or final model scores are then passed to the same feasibility-preserving decoders used for the flow models. This procedure should be interpreted as a learned denoising heuristic, not as an exact probabilistic reverse process.
 
 \section{Decoding by Unrolling and Feasibility-Preserving Rounding}
+\label{sec:chapter_4_unrolling_decoding}
 
-The flow and denoising models described above produce relaxed solution states or variable scores. These outputs are not, by themselves, guaranteed to be feasible binary solutions of the original BILP. As in the previous chapter, we therefore separate \emph{prediction} from \emph{decoding}. The learned refinement model produces a score vector, while a feasibility-preserving decoder converts this vector into a valid assignment.
+The flow and denoising models produce relaxed states, binary states, or variable scores depending on the evaluation mode. These outputs are not guaranteed to be feasible BILP solutions. We therefore keep the same separation between prediction and decoding used earlier in the thesis: the learned model produces a score signal, and a feasibility-preserving decoder converts it into a valid assignment.
 
-This separation is important for two reasons. First, the intermediate states of the flow and denoising processes lie in a relaxed or noisy space: they may contain fractional values, stochastic samples, or assignments that violate constraints. Second, the decoding procedure allows us to compare the refinement models fairly with the models introduced in Chapter~3. We keep the final decoding mechanisms fixed and study how the quality of the scores changes when they are produced by iterative refinement rather than by a single prediction or inference pass.
+This separation is important because the intermediate refinement states may be fractional, stochastic, or constraint-violating. It also allows the experiments to isolate the effect of the refinement model itself: the final decoding mechanisms are fixed, while the score-generation process changes from one-shot prediction to learned refinement.
 
-The decoding pipeline used in this chapter has three stages. We first initialize a candidate state from a simple random distribution. We then unroll the learned flow or denoising dynamics for a prescribed number of steps. Finally, we interpret the resulting state as variable scores and apply the same feasibility-preserving decoders as before.
+The decoding pipeline has three stages. We initialize a candidate state, unroll the learned flow or denoising dynamics for a prescribed number of steps, and decode the resulting state or scores with EGG, GD, or backend reinference.
 
 \subsection{Random Bernoulli Initialization}
 
-At test time, the refinement process starts from an unstructured relaxed assignment.
-Unless otherwise stated, we sample
+For the flow models, test-time refinement starts from an unstructured vector of Bernoulli parameters. Unless otherwise stated, we sample
 \begin{equation}
     p^{(0)}_i \sim \mathcal{U}(0,1),
     \qquad i=1,\ldots,n.
     \label{eq:uniform_initialization}
 \end{equation}
-The initial vector therefore lies in $[0,1]^n$ and can be interpreted as a random probability vector over the binary variables. This initialization contains no information about the instance beyond the number of variables. It tests whether the learned dynamics can transform a random relaxed state into a useful prediction signal for the decoder.
+The vector $p^{(0)}\in[0,1]^n$ is not a binary assignment. Instead, each coordinate parameterizes an independent Bernoulli distribution over the corresponding decision variable. This is the sense in which the source state is a random Bernoulli initialization.
 
-For the flow models, the random vector is interpreted as the initial point of the trajectory:
+For the flow models, this vector is the source state:
 \begin{equation}
-    p^{(0)} = x^{(0)}.
+    p^{(0)} = \FMSOURCESTATE .
 \end{equation}
-The model is then unrolled forward in time, producing a sequence of relaxed probability vectors
+The model is then unrolled forward in time, producing a sequence of relaxed Bernoulli-parameter vectors
 \begin{equation}
     p^{(0)}, p^{(1)}, \ldots, p^{(K)} \in [0,1]^n.
 \end{equation}
-For the diffusion-inspired denoising model, the same random initialization can be viewed as a highly corrupted assignment. The denoising model is then applied iteratively at decreasing timesteps, producing a sequence of increasingly refined candidate states.
+The final vector is interpreted as variable-wise scores or Bernoulli parameters and is passed to a feasibility-preserving decoder.
 
-This random initialization makes the evaluation genuinely generative: the model is not simply repairing a perturbed version of the reference solution. It must produce useful scores from a state that is initially unrelated to the target assignment. In some diagnostic evaluations, we also initialize from corrupted reference solutions in order to measure denoising ability under controlled noise levels. However, the main solution-generation setting starts from random Bernoulli samples.
+For the diffusion-inspired denoising model, the test-time initialization depends on the evaluation mode. In the corrupted-reference setting, the initial state is obtained by applying the replacement corruption process of Equation~\eqref{eq:diffusion_replace_corruption} to a reference solution. In the pure-noise setting, the initial state is a binary vector sampled independently from $\mathrm{Bernoulli}(1/2)$. The denoising model is then applied from the chosen initial timestep down to zero, and the resulting state or scores are decoded.
+
+Thus, random Bernoulli-parameter initialization is the source distribution for the flow models. The diffusion-inspired models instead test denoising from either corrupted reference assignments or pure binary noise.
 
 \subsection{Full and Partial Unrolling}
 
@@ -364,7 +292,26 @@ and apply the learned update rule along this grid. For the diffusion-inspired mo
 
 When $t_{\mathrm{end}}=1$, the flow model is fully unrolled to the terminal time. We refer to this setting as \emph{full unrolling}. The resulting vector is intended to approximate the endpoint of the learned transport process. In contrast, \emph{partial unrolling} stops the dynamics earlier, with $t_{\mathrm{end}}<1$ or with fewer refinement steps. The decoder is then applied to an intermediate state.
 
-Partial unrolling is useful for two reasons. First, it defines a runtime--quality trade-off. Fewer refinement steps reduce inference time, but may provide weaker scores. Second, the best decoded solution need not always be obtained after the longest possible rollout. In discrete optimization, a relaxed trajectory can drift toward high-confidence but structurally poor assignments, especially when the model is iterated beyond the regime in which it was most accurate. Evaluating several unrolling budgets therefore allows us to study whether refinement improves monotonically or whether early decoding can sometimes be preferable.
+Partial unrolling is useful for two reasons. First, it defines a runtime--quality trade-off. Fewer refinement steps reduce inference time, but may provide weaker scores. Second, the best decoded solution need not always be obtained after the longest possible rollout. In discrete optimization, a relaxed trajectory can drift toward high-confidence but structurally poor assignments, especially when the model is iterated beyond the regime in which it was most accurate. 
+
+\subsection{Backend reinference during decimation}
+\label{subsec:backend_reinference_decimation}
+
+For MRF-based refinement models, we also evaluate a backend variant in which GD requests updated beliefs during decimation. This follows the same decimation interface as the previous chapter, but the backend is now state-conditioned.
+
+When GD has fixed a partial assignment $S\subseteq \VCGV\times\{0,1\}$, the backend constructs an evidence-consistent source state:
+\begin{equation}
+    p^{(0)}_i =
+    \begin{cases}
+        0, & (i,0)\in S,\\
+        1, & (i,1)\in S,\\
+        \text{random}, & i \text{ is unfixed}.
+    \end{cases}
+    \label{eq:evidence_conditioned_source_state}
+\end{equation}
+The refinement model is then evaluated from this state, and approximate inference is run under the same evidence-clamping mechanism used previously. The resulting beliefs are returned to the GD rule.
+
+This variant tests whether learned refinement remains useful when combined with adaptive decimation. It is more expensive than decoding a single refined score vector, because the backend may repeat refinement and inference during one GD pass.
 
 The generic unrolling-and-decoding procedure is summarized in Algorithm~\ref{alg:unroll_decode}.
 
@@ -393,6 +340,7 @@ $\hat{x} \leftarrow \mathrm{Dec}(P,s^{(K)})$\;
 \end{algorithm}
 
 \section{Main Results}
+\label{sec:chapter_4_main_results}
 
 We now report the main experimental results for the flow-based refinement models. The results are summarized in Table~\ref{tab:flow_inference_results}. We compare direct variable-score flow models, denoted DGN, with MRF-augmented flow models using either LBP or NMF inference. The suffix ``-v'' denotes models trained with the velocity-prediction objective, while the suffix ``-q'' denotes models trained to predict the denoised endpoint directly.
 
@@ -401,6 +349,19 @@ For each model, we report three decoding variants. First, the raw rollout sample
 Across the experiments, the most consistent pattern is that MRF-augmented flow models produce substantially better decoding signals than direct variable-score flow models. This is especially clear on Set Cover, where the FMRF-LBP variants achieve low relative gaps and high raw-sample feasibility. The difference between velocity prediction and direct endpoint denoising is generally smaller than the difference between factorized prediction and MRF-augmented prediction, suggesting that the structured inference layer is the main source of improvement in these experiments.
 
 \input{resources/tab/chapter_4/flow_inference_results.tex}
+
+\subsection{Runtime--quality trade-offs for flow decoders}
+\input{resources/tikz/chapter_4/flow_fix_and_solve_pareto.tex}
+
+Figure~\ref{fig:flow_fix_and_solve_pareto} summarizes the runtime--quality trade-offs for the flow-based models. Each point corresponds to a model--decoder combination, with runtime on the horizontal axis and relative gap on the vertical axis. The dashed curve marks the non-dominated frontier within each dataset: points on this curve are not simultaneously worse in both runtime and solution quality than another evaluated configuration.
+
+This figure complements Table~\ref{tab:flow_inference_results}. The table reports averaged metrics for each method, whereas the Pareto plot shows which configurations remain competitive once runtime is considered. This is important because backend GD and repeated refinement can reduce the gap, but they also add substantial computational cost.
+
+On Set Cover, the Pareto frontier is dominated by MRF-augmented flow models, especially the LBP-based variants. Direct DGN flow models are fast but remain at larger gaps. FMRF-LBP variants move the frontier downward, showing that the additional structured inference cost can be justified when solution quality is prioritized. The NMF-based variants generally occupy an intermediate region: they improve over direct flow prediction, but are often dominated by LBP-based configurations.
+
+On MIS, the trade-off is less favorable. MRF-augmented flow models improve over direct flow prediction, but the best low-gap points require more expensive decoding. This is consistent with the table-based results: refinement helps produce better scores, but the exclusion structure of MIS makes sequential decoding more sensitive to early ranking errors. As a result, the runtime cost of backend or more elaborate decoding is less uniformly rewarded than on Set Cover.
+
+Overall, the Pareto plot supports the main interpretation of the flow experiments. The value of the proposed models is not only that they improve average gap, but that they shift the runtime--quality frontier for Set Cover. For MIS, the improvement is present but more constrained by the interaction between refined scores and irreversible decoding decisions.
 
 \subsection{Set Cover Results}
 
@@ -418,32 +379,64 @@ The backend GD variant provides a different trade-off. On SC-S, recomputing the 
 
 The Maximum Independent Set results are more mixed. On MIS-S, the direct DGN flow baselines obtain gaps above $22\%$, which is comparable to the difficulty of factorized prediction observed in the previous chapter. The FMRF-LBP models improve over these baselines, especially when decoded with EGG. In particular, the direct endpoint FMRF-LBP model obtains an EGG gap around $14.3\%$, which is the best flow result reported for MIS-S in Table~\ref{tab:flow_inference_results}.
 
-However, the behavior of GD is less favorable on MIS than on SC. For FMRF-LBP, moving from EGG to GD does not consistently improve the result, and for the NMF variants it substantially worsens the gap. This contrasts with the results of Chapter~3, where GD was often beneficial because conditioning the MRF on partial assignments provided updated marginals for the remaining variables. In the flow setting, the additional refinement and conditioning steps appear to be less stable for MIS.
+However, the behavior of GD is less favorable on MIS than on SC. For FMRF-LBP, moving from EGG to GD does not consistently improve the result, and for the NMF variants it substantially worsens the gap. This contrasts with the results of Chapter~\ref{chapter:3_differentiable_mrf_inference_for_BILPs}, where GD was often beneficial because conditioning the MRF on partial assignments provided updated marginals for the remaining variables. In the flow setting, the additional refinement and conditioning steps appear to be less stable for MIS.
 
 This behavior is consistent with the structure of the MIS problem. MIS is governed by hard pairwise exclusion constraints: selecting one vertex immediately rules out all of its neighbors. A small error early in the construction process can therefore remove many useful candidate vertices and lead the decoder toward a poor maximal independent set. In Set Cover, by contrast, the consequences of adding a set are often less brittle, since additional selected sets can still repair uncovered elements. The MIS results therefore highlight a limitation of the refinement approach: a learned trajectory that produces useful scores on average may still interact poorly with a sequential decoder when early decisions have strong irreversible effects.
 
 The feasibility of the raw rollout samples also shows an interesting pattern. FMRF-LBP produces feasible raw samples much more often than the DGN baselines, with feasibility rates above $50\%$ on MIS-S. Nevertheless, this does not directly translate into very low optimality gaps. Feasibility alone is therefore not enough: for MIS, the model must also rank competing feasible assignments well enough for the decoder to select a large independent set.
 
-Overall, the MIS results show that MRF-augmented flow models can improve over factorized flow predictors, but they do not yet reproduce the strong gains obtained by MRF inference and guided decimation in Chapter~3. This suggests that, for packing problems with exclusion constraints, the interaction between refinement dynamics and sequential decoding remains a central challenge.
+Overall, the MIS results show that MRF-augmented flow models can improve over factorized flow predictors, but they do not yet reproduce the strong gains obtained by MRF inference and guided decimation in Chapter~\ref{chapter:3_differentiable_mrf_inference_for_BILPs}. This suggests that, for packing problems with exclusion constraints, the interaction between refinement dynamics and sequential decoding remains a central challenge.
 
-\subsection{Comparison with Chapter 3 Models}
+\subsection{Diffusion-Inspired Denoising Results}
+\label{subsec:diffusion_denoising_results}
 
-Table~\ref{tab:mrf_nair_inference_results} reports the corresponding Chapter~3 results for the non-flow MRF and DGN models. Comparing the two tables clarifies what the flow models add and where they remain limited.
+\input{resources/tab/chapter_4/denoising_inference_results.tex}
 
-On Set Cover, the flow models substantially improve over the direct DGN baselines. For example, on SC-M, DGN in Chapter~3 obtains an EGG gap around $10.3\%$, while the FMRF-LBP flow models reduce the EGG gap to below $3\%$. This is also a large improvement over the DGN flow baselines in Table~\ref{tab:flow_inference_results}. Thus, when the same decoding strategy is used, the learned flow refinement produces much stronger scores than direct factorized prediction.
+Table~\ref{tab:denoising_inference_results} reports the completed denoising results. At this stage, only the Set Cover rows are complete and numerically meaningful. The incomplete MIS rows, as well as placeholder values such as $-100$, are excluded from the discussion and will be revisited once the corresponding experiments are complete.
 
-Compared with the strongest Chapter~3 MRF-GD models, the picture is more nuanced. On SC-S, Chapter~3 LMRF-LBP with GD obtains a gap below $1\%$, while the best flow backend GD result is slightly higher, around $1.3\%$. On SC-M, the Chapter~3 LMRF-LBP GD model remains particularly strong, with a gap around $0.27\%$, whereas the flow models obtain larger gaps. This means that the flow models do not uniformly replace the Chapter~3 inference-and-decoding approach. Rather, they provide a strong alternative way of producing high-quality scores, especially under EGG or single-rollout decoding, but repeated MRF-guided decimation from Chapter~3 can still be superior when its computational cost is acceptable.
+On SC-S, the denoising models show the same broad pattern as the flow models: MRF-augmented denoising produces substantially better decoding signals than the direct denoising baseline. The direct DDGN model obtains an EGG and GD gap of approximately $8.3\%$, while DLBP reduces the GD gap to approximately $0.68\%$ and DNMF reduces it to approximately $1.86\%$. Thus, for small Set Cover instances, the strongest completed denoising result is obtained by combining denoising with LBP-based MRF inference.
 
-The comparison is different for EGG. Since EGG uses a fixed score vector during decoding, it directly tests the quality of the scores produced by the model before any adaptive reinference. Under this protocol, the flow models are very competitive. On SC-M, FMRF-LBP flow models obtain EGG gaps around $2.9\%$, improving over the Chapter~3 LMRF-LBP EGG gap of about $5.0\%$. This suggests that flow refinement is particularly useful as a way to produce a stronger one-shot decoding signal.
+The raw feasibility rates support the same interpretation. DDGN produces feasible samples in only $7.4\%$ of SC-S instances, whereas DLBP produces feasible samples in approximately $88.9\%$ of cases. DNMF improves over DDGN but remains much lower than DLBP, with a feasibility rate of approximately $30.7\%$. This suggests that the LBP-based MRF layer does more than improve the final decoded objective value: it also guides the denoising trajectory toward states that are already much more compatible with the Set Cover constraints before projection.
 
-On MIS-S, the best FMRF-LBP flow EGG result improves over both the DGN baseline and the Chapter~3 LMRF-LBP EGG result. However, Chapter~3 GD remains much stronger than the flow-based GD variants. The Chapter~3 MRF models benefit from conditioning directly on the partial assignment during guided decimation, whereas the flow-based refinement dynamics appear harder to stabilize under repeated decoding updates.
+On SC-M, the same qualitative conclusion holds, but the differences between the inference backends become sharper. DDGN obtains an EGG and GD gap of approximately $10.5\%$, while DLBP achieves a GD gap close to zero, approximately $-0.23\%$, and an IR gap of approximately $0.87\%$. DNMF again improves over DDGN, but remains weaker than DLBP, with a GD gap of approximately $2.33\%$ and an IR gap of approximately $5.49\%$. The negative average gap for DLBP should be interpreted as a numerical outcome of the evaluation protocol, not as evidence that the model violates optimality; it most likely reflects comparison against reference solutions that are not always certified optimal, numerical tolerances, or solver/reference variability.
 
-The overall conclusion is therefore twofold. First, MRF augmentation remains essential: across both chapters, models that combine neural prediction with structured MRF inference consistently outperform purely factorized score predictors. Second, flow-based refinement changes the role of the model. It is most effective at improving the quality of the score vector before decoding, especially for Set Cover and EGG-style projection. However, it does not automatically dominate the inference-driven GD models of Chapter~3, particularly on MIS and in settings where repeated conditioning is crucial.
+The completed denoising results therefore support the same Set Cover conclusion as the flow experiments: the strongest refinement signal is obtained when denoising is combined with LBP-based MRF inference. No conclusion is drawn here for MIS denoising, since those rows are incomplete.
 
-\section{Ablation Studies}
-  \subsection{Number of Unrolling Steps}
-  \subsection{Initialization Sensitivity}
-  \subsection{Feasibility During the Trajectory}
-  \subsection{Velocity Prediction vs. Direct Denoising}
+\subsection{Comparison with the Previous Chapter}
+\label{subsec:comparison_with_previous_chapter}
+
+Table~\ref{tab:mrf_nair_inference_results} reports the corresponding non-refinement results from Chapter~\ref{chapter:3_differentiable_mrf_inference_for_BILPs}. Comparing it with Tables~\ref{tab:flow_inference_results} and~\ref{tab:denoising_inference_results} clarifies the role of learned refinement.
+
+On Set Cover, refinement improves the quality of one-shot decoding scores. This is most visible under EGG, which uses a fixed score vector and therefore directly tests the model output before adaptive reinference. On SC-M, the FMRF-LBP flow models obtain EGG gaps below $3\%$, improving over the corresponding non-refinement LMRF-LBP EGG result.
+
+Under GD, however, the earlier MRF-GD models remain very competitive because they repeatedly condition the MRF on the partial assignment during decimation. Refinement therefore does not replace adaptive MRF-guided decimation. Instead, it provides a stronger score vector before decoding, while adaptive GD remains useful when its additional cost is acceptable.
+
+On MIS-S, flow refinement improves over direct flow prediction and over some one-shot baselines, but it does not match the strongest adaptive GD results. This suggests that refinement is easier to exploit for covering problems than for packing problems with exclusion constraints.
+
+The denoising comparison is currently restricted to Set Cover. The completed rows show the same qualitative conclusion as the flow table: LBP-based MRF refinement gives the strongest denoising signal among the evaluated variants.
+
 \section{Discussion and Limitations}
+\label{sec:chapter_4_discussion_limitations}
+
+The completed experiments show that learned refinement is most effective when it is coupled with structured MRF inference. Direct refinement models improve over unstructured baselines in some settings, but the strongest completed results come from the MRF-augmented variants, especially those using LBP. This supports the main design principle of the chapter: the refinement model should not only update variable-wise scores, but should update a structured prediction mechanism whose approximate marginals are then used for decoding.
+
+The difference between LBP and NMF is important. On SC-M, the FMRF-LBP flow models obtain gaps around $2.9\%$, whereas the FMRF-NMF variants remain around $6.6$--$6.7\%$ under EGG or GD. The completed denoising rows show the same ordering, with DLBP outperforming DNMF on both SC-S and SC-M. This difference is consistent with the approximate-inference discussion in Section~\ref{sec:mrf_intro}: LBP propagates factor-level information through the graph, whereas NMF uses a factorized approximation that weakens dependencies between variables.
+
+The main problem-dependent limitation is the interaction between refinement and decoding. On Set Cover, refined scores work well with feasibility-preserving decoding because mistakes can often be repaired by selecting additional sets. On MIS, the situation is more brittle: selecting one vertex immediately excludes its neighbors, so early ranking errors can permanently remove good candidates. This helps explain why the MIS-S flow results improve over direct prediction but remain weaker than the strongest adaptive GD results from the previous chapter.
+
+A second limitation is computational. Refinement introduces an additional test-time budget through the number of unrolling steps. Backend GD variants are even more expensive because they may repeat refinement and approximate inference during decimation. The results therefore suggest a trade-off: single-rollout refinement is attractive when a strong fixed score vector is needed, while adaptive MRF-GD remains preferable when the additional inference cost is justified.
+
+A third limitation is experimental completeness. The denoising results currently support conclusions only for Set Cover. The MIS denoising rows are incomplete or contain placeholder values, so they should not be interpreted here. Once those experiments are complete, MIS denoising should be analyzed separately from the current flow-based MIS conclusions.
+
+Finally, both the flow and denoising objectives rely on reference solutions. This is natural for the supervised denoising framework introduced in Section~\ref{sec:generative_denoising}, but it also limits the model to the solution patterns represented in the training data. For instances with many structurally different near-optimal solutions, future work should consider multi-solution supervision, objective-aware losses, or decoding-aware training objectives.
+
 \section{Conclusion}
+\label{sec:chapter_4_conclusion}
+
+This chapter extended the MRF-based BILP prediction framework from one-shot inference to learned refinement dynamics. The proposed models condition their predictions on the current candidate state and a refinement time, using either flow-based objectives or replacement-corruption denoising.
+
+The main empirical finding is that refinement is most effective when combined with structured MRF inference. On Set Cover, LBP-based refinement gives the strongest completed flow and denoising results, while direct variable-score refinement is substantially weaker. This supports the central design principle of the thesis: neural models are most useful for these BILP tasks when their predictions are mediated by structured inference and feasibility-preserving decoding.
+
+The results also show that refinement is not a universal replacement for adaptive MRF-guided decimation. It is particularly effective as a way to improve one-shot decoding scores, whereas repeated reinference remains costly and problem-dependent. MIS highlights this limitation because hard exclusion constraints make sequential decoding sensitive to early ranking errors.
+
+The next chapter addresses a complementary scalability issue: how to map neural features to factor potentials more efficiently. This is important because the effectiveness of the refinement models in this chapter depends on the ability to construct useful MRF parameters at each refinement step.

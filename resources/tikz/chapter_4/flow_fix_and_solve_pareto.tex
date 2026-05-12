@@ -1,0 +1,395 @@
+\begin{figure}[t]
+\centering
+% Requires: \usepackage{pgfplots}
+% Requires: \usepgfplotslibrary{groupplots}
+% Requires: \usetikzlibrary{calc, matrix}
+\definecolor{darkgray176}{RGB}{110,110,110}
+\definecolor{lightgray204}{RGB}{200,200,200}
+\begin{tikzpicture}
+\begin{groupplot}[
+    group style={group size=2 by 3, horizontal sep=0.55cm, vertical sep=0.75cm, y descriptions at=edge left, ylabels at=edge left},
+    width=0.42\textwidth,
+    height=0.24\textwidth,
+    scale only axis,
+    tick align=outside,
+    tick pos=left,
+    xmajorgrids,
+    ymajorgrids,
+    x grid style={darkgray176},
+    y grid style={darkgray176},
+]
+
+\nextgroupplot[
+    title={SC-S -- velocity},
+    xtick style={draw=none},
+    ylabel={Gap (\%)},
+    xmode=log,
+    log basis x={10},
+    xmin=0.367911745398, xmax=2.1835482895,
+    ymin=0.267037037037, ymax=13.1033333333,
+]
+% scp_n50_m50_k5 / gnn_velocity::EGG
+\addplot+[semithick, color=GNNQOneEGGColor, mark=triangle*, mark size=3, mark options={solid}]
+coordinates {(0.447314018471,3.28148148148) (0.448100144616,4.73737373737) (0.441494094478,6.05858585859) (0.446097357499,8.76767676768) (0.44884984297,11.6222222222)};
+\node[font=\tiny, anchor=south west, text=GNNQOneEGGColor] at (axis cs:0.447314018471,3.28148148148) {0.5};
+\node[font=\tiny, anchor=south west, text=GNNQOneEGGColor] at (axis cs:0.448100144616,4.73737373737) {0.6};
+\node[font=\tiny, anchor=south west, text=GNNQOneEGGColor] at (axis cs:0.441494094478,6.05858585859) {0.7};
+\node[font=\tiny, anchor=south west, text=GNNQOneEGGColor] at (axis cs:0.446097357499,8.76767676768) {0.8};
+\node[font=\tiny, anchor=south west, text=GNNQOneEGGColor] at (axis cs:0.44884984297,11.6222222222) {0.9};
+% scp_n50_m50_k5 / gnn_velocity::GD
+\addplot+[semithick, color=GNNQOneGDColor, mark=diamond*, mark size=3, mark options={solid}]
+coordinates {(0.453414209237,3.28148148148) (0.451994288069,4.73737373737) (0.449786153361,6.05858585859) (0.44477306173,8.76767676768) (0.450007563817,11.6222222222)};
+\node[font=\tiny, anchor=south west, text=GNNQOneGDColor] at (axis cs:0.453414209237,3.28148148148) {0.5};
+\node[font=\tiny, anchor=south west, text=GNNQOneGDColor] at (axis cs:0.451994288069,4.73737373737) {0.6};
+\node[font=\tiny, anchor=south west, text=GNNQOneGDColor] at (axis cs:0.449786153361,6.05858585859) {0.7};
+\node[font=\tiny, anchor=south west, text=GNNQOneGDColor] at (axis cs:0.44477306173,8.76767676768) {0.8};
+\node[font=\tiny, anchor=south west, text=GNNQOneGDColor] at (axis cs:0.450007563817,11.6222222222) {0.9};
+% scp_n50_m50_k5 / gnn_lbp_full_velocity::EGG
+\addplot+[semithick, color=FMLBPQOneEGGColor, mark=triangle*, mark size=3, mark options={solid}]
+coordinates {(1.05555735796,1.74814814815) (1.02937770233,2.48148148148) (1.01628950823,3.28282828283) (1.01418261671,4.60404040404) (1.01651865909,5.77373737374)};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:1.05555735796,1.74814814815) {0.5};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:1.02937770233,2.48148148148) {0.6};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:1.01628950823,3.28282828283) {0.7};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:1.01418261671,4.60404040404) {0.8};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:1.01651865909,5.77373737374) {0.9};
+% scp_n50_m50_k5 / gnn_lbp_full_velocity::GD
+\addplot+[semithick, color=FMLBPQOneGDColor, mark=diamond*, mark size=3, mark options={solid}]
+coordinates {(1.46791607274,1.81481481481) (1.56077719317,2.42222222222) (1.6815070232,2.82222222222) (1.74667052752,3.15555555556) (1.81962357458,3.35555555556)};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneGDColor] at (axis cs:1.46791607274,1.81481481481) {0.5};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneGDColor] at (axis cs:1.56077719317,2.42222222222) {0.6};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneGDColor] at (axis cs:1.6815070232,2.82222222222) {0.7};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneGDColor] at (axis cs:1.74667052752,3.15555555556) {0.8};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneGDColor] at (axis cs:1.81962357458,3.35555555556) {0.9};
+% scp_n50_m50_k5 / gnn_nmf_full_velocity::EGG
+\addplot+[semithick, color=FMNMFQOneEGGColor, mark=triangle*, mark size=3, mark options={solid}]
+coordinates {(0.762450186384,3.07676767677) (0.763310609479,4.39797979798) (0.769513252353,5.6404040404) (0.758709243196,7.89494949495) (0.754193652777,10.4585858586)};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneEGGColor] at (axis cs:0.762450186384,3.07676767677) {0.5};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneEGGColor] at (axis cs:0.763310609479,4.39797979798) {0.6};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneEGGColor] at (axis cs:0.769513252353,5.6404040404) {0.7};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneEGGColor] at (axis cs:0.758709243196,7.89494949495) {0.8};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneEGGColor] at (axis cs:0.754193652777,10.4585858586) {0.9};
+% scp_n50_m50_k5 / gnn_nmf_full_velocity::GD
+\addplot+[semithick, color=FMNMFQOneGDColor, mark=diamond*, mark size=3, mark options={solid}]
+coordinates {(0.839174669416,3.28888888889) (0.863005634304,3.95555555556) (0.872278610227,4.34949494949) (0.893221161945,5.0101010101) (0.906395893355,5.47070707071)};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneGDColor] at (axis cs:0.839174669416,3.28888888889) {0.5};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneGDColor] at (axis cs:0.863005634304,3.95555555556) {0.6};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneGDColor] at (axis cs:0.872278610227,4.34949494949) {0.7};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneGDColor] at (axis cs:0.893221161945,5.0101010101) {0.8};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneGDColor] at (axis cs:0.906395893355,5.47070707071) {0.9};
+\addplot [thick, black, dashed]
+coordinates {(0.441494094478,6.05858585859) (0.447314018471,3.28148148148) (0.762450186384,3.07676767677) (1.02937770233,2.48148148148) (1.05555735796,1.74814814815)};
+
+\nextgroupplot[
+    title={SC-S -- q1},
+    xtick style={draw=none},
+    ytick style={draw=none},
+    xmode=log,
+    log basis x={10},
+    xmin=0.36603073288, xmax=2.16833694624,
+    ymin=-0.14303030303, ymax=15.541010101,
+]
+% scp_n50_m50_k5 / gnn_q1::EGG
+\addplot+[semithick, color=GNNQOneEGGColor, mark=*, mark size=3, mark options={solid}]
+coordinates {(0.45222059345,4.60875420875) (0.443653153683,5.99057239057) (0.439236879456,8.04646464646) (0.443470930185,11.2888888889) (0.446279485985,13.7313131313)};
+\node[font=\tiny, anchor=south west, text=GNNQOneEGGColor] at (axis cs:0.45222059345,4.60875420875) {0.5};
+\node[font=\tiny, anchor=south west, text=GNNQOneEGGColor] at (axis cs:0.443653153683,5.99057239057) {0.6};
+\node[font=\tiny, anchor=south west, text=GNNQOneEGGColor] at (axis cs:0.439236879456,8.04646464646) {0.7};
+\node[font=\tiny, anchor=south west, text=GNNQOneEGGColor] at (axis cs:0.443470930185,11.2888888889) {0.8};
+\node[font=\tiny, anchor=south west, text=GNNQOneEGGColor] at (axis cs:0.446279485985,13.7313131313) {0.9};
+% scp_n50_m50_k5 / gnn_q1::GD
+\addplot+[semithick, color=GNNQOneGDColor, mark=square*, mark size=3, mark options={solid}]
+coordinates {(0.451704692266,4.60875420875) (0.443684792793,5.99057239057) (0.439684282123,8.04646464646) (0.444924375453,11.2888888889) (0.454196514757,13.7313131313)};
+\node[font=\tiny, anchor=south west, text=GNNQOneGDColor] at (axis cs:0.451704692266,4.60875420875) {0.5};
+\node[font=\tiny, anchor=south west, text=GNNQOneGDColor] at (axis cs:0.443684792793,5.99057239057) {0.6};
+\node[font=\tiny, anchor=south west, text=GNNQOneGDColor] at (axis cs:0.439684282123,8.04646464646) {0.7};
+\node[font=\tiny, anchor=south west, text=GNNQOneGDColor] at (axis cs:0.444924375453,11.2888888889) {0.8};
+\node[font=\tiny, anchor=south west, text=GNNQOneGDColor] at (axis cs:0.454196514757,13.7313131313) {0.9};
+% scp_n50_m50_k5 / gnn_lbp_full_q1::EGG
+\addplot+[semithick, color=FMLBPQOneEGGColor, mark=*, mark size=3, mark options={solid}]
+coordinates {(1.03266433537,1.8) (1.02514373151,2.46801346801) (1.01628436637,3.24983164983) (1.03277668509,4.66464646465) (1.02539214186,5.77373737374)};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:1.03266433537,1.8) {0.5};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:1.02514373151,2.46801346801) {0.6};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:1.01628436637,3.24983164983) {0.7};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:1.03277668509,4.66464646465) {0.8};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:1.02539214186,5.77373737374) {0.9};
+% scp_n50_m50_k5 / gnn_lbp_full_q1::GD
+\addplot+[semithick, color=FMLBPQOneGDColor, mark=square*, mark size=3, mark options={solid}]
+coordinates {(1.4756310913,1.66666666667) (1.56372108437,1.87407407407) (1.74297568788,2.34814814815) (1.75971228865,2.94814814815) (1.8069474552,3.14814814815)};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneGDColor] at (axis cs:1.4756310913,1.66666666667) {0.5};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneGDColor] at (axis cs:1.56372108437,1.87407407407) {0.6};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneGDColor] at (axis cs:1.74297568788,2.34814814815) {0.7};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneGDColor] at (axis cs:1.75971228865,2.94814814815) {0.8};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneGDColor] at (axis cs:1.8069474552,3.14814814815) {0.9};
+% scp_n50_m50_k5 / gnn_nmf_full_q1::EGG
+\addplot+[semithick, color=FMLBPQOneEGGColor, mark=*, mark size=3, mark options={solid}]
+coordinates {(0.766978797019,3.0101010101) (0.768265906593,4.6101010101) (0.759292126181,6.19191919192) (0.755705078712,9.33131313131) (0.755345367998,11.8464646465)};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:0.766978797019,3.0101010101) {0.5};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:0.768265906593,4.6101010101) {0.6};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:0.759292126181,6.19191919192) {0.7};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:0.755705078712,9.33131313131) {0.8};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:0.755345367998,11.8464646465) {0.9};
+% scp_n50_m50_k5 / gnn_nmf_full_q1::GD
+\addplot+[semithick, color=FMNMFQOneGDColor, mark=square*, mark size=3, mark options={solid}]
+coordinates {(0.857221320902,2.95555555556) (0.866052589454,3.81616161616) (0.885991808586,4.41616161616) (0.904127849721,5.28282828283) (0.926167662106,5.8101010101)};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneGDColor] at (axis cs:0.857221320902,2.95555555556) {0.5};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneGDColor] at (axis cs:0.866052589454,3.81616161616) {0.6};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneGDColor] at (axis cs:0.885991808586,4.41616161616) {0.7};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneGDColor] at (axis cs:0.904127849721,5.28282828283) {0.8};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneGDColor] at (axis cs:0.926167662106,5.8101010101) {0.9};
+\addplot [thick, black, dashed]
+coordinates {(0.439236879456,8.04646464646) (0.443653153683,5.99057239057) (0.451704692266,4.60875420875) (0.766978797019,3.0101010101) (0.857221320902,2.95555555556) (1.02514373151,2.46801346801) (1.03266433537,1.8) (1.4756310913,1.66666666667)};
+
+\nextgroupplot[
+    title={SC-M -- velocity},
+    xtick style={draw=none},
+    ylabel={Gap (\%)},
+    xmode=log,
+    log basis x={10},
+    xmin=0.762048519341, xmax=5.67998597888,
+    ymin=-0.903794758604, ymax=15.2494475117,
+]
+% scp_n120-180_m150-250_k5 / gnn_velocity::EGG
+\addplot+[semithick, color=GNNQOneEGGColor, mark=triangle*, mark size=3, mark options={solid}]
+coordinates {(2.17076192648,3.63836701095) (1.2061761097,5.25496590684) (0.924737949255,7.12979264799) (0.932419898486,10.0397208151) (0.966236706025,13.3856118652)};
+\node[font=\tiny, anchor=south west, text=GNNQOneEGGColor] at (axis cs:2.17076192648,3.63836701095) {0.5};
+\node[font=\tiny, anchor=south west, text=GNNQOneEGGColor] at (axis cs:1.2061761097,5.25496590684) {0.6};
+\node[font=\tiny, anchor=south west, text=GNNQOneEGGColor] at (axis cs:0.924737949255,7.12979264799) {0.7};
+\node[font=\tiny, anchor=south west, text=GNNQOneEGGColor] at (axis cs:0.932419898486,10.0397208151) {0.8};
+\node[font=\tiny, anchor=south west, text=GNNQOneEGGColor] at (axis cs:0.966236706025,13.3856118652) {0.9};
+% scp_n120-180_m150-250_k5 / gnn_velocity::GD
+\addplot+[semithick, color=GNNQOneGDColor, mark=diamond*, mark size=3, mark options={solid}]
+coordinates {(2.15664043885,3.63836701095) (1.20636949854,5.25496590684) (0.914458223209,7.12979264799) (0.973058518066,10.0397208151) (0.965757953655,13.3856118652)};
+\node[font=\tiny, anchor=south west, text=GNNQOneGDColor] at (axis cs:2.15664043885,3.63836701095) {0.5};
+\node[font=\tiny, anchor=south west, text=GNNQOneGDColor] at (axis cs:1.20636949854,5.25496590684) {0.6};
+\node[font=\tiny, anchor=south west, text=GNNQOneGDColor] at (axis cs:0.914458223209,7.12979264799) {0.7};
+\node[font=\tiny, anchor=south west, text=GNNQOneGDColor] at (axis cs:0.973058518066,10.0397208151) {0.8};
+\node[font=\tiny, anchor=south west, text=GNNQOneGDColor] at (axis cs:0.965757953655,13.3856118652) {0.9};
+% scp_n120-180_m150-250_k5 / gnn_lbp_full_velocity::EGG
+\addplot+[semithick, color=FMLBPQOneEGGColor, mark=triangle*, mark size=3, mark options={solid}]
+coordinates {(3.14704338856,1.06527934805) (2.48787070775,1.83338236869) (2.12417808367,2.49426784924) (2.08121483366,3.71760864619) (2.07636666968,5.5796987781)};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:3.14704338856,1.06527934805) {0.5};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:2.48787070775,1.83338236869) {0.6};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:2.12417808367,2.49426784924) {0.7};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:2.08121483366,3.71760864619) {0.8};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:2.07636666968,5.5796987781) {0.9};
+% scp_n120-180_m150-250_k5 / gnn_lbp_full_velocity::GD
+\addplot+[semithick, color=FMLBPQOneGDColor, mark=diamond*, mark size=3, mark options={solid}]
+coordinates {(4.70311666648,0.960040887973) (4.22062874979,1.26827804843) (4.3404508331,1.56312464684) (4.47536687837,1.88877551388) (4.73332164907,2.12072591988)};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneGDColor] at (axis cs:4.70311666648,0.960040887973) {0.5};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneGDColor] at (axis cs:4.22062874979,1.26827804843) {0.6};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneGDColor] at (axis cs:4.3404508331,1.56312464684) {0.7};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneGDColor] at (axis cs:4.47536687837,1.88877551388) {0.8};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneGDColor] at (axis cs:4.73332164907,2.12072591988) {0.9};
+% scp_n120-180_m150-250_k5 / gnn_nmf_full_velocity::EGG
+\addplot+[semithick, color=FMNMFQOneEGGColor, mark=triangle*, mark size=3, mark options={solid}]
+coordinates {(2.33598004863,1.86194252368) (1.89103216213,2.53884656382) (1.7450351305,3.65693983967) (1.70567552007,5.50737656141) (1.69984463587,7.93924325952)};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneEGGColor] at (axis cs:2.33598004863,1.86194252368) {0.5};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneEGGColor] at (axis cs:1.89103216213,2.53884656382) {0.6};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneEGGColor] at (axis cs:1.7450351305,3.65693983967) {0.7};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneEGGColor] at (axis cs:1.70567552007,5.50737656141) {0.8};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneEGGColor] at (axis cs:1.69984463587,7.93924325952) {0.9};
+% scp_n120-180_m150-250_k5 / gnn_nmf_full_velocity::GD
+\addplot+[semithick, color=FMNMFQOneGDColor, mark=diamond*, mark size=3, mark options={solid}]
+coordinates {(2.16173285938,2.19827813058) (2.10652093507,2.62654815805) (2.18004509074,3.11662266089) (2.21253340734,3.76595585531) (2.26915086425,4.35924685614)};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneGDColor] at (axis cs:2.16173285938,2.19827813058) {0.5};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneGDColor] at (axis cs:2.10652093507,2.62654815805) {0.6};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneGDColor] at (axis cs:2.18004509074,3.11662266089) {0.7};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneGDColor] at (axis cs:2.21253340734,3.76595585531) {0.8};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneGDColor] at (axis cs:2.26915086425,4.35924685614) {0.9};
+\addplot [thick, black, dashed]
+coordinates {(0.914458223209,7.12979264799) (1.2061761097,5.25496590684) (1.7450351305,3.65693983967) (1.89103216213,2.53884656382) (2.12417808367,2.49426784924) (2.16173285938,2.19827813058) (2.33598004863,1.86194252368) (2.48787070775,1.83338236869) (3.14704338856,1.06527934805) (4.70311666648,0.960040887973)};
+
+\nextgroupplot[
+    title={SC-M -- q1},
+    xtick style={draw=none},
+    ytick style={draw=none},
+    xmode=log,
+    log basis x={10},
+    xmin=0.770938428997, xmax=5.74641497885,
+    ymin=-0.546005140532, ymax=13.6370615787,
+]
+% scp_n120-180_m150-250_k5 / gnn_q1::EGG
+\addplot+[semithick, color=GNNQOneEGGColor, mark=*, mark size=3, mark options={solid}]
+coordinates {(2.38278712574,3.24435134772) (1.30353120501,4.61535744133) (0.92600735882,6.69611486745) (0.925126114797,9.07346372831) (0.955993179526,12.0005538803)};
+\node[font=\tiny, anchor=south west, text=GNNQOneEGGColor] at (axis cs:2.38278712574,3.24435134772) {0.5};
+\node[font=\tiny, anchor=south west, text=GNNQOneEGGColor] at (axis cs:1.30353120501,4.61535744133) {0.6};
+\node[font=\tiny, anchor=south west, text=GNNQOneEGGColor] at (axis cs:0.92600735882,6.69611486745) {0.7};
+\node[font=\tiny, anchor=south west, text=GNNQOneEGGColor] at (axis cs:0.925126114797,9.07346372831) {0.8};
+\node[font=\tiny, anchor=south west, text=GNNQOneEGGColor] at (axis cs:0.955993179526,12.0005538803) {0.9};
+% scp_n120-180_m150-250_k5 / gnn_q1::GD
+\addplot+[semithick, color=GNNQOneGDColor, mark=square*, mark size=3, mark options={solid}]
+coordinates {(2.44063063694,3.24435134772) (1.28287760921,4.61535744133) (0.936830265603,6.69611486745) (0.961968316544,9.07346372831) (0.955609218293,12.0005538803)};
+\node[font=\tiny, anchor=south west, text=GNNQOneGDColor] at (axis cs:2.44063063694,3.24435134772) {0.5};
+\node[font=\tiny, anchor=south west, text=GNNQOneGDColor] at (axis cs:1.28287760921,4.61535744133) {0.6};
+\node[font=\tiny, anchor=south west, text=GNNQOneGDColor] at (axis cs:0.936830265603,6.69611486745) {0.7};
+\node[font=\tiny, anchor=south west, text=GNNQOneGDColor] at (axis cs:0.961968316544,9.07346372831) {0.8};
+\node[font=\tiny, anchor=south west, text=GNNQOneGDColor] at (axis cs:0.955609218293,12.0005538803) {0.9};
+% scp_n120-180_m150-250_k5 / gnn_lbp_full_q1::EGG
+\addplot+[semithick, color=FMLBPQOneEGGColor, mark=*, mark size=3, mark options={solid}]
+coordinates {(2.94938098066,1.151397555) (2.41669002612,1.80153800553) (2.09882988122,2.69797292486) (2.0815363106,4.06255834501) (2.07363634675,5.962286896)};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:2.94938098066,1.151397555) {0.5};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:2.41669002612,1.80153800553) {0.6};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:2.09882988122,2.69797292486) {0.7};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:2.0815363106,4.06255834501) {0.8};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:2.07363634675,5.962286896) {0.9};
+% scp_n120-180_m150-250_k5 / gnn_lbp_full_q1::GD
+\addplot+[semithick, color=FMLBPQOneGDColor, mark=square*, mark size=3, mark options={solid}]
+coordinates {(4.54757077187,1.09050255784) (4.22423327325,1.28141896788) (4.25166675165,1.62747711798) (4.78867914905,1.90009018096) (4.74285296326,2.19555973901)};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneGDColor] at (axis cs:4.54757077187,1.09050255784) {0.5};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneGDColor] at (axis cs:4.22423327325,1.28141896788) {0.6};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneGDColor] at (axis cs:4.25166675165,1.62747711798) {0.7};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneGDColor] at (axis cs:4.78867914905,1.90009018096) {0.8};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneGDColor] at (axis cs:4.74285296326,2.19555973901) {0.9};
+% scp_n120-180_m150-250_k5 / gnn_nmf_full_q1::EGG
+\addplot+[semithick, color=FMLBPQOneEGGColor, mark=*, mark size=3, mark options={solid}]
+coordinates {(2.52577383878,1.98567024006) (1.94146746627,2.80664121189) (1.72181958989,3.78187463016) (1.70389604231,5.25866064741) (1.69034591162,7.74797483354)};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:2.52577383878,1.98567024006) {0.5};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:1.94146746627,2.80664121189) {0.6};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:1.72181958989,3.78187463016) {0.7};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:1.70389604231,5.25866064741) {0.8};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:1.69034591162,7.74797483354) {0.9};
+% scp_n120-180_m150-250_k5 / gnn_nmf_full_q1::GD
+\addplot+[semithick, color=FMNMFQOneGDColor, mark=square*, mark size=3, mark options={solid}]
+coordinates {(2.49299274122,1.94747666564) (2.16846492671,2.56080285322) (2.16830785866,3.33846399059) (2.22045595582,4.28331620784) (2.32501338922,4.85101107783)};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneGDColor] at (axis cs:2.49299274122,1.94747666564) {0.5};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneGDColor] at (axis cs:2.16846492671,2.56080285322) {0.6};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneGDColor] at (axis cs:2.16830785866,3.33846399059) {0.7};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneGDColor] at (axis cs:2.22045595582,4.28331620784) {0.8};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneGDColor] at (axis cs:2.32501338922,4.85101107783) {0.9};
+\addplot [thick, black, dashed]
+coordinates {(0.925126114797,9.07346372831) (0.92600735882,6.69611486745) (1.28287760921,4.61535744133) (1.72181958989,3.78187463016) (1.94146746627,2.80664121189) (2.09882988122,2.69797292486) (2.16846492671,2.56080285322) (2.41669002612,1.80153800553) (2.94938098066,1.151397555) (4.54757077187,1.09050255784)};
+
+\nextgroupplot[
+    title={MIS-S -- velocity},
+    xlabel={Runtime (s)},
+    ylabel={Gap (\%)},
+    xmode=log,
+    log basis x={10},
+    xmin=1.02259876687, xmax=3.97457497119,
+    ymin=-2.76629650543, ymax=65.8427755819,
+]
+% mis_n100_p0.15 / gnn_velocity::EGG
+\addplot+[semithick, color=GNNQOneEGGColor, mark=triangle*, mark size=3, mark options={solid}]
+coordinates {(1.43177414148,24.2764288851) (1.24649484067,31.5532969446) (1.22939171838,38.7913294435) (1.23870724001,47.4994039777) (1.25636458421,57.9263441872)};
+\node[font=\tiny, anchor=south west, text=GNNQOneEGGColor] at (axis cs:1.43177414148,24.2764288851) {0.5};
+\node[font=\tiny, anchor=south west, text=GNNQOneEGGColor] at (axis cs:1.24649484067,31.5532969446) {0.6};
+\node[font=\tiny, anchor=south west, text=GNNQOneEGGColor] at (axis cs:1.22939171838,38.7913294435) {0.7};
+\node[font=\tiny, anchor=south west, text=GNNQOneEGGColor] at (axis cs:1.23870724001,47.4994039777) {0.8};
+\node[font=\tiny, anchor=south west, text=GNNQOneEGGColor] at (axis cs:1.25636458421,57.9263441872) {0.9};
+% mis_n100_p0.15 / gnn_velocity::GD
+\addplot+[semithick, color=GNNQOneGDColor, mark=diamond*, mark size=3, mark options={solid}]
+coordinates {(1.43179064734,24.2764288851) (1.23517648989,31.5532969446) (1.22711852025,38.7913294435) (1.25296345101,47.4994039777) (1.25701963513,57.9263441872)};
+\node[font=\tiny, anchor=south west, text=GNNQOneGDColor] at (axis cs:1.43179064734,24.2764288851) {0.5};
+\node[font=\tiny, anchor=south west, text=GNNQOneGDColor] at (axis cs:1.23517648989,31.5532969446) {0.6};
+\node[font=\tiny, anchor=south west, text=GNNQOneGDColor] at (axis cs:1.22711852025,38.7913294435) {0.7};
+\node[font=\tiny, anchor=south west, text=GNNQOneGDColor] at (axis cs:1.25296345101,47.4994039777) {0.8};
+\node[font=\tiny, anchor=south west, text=GNNQOneGDColor] at (axis cs:1.25701963513,57.9263441872) {0.9};
+% mis_n100_p0.15 / gnn_lbp_full_velocity::EGG
+\addplot+[semithick, color=FMLBPQOneEGGColor, mark=triangle*, mark size=3, mark options={solid}]
+coordinates {(1.76994150806,8.81780538302) (1.68349270698,11.9093418659) (1.67944408891,16.1379634858) (1.6651344924,23.4367275237) (1.66812854225,35.6910094736)};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:1.76994150806,8.81780538302) {0.5};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:1.68349270698,11.9093418659) {0.6};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:1.67944408891,16.1379634858) {0.7};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:1.6651344924,23.4367275237) {0.8};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:1.66812854225,35.6910094736) {0.9};
+% mis_n100_p0.15 / gnn_lbp_full_velocity::GD
+\addplot+[semithick, color=FMLBPQOneGDColor, mark=diamond*, mark size=3, mark options={solid}]
+coordinates {(2.81538890943,5.98287220026) (2.91446681863,6.75525440743) (2.96112770574,7.62538427756) (3.28166390058,8.73097433967) (3.31214580932,9.71943032813)};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneGDColor] at (axis cs:2.81538890943,5.98287220026) {0.5};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneGDColor] at (axis cs:2.91446681863,6.75525440743) {0.6};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneGDColor] at (axis cs:2.96112770574,7.62538427756) {0.7};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneGDColor] at (axis cs:3.28166390058,8.73097433967) {0.8};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneGDColor] at (axis cs:3.31214580932,9.71943032813) {0.9};
+% mis_n100_p0.15 / gnn_nmf_full_velocity::EGG
+\addplot+[semithick, color=FMNMFQOneEGGColor, mark=triangle*, mark size=3, mark options={solid}]
+coordinates {(1.50259110267,11.8332392245) (1.41155601985,14.9735867997) (1.40897592218,18.7711274233) (1.39348741333,25.1589811155) (1.39611942327,34.7997364954)};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneEGGColor] at (axis cs:1.50259110267,11.8332392245) {0.5};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneEGGColor] at (axis cs:1.41155601985,14.9735867997) {0.6};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneEGGColor] at (axis cs:1.40897592218,18.7711274233) {0.7};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneEGGColor] at (axis cs:1.39348741333,25.1589811155) {0.8};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneEGGColor] at (axis cs:1.39611942327,34.7997364954) {0.9};
+% mis_n100_p0.15 / gnn_nmf_full_velocity::GD
+\addplot+[semithick, color=FMNMFQOneGDColor, mark=diamond*, mark size=3, mark options={solid}]
+coordinates {(1.66343329481,5.15013488927) (1.64384447131,5.74032247945) (1.67231413787,6.54432523998) (1.7047561866,7.04216073781) (1.70066566335,7.62814480206)};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneGDColor] at (axis cs:1.66343329481,5.15013488927) {0.5};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneGDColor] at (axis cs:1.64384447131,5.74032247945) {0.6};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneGDColor] at (axis cs:1.67231413787,6.54432523998) {0.7};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneGDColor] at (axis cs:1.7047561866,7.04216073781) {0.8};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneGDColor] at (axis cs:1.70066566335,7.62814480206) {0.9};
+\addplot [thick, black, dashed]
+coordinates {(1.22711852025,38.7913294435) (1.23517648989,31.5532969446) (1.39348741333,25.1589811155) (1.40897592218,18.7711274233) (1.41155601985,14.9735867997) (1.50259110267,11.8332392245) (1.64384447131,5.74032247945) (1.66343329481,5.15013488927)};
+
+\nextgroupplot[
+    title={MIS-S -- q1},
+    xlabel={Runtime (s)},
+    ytick style={draw=none},
+    xmode=log,
+    log basis x={10},
+    xmin=1.02893645493, xmax=3.95531022561,
+    ymin=-5.24056402535, ymax=74.627915804,
+]
+% mis_n100_p0.15 / gnn_q1::EGG
+\addplot+[semithick, color=GNNQOneEGGColor, mark=*, mark size=3, mark options={solid}]
+coordinates {(1.44057785443,24.9299830604) (1.24575686677,32.0582219713) (1.24103206998,39.6741953698) (1.25272068803,51.3525942656) (1.27695440202,65.4123219775)};
+\node[font=\tiny, anchor=south west, text=GNNQOneEGGColor] at (axis cs:1.44057785443,24.9299830604) {0.5};
+\node[font=\tiny, anchor=south west, text=GNNQOneEGGColor] at (axis cs:1.24575686677,32.0582219713) {0.6};
+\node[font=\tiny, anchor=south west, text=GNNQOneEGGColor] at (axis cs:1.24103206998,39.6741953698) {0.7};
+\node[font=\tiny, anchor=south west, text=GNNQOneEGGColor] at (axis cs:1.25272068803,51.3525942656) {0.8};
+\node[font=\tiny, anchor=south west, text=GNNQOneEGGColor] at (axis cs:1.27695440202,65.4123219775) {0.9};
+% mis_n100_p0.15 / gnn_q1::GD
+\addplot+[semithick, color=GNNQOneGDColor, mark=square*, mark size=3, mark options={solid}]
+coordinates {(1.44306347276,24.9299830604) (1.24103394157,32.0582219713) (1.23472374592,39.6741953698) (1.2537673163,51.3525942656) (1.27810095724,65.4123219775)};
+\node[font=\tiny, anchor=south west, text=GNNQOneGDColor] at (axis cs:1.44306347276,24.9299830604) {0.5};
+\node[font=\tiny, anchor=south west, text=GNNQOneGDColor] at (axis cs:1.24103394157,32.0582219713) {0.6};
+\node[font=\tiny, anchor=south west, text=GNNQOneGDColor] at (axis cs:1.23472374592,39.6741953698) {0.7};
+\node[font=\tiny, anchor=south west, text=GNNQOneGDColor] at (axis cs:1.2537673163,51.3525942656) {0.8};
+\node[font=\tiny, anchor=south west, text=GNNQOneGDColor] at (axis cs:1.27810095724,65.4123219775) {0.9};
+% mis_n100_p0.15 / gnn_lbp_full_q1::EGG
+\addplot+[semithick, color=FMLBPQOneEGGColor, mark=*, mark size=3, mark options={solid}]
+coordinates {(1.75850941324,7.67168580212) (1.71717511603,10.6086956522) (1.67366296074,15.1461195809) (1.66853523563,23.4781981304) (1.66717436074,34.9995608256)};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:1.75850941324,7.67168580212) {0.5};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:1.71717511603,10.6086956522) {0.6};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:1.67366296074,15.1461195809) {0.7};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:1.66853523563,23.4781981304) {0.8};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:1.66717436074,34.9995608256) {0.9};
+% mis_n100_p0.15 / gnn_lbp_full_q1::GD
+\addplot+[semithick, color=FMLBPQOneGDColor, mark=square*, mark size=3, mark options={solid}]
+coordinates {(2.63701528093,3.97502980112) (2.73234615778,4.6204278813) (2.90112521457,4.99272225359) (3.12079936752,5.30008156095) (3.29609185467,5.4862287471)};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneGDColor] at (axis cs:2.63701528093,3.97502980112) {0.5};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneGDColor] at (axis cs:2.73234615778,4.6204278813) {0.6};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneGDColor] at (axis cs:2.90112521457,4.99272225359) {0.7};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneGDColor] at (axis cs:3.12079936752,5.30008156095) {0.8};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneGDColor] at (axis cs:3.29609185467,5.4862287471) {0.9};
+% mis_n100_p0.15 / gnn_nmf_full_q1::EGG
+\addplot+[semithick, color=FMLBPQOneEGGColor, mark=*, mark size=3, mark options={solid}]
+coordinates {(1.46895576534,11.9900244683) (1.4198295314,15.8148566409) (1.4007768396,21.7796599536) (1.39809197871,30.0799924713) (1.39834761503,44.5988455988)};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:1.46895576534,11.9900244683) {0.5};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:1.4198295314,15.8148566409) {0.6};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:1.4007768396,21.7796599536) {0.7};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:1.39809197871,30.0799924713) {0.8};
+\node[font=\tiny, anchor=south west, text=FMLBPQOneEGGColor] at (axis cs:1.39834761503,44.5988455988) {0.9};
+% mis_n100_p0.15 / gnn_nmf_full_q1::GD
+\addplot+[semithick, color=FMNMFQOneGDColor, mark=square*, mark size=3, mark options={solid}]
+coordinates {(1.65190411401,4.6865549909) (1.65147161509,5.36620867056) (1.67369665383,5.83374113809) (1.70081105268,6.51916682351) (1.73272559165,6.86115816551)};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneGDColor] at (axis cs:1.65190411401,4.6865549909) {0.5};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneGDColor] at (axis cs:1.65147161509,5.36620867056) {0.6};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneGDColor] at (axis cs:1.67369665383,5.83374113809) {0.7};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneGDColor] at (axis cs:1.70081105268,6.51916682351) {0.8};
+\node[font=\tiny, anchor=south west, text=FMNMFQOneGDColor] at (axis cs:1.73272559165,6.86115816551) {0.9};
+\addplot [thick, black, dashed]
+coordinates {(1.23472374592,39.6741953698) (1.24103394157,32.0582219713) (1.39809197871,30.0799924713) (1.4007768396,21.7796599536) (1.4198295314,15.8148566409) (1.46895576534,11.9900244683) (1.65147161509,5.36620867056) (1.65190411401,4.6865549909) (2.63701528093,3.97502980112)};
+
+\end{groupplot}
+\node[anchor=north, draw=lightgray204, fill=white, fill opacity=0.9, text opacity=1, inner sep=3pt] at ($(current bounding box.south) + (0cm, -0.55cm)$) {
+\begin{tikzpicture}[baseline]
+\matrix[matrix of nodes, nodes={anchor=west, font=\scriptsize}, column sep=8pt, row sep=3pt] {
+\tikz[baseline=-0.55ex]{\draw[very thick, color=GNNQOneEGGColor] (0,0) -- (0.42,0); \draw[color=GNNQOneEGGColor] plot[only marks, mark=*, mark size=2.0pt] coordinates {(0.21,0)};} & DGN-q+EGG & \tikz[baseline=-0.55ex]{\draw[very thick, color=GNNQOneGDColor] (0,0) -- (0.42,0); \draw[color=GNNQOneGDColor] plot[only marks, mark=square*, mark size=2.0pt] coordinates {(0.21,0)};} & DGN-q+GD & \tikz[baseline=-0.55ex]{\draw[very thick, color=GNNQOneEGGColor] (0,0) -- (0.42,0); \draw[color=GNNQOneEGGColor] plot[only marks, mark=triangle*, mark size=2.0pt] coordinates {(0.21,0)};} & DGN-v+EGG & \tikz[baseline=-0.55ex]{\draw[very thick, color=GNNQOneGDColor] (0,0) -- (0.42,0); \draw[color=GNNQOneGDColor] plot[only marks, mark=diamond*, mark size=2.0pt] coordinates {(0.21,0)};} & DGN-v+GD \\
+\tikz[baseline=-0.55ex]{\draw[very thick, color=FMLBPQOneEGGColor] (0,0) -- (0.42,0); \draw[color=FMLBPQOneEGGColor] plot[only marks, mark=*, mark size=2.0pt] coordinates {(0.21,0)};} & FMLBP-q+EGG & \tikz[baseline=-0.55ex]{\draw[very thick, color=FMLBPQOneGDColor] (0,0) -- (0.42,0); \draw[color=FMLBPQOneGDColor] plot[only marks, mark=square*, mark size=2.0pt] coordinates {(0.21,0)};} & FMLBP-q+GD & \tikz[baseline=-0.55ex]{\draw[very thick, color=FMLBPQOneEGGColor] (0,0) -- (0.42,0); \draw[color=FMLBPQOneEGGColor] plot[only marks, mark=triangle*, mark size=2.0pt] coordinates {(0.21,0)};} & FMLBP-v+EGG & \tikz[baseline=-0.55ex]{\draw[very thick, color=FMLBPQOneGDColor] (0,0) -- (0.42,0); \draw[color=FMLBPQOneGDColor] plot[only marks, mark=diamond*, mark size=2.0pt] coordinates {(0.21,0)};} & FM-LBP-v+GD \\
+\tikz[baseline=-0.55ex]{\draw[very thick, color=FMLBPQOneEGGColor] (0,0) -- (0.42,0); \draw[color=FMLBPQOneEGGColor] plot[only marks, mark=*, mark size=2.0pt] coordinates {(0.21,0)};} & FM-NMF-q+EGG & \tikz[baseline=-0.55ex]{\draw[very thick, color=FMNMFQOneGDColor] (0,0) -- (0.42,0); \draw[color=FMNMFQOneGDColor] plot[only marks, mark=square*, mark size=2.0pt] coordinates {(0.21,0)};} & FM-NMF-q+GD & \tikz[baseline=-0.55ex]{\draw[very thick, color=FMNMFQOneEGGColor] (0,0) -- (0.42,0); \draw[color=FMNMFQOneEGGColor] plot[only marks, mark=triangle*, mark size=2.0pt] coordinates {(0.21,0)};} & FM-NMF-v+EGG & \tikz[baseline=-0.55ex]{\draw[very thick, color=FMNMFQOneGDColor] (0,0) -- (0.42,0); \draw[color=FMNMFQOneGDColor] plot[only marks, mark=diamond*, mark size=2.0pt] coordinates {(0.21,0)};} & FM-NMF-v+GD \\
+};
+\end{tikzpicture}
+};
+\end{tikzpicture}
+\caption{Runtime--quality Pareto comparison for flow-model decoding on the MIS and SCP test sets. Each point reports the mean runtime and mean relative optimality gap over available seeds. Colors identify the predictive model, markers identify the decoding strategy, and the dashed curve shows the non-dominated frontier within each dataset.}
+\label{fig:flow_fix_and_solve_pareto}
+\end{figure}

@@ -399,29 +399,21 @@
 %% The chaptermark is the name of the chapter in the footer
 %%% You want a small enough chaptermark or it will overflow to the sides
 
-% \addcontentsline{toc}{chapter}{Introduction}
-% \chapter*{Introduction}\label{chap0:intro}
-% \chaptermark{Introduction}
-% \input{chapters/0-intro}
+%\addcontentsline{toc}{chapter}{Introduction}
+
+\input{chapters/0-intro}
 
 \input{chapters/1-background}
 
-
 \input{chapters/2-related_work}
-
 
 \input{chapters/3-nair_mrf}
 
-
 \input{chapters/4-denoising}
 
-% \chapter{Feature-to-Factor Mappings for Approximate MRF inference}\label{chap5:f2f_mapping}
-% \chaptermark{Feature-to-Factor Mappings}
-% \input{chapters/5-feature-to-factor_mappings}
+\input{chapters/5-feature-to-factor_mappings}
 
-% \chapter*{Conclusion}\label{chap6:conclusion}
-% \addcontentsline{toc}{chapter}{Conclusion}
-% \input{chapters/6-conclusion}
+\input{chapters/6-conclusion}
 
 %%%% Bibliography before appendices
 %%%% After the initial round, you need to fix it by hand depending on where you generate your .bib file from

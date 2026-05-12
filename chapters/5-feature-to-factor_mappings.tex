@@ -1,38 +1,48 @@
-\label{chapter:5_feature-to-factor_mappings_for_approximate_mrf_inference}
+\chapter{Feature-to-Factor Mappings for Approximate MRF inference}\label{chapter:5_feature-to-factor_mappings_for_approximate_mrf_inference}
+\chaptermark{F2F Mappings}
 
-In the previous chapter we have shown that it is possible to learn parameters of a MRF by supervised learning. The resulting MRF belongs to the \emph{over-complete canonical} exponential family with factors mapped in a one-to-one manner to individual constraints of the problem. The number of parameters associated with each factor/constraint grows exponentially with the size of its variable set. While this representation is expressive, it quickly becomes intractable for ILPs whose constraints involve a large number of variables.
+The previous chapters used MRFs as structured prediction layers for BILP solution prediction. The model design separated three components: a GNN extracted features from the variable--constraint graph, an MRF layer converted these features into structured marginal predictions, and a feasibility-preserving decoder produced a valid assignment. This chapter keeps that pipeline fixed and focuses on a specific scalability bottleneck: the mapping from neural features to MRF factor parameters.
 
-To illustrate this limitation, consider a Knapsack problem with  available capacity $C$ and $n$ items each having a weight $w_i$ and profit $c_i$:
+The explicit over-complete parameterization used previously assigns one factor to each constraint and predicts a parameter for every local assignment of the variables in that constraint. This is expressive, but its cost grows exponentially with constraint arity. A constraint involving $k$ binary variables requires $2^k$ factor parameters, making the approach impractical for high-arity BILPs.
+
+For this reason, the empirical study in this chapter is restricted to Set Covering (SC) instances. SC provides a controlled setting in which the arity of each constraint factor can be varied directly through the number of sets covering each element. This makes it possible to isolate the effect of factor arity on parameterization cost, inference cost, and prediction quality without introducing additional modeling complications from heterogeneous constraint types.
+
+To illustrate this limitation, consider a knapsack problem with capacity $C$ and $n$ items, each with weight $w_i$ and profit $c_i$:
 \begin{equation}
     \begin{array}{ll}
-        \max\limits_{x} & \sum\limits_{i=1}^n c_i x_i \\
-        \text{s.t.}     & \sum\limits_{i=1}^n w_i x_i \leq C \\
-                        & x \in \{ 0,1\}^n
+        \max\limits_{\XVEC} & \sum\limits_{i=1}^n c_i \XVEC_i \\
+        \text{s.t.}     & \sum\limits_{i=1}^n w_i \XVEC_i \leq C \\
+                        & \XVEC \in \{0,1\}^n .
     \end{array}
 \end{equation}
-The constraint ensuring that the Knapsack is not filled over capacity involves a total of $n$ variables. The corresponding factor would thus have an arity of $n$ and would require $2^n$ parameters in the canonical over-complete representation, making it unrealistic to use this model for even reasonably sized instances. If, instead, this constraint were approximated by a collection of $n(n-1)/2$ pairwise factors, one for each pair of variables appearing in the constraint, the number of parameters required would reduce to $2 n (n - 1)$, which is orders of magnitude smaller and far more tractable.
+The capacity constraint contains all $n$ variables. A direct over-complete factor for this constraint would therefore require $2^n$ parameters. If the same interaction were approximated by pairwise factors over all item pairs, the number of pairwise factor parameters would scale as $4\binom{n}{2}=2n(n-1)$ instead. This approximation is less expressive, but it illustrates the central trade-off studied in this chapter: reducing factor arity can make MRF parameterization and inference tractable, at the cost of weakening the representation of high-order constraints.
 
-Motivated by this observation, this chapter proposes to replace the original MRF distribution with a more tractable approximation, with a particular emphasis on controlling factor sizes. Rather than directly parameterizing the original factor graph, we introduce a feature-to-factor mapping operation that maps GNN-extracted features from the original bipartite graph to embeddings, and then to parameters, of the approximate MRF.
+Motivated by this trade-off, we replace the original high-arity MRF with a tractable approximate MRF whose factor graph is chosen in advance. The neural network then has to solve a new problem: it must map features extracted from the original variable--constraint graph to the factors of this approximate MRF. We call this operation a \emph{feature-to-factor mapping}.
 
-This approach raises two fundamental questions. First, how should the approximate MRF be chosen? Modifying the underlying factor graph necessarily moves the model away from an optimal parameterization of the problem. Aggressively reducing factor sizes improves tractability—both in terms of memory requirements and inference—but may also limit the model’s ability to capture local interactions between variables.
-
-Second, how should features be mapped from the original problem representation to the chosen approximate MRF? The features extracted by the GNN must be transformed into parameters of the approximate model in a way that respects the dependencies induced by the new factor graph. We propose to perform this transformation using a learned operator, so that the resulting approximation becomes an instance-dependent, data-driven function of the original problem.
+Within this SC setting, this chapter studies two coupled design questions. First, how should the approximate factor graph be chosen so that inference remains tractable while preserving useful dependencies between variables? Second, how should GNN features from the original SC variable--constraint representation be mapped to the parameters of the approximate MRF? The experiments evaluate these questions on Set Cover instances with increasing constraint arity.
 
 \section{Relation to Mean-Field and Learned Posterior Approximations}
-Mean-field (MF) approximations and their structured variants provide a classical framework for tractable inference in high-dimensional graphical models by restricting the distribution to a simplified factorization \cite{wainwright_graphical_2007, xing_generalized_2012}. In the context of ILPs and combinatorial optimization, such restrictions are often necessary due to the presence of high-arity constraints, and many learning-based approaches adopt a fully factorized distribution as a practical modeling choice.
+\label{sec:chapter_5_relation_to_mean_field}
 
-Several recent works in machine learning for ILPs directly predict independent marginal distributions over variables using graph neural networks, effectively operating within a fully factorized distribution family \cite{khalil_learning_2016, gasse_exact_2019,nair_solving_2020}. In these methods, interactions induced by constraints are modeled implicitly through message passing on the problem graph, while independence is enforced at the level of the output distribution.
+Mean-field approximations and their structured variants provide a classical framework for tractable inference in high-dimensional graphical models by restricting the distribution to a simpler factorization \cite{wainwright_graphical_2007, xing_generalized_2012}. In learning-based approaches for ILPs, the most common analogue is to predict independent variable marginals with a GNN, effectively using a fully factorized output distribution \cite{khalil_learning_2016, gasse_exact_2019, nair_solving_2020}. In these models, constraint interactions are represented implicitly by message passing on the input graph, but the final predictive distribution factorizes over variables.
 
-The approach proposed in this chapter follows the same amortized inference paradigm, but relaxes the fully factorized assumption by introducing a distribution with controlled factor arity. By allowing small factors over subsets of variables, the proposed method increases the expressivity of the approximate MRF while maintaining tractability, in a manner closely related to structured mean-field approximations. The proposed method is related in spirit to structured mean-field approximations in that it restricts inference to a tractable family of low-arity distributions. However, unlike mean-field methods, which explicitly seek the closest approximation to a fixed target distribution within a chosen variational family, our approach does not first define and then approximate the original high-order MRF. Instead, it learns directly from data to parameterize a tractable approximate MRF as a function of the input instance.
+The approach in this chapter follows the same amortized prediction viewpoint but relaxes the fully factorized output assumption. Instead of predicting independent unary scores, the model predicts the parameters of a tractable approximate MRF with controlled factor arity. This is related in spirit to structured mean-field methods, because the model deliberately restricts the family of distributions to make inference tractable. The difference is that we do not begin with a fixed high-order MRF and derive the closest approximation within a variational family. Instead, we learn the parameters of the tractable MRF directly from data as a function of the input instance.
+
+In all experiments in this chapter, approximate unary marginals are computed using loopy belief propagation. Mean-field is discussed here only as a conceptual point of comparison: both approaches restrict the distribution family for tractability, but the models evaluated below use LBP on the chosen approximate factor graph rather than NMF or mean-field fixed-point updates.
 
 \section{Proposed approach}
-We now introduce the proposed method for learning a structured approximate MRF distribution. Following recent learning-based approaches for ILPs, we adopt an amortized inference paradigm in which a GNN extracts features from the graph representation of the problem, i.e. its variable-constraint bipartite graph. Unlike fully factorized models, however, we parameterize an approximate MRF with bounded-arity factors, allowing limited dependencies between variables while preserving tractability. The structure of this MRF is fixed in advance, and its parameters are learned as a function of the input instance through a feature-to-factor mapping.
+\label{sec:chapter_5_proposed_approach}
 
-The proposed approach requires addressing two complementary design questions: (i) how to choose a tractable approximate MRF, and (ii) how to map features extracted from the original problem representation onto the parameters of this approximate model. In this section, we focus on a generic formulation of both aspects. More expressive or specialized mapping operators are deferred to the experimental section.
+We now introduce the proposed method for learning a structured approximate MRF distribution in the SC setting. Following recent learning-based approaches for ILPs, we adopt an amortized inference paradigm in which a GNN extracts features from the variable--constraint bipartite graph of the instance. Unlike fully factorized models, however, we parameterize an approximate MRF with bounded-arity factors, allowing limited dependencies between variables while preserving tractability. The structure of this MRF is fixed in advance, and its parameters are learned as a function of the input instance through a feature-to-factor mapping.
+
+The proposed approach requires addressing two complementary design questions: (i) how to choose a tractable approximate MRF, and (ii) how to map features extracted from the original SC representation onto the parameters of this approximate model. The construction is stated in a general factor-graph language, but the experiments and design choices in this chapter are specialized to SC because SC allows direct control of constraint arity. More expressive or specialized mapping operators are deferred to the experimental section.
 
 \subsection{Choice of the Approximate MRF}
+\label{subsec:chapter_5_choice_approximate_mrf}
 
-The choice of the approximate MRF is made \emph{a priori} and consists primarily in selecting a factor graph that defines a tractable family of MRF distributions while retaining sufficient expressive power. Recall that the ideal distribution is obtained by interpreting the variable--constraint bipartite representation of the ILP as a factor graph, in which constraint nodes act as factors over the variables involved in each constraint. While this representation is natural, it presents two major challenges.
+In the SC instances considered here, each original constraint corresponds to one element-covering requirement, and its factor arity is the number of sets that can cover that element.
+
+The choice of the approximate MRF consists primarily in selecting a factor graph that defines a tractable family of MRF distributions while retaining sufficient expressive power. Recall that the ideal distribution is obtained by interpreting the variable--constraint bipartite representation of the ILP as a factor graph, in which constraint nodes act as factors over the variables involved in each constraint. While this representation is natural, it presents two major challenges.
 
 First, the resulting factor graph generally contains many short loops, which makes inference by belief propagation difficult and precludes convergence guarantees. Second, constraints involving a large number of variables induce high-arity factors, whose over-complete exponential family parameterization is infeasible to represent in memory.
 
@@ -48,7 +58,7 @@ Independently of the presence of loops, the arity of factors plays a critical ro
 
 Under this approximation, the number of parameters required to represent the contribution of the original constraint can be significantly more tractable than the original $2^{|V_c|}$ parameterization given an adequate choice of $W$.
 
-The approximate factor graph obtained through these choices defines the family of distributions considered in the remainder of this chapter. The next subsection describes how features extracted from the original problem representation are mapped onto the parameters of this approximate MRF.
+The approximate factor graph obtained through these choices defines the family of distributions considered in the remainder of this chapter. The following section describes how features extracted from the original problem representation are mapped onto the parameters of this approximate MRF.
 
 \input{resources/tikz/chapter_5/controlled_graph_arity_factorgraph}
 
@@ -57,29 +67,26 @@ The approximate factor graph obtained through these choices defines the family o
 Having fixed the structure of the approximate MRF through the choice of an approximate factor graph, we now describe how its parameters are obtained from the input problem instance. The proposed approach follows an amortized inference paradigm: features are first extracted from a graph representation of the ILP using a graph neural network, and are then mapped to the parameters of the approximate MRF through a learned \emph{feature-to-factor mapping} operator.
 
 We assume that a GNN has been applied to the variable--constraint bipartite representation $\VCGFULL$ of the problem, producing embeddings
-\[
-h^{(T)} = \bigl( h^{(T)}_u \bigr)_{u \in \VCGV \cup \VCGC}, \qquad h^{(T)}_u \in \mathbb{R}^d,
-\]
+\begin{equation}
+\EMB^{(T)} = \bigl( \EMB^{(T)}_u \bigr)_{u \in \VCGV \cup \VCGC}, \qquad \EMB^{(T)}_u \in \mathbb{R}^d,
+\end{equation}
 where $\VCGV$ denotes the set of variables, $\VCGC$ the set of constraints, and $T$ the number of message-passing layers. These embeddings encode both local information and contextual interactions induced by the problem structure.
 
-The role of the feature-to-factor mapping is to transform these embeddings into parameters of an approximate MRF defined on a factor graph
-\[
-G = (V \cup F, E),
-\]
-whose structure has been fixed \emph{a priori} as described previously.
+The role of the feature-to-factor mapping is to transform these embeddings into parameters of an approximate MRF defined on a factor graph $\FGFULL$ whose structure has been fixed, as described previously.
 
 \paragraph{Precedence graph.}
 The mapping from original features to the approximate MRF is guided by a dependency structure formalized through a directed bipartite graph, which we call the precedence graph and denote by $P$. This mapping specifies, for each variable or factor in the approximate MRF, which embeddings from the original problem representation it may depend on.
 
 Formally, we define a bipartite directed graph
+\begin{equation*}
+\PRECG = (\PRECV \cup \FACTORSET, \PRECE),
+\end{equation*}
 
-$$P = (V_x \cup F, E_P),$$
-
-where $V_x = \VCGV \cup \VCGC$ are nodes of the variable-constraint representation and $F$ are factors of the approximate factor graph. Note that since the variables in the original graph and the approximate factor graph are identical, only factor nodes require an explicit learned mapping. Variable node embeddings are mapped one-to-one. An edge $(u, \alpha) \in E_P$ indicates that the embedding of $u \in V_x$ may be used to parameterize factor $\alpha \in F$. For each factor $\alpha$, we denote by $\mathcal{N}(\alpha) \subseteq V_x$ its predecessors in $P$. In practice, a dependency $(u,\alpha)$ is introduced whenever the set of variables associated with $u$ intersects non-trivially with the scope of $\alpha$; i.e. if $u$ is a variable node that belongs to the scope of factor $\alpha$, or if the scope of $\alpha$ and of the constraint represented by $u$ coincide in some variables. Figure~\ref{fig:chapter_5_factor_graph_precedence} shows that each factor of the approximate MRF receives information only from variables and constraints in the original bipartite graph whose scopes overlap with its own. For each target factor
-$\alpha \in F$, we define:
+where $\PRECV = \VCGV \cup \VCGC$ are nodes of the variable-constraint representation and $\FACTORSET$ are factors of the approximate factor graph. Note that since the variables in the original graph and the approximate factor graph are identical, only factor nodes require an explicit learned mapping. Variable node embeddings are mapped one-to-one. An edge $(u, \FACTOR) \in \PRECE$ indicates that the embedding of $u \in \PRECV$ may be used to parameterize factor $\FACTOR \in \FACTORSET$. For each factor $\FACTOR$, we denote by $N(\FACTOR) \subseteq \PRECV$ its predecessors in $\PRECG$. In practice, a dependency $(u,\FACTOR)$ is introduced whenever the set of variables associated with $u$ intersects non-trivially with the scope of $\FACTOR$; i.e. if $u$ is a variable node that belongs to the scope of factor $\FACTOR$, or if the scope of $\FACTOR$ and of the constraint represented by $u$ coincide in some variables. Figure~\ref{fig:chapter_5_factor_graph_precedence} shows that each factor of the approximate MRF receives information only from variables and constraints in the original bipartite graph whose scopes overlap with its own. For each target factor
+$\FACTOR \in \FACTORSET$, we define:
 \begin{itemize}
-    \item a set of variable dependencies $\mathcal N_V(\alpha) = \mathcal{N}(\alpha) \cap \VCGV$,
-    \item a set of constraint dependencies $\mathcal N_C(\alpha) = \mathcal{N}(\alpha) \cap \VCGC$.
+    \item a set of variable dependencies $\mathcal N_V(\FACTOR) = N(\FACTOR) \cap \VCGV$,
+    \item a set of constraint dependencies $\mathcal N_C(\FACTOR) = N(\FACTOR) \cap \VCGC$.
 \end{itemize}
 
 \input{resources/tikz/chapter_5/factor_graph_precedence}
@@ -92,30 +99,29 @@ The feature-to-factor mapping is defined independently for variables and factors
 
 Variables are shared between the original and approximate graphs, and their embeddings are passed through unchanged:
 \begin{equation}
-h'_v = h^{(T)}_v, \qquad \forall v \in \VCGV.
+\EMB'_v = \EMB^{(T)}_v, \qquad \forall v \in \VCGV.
 \end{equation}
 
-For each factor $\alpha \in F$, we construct a factor embedding $h'_{\alpha}$ by aggregating the embeddings of its dependency neighborhood:
+For each factor $\FACTOR \in \FACTORSET$, we construct a factor embedding $\EMB'_{\FACTOR}$ by aggregating the embeddings of its dependency neighborhood:
 \begin{equation}
-h'_{\alpha} =
-\operatorname*{F2F}_{u \in \mathcal{N}(\alpha)}
-h^{(T)}_u,
-\qquad \forall \alpha \in F,
+\EMB'_{\FACTOR} =
+\operatorname*{F2F}_{u \in N(\FACTOR)}
+\EMB^{(T)}_u,
+\qquad \forall \FACTOR \in \FACTORSET,
 \end{equation}
-where $\operatorname*{F2F}$ is an operator over the set of dependent embeddings, which may range from simple pooling functions (e.g., sum, mean, or max) to learned aggregation mechanisms. In its simplest variant, F2F is permutation-invariant, but this is not the case for all variants explored in the experimental section. Learned aggregation mechanisms are described in the experimental section. This aggregation step yields a fixed-dimensional representation regardless of the size of $\mathcal{N}(\alpha)$.
-
-\todo[inline]{our F2F implementation are not actually permutation-invariant, but we ensure that a specific ordering of factors and variables is respected, so the mapping is invariant after applying the sorting}
+where $\operatorname*{F2F}$ is an operator over the set of dependent embeddings, which may range from simple pooling functions (e.g., sum, mean, or max) to learned aggregation mechanisms. In its simplest variant, F2F is permutation-invariant, but this is not the case for all variants explored in the experimental section. Learned aggregation mechanisms are described in the experimental section. This aggregation step yields a fixed-dimensional representation regardless of the size of $N(\FACTOR)$.
 
 \paragraph{Parameter prediction head.}
-The parameters of the approximate MRF are obtained by applying a learned prediction head to the factor embeddings. For each factor $\alpha \in F$ of arity $|\alpha|$, we define
+The parameters of the approximate MRF are obtained by applying a learned prediction head to the factor embeddings. For each factor $\FACTOR \in \FACTORSET$ of arity $|\FACTOR|$, we define
 \begin{equation}
-\theta_{\alpha} = \mathrm{MLP}_{|\alpha|}\!\left( h'_{\alpha} \right),
+\EPARAM_{\FACTOR} = \MLP_{|\FACTOR|}\!\left( h'_{\FACTOR} \right),
 \end{equation}
-where $\mathrm{MLP}_{|\alpha|} : \mathbb{R}^d \rightarrow \mathbb{R}^{2^{|\alpha|}}$ is a multi-layer perceptron whose output dimension matches the size of the over-complete canonical parameterization for factors of that arity (see Chapter~\ref{chapter:4_differentiable_mrf_inference_for_training_co_solution_predictors}).
+where $\MLP_{|\FACTOR|} : \R^d \rightarrow \R^{2^{|\FACTOR|}}$ is a multi-layer perceptron whose output dimension matches the size of the over-complete canonical parameterization for factors of that arity (see Chapter~\ref{chapter:3_differentiable_mrf_inference_for_BILPs}).
 
 This formulation makes explicit the separation between the structure of the approximate MRF, which is fixed, and its parameterization, which is learned. Fully factorized distributions are recovered as a special case in which each factor depends only on a single variable embedding, while higher-arity factors allow the model to capture limited dependencies between variables without sacrificing tractability.
 
 \section{Experiments}
+\label{sec:chapter_5_experiments}
 
 We now present an empirical evaluation of the proposed feature-to-factor mapping framework. Unless stated otherwise, the experimental setup closely follows that of the previous chapter. In particular, we reuse the same graph neural network architecture, hidden dimension, number of message-passing layers, optimization procedure, and training protocol. This allows us to isolate the effect of introducing structured approximate MRFs from other architectural choices.
 
@@ -123,46 +129,39 @@ The experiments in this section focus on evaluating the impact of the chosen app
 
 Training is capped at 20 hours per model. For each configuration, three models are trained with different random seeds, and reported results are averaged across these runs. Evaluation is performed on 500 instances held out from training.
 
-\paragraph{Training objective.}
+\paragraph{Training objective}
 In the previous chapter, training was performed by minimizing a sum of factor-wise marginal cross-entropies between the predicted and ground-truth marginals. While this objective is natural when working with the full factor graph, we found it to be ill-suited for structured approximations with small factor arity. In particular, when using pairwise approximations, aggregating cross-entropies at the factor level leads to a strong bias towards locally consistent but globally degenerate solutions, resulting in a collapse of the learned distribution onto a small number of modes.
 
 To mitigate this effect, the experiments reported in this section use a variable-level marginal cross-entropy loss. Concretely, training is performed by comparing the predicted unary marginals of the approximate MRF with ground-truth variable marginals, regardless of the factorization used internally by the model. This objective encourages the model to preserve meaningful uncertainty at the variable level while allowing pairwise and tree-structured factors to capture dependencies implicitly through inference.
 
-Let $x=(x_v)_{v\in V}$ denote the binary decision variables and let
-$\mu_x = (\mu_v)_{v\in V}$ be the vector of unary marginals produced by the inference procedure, where
+Let $\XVEC=(\XVEC_v)_{v\in \VCGV}$ denote the binary decision variables and let $\MARGINAL_x = (\MARGINAL_v)_{v\in \VCGV}$ be the vector of unary marginals produced by the inference procedure, where
 \[
-\mu_v \;\triangleq\; \mathbb{P}_{p_{\theta'}}(x_v=1).
+\MARGINAL_v \;\triangleq\; \mathbb{P}_{p_{\EPARAM'}}(\XVEC_v=1).
 \]
-The marginals $\mu_x$ are computed either by running belief propagation on the
-chosen approximate factor graph, or by running a naive mean-field fixed-point
-iteration. Let $\mu^{\star}=(\mu^{\star}_v)_{v\in V}$ denote the target unary
-marginals (estimated from data, supervision, or an oracle).
+The marginals $\MARGINAL_{\XVEC}$ are computed by running loopy belief propagation on the chosen approximate factor graph. Let $\MARGINAL^{\star}=(\MARGINAL^{\star}_v)_{v\in\VCGV}$ denote the target unary marginals obtained from the reference solution distribution used for supervision.
 
-We train the model by minimizing a variable-level cross-entropy between the
-predicted and target unary marginals:
+We train the model by minimizing a variable-level cross-entropy between the predicted and target unary marginals:
 \begin{equation}
-\mathcal{L}_{\mathrm{var}}(\theta')
+\mathcal{L}_{\mathrm{var}}(\EPARAM')
 \;=\;
--\sum_{v\in V}
+-\sum_{v\in \VCGV}
 \Bigl[
-\mu^{\star}_v \log \mu_v
+\MARGINAL^{\star}_v \log \MARGINAL_v
 +
-(1-\mu^{\star}_v)\log(1-\mu_v)
+(1-\MARGINAL^{\star}_v)\log(1-\MARGINAL_v)
 \Bigr],
 \label{eq:var_ce_loss}
 \end{equation}
-where $\mu = \mu_x(\theta')$ denotes the output of the inference algorithm
-(BP or mean-field) applied to the approximate MRF parameterized by
-$\theta'$.
+where $\MARGINAL=\MARGINAL_{\XVEC}(\EPARAM')$ denotes the unary marginals returned by LBP on the approximate MRF parameterized by $\EPARAM'$.
 
 The first set of results evaluates tree-structured and pairwise approximations under this training objective. More expressive feature-to-factor mappings, including attention-based and transformer-based variants, are introduced and analyzed in subsequent experiments.
 
-\paragraph{Training data.}
-All experiments in this section are conducted on instances of the Set Covering Problem. We focus on this problem class because it allows for fine-grained control over the arity of constraint factors, making it particularly well suited for evaluating approximations with bounded factor sizes. Moreover, set covering instances naturally give rise to high-arity constraints, which directly stress the limitations of over-complete canonical MRF parameterizations.
+\paragraph{Training data}
+Consistent with the scope introduced at the beginning of the chapter, all experiments in this section are conducted on instances of the Set Covering problem. We focus on this problem class because it allows fine-grained control over the arity of constraint factors: by controlling how many sets cover each element, we directly control the size of the corresponding MRF factor. This makes SC particularly well suited for evaluating approximations with bounded factor sizes. Moreover, SC instances naturally give rise to high-arity constraints, which directly stress the limitations of over-complete canonical MRF parameterizations.
 
-We consider three datasets. First, we reuse the two datasets with small constraint arity introduced in the previous chapter, on which the full factor graph can be represented explicitly. These datasets allow for a direct comparison between exact and approximate MRF parameterizations. Second, we introduce a new synthetic dataset specifically designed to evaluate the scalability of the proposed approach. Instances in this dataset contain constraints of arity $15$, with the total number of variables and constraints ranging between $150$ and $300$. This setting lies well beyond the regime in which explicit high-arity factor parameterizations are tractable, and therefore provides a controlled testbed for evaluating structured approximate MRFs.
+We consider three datasets. First, we reuse the two datasets with small constraint arity introduced in the previous chapter, on which the full factor graph can be represented explicitly. These datasets allow for a direct comparison between exact and approximate MRF parameterizations. Second, we introduce a new synthetic dataset specifically designed to evaluate the scalability of the proposed approach. Instances in this dataset contain constraints of arity $15$, with the total number of variables and constraints ranging between $150$ and $300$. This setting lies well beyond the regime in which explicit high-arity factor parameterizations are tractable, and therefore provides a controlled testbed for evaluating structured approximate MRFs. A description of the datasets used in this chapter is given in Table~\ref{tab:f2f_dataset_identifiers}.
 
-
+\input{resources/tab/chapter_5/dataset_identifiers.tex}
 
 \subsection{Feature-to-Factor Mapping Variants}
 Here we present the variants of the feature-to-factor mapping implementations that will be tested in experiments. The variants are ordered by increasing complexity and capacity to distinguish information belonging to constraints and variable nodes. After constructing an approximate factor graph, the embeddings corresponding to a particular constraint may be involved in the construction of multiple factor embeddings but may contribute differently to each of these factors. We start by trying a simple implementation of the mapping that does not differentiate between variable and constraint embeddings, we then implement a model that explicitly separates the input between variable and constraint information and add an attention mechanism to adaptively strengthen the contribution of constraint embeddings of particular importance (learned by the model), finally we propose a transformer network layer to perform the mapping. 
@@ -170,14 +169,14 @@ Here we present the variants of the feature-to-factor mapping implementations th
 \begin{table}[H]
 \centering
 \small
-\begin{tabular}{p{1.3cm} p{3.2cm} p{7.8cm}}
+\begin{tabular}{p{2.3cm} p{3.2cm} p{7.8cm}}
 \toprule
 \textbf{Variant} & \textbf{Mechanism} & \textbf{Purpose} \\
 \midrule
-P.0 & Element-wise max aggregation over all predecessors & Baseline mapping with minimal inductive bias and low capacity. \\
-P.1 & Explicit separation of variable and constraint embeddings & Preserve the semantic distinction between variable-level and constraint-level information. \\
-P.2 & Learned attention over predecessor constraints & Select the most relevant constraints for constructing each target factor embedding. \\
-P.3 & Transformer encoder over the dependency sequence & Model richer interactions and produce more structured factor representations. \\
+F2F-MAX & Element-wise max aggregation over all predecessors & Baseline mapping with minimal inductive bias and low capacity. \\
+F2F-SEP & Explicit separation of variable and constraint embeddings & Preserve the semantic distinction between variable-level and constraint-level information. \\
+F2F-ATT & Learned attention over predecessor constraints & Select the most relevant constraints for constructing each target factor embedding. \\
+F2F-TRF & Transformer encoder over the dependency sequence & Model richer interactions and produce more structured factor representations. \\
 \bottomrule
 \end{tabular}
 \caption{Summary of the feature-to-factor mapping variants.}
@@ -185,52 +184,52 @@ P.3 & Transformer encoder over the dependency sequence & Model richer interactio
 \end{table}
 
 
-\subsubsection{Simple Aggregation (P.0)}
-For both tree and pairwise approximations, the feature-to-factor mapping follows the generic formulation described in Section~\ref{sec:feature_factor_mapping}, with a simple aggregation operator. Concretely, for each factor $\alpha$ in the approximate graph, the corresponding factor embedding is obtained as
-\[
-h'_{\alpha} = \max_{u \in \mathcal{N}(\alpha)} h^{(T)}_u,
-\]
+\subsubsection{Simple Aggregation}
+For both tree and pairwise approximations, the feature-to-factor mapping follows the generic formulation described in Section~\ref{sec:feature_factor_mapping}, with a simple aggregation operator. Concretely, for each factor $\FACTOR$ in the approximate graph, the corresponding factor embedding is obtained as
+\begin{equation*}
+\EMB'_{\FACTOR} = \max_{u \in N(\FACTOR)} h^{(T)}_u,
+\end{equation*}
 where the maximum is taken element-wise over the embeddings of the dependency neighborhood defined by the precedence graph. The resulting factor embedding is then passed through an arity-specific parameter prediction head to produce the parameters of the approximate MRF.
 
-This aggregation strategy is permutation-invariant and computationally inexpensive, and makes minimal assumptions about the relative importance of the dependent embeddings. While such a simple operator may discard fine-grained information, it provides a strong baseline that allows us to isolate the effect of the MRF structure from that of the mapping architecture. Figure~\ref{fig:chapter_5_structure_prediction_simple_aggregation_mapping_figure} illustrates the P.0 mapping, in which all predecessor embeddings are aggregated by a simple element-wise max operation before parameter prediction.
+This aggregation strategy is permutation-invariant and computationally inexpensive, and makes minimal assumptions about the relative importance of the dependent embeddings. While such a simple operator may discard fine-grained information, it provides a strong baseline that allows us to isolate the effect of the MRF structure from that of the mapping architecture. Figure~\ref{fig:chapter_5_structure_prediction_simple_aggregation_mapping_figure} illustrates the F2F-MAX mapping, in which all predecessor embeddings are aggregated by a simple element-wise max operation before parameter prediction.
 
 \input{resources/tikz/chapter_5/structure_prediction_simple_aggregation_mapping_figure}
 
-\subsubsection{Separating variable / constraint features (P.1)}
-This variant aims to identify the degree of importance of the variable embeddings versus the constraint information. In this model the only difference is constructing the parameter head predictors by explicitly splitting the input of the MLP into a vector of variable embeddings and a vector of constraint embeddings. We test the \emph{variable-only} model (P.1 VO) in which constraint embeddings are simply not passed to the model.
+\subsubsection{Separating variable / constraint features}
+This variant aims to identify the degree of importance of the variable embeddings versus the constraint information. In this model the only difference is constructing the parameter head predictors by explicitly splitting the input of the MLP into a vector of variable embeddings and a vector of constraint embeddings. We test the \emph{variable-only} model (F2F-VAR) in which constraint embeddings are simply not passed to the model.
 
-The parameter prediction head input given by $\square_{v \in \mathcal{N}(\alpha')} h_v$ may be garbled, i.e. aggregating all features for variables and constraints alike leads to a loss of information. Factor embeddings are defined
+The parameter prediction head input given by $\square_{v \in N(\FACTOR')} h_v$ may be garbled, i.e. aggregating all features for variables and constraints alike leads to a loss of information. Factor embeddings are defined
 \begin{equation}
-    h'_{\alpha} = \left[ h^{(T)}_{i_1},...,h^{(T)}_{i_{|\alpha|}}, \underset{c \in \mathcal{N}_C(\alpha)}{\square} h^{(T)}_{c} \right] \in \mathbb{R}^{(|\alpha| + 1) d}
+    \EMB'_{\FACTOR} = \left[ \EMB^{(T)}_{i_1},...,\EMB^{(T)}_{i_{|\FACTOR|}}, \underset{c \in \mathcal{N}_C(\FACTOR)}{\square} \EMB^{(T)}_{c} \right] \in \R^{(|\FACTOR| + 1) d}
 \end{equation}
-with $\square $ still defined as an aggregation function (taken as the $\max$ operator in experiments) and $(i_1,...,i_{|\alpha|})$ is an ordering of the variables in the scope of $\alpha$. The input dimensions of the parameter prediction heads are adapted to the new factor embedding shape $h'_{\alpha} \in \mathbb{R}^{(|\alpha|+1) d}$. Figure~\ref{fig:chapter_5_structure_prediction_var_constr_separation_mapping_figure} illustrates how P.1 separates variable embeddings from aggregated constraint information before concatenating them into the factor representation.
+with $\square $ still defined as an aggregation function (taken as the $\max$ operator in experiments) and $(i_1,...,i_{|\FACTOR|})$ is an ordering of the variables in the scope of $\FACTOR$. The input dimensions of the parameter prediction heads are adapted to the new factor embedding shape $\EMB'_{\FACTOR} \in \R^{(|\FACTOR|+1) d}$. Figure~\ref{fig:chapter_5_structure_prediction_var_constr_separation_mapping_figure} illustrates how F2F-SEP separates variable embeddings from aggregated constraint information before concatenating them into the factor representation.
 
 We expect this separation to improve the quality of the predicted factor parameters by preventing variable and constraint information from being mixed too early, thereby allowing the prediction head to exploit their distinct semantic roles more effectively.
 
 \input{resources/tikz/chapter_5/structure_prediction_var_constr_separation_mapping_figure}
 
-\subsubsection{Mapping with Attention (P.2)}
+\subsubsection{Mapping with Attention}
 The previous proposal still aggregates over all constraint embeddings, disregarding their importance level. We propose to add an attention prediction head to attribute more importance to certain constraints over others. Factor embeddings are constructed :
 \begin{equation}
-    h'_{\alpha} = \left[ h^{(T)}_{i_1},...,h^{(T)}_{i_{|\alpha|}}, h^c_{\alpha} \right] \in \mathbb{R}^{(|\alpha| + 1) d}
+    \EMB'_{\FACTOR} = \left[ \EMB^{(T)}_{i_1},...,\EMB^{(T)}_{i_{|\FACTOR|}}, \EMB^c_{\FACTOR} \right] \in \R^{(|\FACTOR| + 1) d}
 \end{equation}
-with $h^c_{\alpha}$ an embedding representing the constraints upon which factor $\alpha$ depends, and is defined
+with $\EMB^c_{\FACTOR}$ an embedding representing the constraints upon which factor $\FACTOR$ depends, and is defined
 \begin{align}
-    h^c_{\alpha} &= \sum\limits_{c \in \mathcal{N}_C(\alpha)} \beta_{\alpha,c} h^{(T)}_{c}
+    \EMB^c_{\FACTOR} &= \sum\limits_{c \in \mathcal{N}_C(\FACTOR)} \beta_{\FACTOR,c} \EMB^{(T)}_{c}
 \end{align}
 with attention 
 \begin{align}
-    \hat{\beta}_{\alpha,c} &=  \text{MLP} \left(  h^{(T)}_{i_1},...,h^{(T)}_{i_{|\alpha|}}, h^{(T)}_{c} \right) \\
-    \beta_{\alpha,c} &= \frac{\exp \hat{\beta}_{\alpha,c}}{\sum\limits_{c \in \mathcal{N}_C(\alpha)} \exp \hat{\beta}_{\alpha,c}}
+    \hat{\beta}_{\FACTOR,c} &=  \MLP \left(  \EMB^{(T)}_{i_1},...,\EMB^{(T)}_{i_{|\FACTOR|}}, \EMB^{(T)}_{c} \right) \\
+    \beta_{\FACTOR,c} &= \frac{\exp \hat{\beta}_{\FACTOR,c}}{\sum\limits_{c \in \mathcal{N}_C(\FACTOR)} \exp \hat{\beta}_{\FACTOR,c}}
 \end{align}
 
-Figure~\ref{fig:chapter_5_structure_prediction_constr_attention_mapping_figure} shows the P.2 architecture, where the contribution of each predecessor constraint embedding is weighted by a learned attention score before being incorporated into the factor embedding.
+Figure~\ref{fig:chapter_5_structure_prediction_constr_attention_mapping_figure} shows the F2F-ATT architecture, where the contribution of each predecessor constraint embedding is weighted by a learned attention score before being incorporated into the factor embedding.
 
-This variant is expected to improve over P.1 when not all predecessor constraints are equally informative for a given target factor, as the attention mechanism allows the model to identify and emphasize the most relevant constraints while down-weighting less useful ones.
+This variant is expected to improve over F2F-SEP when not all predecessor constraints are equally informative for a given target factor, as the attention mechanism allows the model to identify and emphasize the most relevant constraints while down-weighting less useful ones.
 
 \input{resources/tikz/chapter_5/structure_prediction_constr_attention_mapping_figure.tex}
 
-\subsubsection{Transformer Mapping (P.3)}
+\subsubsection{Transformer Mapping}
 \label{sssec:chapter_5_variant_p3}
 
 The previous mappings construct each target factor embedding independently from the features of its neighboring variables and constraints. In this proposal, we instead represent each target factor by a short input sequence and use a transformer encoder to learn interactions between the different elements of this sequence before predicting the factor parameters.
@@ -238,121 +237,137 @@ The previous mappings construct each target factor embedding independently from 
 
 We denote by
 \[
-K_V = \max_{\alpha \in F} |\mathcal N_V(\alpha)|,
+K_V = \max_{\FACTOR \in \FACTORSET} |\mathcal N_V(\FACTOR)|,
 \qquad
-K_C = \max_{\alpha \in F} |\mathcal N_C(\alpha)|,
+K_C = \max_{\FACTOR \in \FACTORSET} |\mathcal N_C(\FACTOR)|,
 \]
 the maximum number of variable and constraint dependencies over all target factors, and define
 \[
 S = K_V + K_C .
 \]
 
-For each target factor $\alpha$, we build a sequence of length $S$ by listing first the embeddings of its dependent variables and then the embeddings of its dependent constraints, padding with null tokens whenever fewer than $K_V$ or $K_C$ elements are present. Thus, the transformer input is a tensor
+For each target factor $\FACTOR$, we build a sequence of length $S$ by listing first the embeddings of its dependent variables and then the embeddings of its dependent constraints, padding with null tokens whenever fewer than $K_V$ or $K_C$ elements are present. Thus, the transformer input is a tensor
 
-$$g_0 \in \mathbb R^{|F| \times S \times d}$$
+$$g_0 \in \R^{|F| \times S \times d}$$
 
-More explicitly, for each target factor $\alpha_m$, the slice $g_0[m,:,:]$ is of the form
+More explicitly, for each target factor $\FACTOR_m$, the slice $g_0[m,:,:]$ is of the form
 \begin{equation}
 g_0[m,:,:]
 =
 \Big[
-h^{(T)}_{v_1},\,
+\EMB^{(T)}_{v_1},\,
 \ldots,\,
-h^{(T)}_{v_{|\mathcal N_V(\alpha_m)|}},\,
+\EMB^{(T)}_{v_{|\mathcal N_V(\FACTOR_m)|}},\,
 0,\ldots,0,\,
-h^{(T)}_{c_1},\,
+\EMB^{(T)}_{c_1},\,
 \ldots,\,
-h^{(T)}_{c_{|\mathcal N_C(\alpha_m)|}},\,
+\EMB^{(T)}_{c_{|\mathcal N_C(\FACTOR_m)|}},\,
 0,\ldots,0
 \Big],
 \end{equation}
-where $(v_1,\dots,v_{|\mathcal N_V(\alpha_m)|})$ enumerates the variable dependencies in $\mathcal N_V(\alpha_m)$, $(c_1,\dots,c_{|\mathcal N_C(\alpha_m)|})$ enumerates the constraint dependencies in $\mathcal N_C(\alpha_m)$, and each element of the sequence belongs to $\mathbb R^d$.
+where $(v_1,\dots,v_{|\mathcal N_V(\FACTOR_m)|})$ enumerates the variable dependencies in $\mathcal N_V(\FACTOR_m)$, $(c_1,\dots,c_{|\mathcal N_C(\FACTOR_m)|})$ enumerates the constraint dependencies in $\mathcal N_C(\FACTOR_m)$, and each element of the sequence belongs to $\R^d$.
 
-% Equivalently, if we denote by $g_0[m,s,:] \in \mathbb R^d$ the $s$-th token associated with target factor $\alpha_m$, then
-
-% $$g_0[m,s,:] =
-% \begin{cases}
-% h^{(T)}_{v_s}, & 1 \le s \le |\mathcal N_V(\alpha_m)|,\\[2mm]
-% 0, & |\mathcal N_V(\alpha_m)| < s \le K_V,\\[2mm]
-% h^{(T)}_{c_{\,s-K_V}}, & K_V < s \le K_V + |\mathcal N_C(\alpha_m)|,\\[2mm]
-% 0, & K_V + |\mathcal N_C(\alpha_m)| < s \le S.
-% \end{cases}
-% $$
-
-Since the number of dependencies varies across target factors, we additionally define a binary padding mask
-
-$$M \in \{0,1\}^{|F| \times S},$$
-
-with
-$$
+Since the number of dependencies varies across target factors, we additionally define a binary padding mask $M \in \{0,1\}^{|\FACTORSET| \times S}$, with
+\begin{equation*}
 M_{m,s} =
 \begin{cases}
-1, & \text{if token } s \text{ of target factor } \alpha_m \text{ corresponds to a real dependency},\\
+1, & \text{if token } s \text{ of target factor } \FACTOR_m \text{ corresponds to a real dependency},\\
 0, & \text{if token } s \text{ is padding}.
 \end{cases}
-$$
+\end{equation*}
 
 The transformer then produces a sequence of hidden representations
-\[
+\begin{equation*}
 g_1, g_2, \dots, g_L,
 \qquad
-g_\ell \in \mathbb R^{|F| \times S \times d},
-\]
-where each layer applies self-attention over the dependency tokens of each target factor,
-using the mask $M$ to ignore padded positions. The embedding of factor $\alpha_m$ is then simply taken to be the average value of each slice along the second dimension: 
+g_\ell \in \mathbb R^{|\FACTORSET| \times S \times d},
+\end{equation*}
+where each layer applies self-attention over the dependency tokens of each target factor, using the mask $M$ to ignore padded positions. The embedding of factor $\FACTOR_m$ is then simply taken to be the average value of each slice along the second dimension: 
 \begin{equation}
-    h'_{\alpha_m} = \frac{1}{\sum^S_{s=1} M_{m,s}} \sum\limits_{s=1}^S M_{m,s} g_{L}[m,s,:] \in \mathbb{R}^d
+    \EMB'_{\FACTOR_m} = \frac{1}{\sum^S_{s=1} M_{m,s}} \sum\limits_{s=1}^S M_{m,s} g_{L}[m,s,:] \in \mathbb{R}^d
 \end{equation}
 
-Figure~\ref{fig:chapter_5_structure_prediction_transformer_mapping_figure} illustrates the P.3 mapping, in which variable and constraint embeddings are arranged into a padded sequence and processed jointly by a transformer encoder before pooling.
+Figure~\ref{fig:chapter_5_structure_prediction_transformer_mapping_figure} illustrates the F2F-TRF mapping, in which variable and constraint embeddings are arranged into a padded sequence and processed jointly by a transformer encoder before pooling.
 
 The transformer-based model should outperform other variants when proper parameterization requires combining and disentangling multiple sources of variable- and constraint-level information, since self-attention can model higher-order interactions within the dependency set of each target factor.
 
 \input{resources/tikz/chapter_5/structure_prediction_transformer_mapping_figure}
 
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{p{2.2cm} p{3.1cm} p{7.2cm}}
+\toprule
+\textbf{Label} & \textbf{Category} & \textbf{Meaning} \\
+\midrule
+DGN & Baseline model & Fully factorized predictor with independent variable scores and no MRF inference. \\
+F2F-MAX/SEP/VAR/ATT/TRF & Mapping variant & Neural mechanism used to map GNN embeddings to factor parameters. \\
+FULL & Factor graph structure & Original constraint-factor MRF; used only when the full canonical factor tables are tractable. \\
+PAIR & Factor graph structure & Pairwise approximation containing only factors of arity at most two. \\
+TREE & Factor graph structure & Sparse tree-structured approximation, obtained from a spanning tree of the dependency graph. \\
+EGG/GD & Decoding policy & Procedures used to convert predicted marginals into feasible assignments. \\
+\bottomrule
+\end{tabular}
+\caption{Terminology used in the experimental section. Mapping labels describe how factors are parameterized, whereas FULL, PAIR, and TREE describe which factor graph is parameterized.}
+\label{tab:chapter_5_experimental_terminology}
+\end{table}
+
 \subsection{Results}
-As discussed previously, exact MRF parameterizations quickly become intractable as constraint arity increases. The experiments in this section evaluate how well the proposed approximate MRF constructions mitigate this limitation in practice. We focus on assessing the impact of the chosen factor graph structure and feature-to-factor mapping on the quality of the learned distributions, and analyze the trade-offs between expressivity and tractability across different approximation regimes. Table ~\ref{tab:chapter_5_scp50_results}-~\ref{tab:chapter_5_scp_n150_results} reports the performance of all considered mapping variants across the datasets of increasing constraint arity. Results are evaluated using both a score driven greedy (predicted scores are used to order variables) and GD.
+\label{subsec:chapter_5_results}
 
-\paragraph{On the choice of factor graph approximation.}
+The experiments vary three conceptually distinct components: the feature-to-factor mapping, the approximate MRF structure, and the decoding policy. To avoid ambiguity, we use the following terminology throughout the section. The labels F2F-MAX, F2F-SEP, F2F-VAR, F2F-ATT, and F2F-TRF denote neural mapping architectures that convert embeddings from the original variable--constraint graph into factor parameters. In contrast, FULL, PAIR, and TREE denote the structure of the MRF being parameterized. FULL is the original constraint-factor graph and is evaluated only on low-arity instances where the canonical factor representation is tractable. PAIR is a bounded pairwise approximation, and TREE is a spanning-tree approximation of the variable-dependency graph. Finally, EGG and GD denote decoding strategies applied to the marginals returned by inference.
 
-On the two lower-arity datasets (Tables~\ref{tab:chapter_5_scp50_results} and \ref{tab:chapter_5_scp_n120_results}), the choice of factor graph approximation has a clear and consistent impact on solution quality. As the maximum factor arity increases, the optimality gap decreases across all mapping variants. For instance, on the $(n=50)$ dataset, moving from pairwise models ($\alpha \leq 2$) to higher-arity approximations ($\alpha \leq 4$) reduces the GD gap from approximately $2.9\%$ to $2.0\%$ for P.0, and from $3.3\%$ to $2.5\%$ for P.1. A similar trend is observed for P.2 and P.3, indicating that increasing factor arity consistently improves performance.
+The first set of experiments evaluates the effect of the mapping architecture for a fixed factor-graph protocol on each dataset. The later decoding-dynamics analysis fixes the mapping to F2F-TRF and varies the factor-graph structure among FULL, PAIR, and TREE. Thus, differences between F2F variants measure the effect of parameterization capacity, whereas differences between FULL, PAIR, and TREE measure the effect of structural approximation.
+
+As discussed previously, exact MRF parameterizations quickly become intractable as constraint arity increases. The experiments in this section evaluate how well the proposed approximate MRF constructions mitigate this limitation in practice. We focus on assessing the impact of the chosen factor graph structure and feature-to-factor mapping on the quality of the learned distributions, and analyze the trade-offs between expressivity and tractability across different approximation regimes. Table ~\ref{tab:chapter_5_scp50_results}-~\ref{tab:chapter_5_scp_n150_results} reports the performance of all considered mapping variants across the datasets of increasing constraint arity. Results are evaluated using both EGG and GD decoding.
+
+We evaluate the five proposed variants of the feature-to-factor component under approximate factor graphs of increasing complexity. Each F2F variant is paired either with a tree-structured factor graph obtained from a minimum spanning tree of the supporting dependency graph, denoted MST, or with a bounded-arity factor graph in which every factor $\FACTOR$ satisfies $|\FACTOR|\leq k$. The arity bound controls the expressiveness and cost of the approximate MRF: larger values of $k$ allow richer local dependencies, but require larger factor tables and more expensive LBP updates.
+
+For all instance classes, we report the performance of the fully factorized baseline, denoted DGN, which predicts independent variable scores and does not use an MRF layer. For the smaller instances, where the full canonical factor parameterization remains tractable, we also report the performance of the LMRF-LBP model from Chapter~\ref{chapter:3_differentiable_mrf_inference_for_BILPs}. This model serves as a high-expressivity reference point for assessing how much is lost when the original high-arity constraint factors are replaced by tractable approximate factor graphs.
+
+\paragraph{On the choice of factor graph approximation}
+
+On the two lower-arity datasets (Tables~\ref{tab:chapter_5_scp50_results} and \ref{tab:chapter_5_scp_n120_results}), the choice of factor graph approximation has a clear and consistent impact on solution quality. As the maximum factor arity increases, the optimality gap decreases across all mapping variants. For instance, on the $(n=50)$ dataset, moving from pairwise models ($|\FACTOR| \leq 2$) to higher-arity approximations ($|\FACTOR| \leq 4$) reduces the GD gap from approximately $2.9\%$ to $2.0\%$ for F2F-MAX, and from $3.3\%$ to $2.5\%$ for F2F-SEP. A similar trend is observed for F2F-ATT and F2F-TRF, indicating that increasing factor arity consistently improves performance.
 
 This behavior is expected: higher-arity factors allow the approximate MRF to better capture the combinatorial structure of the constraints, leading to more accurate local representations of feasibility. In contrast, low-arity approximations break higher-order dependencies into independent or weakly coupled interactions, which limits the model’s ability to represent valid joint configurations.
 
-The difference between the two decoding strategies further highlights the role of modeled dependencies. When using the score-driven greedy procedure, improvements from increasing factor arity remain moderate, as decisions are made based solely on the initial marginals. In contrast, the GD procedure consistently yields substantially lower optimality gaps. For example, on the $(n=50)$ dataset with $\alpha \leq 4$, GD improves over greedy by more than $3$ percentage points across most models.
+The difference between the two decoding strategies further highlights the role of modeled dependencies. When using EGG, improvements from increasing factor arity remain moderate, as decisions are made based solely on the initial marginals. In contrast, the GD procedure consistently yields substantially lower optimality gaps. For example, on the SC-S dataset with $|\FACTOR| \leq 4$, GD improves over greedy by more than $3$ percentage points across most models.
 
 This gap can be attributed to the ability of GD to exploit the learned dependencies: as variables are fixed, marginals are recomputed, allowing the model to propagate constraints and refine its predictions. As a result, the marginals become increasingly informative throughout the decoding process, effectively guiding the search toward more feasible and higher-quality solutions.
 
 However, this comes at a significant computational cost, as inference must be rerun after each variable assignment. This highlights a fundamental trade-off: while richer factor graph approximations improve solution quality, their benefits are most pronounced when combined with iterative inference procedures such as GD.
 
-\paragraph{On the choice of feature-to-factor mapping.}
-Having established that the structure of the approximate factor graph strongly influences performance, we now examine the contribution of the feature-to-factor mapping itself. Overall, increasing the expressivity of the mapping leads to consistent but moderate improvements, provided that the underlying factor graph is sufficiently informative. Comparing P.0 and P.1 highlights the importance of explicitly separating variable and constraint information: while both models rely on simple aggregation mechanisms, P.1 typically achieves slightly improved performance, indicating that preserving this structural distinction is beneficial. In contrast, the P.1 VO variant, which discards constraint embeddings entirely, consistently degrades performance, confirming that constraint-level information is essential for accurately parameterizing the approximate MRF.
+\paragraph{On the choice of feature-to-factor mapping}
+Having established that the structure of the approximate factor graph strongly influences performance, we now examine the contribution of the feature-to-factor mapping itself. Overall, increasing the expressivity of the mapping leads to consistent but moderate improvements, provided that the underlying factor graph is sufficiently informative. Comparing F2F-MAX and F2F-SEP highlights the importance of explicitly separating variable and constraint information: while both models rely on simple aggregation mechanisms, F2F-SEP typically achieves slightly improved performance, indicating that preserving this structural distinction is beneficial. In contrast, the F2F-VAR variant, which discards constraint embeddings entirely, consistently degrades performance, confirming that constraint-level information is essential for accurately parameterizing the approximate MRF.
 
-Moving to more expressive mappings, P.2 introduces attention over constraint embeddings, allowing the model to selectively weight the contribution of different constraints. This results in more stable behavior and modest improvements across most settings, suggesting that not all constraints contribute equally to the parameterization of a given factor. Finally, the transformer-based mapping P.3 further increases modeling capacity by allowing interactions between all dependency embeddings. While this additional flexibility can yield further gains—particularly in intermediate regimes—it does not lead to uniformly large improvements over P.2, indicating that the main benefit comes from identifying relevant dependencies rather than modeling complex higher-order interactions between them.
+Moving to more expressive mappings, F2F-ATT introduces attention over constraint embeddings, allowing the model to selectively weight the contribution of different constraints. This results in more stable behavior and modest improvements across most settings, suggesting that not all constraints contribute equally to the parameterization of a given factor. Finally, the transformer-based mapping F2F-TRF further increases modeling capacity by allowing interactions between all dependency embeddings. While this additional flexibility can yield further gains—particularly in intermediate regimes—it does not lead to uniformly large improvements over F2F-ATT, indicating that the main benefit comes from identifying relevant dependencies rather than modeling complex higher-order interactions between them.
 
 Taken together, these results suggest that while improving the mapping function is beneficial, its impact remains secondary to that of the factor graph structure. In particular, more expressive mappings are most effective when combined with sufficiently rich factor graph approximations, and cannot fully compensate for overly restrictive structural choices.
 
-\paragraph{Failure modes on high-arity instances.}
+\paragraph{Failure modes on high-arity instances}
 The results on the largest dataset (Table~\ref{tab:chapter_5_scp_n150_results}) reveal important limitations of the proposed approximation scheme. In this regime, constraints involve a large number of variables, and the reduction to low-arity factors leads to unstable behavior during training, with some seeds consistently failing to converge. This suggests that decomposing high-arity constraints into collections of small factors is insufficient to faithfully capture the underlying dependencies between variables. In particular, the resulting approximate MRF appears unable to represent the global interactions induced by large constraints, leading to degraded performance and increased variance across runs. These observations highlight a fundamental limitation of fixed low-arity approximations in highly combinatorial settings, and suggest that more expressive or adaptive factorization strategies may be required. In the following subsection, we investigate an alternative approach that leverages the predicted marginals to reduce the problem size by fixing a subset of variables, and then solves the resulting reduced instance to optimality using a state-of-the-art ILP solver.
 
 \input{resources/tab/chapter_5/structured_prediction_result_tables}
 
-\subsection{Decoding dynamics} 
+\subsection{Decoding dynamics}
+\label{subsec:chapter_5_decoding_dynamics} 
 
-We analyse the dynamics of the decoding process when leveraging model predictions, with and without belief propagation, to assess whether the selected variables exhibit higher quality over time. In a fully factorized setting, the model effectively learns a ranking over variables, assigning higher scores to those deemed most important, which are therefore fixed early in the decoding process. However, early incorrect decisions can significantly degrade the final solution quality.
+The previous results compare the five F2F mapping variants. In this section, we ask a different question: how does the \emph{choice of approximate factor graph} affect the decoding process once the mapping architecture is fixed? To isolate this effect, we restrict the analysis to F2F-TRF, which was the strongest mapping variant in the main performance tables.
 
-In contrast, our proposed model induces dependencies between decisions: the variable selected at iteration $t$ influences subsequent choices through the evolving partial solution. The selection mechanism relies on evaluating the marginals of the learned distribution conditioned on this partial assignment. As decoding progresses, we therefore expect the probability mass of the conditional distribution to increasingly concentrate on variables that are consistent with the current partial solution, leading to more informed and stable decisions.
+We compare three MRF factor graph structures. FULL denotes the original constraint-factor MRF and is evaluated only on low-arity instances where its canonical parameterization is tractable. PAIR denotes a pairwise approximation of the variable dependencies. TREE denotes a tree-structured approximation. These labels therefore describe the factor graph being parameterized, not different F2F mappings. The fully factorized DGN model is included as a non-MRF baseline.
 
-As shown in Tables~\ref{tab:chapter_5_scp50_results} and \ref{tab:chapter_5_scp_n120_results}, transformer-based models consistently outperform the other variants. In the following, we analyse the dynamics of the decoding process under both the EGG variable selection policy and the GD decoding strategy for trained P.3 models (see Table~\ref{tab:f2f_mapping_variants_compact}). Our goal is to understand how the variable selection process behaves and how it is influenced by the expressiveness of the underlying distribution. To this end, we compare a fully factorized model (GNN) with three types of MRF-based approximations: FULL, which follows the original factor graph (for low-arity instances); PAIR, a pairwise approximation; and TREE, a spanning-tree-based approximation of the factor graph.
+We then analyse the variables selected by EGG and GD, their entropy at the time of selection, and how these quantities change as the approximate factor graph becomes more or less expressive.
+
+As shown in Tables~\ref{tab:chapter_5_scp50_results} and \ref{tab:chapter_5_scp_n120_results}, transformer-based models consistently outperform the other variants. In the following, we analyse the dynamics of the decoding process under both the EGG variable selection policy and the GD decoding strategy for trained F2F-TRF models (see Table~\ref{tab:f2f_mapping_variants_compact}). Our goal is to understand how the variable selection process behaves and how it is influenced by the expressiveness of the underlying distribution. To this end, we compare a fully factorized model (DGN) with three types of MRF-based approximations: LMRF-LBP, which follows the original factor graph (for low-arity instances); PAIR, a pairwise approximation; and TREE, a spanning-tree-based approximation of the factor graph.
 
 \paragraph{Variable selection.}
-Figure~\ref{fig:chapter_5_decoding_average_value} reports the evolution of the mean selected variable value $\overline{x}_i^{(t)}$ at decoding step $t$. Across all settings, we observe a strong bias towards selecting variables with value $0$ in the early iterations, with $\overline{x}_i^{(t)}$ remaining close to $0$ for the first steps and decreasing further as instance size increases. This behavior is consistent with the strong class imbalance in the training data, where most variables are inactive, and reflects the model’s tendency to first eliminate sets that do not contribute to feasibility. Importantly, the decoding procedures enforce feasibility at all times, ensuring that a valid solution is maintained even in the degenerate case where the model consistently favors variables with value $0$.
+Figure~\ref{fig:chapter_5_decoding_average_value} reports the evolution of the mean selected variable value $\overline{x}_i^{(t)}$ at decoding step $t$. Across all settings, we observe a strong bias towards selecting variables with value $0$ in the early iterations, with $\overline{x}_i^{(t)}$ remaining close to $0$ for the first steps and decreasing further as instance size increases. This behavior is consistent with the strong class imbalance in the training data, where most variables are inactive, and reflects the model's tendency to first eliminate sets that do not contribute to feasibility. Importantly, the decoding procedures enforce feasibility at all times, ensuring that a valid solution is maintained even in the degenerate case where the model consistently favors variables with value $0$.
 
 As decoding progresses and the candidate set shrinks, distinct behaviors emerge. Under the EGG strategy, the GNN-based model exhibits a gradual increase in $\overline{x}_i^{(t)}$, with values rising steadily in the later iterations and peaking near the end of the decoding process. This reflects the transition from pruning irrelevant variables to selecting the remaining variables required to complete a feasible cover, where the proportion of active variables necessarily increases.
 
 In contrast, the MRF-based models display a more stable selection profile, with consistently higher values of $\overline{x}_i^{(t)}$ in the early and intermediate regimes (typically remaining above the GNN curves by a noticeable margin). This indicates a greater propensity to fix variables to $1$ earlier in the process, suggesting that the structured model is able to better account for dependencies between variables. A moderate increase is still observed in the later stages, but the transition is smoother overall.
 
-A similar trend is observed under the GD strategy, although the increase in $\overline{x}_i^{(t)}$ during the mid-regime is more pronounced. This effect becomes stronger as the approximate model more closely matches the full MRF (FULL $>$ PAIR $>$ TREE), highlighting the impact of richer factor structures on the selection dynamics. Overall, these results suggest that combining structured models with appropriate decoding strategies can mitigate the effects of label imbalance, leading to more balanced and informative variable selection throughout the decoding process.
+A similar trend is observed under the GD strategy, although the increase in $\overline{x}_i^{(t)}$ during the mid-regime is more pronounced. This effect becomes stronger as the approximate model more closely matches the full MRF, highlighting the impact of richer factor structures on the selection dynamics. Overall, these results suggest that combining structured models with appropriate decoding strategies can mitigate the effects of label imbalance, leading to more balanced and informative variable selection throughout the decoding process.
 
 This behavior is further explained by the entropy gap $\Delta H^{(t)}$ shown in Figure~\ref{fig:chapter_5_decoding_average_entropy_gap}. Across all settings, the gap is strongly negative in the early iterations (typically reaching values around $-0.3$ on small and mid-sized instances), indicating that the decoder initially selects variables with significantly lower entropy than the average candidate. Interestingly, the TREE MRF and GNN models exhibit very similar dynamics in this regime, both displaying highly confident early decisions. However, as decoding progresses, these models are rapidly overtaken by the PAIR and FULL MRF variants, whose entropy gap increases more slowly and remains more negative in the intermediate regime. This indicates that richer factor structures lead to more discriminative and sustained confidence estimates throughout decoding. Under GD, this effect is even more pronounced, with the FULL model maintaining the largest gap for most of the trajectory, while the GNN and TREE models quickly lose their initial advantage. Overall, these results suggest that while simpler models can identify obvious variables early on, structured MRF models are better able to maintain reliable confidence estimates as the problem becomes more constrained, thereby mitigating the effects of label imbalance and supporting more informed decisions in later decoding stages.
 
@@ -361,10 +376,11 @@ This behavior is further explained by the entropy gap $\Delta H^{(t)}$ shown in 
 \input{resources/tikz/chapter_5/gd_selected_variable_entropy_gap}
 
 \subsection{Fix-and-solve with partial variable assignment}
+\label{subsec:chapter_5_fix_and_solve}
 
 The previous experiments highlight the limitations of approximate MRF inference when dealing with high-arity constraints, where low-arity approximations fail to fully capture complex dependencies. We now investigate whether the learned distributions can still be exploited effectively in a hybrid setting, where predictions are used to simplify the problem before applying an exact solver.
 
-In this setting, a subset of variables is fixed according to the predicted marginals using an entropy-guided greedy (EGG) strategy, and the resulting reduced instance is solved to optimality using a commercial ILP solver (Gurobi). By varying the proportion of variables that are fixed, we obtain a trade-off between the size of the reduced problem and the quality of the resulting solution.
+In this setting, a subset of variables is fixed according to the predicted marginals using an entropy-guided greedy (EGG) strategy, and the resulting reduced instance is solved to optimality using a commercial ILP solver (SCIP). By varying the proportion of variables that are fixed, we obtain a trade-off between the size of the reduced problem and the quality of the resulting solution.
 
 \paragraph{Optimality gap under partial fixing.}
 
@@ -373,9 +389,9 @@ In this setting, a subset of variables is fixed according to the predicted margi
 \input{resources/tikz/chapter_5/fix_and_solve_pareto}
 
 
-Figures~\ref{fig:chapter_5_fix_and_solve_optimality_gaps} show the evolution of the optimality gap as a function of the proportion of fixed variables. Across all datasets, using learned MRF-based predictions to guide variable fixing consistently improves over the baseline GNN logits. For instance, on \SCPSmall at $p=0.9$, the gap drops from approximately $8.0\%$ for GNN EGG to about $5.0\%$ for MRF EGG, and further down to around $1.7\%$ with MRF GD. Similar trends are observed across all values of $p$, where MRF-based methods not only reduce the gap but also exhibit a slower degradation as more variables are fixed.
+Figures~\ref{fig:chapter_5_fix_and_solve_optimality_gaps} show the evolution of the optimality gap as a function of the proportion of fixed variables. Across all datasets, using learned MRF-based predictions to guide variable fixing consistently improves over the baseline GNN logits. For instance, on SC-S at $p=0.9$, the gap drops from approximately $8.0\%$ for GNN EGG to about $5.0\%$ for MRF EGG, and further down to around $1.7\%$ with MRF GD. Similar trends are observed across all values of $p$, where MRF-based methods not only reduce the gap but also exhibit a slower degradation as more variables are fixed.
 
-On the lower-arity datasets, even simple mappings already provide strong guidance, and increasing the expressivity of the mapping (P.0 $\rightarrow$ P.3) consistently improves the quality of the reduced solutions. This is particularly visible at higher fixing ratios: on \SCPMid at $p=0.9$, the gap decreases from roughly $9.3\%$ for GNN EGG to $4.7\%$ for MRF EGG, while more expressive models such as Pair and Tree MRF further reduce the gap to approximately $6.7\%$ and $9.0\%$ (EGG), and down to $4.4\%$ and $9.0\%$ under GD decoding. These results indicate that more expressive mappings enable the model to better identify variables that can be fixed with high confidence.
+On the lower-arity datasets, even simple mappings already provide strong guidance, and increasing the expressivity of the mapping (F2F-MAX $\rightarrow$ F2F-TRF) consistently improves the quality of the reduced solutions. This is particularly visible at higher fixing ratios: on SC-M at $p=0.9$, the gap decreases from roughly $9.3\%$ for GNN EGG to $4.7\%$ for MRF EGG, while more expressive models such as Pair and Tree MRF further reduce the gap to approximately $6.7\%$ and $9.0\%$ (EGG), and down to $4.4\%$ and $9.0\%$ under GD decoding. These results indicate that more expressive mappings enable the model to better identify variables that can be fixed with high confidence.
 
 On the high-arity dataset, where approximate inference alone struggled, this hybrid approach remains effective. Although some methods degrade when fixing too many variables (e.g., GNN EGG reaches over $11.5\%$ gap at $p=0.9$), MRF-based approaches remain significantly more stable. In particular, Pair MRF GD reduces the gap to around $8.0\%$, and Tree-based models achieve similar improvements while maintaining robustness across fixing ratios. Notably, at intermediate values such as $p=0.7$, MRF GD variants achieve gaps near $1.1$--$1.4\%$, compared to $0.8\%$--$4.2\%$ for GNN, highlighting their ability to preserve solution quality even with partial fixing.
 
@@ -390,7 +406,7 @@ To better understand the trade-off between solution quality and computational co
 
 As expected, fixing a larger number of variables reduces the size of the remaining problem and leads to faster solving times, but may degrade solution quality if incorrect assignments are made. Conversely, fixing fewer variables preserves more flexibility for the solver but results in higher computational cost.
 
-Across all datasets, MRF-based models dominate the baseline in terms of Pareto efficiency: for a given solving time, they consistently achieve lower optimality gaps. This improvement becomes more pronounced as the mapping becomes more expressive, with P.2 and P.3 yielding the best trade-offs overall.
+Across all datasets, MRF-based models dominate the baseline in terms of Pareto efficiency: for a given solving time, they consistently achieve lower optimality gaps. This improvement becomes more pronounced as the mapping becomes more expressive, with F2F-ATT and F2F-TRF yielding the best trade-offs overall.
 
 Importantly, even on the largest dataset, where approximate inference alone was unstable, the hybrid approach remains robust. The learned distributions enable the model to identify a subset of high-confidence variables whose fixing significantly simplifies the problem without overly constraining the solution space. This results in favorable Pareto frontiers, demonstrating that the proposed approach effectively balances prediction and exact optimization.
 
@@ -398,5 +414,3 @@ Overall, these results show that combining learned approximate MRFs with exact s
 
 \subsection{Conclusion}
 Overall, these results demonstrate that leveraging learned approximate MRFs provides an effective mechanism for guiding the decoding process and improving solution quality. By capturing structural dependencies between variables, MRF-based models yield more informative marginals, which translate into better variable fixing decisions compared to fully factorized approaches. Importantly, the experiments highlight an inherent trade-off between optimality and computational cost: aggressive fixing leads to faster solving times at the expense of solution quality, while conservative strategies preserve optimality but reduce computational gains. Within this spectrum, the proposed approach enables a controlled balance, where the choice of approximation (FULL, PAIR, TREE) and decoding strategy (EGG vs GD) determines the position on the Pareto frontier. This flexibility makes approximate MRFs particularly well-suited for hybrid optimization pipelines, where learned inference and exact solvers can be combined to adapt to varying time and accuracy requirements.
-
-\todo[inline]{more on the conclusion, what is to follow, how to perform tradeoff, integration in a pipeline}

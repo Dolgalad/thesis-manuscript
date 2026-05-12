@@ -1,5 +1,64 @@
-\lipsum[100]
+\chapter{Conclusion}\label{chap6:conclusion}
+%\addcontentsline{toc}{chapter}{Conclusion}
 
-\section{Future work}
-A possible extension would be to learn residual corrections to the canonical feasibility-cost parameters, rather than replacing them entirely. Such a model could preserve the inductive bias of the canonical construction while allowing data-driven adjustment of the local log-potentials.
+\section{Summary}
 
+This thesis studied how machine learning can be combined with graphical-model inference to support the solution of binary integer linear programs. The starting point was the observation that BILP solutions are structured objects: variables are coupled by feasibility constraints, and good assignments cannot generally be obtained by predicting each variable independently. While graph neural networks provide a powerful way to encode the variable–-constraint structure of an optimization instance, a purely factorized output distribution does not explicitly represent the dependencies that make combinatorial optimization difficult.
+
+To address this issue, the thesis developed MRF-based models for structured solution prediction. Constraints were represented as factors over decision variables, neural networks were used to predict local factor parameters, and approximate inference algorithms were used to propagate local information into global prediction signals. This led to a sequence of methods that progressively addressed expressiveness, refinement, and scalability.
+
+Chapter 3 introduced differentiable MRF inference for BILPs. The chapter showed how a BILP can be associated with an exponential-family MRF over its binary decision variables. A canonical feasibility--cost parameterization encoded objective coefficients and local feasibility directly into factor log-potentials, while a learned parameterization used a GNN to predict over-complete factor tables. Fixed-iteration LBP and NMF transformed these parameters into approximate marginals. These marginals were then used for solution decoding, including guided decimation, which repeatedly fixed variables and recomputed beliefs under the resulting evidence.
+
+The experiments in Chapter 3 showed that learned MRF inference can provide more useful decoding signals than independent neural variable scores or non-learned canonical MRF parameters. The strongest results were obtained when learned inference was combined with adaptive decoding, especially guided decimation. The analysis of learned factor potentials further supported the central claim of the chapter: the model learns local compatibility patterns that separate feasible from infeasible configurations and uses inference to propagate this information through the factor graph.
+
+Chapter 4 extended the structured-inference perspective toward learned refinement dynamics. Instead of treating solution prediction as a one-shot mapping from an instance to a binary assignment, the chapter viewed solution construction as an iterative process. Flow-matching and denoising-inspired models were used to update candidate assignments over time. MRF--derived information was incorporated into the state representation, linking learned generative dynamics with structured graphical-model signals. This chapter emphasized that many optimization procedures can be understood as refinement processes: a candidate solution is progressively improved, repaired, or made more consistent with the constraints.
+
+Chapter 5 addressed one of the main scalability limitations of direct MRF parameterization. In an over-complete representation, factor tables grow exponentially with factor arity. This is manageable for pairwise constraints, such as those arising in edge-based Maximum Independent Set formulations, but becomes problematic for higher-arity constraints, such as Set Cover constraints. The chapter therefore studied approximate feature-to-factor mappings that construct lower-arity factor graphs while retaining useful dependency information from the original problem structure. Several mapping architectures were considered, including aggregation-based, attention-based, and transformer-based mappings. The resulting models provided a more scalable way to obtain structured inference signals and were evaluated in both direct decoding and fix-and-solve settings.
+
+Across these chapters, the thesis supports a consistent conclusion: graphical-model inference provides a useful inductive bias for learning to solve BILPs. It does not replace exact optimization, nor does it guarantee feasibility or optimality by itself. Instead, it provides structured intermediate information—marginals, factor beliefs, local compatibility scores, and partial assignments—that can guide decoders, refinement models, or downstream solvers.
+
+\section{Main Findings}
+
+The first main finding is that explicit dependency modeling improves the usefulness of learned predictions. Factorized GNN outputs are scalable and effective, but they ultimately produce independent variable scores. By contrast, MRF-based models represent interactions among variables through factors and use inference to propagate information across the factor graph. This leads to prediction signals that better reflect the constraint structure of the problem.
+
+The second finding is that approximate inference is most effective when paired with an adaptive decoder. A single pass of inference provides useful marginals, but guided decimation makes better use of the model by conditioning on partial assignments and recomputing beliefs as the solution is constructed. This is important because the relevance of a variable's value changes as other variables are fixed. The decoder therefore benefits from treating inference as an iterative conditional process rather than as a static scoring step.
+
+The third finding is that learned MRF parameters can adapt to the practical limitations of approximate inference. Since LBP and NMF are run for a finite number of iterations on loopy graphs, their outputs are not exact marginals. However, training the parameters through the same approximate inference procedure allows the model to learn factor potentials that are useful under this bounded inference regime. This distinguishes the approach from purely canonical MRF constructions, where the potentials are fixed by the original optimization model but may not be well matched to finite-iteration inference.
+
+The fourth finding is that learned predictions are especially useful as partial information for exact or heuristic solvers. In fix-and-solve settings, the learned model fixes a subset of variables and leaves the residual problem to a conventional solver. This creates a tunable trade-off between runtime and solution quality. The results suggest that learned inference should often be used conservatively: fixing too few variables yields little simplification, but fixing too many can overconstrain the remaining problem and amplify prediction errors.
+
+The fifth finding is that scalability requires approximate factor representations. Direct MRFs with high-arity factors are expressive but expensive. Lower-arity approximations and feature-to-factor mappings provide a practical compromise: they reduce inference cost while preserving some structured information from the original constraints. This is particularly important for problem classes such as Set Cover, where individual constraints may involve many variables.
+
+\section{Limitations}
+
+Several limitations remain.
+
+First, the methods studied in this thesis rely on approximate inference. LBP and NMF provide useful structured signals, but they do not guarantee exact marginals, exact MAP solutions, or convergence on arbitrary loopy factor graphs. The models should therefore be viewed as learned heuristic components rather than exact solvers.
+
+Second, feasibility is not guaranteed by the learned MRF distribution alone. The canonical hard-constraint MRF can assign zero mass to infeasible assignments in the idealized infinite-penalty case, but the learned models use finite parameters and approximate inference. Feasibility must therefore be handled by decoding rules, repair procedures, or downstream solvers.
+
+Third, over-complete factor parameterizations scale poorly with factor arity. Chapter 5 addresses this by studying approximate factor mappings, but this also introduces a modeling trade-off: reducing arity improves tractability but may discard important dependencies.
+
+Fourth, the empirical evaluation focuses on representative BILP families, primarily Maximum Independent Set and Set Cover. These problems expose important structures, but broader validation is needed on more diverse ILP classes, including scheduling, routing, packing, and real-world mixed-integer programming benchmarks.
+
+Finally, the models require solved training instances or high-quality reference solutions. Obtaining such data may itself be expensive, especially for large or hard instances. Reducing this dependency remains an important direction for future work.
+
+\section{Future Work}
+
+Several extensions follow naturally from this thesis.
+
+A first direction is to improve the theoretical understanding of learned approximate inference for optimization. The experiments suggest that learned parameters adapt to finite-iteration LBP or NMF, but stronger theoretical tools are needed to characterize when such inference produces useful decoding signals.
+
+A second direction is to integrate feasibility more directly into the learned models. This could involve constrained decoding, differentiable repair layers, hybrid MRF-solver architectures, or training objectives that penalize infeasible local and global configurations more explicitly.
+
+A third direction is to scale the approach to richer ILP and MILP formulations. This requires handling integer and continuous variables, heterogeneous constraint types, large coefficients, and solver-state information. It also requires factor representations that remain tractable on large industrial instances.
+
+A fourth direction is to combine MRF inference with stronger generative refinement methods. The denoising and flow-based models studied here suggest that solution generation can be viewed as a learned trajectory. Future work could combine this with conditional inference, local search, or reinforcement learning to obtain more robust refinement policies.
+
+A fifth direction is to use MRF-based predictions more deeply inside exact solvers. Instead of only producing standalone solutions or fixed-variable subsets, structured beliefs could guide branching, cut selection, primal heuristics, neighborhood selection, or restart policies.
+
+\section{Final Remarks}
+
+The central message of this thesis is that learning to solve combinatorial optimization problems should not ignore the structure that makes these problems difficult. Binary integer programs are defined by interactions among variables, and these interactions are naturally represented by constraints, graphs, factors, and inference procedures. Machine learning provides a way to adapt predictions to families of instances, but graphical models provide a principled mechanism for making those predictions structured.
+
+By combining graph neural networks, Markov Random Fields, approximate inference, guided decoding, and learned refinement, this thesis contributes to a broader view of learning-based optimization: learned models need not replace solvers, nor should they be limited to independent variable scores. Instead, they can produce structured information that helps construct, refine, or reduce optimization problems. This hybrid perspective preserves the strengths of both probabilistic inference and combinatorial optimization, and it opens a path toward learning systems that reason more explicitly about constraints, dependencies, and discrete structure.

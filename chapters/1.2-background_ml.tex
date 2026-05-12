@@ -60,7 +60,7 @@ For binary prediction tasks, where $y\in\{0,1\}$ and the model outputs a probabi
     -y\log p_{\GENENNPARAM}(x)
     -(1-y)\log\!\left(1-p_{\GENENNPARAM}(x)\right).
 \end{equation}
-This loss will be used later for direct variable-level predictors, where each binary decision variable is treated as a supervised label. For vector-valued binary outputs, this loss is typically applied componentwise and averaged over variables.
+This loss is used for direct variable-level predictors, including the factorized GNN baselines in Chapter~\ref{chapter:3_differentiable_mrf_inference_for_BILPs}.
 
 Supervised learning thus reduces to a parameter optimization problem, where $\GENENNPARAM$ is iteratively updated to minimize $\widehat{\mathcal{L}}_{\mathrm{sup}}(\GENENNPARAM)$ using stochastic gradient descent or one of its many variants \cite{goodfellow_deep_2016,kingma_adam_2014}. When the learned parameters generalize beyond the training data, the model effectively captures an underlying mapping between inputs and outputs, a property central to most modern applications of deep learning \cite{vapnik_nature_2000,bishop_pattern_2006}.
 
@@ -83,7 +83,7 @@ In practice, the true conditional distribution $p(y \mid x)$ is unknown and is a
 \end{equation}
 or by selecting high-probability outputs according to the learned distribution.
 
-Different families of generative models mainly differ in how they parameterize this distribution and in the training objective used to match it to the data distribution. Examples include likelihood-based objectives, denoising objectives, diffusion-style objectives, and flow-matching objectives. In the remainder of this section, we focus on denoising-based generative models, since they provide the conceptual basis for the diffusion and flow-based decoding methods studied later in this thesis. 
+Different families of generative models mainly differ in how they parameterize this distribution and in the training objective used to match it to the data distribution. Examples include likelihood-based objectives, denoising objectives, diffusion-style objectives, and flow-matching objectives. In the remainder of this section, we focus on denoising-based generative models, since they provide the conceptual basis for the diffusion and flow-based refinement methods studied in Chapter~\ref{chapter:4_denoising_and_mrf_inference}.
 
 \input{resources/tikz/chapter_1/ml/generative_model.tex}
 
@@ -200,7 +200,7 @@ Decode the final state $\hat{y} \leftarrow \mathrm{Dec}(y^{(K)}, x)$ \;
 \end{algorithm}
 
 \paragraph{From data generation to solution generation}
-In standard generative modeling, the objective is to sample realistic data points, such as images or signals. In this thesis, the generated object is instead a candidate solution to an optimization instance. This introduces an additional requirement: intermediate states of a denoising or flow model may be noisy, continuous, or infeasible, whereas the final output must be decoded into a discrete assignment satisfying the constraints of the original BILP. This distinction motivates the structured decoding procedures and graphical-model information used in later chapters.
+In standard generative modeling, the objective is to sample realistic data points, such as images or signals. In this thesis, the generated object is instead a candidate solution to an optimization instance. This introduces an additional requirement: intermediate states of a denoising or flow model may be noisy, continuous, or infeasible, whereas the final output must be decoded into a discrete assignment satisfying the constraints of the original BILP. we focus on denoising-based generative models, since they provide the conceptual basis for the diffusion and flow-based refinement methods studied in Chapter~\ref{chapter:4_denoising_and_mrf_inference}.
 
 
 \subsection{Neural Networks and Graph Neural Networks}
@@ -234,7 +234,7 @@ After several message-passing iterations, the node representations can be used d
 
 GNNs are especially useful for structured prediction problems in which the input is naturally relational or graph-structured~\cite{gilmer_neural_2017,battaglia_relational_2018}. In combinatorial optimization, they provide a way to learn heuristics or prediction rules that operate directly on graph-structured problem instances.
 
-In the context of this thesis, GNNs provide one of the main neural representation mechanisms for BILP instances. They process the variable-constraint graph and produce embeddings that can be used for direct variable-level prediction, MRF factor-parameter prediction, denoising updates, or as inputs to subsequent feature-to-factor mapping modules. They therefore form a bridge between the algebraic ILP formulation introduced in the previous section and the structured probabilistic models introduced in the next section.
+In the context of this thesis, GNNs provide one of the main neural representation mechanisms for BILP instances. They process the variable-constraint graph and produce embeddings that can be used for direct variable-level prediction, MRF factor-parameter prediction, denoising updates, or as inputs to subsequent feature-to-factor mapping modules. This distinction motivates the feasibility-preserving decoding procedures in Section~\ref{subsec:chapter_3_solution_decoding} and the refinement-based decoding procedures in Section~\ref{sec:chapter_4_unrolling_decoding}.
 
 \paragraph{Transformers and attention}
 
@@ -284,12 +284,12 @@ When applying a graph neural or attention-based model to a combinatorial optimiz
 
 In addition to optimization-derived quantities, one may use purely structural graph features. Degree features describe local connectivity, while positional encodings such as Laplacian eigenvectors or random-walk features provide information about a node's position in the graph beyond its immediate neighborhood~\cite{maskey_generalized_2022,eliasof_graph_2023}. 
 
-Random node features can also be added to break symmetries or increase the expressive power of message-passing GNNs~\cite{sato_random_2021,abboud_surprising_2021}. These features are used later as inputs to neural encoders, which transform them into embeddings for variable scoring, MRF parameter prediction, denoising updates, or feature-to-factor mappings.
+Random node features can also be added to break symmetries or increase the expressive power of message-passing GNNs~\cite{sato_random_2021,abboud_surprising_2021}. These features are used as inputs to neural encoders for variable scoring and MRF parameter prediction in Chapter~\ref{chapter:3_differentiable_mrf_inference_for_BILPs}, denoising updates in Chapter~\ref{chapter:4_denoising_and_mrf_inference}, and feature-to-factor mappings in Chapter~\ref{chapter:5_feature-to-factor_mappings_for_approximate_mrf_inference}.
 
 \subsection{Summary: Learning structured predictors}
 
-This section introduced the machine-learning concepts used in the remainder of the thesis. Supervised learning provides the basic framework for training direct variable-level predictors and learned MRF parameterizations from reference solutions. Binary cross-entropy will be used for direct binary prediction, while later chapters use inference-based surrogate losses to train structured MRF predictors.
+This section introduced the machine-learning concepts used in the remainder of the thesis. Supervised learning provides the basic framework for training direct variable-level predictors and learned MRF parameterizations from reference solutions. Binary cross-entropy is used for direct binary prediction, while Chapter~\ref{chapter:3_differentiable_mrf_inference_for_BILPs} uses inference-based surrogate losses to train structured MRF predictors.
 
-We also introduced denoising and flow-matching objectives as generative approaches to structured solution construction. These methods view solution generation as an iterative refinement process, transforming noisy, relaxed, or partially specified assignments into candidate solutions. This perspective is important for later chapters, where denoising and flow-based models are combined with MRF-structured predictions.
+We also introduced denoising and flow-matching objectives as generative approaches to structured solution construction. These methods view solution generation as an iterative refinement process, transforming noisy, relaxed, or partially specified assignments into candidate solutions. This perspective is important for Chapter~\ref{chapter:4_denoising_and_mrf_inference}, where denoising and flow-based models are combined with MRF-structured predictions.
 
-Finally, GNNs and transformers provide the neural representation and mapping mechanisms used to process variable-constraint graphs and construct learned predictors. GNNs encode the local structure of the original ILP representation, while attention-based modules provide flexible ways to aggregate and remap embeddings, a role that becomes important in the approximate factor-graph models introduced later. The next section introduces Markov Random Fields and approximate inference, which supply the structured probabilistic layer used to model dependencies between BILP decision variables.
+Finally, GNNs and transformers provide the neural representation and mapping mechanisms used to process variable-constraint graphs and construct learned predictors. GNNs encode the local structure of the original ILP representation, while attention-based modules provide flexible ways to aggregate and remap embeddings, a role that becomes important in the feature-to-factor mappings of Chapter~\ref{chapter:5_feature-to-factor_mappings_for_approximate_mrf_inference}. Section~\ref{sec:mrf_intro} introduces Markov Random Fields and approximate inference, which supply the structured probabilistic layer used to model dependencies between BILP decision variables.

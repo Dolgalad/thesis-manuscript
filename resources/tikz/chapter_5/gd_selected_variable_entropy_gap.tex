@@ -47,7 +47,7 @@
 % =========================================================
 
 \nextgroupplot[
-    title={\tiny SCP $\left(\begin{array}{l}n=50\\ m=50\\ k=5\end{array}\right)$},
+    title={\tiny SC-S},
     xtick style={draw=none},
     xmin=0,
     xmax=50,
@@ -121,7 +121,7 @@ table[col sep=comma, x=iter, y=gnn_lbp_tree__entropy_gap_to_mean__mean]
 {resources/data/chapter_5/scp_n50_m50_k5_egg_selected_variable_diagnostics.csv};
 
 \nextgroupplot[
-    title={\tiny SCP $\left(\begin{array}{l}n\in\mathcal{U}[120,180]\\ m\in\mathcal{U}[150,250]\\ k=5\end{array}\right)$},
+    title={\tiny SC-M},
     ylabel={},
     yticklabels={},
     ytick style={draw=none},
@@ -199,7 +199,7 @@ table[col sep=comma, x=iter, y=gnn_lbp_tree__entropy_gap_to_mean__mean]
 {resources/data/chapter_5/scp_n120-180_m150-250_k5_egg_selected_variable_diagnostics.csv};
 
 \nextgroupplot[
-    title={\tiny SCP $\left(\begin{array}{l}n\in\mathcal{U}[150,300]\\ m\in\mathcal{U}[150,300]\\ k=15\end{array}\right)$},
+    title={\tiny SC-L},
     ylabel={},
     yticklabels={},
     %empty cells with={nan},
@@ -464,6 +464,6 @@ table[col sep=comma, x=iter, y=gnn_lbp_tree__entropy_gap_to_mean__mean]
 };
 \end{tikzpicture}
 
-\caption{Evolution of the mean value of the entropy gap $\Delta H^{(t)} = H\left(x_i^{(t)}\right) - \overline{H_{\text{cand}} \left(x\right)} $ of the variable selected at decoding step $t$, reflecting the confidence of the decoding policy. Columns correspond to the three SCP test distributions. Solid lines denote the mean over instances and seeds, and shaded bands represent one standard deviation.}
+\caption{Evolution of the mean value of the entropy gap $\Delta H^{(t)} = H\left(x_i^{(t)}\right) - \overline{H_{\text{cand}} \left(x\right)} $ of the variable selected at decoding step $t$, reflecting the confidence of the decoding policy. Columns correspond to the three SC test distributions. Solid lines denote the mean over instances and seeds, and shaded bands represent one standard deviation.}
 \label{fig:chapter_5_decoding_average_entropy_gap}
 \end{figure}
