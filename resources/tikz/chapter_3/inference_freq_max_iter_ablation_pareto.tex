@@ -1,17 +1,23 @@
 \begin{figure}[t]
 \centering
 
+% Requires: \usepackage{pgfplots}
+% Requires: \usepgfplotslibrary{groupplots}
+% Requires: \usetikzlibrary{calc, matrix}
+% Requires: \pgfplotsset{compat=1.18}
 \definecolor{darkgray176}{RGB}{176,176,176}
 \definecolor{lightgray204}{RGB}{204,204,204}
 % Dataset colors are assumed to be defined outside this file.
 
+% \resizebox{\textwidth}{!}{
 \begin{tikzpicture}
 \begin{groupplot}[
-    group style={group size=2 by 4, horizontal sep=0.9cm, vertical sep=0.95cm},
+    group style={group size=2 by 4, horizontal sep=1.2cm, vertical sep=0.95cm},
 ]
 
+
 \nextgroupplot[
-    width=0.42\textwidth,
+    width=0.32\textwidth,
     height=0.16\textwidth,
     scale only axis,
     tick align=outside,
@@ -22,158 +28,10 @@
     ymode=log,
     x grid style={darkgray176},
     y grid style={darkgray176},
-    ylabel={\small MIS-S Gap (\%)},
-    ylabel style={align=center},
-    xmin=0, xmax=0.589463452185,
-    ymin=0, ymax=20.0461760369,
-    xtick style={color=black},
-    ytick style={color=black},
-    title={Reinference interval}
-]
-% mis_n100_p0.15::lbp_gd: all settings
-\addplot+[mark=*, mark size=2.0pt, very thick, color=MISSColor] coordinates {(0.512576914943,3.91053390873) (0.326768895037,5.0072150049) (0.253583691735,6.54040403738) (0.208315435828,9.25324674896) (0.191243994803,16.5404040327) (0.17786460463,16.9191919113) (0.181638120472,16.9191919113)};
-
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.512576914943,3.91053390873) {1};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.326768895037,5.0072150049) {2};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.253583691735,6.54040403738) {4};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.208315435828,9.25324674896) {8};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.191243994803,16.5404040327) {16};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.17786460463,16.9191919113) {32};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.181638120472,16.9191919113) {64};
-
-% mis_n100_p0.15::nmf_gd: all settings
-\addplot+[mark=square*, mark size=2.0pt, very thick, color=MISSColor] coordinates {(0.179506478311,4.37950937749) (0.0972551072016,5.21645021405) (0.0916422882273,7.44588744246) (0.0612851285065,10.5844155795) (0.0641434390175,17.2799422719) (0.0651205534892,17.4314574234) (0.0725637680463,17.4314574234)};
-
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.179506478311,4.37950937749) {1};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.0972551072016,5.21645021405) {2};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.0916422882273,7.44588744246) {4};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.0612851285065,10.5844155795) {8};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.0641434390175,17.2799422719) {16};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.0651205534892,17.4314574234) {32};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.0725637680463,17.4314574234) {64};
-
-
-\nextgroupplot[
-    width=0.42\textwidth,
-    height=0.16\textwidth,
-    scale only axis,
-    tick align=outside,
-    tick pos=left,
-    xmajorgrids,
-    ymajorgrids,
-    xmode=log,
-    ymode=log,
-    x grid style={darkgray176},
-    y grid style={darkgray176},
-    xmin=0, xmax=2.12161090273,
-    ymin=0, ymax=20.0461760369,
-    xtick style={color=black},
-    ytick style={color=black},
-    %yticklabels=\empty,
-    ytick style={draw=none},
-    title={Inference iterations}
-]
-% mis_n100_p0.15::lbp_gd: all settings
-\addplot+[mark=*, mark size=2.0pt, very thick, color=MISSColor] coordinates {(0.215283344407,6.75685425374) (0.24658453806,5.05772005539) (0.305247866719,4.60678210466) (0.435414205259,3.75541125368) (0.658544044445,4.21717171523) (1.10161039896,4.22077921883) (1.84487904585,4.14502164311)};
-
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.215283344407,6.75685425374) {1};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.24658453806,5.05772005539) {2};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.305247866719,4.60678210466) {4};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.435414205259,3.75541125368) {8};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.658544044445,4.21717171523) {16};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:1.10161039896,4.22077921883) {32};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:1.84487904585,4.14502164311) {64};
-
-% mis_n100_p0.15::nmf_gd: all settings
-\addplot+[mark=square*, mark size=2.0pt, very thick, color=MISSColor] coordinates {(0.0712764359623,9.87373736917) (0.0802409132011,7.7958152922) (0.107670685323,6.16161615877) (0.127844512346,4.68253968038) (0.181195117502,4.22799422604) (0.272323611681,3.69047618877) (0.393506400481,3.54256854093)};
-
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.0712764359623,9.87373736917) {1};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.0802409132011,7.7958152922) {2};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.107670685323,6.16161615877) {4};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.127844512346,4.68253968038) {8};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.181195117502,4.22799422604) {16};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.272323611681,3.69047618877) {32};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.393506400481,3.54256854093) {64};
-
-
-\nextgroupplot[
-    width=0.42\textwidth,
-    height=0.16\textwidth,
-    scale only axis,
-    tick align=outside,
-    tick pos=left,
-    xmajorgrids,
-    ymajorgrids,
-    xmode=log,
-    ymode=log,
-    x grid style={darkgray176},
-    y grid style={darkgray176},
-    ylabel={\small MIS-M Gap (\%)},
-    ylabel style={align=center},
-    xmin=0, xmax=1.53723548507,
-    ymin=0, ymax=21.9313961979,
-    xtick style={color=black},
-    ytick style={color=black},
-]
-% mis_n200-300_p0.15::lbp_gd: all settings
-\addplot+[mark=*, mark size=2.0pt, very thick, color=MISSColor] coordinates {(1.33672650876,2.6393791142) (0.852650089228,3.11814902836) (0.664828000466,3.98378329746) (0.531495497616,6.10284964529) (0.491311110936,10.1736507865) (0.472036866595,16.4063275529) (0.432444909719,19.0707793025)};
-
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:1.33672650876,2.6393791142) {1};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.852650089228,3.11814902836) {2};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.664828000466,3.98378329746) {4};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.531495497616,6.10284964529) {8};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.491311110936,10.1736507865) {16};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.472036866595,16.4063275529) {32};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.432444909719,19.0707793025) {64};
-
-
-\nextgroupplot[
-    width=0.42\textwidth,
-    height=0.16\textwidth,
-    scale only axis,
-    tick align=outside,
-    tick pos=left,
-    xmajorgrids,
-    ymajorgrids,
-    xmode=log,
-    ymode=log,
-    x grid style={darkgray176},
-    y grid style={darkgray176},
-    xmin=0, xmax=5.70356402491,
-    ymin=0, ymax=21.9313961979,
-    xtick style={color=black},
-    ytick style={color=black},
-    %yticklabels=\empty,
-    ytick style={draw=none},
-]
-% mis_n200-300_p0.15::lbp_gd: all settings
-\addplot+[mark=*, mark size=2.0pt, very thick, color=MISSColor] coordinates {(0.565662686643,5.21645804399) (0.66501728845,3.91013155643) (0.832818669205,3.04276146726) (1.13526691831,2.79228004055) (1.75364145495,2.54156503648) (2.91719709324,2.51830297838) (4.95962089122,2.49142125795)};
-
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.565662686643,5.21645804399) {1};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.66501728845,3.91013155643) {2};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.832818669205,3.04276146726) {4};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:1.13526691831,2.79228004055) {8};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:1.75364145495,2.54156503648) {16};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:2.91719709324,2.51830297838) {32};
-\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:4.95962089122,2.49142125795) {64};
-
-
-\nextgroupplot[
-    width=0.42\textwidth,
-    height=0.16\textwidth,
-    scale only axis,
-    tick align=outside,
-    tick pos=left,
-    xmajorgrids,
-    ymajorgrids,
-    xmode=log,
-    ymode=log,
-    x grid style={darkgray176},
-    y grid style={darkgray176},
-    ylabel={\small SC-S Gap (\%)},
+    ylabel={SC-S\\Rel. gap (\%)},
     ylabel style={align=center},
     xmin=0, xmax=0.934880893466,
-    ymin=0, ymax=9.32196968789,
+    ymin=0, ymax=20.32196968789,
     xtick style={color=black},
     ytick style={color=black},
 ]
@@ -201,7 +59,7 @@
 
 
 \nextgroupplot[
-    width=0.42\textwidth,
+    width=0.32\textwidth,
     height=0.16\textwidth,
     scale only axis,
     tick align=outside,
@@ -216,8 +74,8 @@
     ymin=0, ymax=9.32196968789,
     xtick style={color=black},
     ytick style={color=black},
-    %yticklabels=\empty,
-    ytick style={draw=none},
+    % yticklabels=\empty,
+    % ytick style={draw=none},
 ]
 % scp_n50_m50_k5::lbp_gd: all settings
 \addplot+[mark=*, mark size=2.0pt, very thick, color=MISSColor] coordinates {(0.214880921901,1.68181818012) (0.280400671243,1.18181818062) (0.412791680723,1.18181818062) (0.673344068113,1.01515151412) (1.18734423266,1.34848484712) (2.15040354455,1.34848484712) (3.8890127731,1.18181818062)};
@@ -243,7 +101,7 @@
 
 
 \nextgroupplot[
-    width=0.42\textwidth,
+    width=0.32\textwidth,
     height=0.16\textwidth,
     scale only axis,
     tick align=outside,
@@ -254,11 +112,11 @@
     ymode=log,
     x grid style={darkgray176},
     y grid style={darkgray176},
-    ylabel={\small SC-M Gap (\%)},
+    ylabel={SC-M\\Rel. gap (\%)},
     ylabel style={align=center},
-    xlabel={Runtime (s)},
+    xlabel={},
     xmin=0, xmax=3.10848439744,
-    ymin=0, ymax=8.82314258825,
+    ymin=0, ymax=20.82314258825,
     xtick style={color=black},
     ytick style={color=black},
 ]
@@ -286,7 +144,7 @@
 
 
 \nextgroupplot[
-    width=0.42\textwidth,
+    width=0.32\textwidth,
     height=0.16\textwidth,
     scale only axis,
     tick align=outside,
@@ -297,13 +155,12 @@
     ymode=log,
     x grid style={darkgray176},
     y grid style={darkgray176},
-    xlabel={Runtime (s)},
     xmin=0, xmax=15.2467760561,
     ymin=0, ymax=8.82314258825,
     xtick style={color=black},
     ytick style={color=black},
-    %yticklabels=\empty,
-    ytick style={draw=none},
+    % yticklabels=\empty,
+    % ytick style={draw=none},
 ]
 % scp_n120-180_m150-250_k5::lbp_gd: all settings
 \addplot+[mark=*, mark size=2.0pt, very thick, color=MISSColor] coordinates {(0.784431263347,0.634728982832) (0.995464282165,0.595609686665) (1.42198144636,0.788683125128) (2.26457055702,0.630576697432) (3.93091168551,0.377167994504) (7.16497610473,0.67148448833) (13.2580661357,0.537483174164)};
@@ -327,6 +184,175 @@
 \node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:1.69609331198,3.59460682285) {32};
 \node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:2.91380323851,3.23779510323) {64};
 
+\nextgroupplot[
+    width=0.32\textwidth,
+    height=0.16\textwidth,
+    scale only axis,
+    tick align=outside,
+    tick pos=left,
+    xmajorgrids,
+    ymajorgrids,
+    xmode=log,
+    ymode=log,
+    x grid style={darkgray176},
+    y grid style={darkgray176},
+    ylabel={MIS-S\\Rel. gap (\%)},
+    ylabel style={align=center},
+    xmin=0, xmax=0.589463452185,
+    ymin=0, ymax=40.0461760369,
+    xtick style={color=black},
+    ytick style={color=black},
+]
+% mis_n100_p0.15::lbp_gd: all settings
+\addplot+[mark=*, mark size=2.0pt, very thick, color=MISSColor] coordinates {(0.512576914943,3.91053390873) (0.326768895037,5.0072150049) (0.253583691735,6.54040403738) (0.208315435828,9.25324674896) (0.191243994803,16.5404040327) (0.17786460463,16.9191919113) (0.181638120472,16.9191919113)};
+
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.512576914943,3.91053390873) {1};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.326768895037,5.0072150049) {2};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.253583691735,6.54040403738) {4};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.208315435828,9.25324674896) {8};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.191243994803,16.5404040327) {16};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.17786460463,16.9191919113) {32};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.181638120472,16.9191919113) {64};
+
+% mis_n100_p0.15::nmf_gd: all settings
+\addplot+[mark=square*, mark size=2.0pt, very thick, color=MISSColor] coordinates {(0.179506478311,4.37950937749) (0.0972551072016,5.21645021405) (0.0916422882273,7.44588744246) (0.0612851285065,10.5844155795) (0.0641434390175,17.2799422719) (0.0651205534892,17.4314574234) (0.0725637680463,17.4314574234)};
+
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.179506478311,4.37950937749) {1};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.0972551072016,5.21645021405) {2};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.0916422882273,7.44588744246) {4};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.0612851285065,10.5844155795) {8};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.0641434390175,17.2799422719) {16};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.0651205534892,17.4314574234) {32};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.0725637680463,17.4314574234) {64};
+
+
+\nextgroupplot[
+    width=0.32\textwidth,
+    height=0.16\textwidth,
+    scale only axis,
+    tick align=outside,
+    tick pos=left,
+    xmajorgrids,
+    ymajorgrids,
+    xmode=log,
+    ymode=log,
+    x grid style={darkgray176},
+    y grid style={darkgray176},
+    xmin=0, xmax=2.12161090273,
+    ymin=0, ymax=20.0461760369,
+    xtick style={color=black},
+    ytick style={color=black},
+    %yticklabels=\empty,
+    %ytick style={draw=none},
+]
+% mis_n100_p0.15::lbp_gd: all settings
+\addplot+[mark=*, mark size=2.0pt, very thick, color=MISSColor] coordinates {(0.215283344407,6.75685425374) (0.24658453806,5.05772005539) (0.305247866719,4.60678210466) (0.435414205259,3.75541125368) (0.658544044445,4.21717171523) (1.10161039896,4.22077921883) (1.84487904585,4.14502164311)};
+
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.215283344407,6.75685425374) {1};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.24658453806,5.05772005539) {2};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.305247866719,4.60678210466) {4};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.435414205259,3.75541125368) {8};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.658544044445,4.21717171523) {16};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:1.10161039896,4.22077921883) {32};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:1.84487904585,4.14502164311) {64};
+
+% mis_n100_p0.15::nmf_gd: all settings
+\addplot+[mark=square*, mark size=2.0pt, very thick, color=MISSColor] coordinates {(0.0712764359623,9.87373736917) (0.0802409132011,7.7958152922) (0.107670685323,6.16161615877) (0.127844512346,4.68253968038) (0.181195117502,4.22799422604) (0.272323611681,3.69047618877) (0.393506400481,3.54256854093)};
+
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.0712764359623,9.87373736917) {1};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.0802409132011,7.7958152922) {2};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.107670685323,6.16161615877) {4};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.127844512346,4.68253968038) {8};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.181195117502,4.22799422604) {16};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.272323611681,3.69047618877) {32};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.393506400481,3.54256854093) {64};
+
+
+\nextgroupplot[
+    width=0.32\textwidth,
+    height=0.16\textwidth,
+    scale only axis,
+    tick align=outside,
+    tick pos=left,
+    xmajorgrids,
+    ymajorgrids,
+    xmode=log,
+    ymode=log,
+    x grid style={darkgray176},
+    y grid style={darkgray176},
+    ylabel={MIS-M\\Rel. gap (\%)},
+    ylabel style={align=center},
+    xmin=0, xmax=1.53723548507,
+    ymin=0, ymax=41.9313961979,
+    xtick style={color=black},
+    ytick style={color=black},
+    xlabel={Runtime (s)},
+]
+% mis_n200-300_p0.15::lbp_gd: all settings
+\addplot+[mark=*, mark size=2.0pt, very thick, color=MISSColor] coordinates {(1.33672650876,2.6393791142) (0.852650089228,3.11814902836) (0.664828000466,3.98378329746) (0.531495497616,6.10284964529) (0.491311110936,10.1736507865) (0.472036866595,16.4063275529) (0.432444909719,19.0707793025)};
+
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:1.33672650876,2.6393791142) {1};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.852650089228,3.11814902836) {2};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.664828000466,3.98378329746) {4};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.531495497616,6.10284964529) {8};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.491311110936,10.1736507865) {16};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.472036866595,16.4063275529) {32};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.432444909719,19.0707793025) {64};
+
+% mis_n200-300_p0.15::nmf_gd: all settings
+\addplot+[mark=square*, mark size=2.0pt, very thick, color=MISSColor] coordinates {(1.13055972105,4.87724536019) (0.669170457241,5.75027371516) (0.459985549701,6.24723526322) (0.404597691796,6.94675477123) (0.329871653602,8.00215830753) (0.316688971361,10.7543012467) (0.294356081937,15.697381248)};
+
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:1.13055972105,4.87724536019) {1};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.669170457241,5.75027371516) {2};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.459985549701,6.24723526322) {4};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.404597691796,6.94675477123) {8};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.329871653602,8.00215830753) {16};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.316688971361,10.7543012467) {32};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.294356081937,15.697381248) {64};
+
+
+\nextgroupplot[
+    width=0.32\textwidth,
+    height=0.16\textwidth,
+    scale only axis,
+    tick align=outside,
+    tick pos=left,
+    xmajorgrids,
+    ymajorgrids,
+    xmode=log,
+    ymode=log,
+    x grid style={darkgray176},
+    y grid style={darkgray176},
+    xmin=0, xmax=5.70356402491,
+    ymin=0, ymax=21.9313961979,
+    xtick style={color=black},
+    ytick style={color=black},
+    xlabel={Runtime (s)},
+    % yticklabels=\empty,
+    % ytick style={draw=none},
+]
+% mis_n200-300_p0.15::lbp_gd: all settings
+\addplot+[mark=*, mark size=2.0pt, very thick, color=MISSColor] coordinates {(0.565662686643,5.21645804399) (0.66501728845,3.91013155643) (0.832818669205,3.04276146726) (1.13526691831,2.79228004055) (1.75364145495,2.54156503648) (2.91719709324,2.51830297838) (4.95962089122,2.49142125795)};
+
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.565662686643,5.21645804399) {1};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.66501728845,3.91013155643) {2};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.832818669205,3.04276146726) {4};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:1.13526691831,2.79228004055) {8};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:1.75364145495,2.54156503648) {16};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:2.91719709324,2.51830297838) {32};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:4.95962089122,2.49142125795) {64};
+
+% mis_n200-300_p0.15::nmf_gd: all settings
+\addplot+[mark=square*, mark size=2.0pt, very thick, color=MISSColor] coordinates {(0.518666109513,14.6449382719) (0.508230427559,10.2777996486) (0.620417537866,7.08973346312) (0.913723747409,5.08592923464) (1.41755746026,5.14620434284) (2.44965308714,4.45974873111) (4.17979014679,4.66807177206)};
+
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.518666109513,14.6449382719) {1};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.508230427559,10.2777996486) {2};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.620417537866,7.08973346312) {4};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:0.913723747409,5.08592923464) {8};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:1.41755746026,5.14620434284) {16};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:2.44965308714,4.45974873111) {32};
+\node[font=\tiny, anchor=south west, text=MISSColor] at (axis cs:4.17979014679,4.66807177206) {64};
+
 
 \end{groupplot}
 \node[anchor=north, draw=lightgray204, fill=white, fill opacity=0.9, text opacity=1, inner sep=3pt] at ($(current bounding box.south) + (0cm, -0.35cm)$) {
@@ -335,13 +361,15 @@
     matrix of nodes,
     nodes={anchor=west, font=\scriptsize},
     column sep=8pt,
-    row sep=3pt
+    row sep=3pt,
+    %text width=0.82\textwidth
 ] {
-\tikz[baseline=-0.55ex]{\draw[very thick, color=black] (0,0) -- (0.42,0); \draw[color=black] plot[only marks, mark=*, mark size=2.0pt] coordinates {(0.21,0)};} & LMRF-LBP+GD & \tikz[baseline=-0.55ex]{\draw[very thick, color=black] (0,0) -- (0.42,0); \draw[color=black] plot[only marks, mark=square*, mark size=2.0pt] coordinates {(0.21,0)};} & LMRF-NMF+GD \\
+\draw[very thick, color=MISSColor] (0,0) -- (0.42,0); \draw[color=MISSColor] plot[only marks, mark=*, mark size=2.0pt] coordinates {(0.21,0)}; & LBP+GD & \draw[very thick, color=MISSColor] (0,0) -- (0.42,0); \draw[color=MISSColor] plot[only marks, mark=square*, mark size=2.0pt] coordinates {(0.21,0)}; & NMF+GD \\
 };
 \end{tikzpicture}
 };
 \end{tikzpicture}
+% }
 
 \caption{\inferenceFreqMaxIterAblationParetoCaption}
 \label{fig:inference_freq_max_iter_ablation_pareto}

@@ -7,8 +7,14 @@
 \definecolor{lightgray204}{RGB}{200,200,200}
 \begin{tikzpicture}
 \begin{groupplot}[
-    group style={group size=2 by 3, horizontal sep=0.55cm, vertical sep=0.75cm, y descriptions at=edge left, ylabels at=edge left},
-    width=0.42\textwidth,
+    group style={
+        group size=2 by 3, 
+        horizontal sep=1.15cm, 
+        vertical sep=1.45cm, 
+        %y descriptions at=edge left, 
+        ylabels at=edge left
+    },
+    width=0.32\textwidth,
     height=0.24\textwidth,
     scale only axis,
     tick align=outside,
@@ -20,7 +26,7 @@
 ]
 
 \nextgroupplot[
-    title={SC-S -- velocity},
+    title={SC-S -- Velocity},
     xtick style={draw=none},
     ylabel={Gap (\%)},
     xmode=log,
@@ -80,9 +86,9 @@ coordinates {(0.839174669416,3.28888888889) (0.863005634304,3.95555555556) (0.87
 coordinates {(0.441494094478,6.05858585859) (0.447314018471,3.28148148148) (0.762450186384,3.07676767677) (1.02937770233,2.48148148148) (1.05555735796,1.74814814815)};
 
 \nextgroupplot[
-    title={SC-S -- q1},
-    xtick style={draw=none},
-    ytick style={draw=none},
+    title={SC-S -- Denoise},
+    % xtick style={draw=none},
+    % ytick style={draw=none},
     xmode=log,
     log basis x={10},
     xmin=0.36603073288, xmax=2.16833694624,
@@ -140,8 +146,8 @@ coordinates {(0.857221320902,2.95555555556) (0.866052589454,3.81616161616) (0.88
 coordinates {(0.439236879456,8.04646464646) (0.443653153683,5.99057239057) (0.451704692266,4.60875420875) (0.766978797019,3.0101010101) (0.857221320902,2.95555555556) (1.02514373151,2.46801346801) (1.03266433537,1.8) (1.4756310913,1.66666666667)};
 
 \nextgroupplot[
-    title={SC-M -- velocity},
-    xtick style={draw=none},
+    title={SC-M -- Velocity},
+    % xtick style={draw=none},
     ylabel={Gap (\%)},
     xmode=log,
     log basis x={10},
@@ -200,9 +206,9 @@ coordinates {(2.16173285938,2.19827813058) (2.10652093507,2.62654815805) (2.1800
 coordinates {(0.914458223209,7.12979264799) (1.2061761097,5.25496590684) (1.7450351305,3.65693983967) (1.89103216213,2.53884656382) (2.12417808367,2.49426784924) (2.16173285938,2.19827813058) (2.33598004863,1.86194252368) (2.48787070775,1.83338236869) (3.14704338856,1.06527934805) (4.70311666648,0.960040887973)};
 
 \nextgroupplot[
-    title={SC-M -- q1},
-    xtick style={draw=none},
-    ytick style={draw=none},
+    title={SC-M -- Denoise},
+    % xtick style={draw=none},
+    % ytick style={draw=none},
     xmode=log,
     log basis x={10},
     xmin=0.770938428997, xmax=5.74641497885,
@@ -260,7 +266,7 @@ coordinates {(2.49299274122,1.94747666564) (2.16846492671,2.56080285322) (2.1683
 coordinates {(0.925126114797,9.07346372831) (0.92600735882,6.69611486745) (1.28287760921,4.61535744133) (1.72181958989,3.78187463016) (1.94146746627,2.80664121189) (2.09882988122,2.69797292486) (2.16846492671,2.56080285322) (2.41669002612,1.80153800553) (2.94938098066,1.151397555) (4.54757077187,1.09050255784)};
 
 \nextgroupplot[
-    title={MIS-S -- velocity},
+    title={MIS-S -- Velocity},
     xlabel={Runtime (s)},
     ylabel={Gap (\%)},
     xmode=log,
@@ -320,9 +326,9 @@ coordinates {(1.66343329481,5.15013488927) (1.64384447131,5.74032247945) (1.6723
 coordinates {(1.22711852025,38.7913294435) (1.23517648989,31.5532969446) (1.39348741333,25.1589811155) (1.40897592218,18.7711274233) (1.41155601985,14.9735867997) (1.50259110267,11.8332392245) (1.64384447131,5.74032247945) (1.66343329481,5.15013488927)};
 
 \nextgroupplot[
-    title={MIS-S -- q1},
+    title={MIS-S -- Denoise},
     xlabel={Runtime (s)},
-    ytick style={draw=none},
+    % ytick style={draw=none},
     xmode=log,
     log basis x={10},
     xmin=1.02893645493, xmax=3.95531022561,
@@ -380,12 +386,18 @@ coordinates {(1.65190411401,4.6865549909) (1.65147161509,5.36620867056) (1.67369
 coordinates {(1.23472374592,39.6741953698) (1.24103394157,32.0582219713) (1.39809197871,30.0799924713) (1.4007768396,21.7796599536) (1.4198295314,15.8148566409) (1.46895576534,11.9900244683) (1.65147161509,5.36620867056) (1.65190411401,4.6865549909) (2.63701528093,3.97502980112)};
 
 \end{groupplot}
-\node[anchor=north, draw=lightgray204, fill=white, fill opacity=0.9, text opacity=1, inner sep=3pt] at ($(current bounding box.south) + (0cm, -0.55cm)$) {
+\node[anchor=north, 
+    draw=lightgray204, 
+    fill=white, 
+    fill opacity=0.9, 
+    text opacity=1, 
+    text width=0.95\textwidth,
+    inner sep=3pt] at ($(current bounding box.south) + (0cm, -0.55cm)$) {
 \begin{tikzpicture}[baseline]
 \matrix[matrix of nodes, nodes={anchor=west, font=\scriptsize}, column sep=8pt, row sep=3pt] {
-\tikz[baseline=-0.55ex]{\draw[very thick, color=GNNQOneEGGColor] (0,0) -- (0.42,0); \draw[color=GNNQOneEGGColor] plot[only marks, mark=*, mark size=2.0pt] coordinates {(0.21,0)};} & DGN-q+EGG & \tikz[baseline=-0.55ex]{\draw[very thick, color=GNNQOneGDColor] (0,0) -- (0.42,0); \draw[color=GNNQOneGDColor] plot[only marks, mark=square*, mark size=2.0pt] coordinates {(0.21,0)};} & DGN-q+GD & \tikz[baseline=-0.55ex]{\draw[very thick, color=GNNQOneEGGColor] (0,0) -- (0.42,0); \draw[color=GNNQOneEGGColor] plot[only marks, mark=triangle*, mark size=2.0pt] coordinates {(0.21,0)};} & DGN-v+EGG & \tikz[baseline=-0.55ex]{\draw[very thick, color=GNNQOneGDColor] (0,0) -- (0.42,0); \draw[color=GNNQOneGDColor] plot[only marks, mark=diamond*, mark size=2.0pt] coordinates {(0.21,0)};} & DGN-v+GD \\
-\tikz[baseline=-0.55ex]{\draw[very thick, color=FMLBPQOneEGGColor] (0,0) -- (0.42,0); \draw[color=FMLBPQOneEGGColor] plot[only marks, mark=*, mark size=2.0pt] coordinates {(0.21,0)};} & FMLBP-q+EGG & \tikz[baseline=-0.55ex]{\draw[very thick, color=FMLBPQOneGDColor] (0,0) -- (0.42,0); \draw[color=FMLBPQOneGDColor] plot[only marks, mark=square*, mark size=2.0pt] coordinates {(0.21,0)};} & FMLBP-q+GD & \tikz[baseline=-0.55ex]{\draw[very thick, color=FMLBPQOneEGGColor] (0,0) -- (0.42,0); \draw[color=FMLBPQOneEGGColor] plot[only marks, mark=triangle*, mark size=2.0pt] coordinates {(0.21,0)};} & FMLBP-v+EGG & \tikz[baseline=-0.55ex]{\draw[very thick, color=FMLBPQOneGDColor] (0,0) -- (0.42,0); \draw[color=FMLBPQOneGDColor] plot[only marks, mark=diamond*, mark size=2.0pt] coordinates {(0.21,0)};} & FM-LBP-v+GD \\
-\tikz[baseline=-0.55ex]{\draw[very thick, color=FMLBPQOneEGGColor] (0,0) -- (0.42,0); \draw[color=FMLBPQOneEGGColor] plot[only marks, mark=*, mark size=2.0pt] coordinates {(0.21,0)};} & FM-NMF-q+EGG & \tikz[baseline=-0.55ex]{\draw[very thick, color=FMNMFQOneGDColor] (0,0) -- (0.42,0); \draw[color=FMNMFQOneGDColor] plot[only marks, mark=square*, mark size=2.0pt] coordinates {(0.21,0)};} & FM-NMF-q+GD & \tikz[baseline=-0.55ex]{\draw[very thick, color=FMNMFQOneEGGColor] (0,0) -- (0.42,0); \draw[color=FMNMFQOneEGGColor] plot[only marks, mark=triangle*, mark size=2.0pt] coordinates {(0.21,0)};} & FM-NMF-v+EGG & \tikz[baseline=-0.55ex]{\draw[very thick, color=FMNMFQOneGDColor] (0,0) -- (0.42,0); \draw[color=FMNMFQOneGDColor] plot[only marks, mark=diamond*, mark size=2.0pt] coordinates {(0.21,0)};} & FM-NMF-v+GD \\
+\draw[semithick, color=GNNQOneEGGColor] (0,0) -- (0.42,0); \draw[color=GNNQOneEGGColor] plot[only marks, mark=*, mark size=3] coordinates {(0.21,0)}; & DGN-q+EGG & \draw[semithick, color=GNNQOneGDColor] (0,0) -- (0.42,0); \draw[color=GNNQOneGDColor] plot[only marks, mark=square*, mark size=3] coordinates {(0.21,0)}; & DGN-q+GD & \draw[semithick, color=GNNQOneEGGColor] (0,0) -- (0.42,0); \draw[color=GNNQOneEGGColor] plot[only marks, mark=triangle*, mark size=3] coordinates {(0.21,0)}; & DGN-v+EGG & \draw[semithick, color=GNNQOneGDColor] (0,0) -- (0.42,0); \draw[color=GNNQOneGDColor] plot[only marks, mark=diamond*, mark size=3] coordinates {(0.21,0)}; & DGN-v+GD \\
+\draw[semithick, color=FMLBPQOneEGGColor] (0,0) -- (0.42,0); \draw[color=FMLBPQOneEGGColor] plot[only marks, mark=*, mark size=3] coordinates {(0.21,0)}; & FMLBP-q+EGG & \draw[semithick, color=FMLBPQOneGDColor] (0,0) -- (0.42,0); \draw[color=FMLBPQOneGDColor] plot[only marks, mark=square*, mark size=3] coordinates {(0.21,0)}; & FMLBP-q+GD & \draw[semithick, color=FMLBPQOneEGGColor] (0,0) -- (0.42,0); \draw[color=FMLBPQOneEGGColor] plot[only marks, mark=triangle*, mark size=3] coordinates {(0.21,0)}; & FMLBP-v+EGG & \draw[semithick, color=FMLBPQOneGDColor] (0,0) -- (0.42,0); \draw[color=FMLBPQOneGDColor] plot[only marks, mark=diamond*, mark size=3] coordinates {(0.21,0)}; & FM-LBP-v+GD \\
+\draw[semithick, color=FMLBPQOneEGGColor] (0,0) -- (0.42,0); \draw[color=FMLBPQOneEGGColor] plot[only marks, mark=*, mark size=3] coordinates {(0.21,0)}; & FM-NMF-q+EGG & \draw[semithick, color=FMNMFQOneGDColor] (0,0) -- (0.42,0); \draw[color=FMNMFQOneGDColor] plot[only marks, mark=square*, mark size=3] coordinates {(0.21,0)}; & FM-NMF-q+GD & \draw[semithick, color=FMNMFQOneEGGColor] (0,0) -- (0.42,0); \draw[color=FMNMFQOneEGGColor] plot[only marks, mark=triangle*, mark size=3] coordinates {(0.21,0)}; & FM-NMF-v+EGG & \draw[semithick, color=FMNMFQOneGDColor] (0,0) -- (0.42,0); \draw[color=FMNMFQOneGDColor] plot[only marks, mark=diamond*, mark size=3] coordinates {(0.21,0)}; & FM-NMF-v+GD \\
 };
 \end{tikzpicture}
 };

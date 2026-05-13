@@ -1,6 +1,5 @@
 \begin{table}[htbp]
 \centering
-\caption{Average relative gap and runtimes.}
 \resizebox{\textwidth}{!}{
 \begin{tabular}{l
                     l
@@ -12,24 +11,27 @@
                     S[table-format=2.3(2.3)]
                     S[table-format=2.3(2.3)]}
         \toprule
-        {Dataset} & {Model} & {Sample feasible (\%)} & {EGG gap (\%)} & {EGG time (s)} & {GD gap (\%)} & {GD time (s)} & {IR gap (\%)} & {IR time (s)} \\
+        \multirow{2}{*}{\textbf{Dataset}} & \multirow{2}{*}{\textbf{Model}} & \multicolumn{1}{c}{\multirow{2}{*}{\textbf{Feas.} (\%) $\uparrow$}} & \multicolumn{2}{c}{\textbf{EGG}} & \multicolumn{2}{c}{\textbf{GD}} &  \multicolumn{2}{c}{\textbf{IR}} \\
+        \cmidrule(lr){4-5} \cmidrule(lr){6-7} \cmidrule(lr){8-9}
+        & & & \multicolumn{1}{c}{Rel. gap (\%) $\downarrow$} & \multicolumn{1}{c}{$t$ (s) $\downarrow$} & \multicolumn{1}{c}{Rel. gap (\%) $\downarrow$} & \multicolumn{1}{c}{$t$ (s) $\downarrow$} & \multicolumn{1}{c}{Rel. gap (\%) $\downarrow$} & \multicolumn{1}{c}{$t$ (s) $\downarrow$} \\
         \midrule
-        \multirow{3}{*}{SC-S} & DDGN & 7.400 & 8.311 (7.175) & 0.144 (0.387) & 8.311 (7.175) & 0.138 (0.387) & 21.439 (13.622) & 0.170 (0.386) \\
-         & DLBP & 88.867 & 3.639 (5.283) & 0.439 (0.363) & 0.680 (3.341) & 1.269 (0.385) & 1.383 (4.271) & 0.651 (0.362) \\
+        \multirow{3}{*}{SC-S} & DDGN & 7.400 & 8.311 (7.175) & \B 0.144 (0.387) & 8.311 (7.175) & \B 0.138 (0.387) & 21.439 (13.622) & \B 0.170 (0.386) \\
+         & DLBP & \B 88.867 & \B 3.639 (5.283) & 0.439 (0.363) & \B 0.680 (3.341) & 1.269 (0.385) & \B 1.383 (4.271) & 0.651 (0.362) \\
          & DNMF & 30.667 & 5.678 (6.034) & 0.344 (0.351) & 1.862 (4.415) & 0.514 (0.357) & 6.814 (8.952) & 0.388 (0.345) \\
         \midrule
-        \multirow{3}{*}{SC-M} & DDGN & 0.000 & 10.505 (4.090) & 0.600 (0.367) & 10.505 (4.090) & 0.594 (0.367) & 24.447 (8.150) & 0.432 (0.358) \\
-         & DLBP & 84.615 & 4.543 (3.989) & 2.692 (2.798) & -0.233 (2.181) & 5.452 (2.950) & 0.868 (2.327) & 2.515 (2.575) \\
+        \multirow{3}{*}{SC-M} & DDGN & 0.000 & 10.505 (4.090) & \B 0.600 (0.367) & 10.505 (4.090) & \B 0.594 (0.367) & 24.447 (8.150) & \B 0.432 (0.358) \\
+         & DLBP & \B 84.615 & \B 4.543 (3.989) & 2.692 (2.798) & \B -0.233 (2.181) & 5.452 (2.950) & \B 0.868 (2.327) & 2.515 (2.575) \\
          & DNMF & 3.130 & 8.019 (3.544) & 1.362 (0.888) & 2.327 (2.572) & 1.885 (0.879) & 5.493 (3.645) & 1.125 (0.866) \\
-        \midrule
-        \multirow{3}{*}{MIS-S} & DDGN & 0.000 & -100.000 (0.000) & 0.689 (0.487) & -100.000 (0.000) & 0.680 (0.487) & -24.628 (6.382) & 0.558 (0.486) \\
-         & DLBP &  &  &  &  &  &  &  \\
-         & DNMF &  &  &  &  &  &  &  \\
-        \midrule
-        \multirow{3}{*}{MIS-M} & DDGN &  &  &  &  &  &  &  \\
-         & DLBP &  &  &  &  &  &  &  \\
-         & DNMF &  &  &  &  &  &  &  \\
+        % \midrule
+        % \multirow{3}{*}{MIS-S} & DDGN & 0.000 & -100.000 (0.000) & 0.689 (0.487) & -100.000 (0.000) & 0.680 (0.487) & -24.628 (6.382) & 0.558 (0.486) \\
+        %  & DLBP &  &  &  &  &  &  &  \\
+        %  & DNMF &  &  &  &  &  &  &  \\
+        % \midrule
+        % \multirow{3}{*}{MIS-M} & DDGN &  &  &  &  &  &  &  \\
+        %  & DLBP &  &  &  &  &  &  &  \\
+        %  & DNMF &  &  &  &  &  &  &  \\
         \bottomrule
     \end{tabular}}
+\caption{Diffusion-inspired denoiser performance across datasets and models. ``Feas.'' denotes the proportion of samples obtained after unrolling the flow that satisfy the problem feasibility constraints. For each decoding method---EGG, GD, and IR---the table reports the average relative optimality gap and runtime, with values in parentheses indicating the corresponding standard deviations.}
 \label{tab:denoising_inference_results}
 \end{table}

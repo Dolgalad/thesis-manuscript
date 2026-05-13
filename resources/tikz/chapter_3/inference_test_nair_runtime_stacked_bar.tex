@@ -7,7 +7,13 @@
 \definecolor{lightgray204}{RGB}{200,200,200}
 \begin{tikzpicture}
 \begin{groupplot}[
-    group style={group size=2 by 2, horizontal sep=0.75cm, vertical sep=0.75cm, y descriptions at=edge left, ylabels at=edge left},
+    group style={
+        group size=2 by 2, 
+        horizontal sep=0.75cm, 
+        vertical sep=1.25cm, 
+        y descriptions at=edge left, 
+        ylabels at=edge left
+    },
     width=0.42\textwidth,
     height=0.20\textwidth,
     scale only axis,
@@ -215,6 +221,8 @@
     xtick style={draw=none},
     ylabel={},
     ymin=0, ymax=2.86212014834,
+    yticklabels=\empty,
+    ytick style={draw=none}
 ]
 % manual stacked bars for scp_n120-180_m150-250_k5
 \draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:-0.41,0) rectangle (axis cs:-0.246,0.000279161334038);
@@ -587,6 +595,8 @@
     xlabel={Fixed-variable proportion},
     ylabel={},
     ymin=0, ymax=16.758679486,
+    yticklabels=\empty,
+    ytick style={draw=none}
 ]
 % manual stacked bars for mis_n200-300_p0.15
 \draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:-0.41,0) rectangle (axis cs:-0.246,0.000291748140007);
@@ -766,13 +776,19 @@
 \draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:4.246,0.30251357913) rectangle (axis cs:4.41,0.4266044279);
 
 \end{groupplot}
-\node[anchor=north, draw=lightgray204, fill=white, fill opacity=0.9, text opacity=1, inner sep=3pt] at ($(current bounding box.south) + (0cm, -0.55cm)$) {
+\node[anchor=north, 
+    draw=lightgray204, 
+    fill=white, 
+    fill opacity=0.9, 
+    text opacity=1, 
+    text width=0.8\textwidth, 
+    inner sep=3pt] at ($(current bounding box.south) + (0cm, -0.45cm)$) {
 \begin{tikzpicture}[baseline]
 \matrix[matrix of nodes, nodes={anchor=west, font=\scriptsize}, column sep=8pt, row sep=3pt] {
-\tikz[baseline=-0.55ex]{\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (0,0) rectangle (0.38,0.16);} & DGN+EGG & \tikz[baseline=-0.55ex]{\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (0,0) rectangle (0.38,0.16);} & LMRF-LBP+EGG & \tikz[baseline=-0.55ex]{\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (0,0) rectangle (0.38,0.16);} & LMRF-LBP+GD \\
-\tikz[baseline=-0.55ex]{\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (0,0) rectangle (0.38,0.16);} & LMRF-NMF+EGG & \tikz[baseline=-0.55ex]{\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (0,0) rectangle (0.38,0.16);} & LMRF-NMF+GD &  &  \\
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (0,0) rectangle (0.38,0.16); & DGN+EGG & \draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (0,0) rectangle (0.38,0.16); & LMRF-LBP+EGG & \draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (0,0) rectangle (0.38,0.16); & LMRF-LBP+GD \\
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (0,0) rectangle (0.38,0.16); & LMRF-NMF+EGG & \draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (0,0) rectangle (0.38,0.16); & LMRF-NMF+GD &  &  \\
 \\[-1pt]
-\tikz[baseline=-0.55ex]{\draw[draw=black, line width=0.3pt, fill=white, fill opacity=0.55] (0,0) rectangle (0.38,0.16);\draw[draw=none, pattern=grid, pattern color=black] (0,0) rectangle (0.38,0.16);} & Preprocess & \tikz[baseline=-0.55ex]{\draw[draw=black, line width=0.3pt, fill=white, fill opacity=0.55] (0,0) rectangle (0.38,0.16);\draw[draw=none, pattern=north east lines, pattern color=black] (0,0) rectangle (0.38,0.16);} & Forward & \tikz[baseline=-0.55ex]{\draw[draw=black, line width=0.3pt, fill=white, fill opacity=0.55] (0,0) rectangle (0.38,0.16);\draw[draw=none, pattern=crosshatch, pattern color=black] (0,0) rectangle (0.38,0.16);} & Decoding & \tikz[baseline=-0.55ex]{\draw[draw=black, line width=0.3pt, fill=white, fill opacity=0.55] (0,0) rectangle (0.38,0.16);} & Solver \\
+\draw[draw=black, line width=0.3pt, fill=white, fill opacity=0.55] (0,0) rectangle (0.38,0.16);\draw[draw=none, pattern=grid, pattern color=black] (0,0) rectangle (0.38,0.16); & Preprocess & \draw[draw=black, line width=0.3pt, fill=white, fill opacity=0.55] (0,0) rectangle (0.38,0.16);\draw[draw=none, pattern=north east lines, pattern color=black] (0,0) rectangle (0.38,0.16); & Forward & \draw[draw=black, line width=0.3pt, fill=white, fill opacity=0.55] (0,0) rectangle (0.38,0.16);\draw[draw=none, pattern=crosshatch, pattern color=black] (0,0) rectangle (0.38,0.16); & Decoding & \draw[draw=black, line width=0.3pt, fill=white, fill opacity=0.55] (0,0) rectangle (0.38,0.16); & Solver \\
 };
 \end{tikzpicture}
 };

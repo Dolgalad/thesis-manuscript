@@ -156,7 +156,6 @@ The expressiveness of MRFs makes them well suited for modeling structured domain
 
 In the context of this thesis, MRFs serve as the core formalism for linking energy-based models to combinatorial optimization. By designing potential functions $\POTENTIAL_c$ that encode local constraints and objective terms, BILP objectives and constraints can be represented as energies or potentials over binary assignments, with low-energy states corresponding to high-quality solutions. In this work, we consider parameterized MRF distributions where the factor structure is derived from the optimization instance and the local potentials are learned from data.
 
-
 \subsubsection{Factor graphs}
 
 Factor graphs provide an explicit representation of the factorization structure of a graphical model. A factor graph is a bipartite graph 
@@ -170,7 +169,21 @@ We write $N(\FACTOR)$ for the set of variables incident to factor $\FACTOR$, and
 \begin{equation*}
 |\FACTOR| \coloneqq |N(\FACTOR)|.
 \end{equation*}
-Thus, unary, pairwise, and higher-order factors correspond to $|\FACTOR|=1$, $|\FACTOR|=2$, and $|\FACTOR|>2$, respectively.
+Thus, unary, pairwise, and higher-order factors correspond to $|\FACTOR|=1$, $|\FACTOR|=2$, and $|\FACTOR|>2$, respectively. 
+
+For a global assignment $\XVEC$, we write
+\begin{equation*}
+    \XVEC_{\FACTOR} = (\XVEC_i)_{i\in N(\FACTOR)}
+\end{equation*}
+for the restriction of $\XVEC$ to the variables in the scope of factor $\FACTOR$. For $i\in N(\FACTOR)$, we write
+\begin{equation*}
+    \XVEC_{\FACTOR\setminus i} = (\XVEC_j)_{j\in N(\FACTOR)\setminus\{i\}}
+\end{equation*}
+for the assignment of all variables in the factor scope except $i$. Accordingly, a sum such as
+\begin{equation*}
+    \sum_{\XVEC_{\FACTOR\setminus i}}
+\end{equation*}
+ranges over all assignments to the variables in $N(\FACTOR)\setminus\{i\}$ for each fixed value of $\XVEC_i$.
 
 This representation is closely related to, but distinct from, the variable--constraint graphs introduced earlier for BILPs. A variable--constraint graph represents the input structure of an optimization instance and is used as the graph on which neural encoders operate. A factor graph represents a probabilistic model over solution variables and is used for inference. In many cases the two graphs have similar bipartite structure, because ILP constraints naturally suggest factor scopes, but they play different roles.
 
@@ -200,6 +213,13 @@ A(\GENEPARAM)
 \end{equation}
 This representation is called over-complete because the indicator statistics are linearly dependent: for each variable or factor, exactly one local configuration is active, so the associated indicators sum to one. Consequently, different parameter vectors can define the same distribution, so the parameters are not uniquely identifiable unless one imposes a convention for removing this redundancy. Nevertheless, the over-complete form is useful for graphical models because it aligns directly with local potentials and marginal inference. In this parameterization, the expected value of a unary indicator is the corresponding unary marginal, and the expected value of a factor indicator is the corresponding factor marginal. Approximate inference algorithms such as belief propagation therefore naturally operate on these quantities, returning beliefs $\BELIEF_i(x_i)$ and $\BELIEF_{\FACTOR}(x_{\FACTOR})$ that approximate the marginal expectations of the corresponding indicator sufficient statistics \citep{wainwright_graphical_2007}.
 
+\paragraph{Instance-conditioned parameterization}
+The distributions used later in this thesis should be understood as conditional MRF models over solution variables, conditioned on the data of a combinatorial optimization instance. That is, for a problem instance $\PROB$, the random variables are the candidate solution variables $\XVEC$, while the instance data are treated as fixed input information. The dependence on $\PROB$ enters through the factor graph structure and through the local natural parameters. In this sense, the model used later can be written informally as
+\begin{equation*}
+    p_{\GENEPARAM(\PROB)}(\XVEC \mid \PROB),
+\end{equation*}
+where $\GENEPARAM(\PROB)$ denotes the collection of local factor parameters associated with the instance $\PROB$. When the instance is fixed or clear from context, we suppress the conditioning notation and write simply $p_{\GENEPARAM}(\XVEC)$. Thus, throughout the thesis, references to an MRF over a BILP instance should be read as references to this instance-conditioned undirected model.
+
 For binary variables, the size of an over-complete factor table grows exponentially with the arity of the factor. If factor $\FACTOR$ has arity $|\FACTOR|$, then its local assignment space has size
 \begin{equation*}
 |\mathcal{X}_{\FACTOR}| = 2^{|\FACTOR|}.
@@ -210,7 +230,7 @@ Thus, representing a separate parameter for every local assignment requires $2^{
 \label{subsec:canonical-feasibility-cost-param}
 In \citep{park_max-product_2017} the authors show that certain ILPs can be solved efficiently using the Max-Product algorithm. They define a potential for each constraint that encodes local feasibility and assigns $0$ probability to all infeasible assignments. In the following we derive what we call the \emph{feasibility-cost parameterization}, a parameterization for the canonical-over complete representation of the same model. 
 
-We now define a fixed, non-learned choice of the generic parameters $\EPARAM$ introduced above. This parameterization maps an integer linear program to an MRF by encoding feasibility through constraint factors and objective value through unary factors. Local assignments that satisfy a constraint receive larger log-potential values than assignments that violate it, thereby increasing the probability of globally feasible assignments.
+We now define a fixed, non-learned choice of the generic parameters $\GENEPARAM$ introduced above. This parameterization maps an integer linear program to an MRF by encoding feasibility through constraint factors and objective value through unary factors. Local assignments that satisfy a constraint receive larger log-potential values than assignments that violate it, thereby increasing the probability of globally feasible assignments.
 
 We refer to the resulting fixed model as the \emph{canonical Markov random field} (CMRF), and to its parameter choice as the \emph{canonical feasibility-cost parameterization}. We denote the corresponding parameters by $\CANEPARAM$.
 
@@ -315,7 +335,7 @@ The term \emph{belief} is standard in the BP literature and refers to the algori
 
 \input{resources/tikz/chapter_1/mrf/bp_message_passing.tex}
 
-For numerical stability and implementation efficiency, the algorithms used in this thesis are written in the log-potential domain. For each factor $\FACTOR$, let $\EPARAM_{\FACTOR}$ denote the factor's log-potential table, with entries indexed by local assignments:
+For numerical stability and implementation efficiency, the algorithms used in this thesis are written in the log-potential domain. For each factor $\FACTOR$, let $\GENEPARAM_{\FACTOR}$ denote the factor's log-potential table, with entries indexed by local assignments:
 \begin{equation}
 \label{equ:log_potential_definition}
     \GENEPARAM_{\FACTOR}(x_{\FACTOR}) \coloneq \log \POTENTIAL_{\FACTOR}(x_{\FACTOR}) = -E_{\FACTOR}(x_{\FACTOR}).
@@ -325,27 +345,27 @@ Thus, $\EPARAM_{\FACTOR}(x_{\FACTOR})$ denotes the log-potential value assigned 
 The factor-to-variable message is computed as
 \begin{equation}
     \label{equ:lbp_log_factor_to_variable}
-    r_{\FACTOR\rightarrow i}^{(t)}(x_i) = \log \sum_{x_{\FACTOR\setminus i}}
+    m_{\FACTOR\rightarrow i}^{(t)}(x_i) = \log \sum_{x_{\FACTOR\setminus i}}
     \exp\left(
         \GENEPARAM_{\FACTOR}(x_{\FACTOR})
         +
         \sum_{j\in N(\FACTOR)\setminus\{i\}}
-        q_{j\rightarrow \FACTOR}^{(t)}(x_j)
+        m_{j\rightarrow \FACTOR}^{(t)}(x_j)
     \right).
 \end{equation}
 The undamped variable-to-factor message is then
 \begin{equation}
     \label{equ:lbp_log_variable_to_factor}
-    \widetilde{q}_{i\rightarrow \FACTOR}^{(t+1)}(x_i)
+    \widetilde{m}_{i\rightarrow \FACTOR}^{(t+1)}(x_i)
     =
     \sum_{\FACTOR'\in N(i)\setminus\{\FACTOR\}}
-    r_{\FACTOR'\rightarrow i}^{(t)}(x_i)
+    m_{\FACTOR'\rightarrow i}^{(t)}(x_i)
     -
     \log
     \sum_{x'_i}
     \exp\left(
         \sum_{\FACTOR'\in N(i)\setminus\{\FACTOR\}}
-        r_{\FACTOR'\rightarrow i}^{(t)}(x'_i)
+        m_{\FACTOR'\rightarrow i}^{(t)}(x'_i)
     \right).
 \end{equation}
 
@@ -353,12 +373,12 @@ In practice, we use damped message updates. Given a damping coefficient
 $\BPDAMPING\in[0,1]$, the updated message is
 \begin{equation}
     \label{equ:lbp_damping}
-    q_{i\rightarrow \FACTOR}^{(t+1)}
+    m_{i\rightarrow \FACTOR}^{(t+1)}
     =
-    \BPDAMPING q_{i\rightarrow \FACTOR}^{(t)}
+    \BPDAMPING m_{i\rightarrow \FACTOR}^{(t)}
     +
     (1-\BPDAMPING)
-    \widetilde{q}_{i\rightarrow \FACTOR}^{(t+1)} .
+    \widetilde{m}_{i\rightarrow \FACTOR}^{(t+1)} .
 \end{equation}
 Damping mixes the previous message with the newly computed message to stabilize loopy BP iterations; beliefs are computed from the final damped messages.
 

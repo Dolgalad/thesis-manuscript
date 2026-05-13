@@ -127,18 +127,52 @@
 
 \nextgroupplot[
     title={MIS-M},
+    xmin=-0.6, xmax=4.6,
+    xtick={0,1,2,3,4},
+    xticklabels={0.5,0.6,0.7,0.8,0.9},
     xlabel={Fixed-variable proportion},
     ylabel={},
-    ymin=0, ymax=1,
+    ymin=0, ymax=46.9783026356,
 ]
 % manual grouped bars for mis_n200-300_p0.15
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:-0.41,0) rectangle (axis cs:-0.246,8.62307821747);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:0.59,0) rectangle (axis cs:0.754,11.5818287493);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:1.59,0) rectangle (axis cs:1.754,14.4567988613);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:2.59,0) rectangle (axis cs:2.754,18.8500930524);
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (axis cs:3.59,0) rectangle (axis cs:3.754,22.35909347);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:-0.246,0) rectangle (axis cs:-0.082,6.76321658198);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:0.754,0) rectangle (axis cs:0.918,9.16579388704);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:1.754,0) rectangle (axis cs:1.918,11.1811214989);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:2.754,0) rectangle (axis cs:2.918,14.067312923);
+\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (axis cs:3.754,0) rectangle (axis cs:3.918,17.7029662942);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:-0.082,0) rectangle (axis cs:0.082,15.3216587787);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:0.918,0) rectangle (axis cs:1.082,20.1629759614);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:1.918,0) rectangle (axis cs:2.082,26.0792901685);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:2.918,0) rectangle (axis cs:3.082,33.1532676477);
+\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (axis cs:3.918,0) rectangle (axis cs:4.082,40.850697944);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:0.082,0) rectangle (axis cs:0.246,5.97789120105);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:1.082,0) rectangle (axis cs:1.246,8.69211799172);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:2.082,0) rectangle (axis cs:2.246,10.8302876648);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:3.082,0) rectangle (axis cs:3.246,13.8878797594);
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (axis cs:4.082,0) rectangle (axis cs:4.246,17.1195028398);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:0.246,0) rectangle (axis cs:0.41,15.1950554889);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:1.246,0) rectangle (axis cs:1.41,20.2416045739);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:2.246,0) rectangle (axis cs:2.41,25.1716758031);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:3.246,0) rectangle (axis cs:3.41,29.0793375788);
+\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (axis cs:4.246,0) rectangle (axis cs:4.41,29.9927811459);
 
 \end{groupplot}
-\node[anchor=north, draw=lightgray204, fill=white, fill opacity=0.9, text opacity=1, inner sep=3pt] at ($(current bounding box.south) + (0cm, -0.45cm)$) {
+\node[anchor=north,
+    draw=lightgray204, 
+    fill=white, 
+    fill opacity=0.9, 
+    text opacity=1,
+    text width=0.8\textwidth,
+    inner sep=3pt] at ($(current bounding box.south) + (0cm, -0.45cm)$) {
 \begin{tikzpicture}[baseline]
 \matrix[matrix of nodes, nodes={anchor=west, font=\scriptsize}, column sep=8pt, row sep=3pt] {
-\tikz[baseline=-0.55ex]{\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (0,0) rectangle (0.32,0.16);} & GNN+EGG & \tikz[baseline=-0.55ex]{\draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (0,0) rectangle (0.32,0.16);} & LBP+EGG & \tikz[baseline=-0.55ex]{\draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (0,0) rectangle (0.32,0.16);} & LBP+GD \\
-\tikz[baseline=-0.55ex]{\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (0,0) rectangle (0.32,0.16);} & NMF+EGG & \tikz[baseline=-0.55ex]{\draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (0,0) rectangle (0.32,0.16);} & NMF+GD &  &  \\
+\draw[draw=black, line width=0.3pt, fill=GNNEGGColor, fill opacity=0.55] (0,0) rectangle (0.32,0.16); & GNN+EGG & \draw[draw=black, line width=0.3pt, fill=LBPEGGColor, fill opacity=0.55] (0,0) rectangle (0.32,0.16); & LBP+EGG & \draw[draw=black, line width=0.3pt, fill=LBPGDColor, fill opacity=0.55] (0,0) rectangle (0.32,0.16); & LBP+GD \\
+\draw[draw=black, line width=0.3pt, fill=NMFEGGColor, fill opacity=0.55] (0,0) rectangle (0.32,0.16); & NMF+EGG & \draw[draw=black, line width=0.3pt, fill=NMFGDColor, fill opacity=0.55] (0,0) rectangle (0.32,0.16); & NMF+GD &  &  \\
 };
 \end{tikzpicture}
 };

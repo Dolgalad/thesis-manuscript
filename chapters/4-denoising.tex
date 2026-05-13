@@ -296,12 +296,14 @@ When $t_{\mathrm{end}}=1$, the flow model is fully unrolled to the terminal time
 
 Partial unrolling is useful for two reasons. First, it defines a runtime--quality trade-off. Fewer refinement steps reduce inference time, but may provide weaker scores. Second, the best decoded solution need not always be obtained after the longest possible rollout. In discrete optimization, a relaxed trajectory can drift toward high-confidence but structurally poor assignments, especially when the model is iterated beyond the regime in which it was most accurate. 
 
-\subsection{Backend reinference during decimation}
+\subsection{Flow Guided Decimation}
 \label{subsec:backend_reinference_decimation}
 
-For MRF-based refinement models, we also evaluate a backend variant in which GD requests updated beliefs during decimation. This follows the guided-decimation interface introduced in Section~\ref{subsubsec:chapter_3_egg_gd}, but the backend is now state-conditioned.
+For MRF-based flow refinement models, we also evaluate a stronger adaptive decoding method, which we call \emph{Flow Guided Decimation} (FGD). FGD uses the same guided-decimation interface introduced in Section~\ref{subsubsec:chapter_3_egg_gd}, but differs from standard GD in how the score signal is recomputed during decimation. In standard GD, the current partial assignment is imposed as evidence and the inference backend directly updates the beliefs of the remaining variables. In FGD, each decimation step instead performs a full conditioned flow-refinement pass: the flow state is initialized from an evidence-conditioned source state, the learned flow model is unrolled, and the resulting MRF-based beliefs are then used by the decimation rule.
 
-When GD has fixed a partial assignment $S\subseteq \VCGV\times\{0,1\}$, the backend constructs an evidence-consistent source state:
+Thus, FGD is not simply GD applied to the final output of the flow model. It repeatedly invokes the learned flow dynamics inside the decimation loop, so that every new partial assignment changes the source state from which the flow is initialized and therefore changes the refined belief signal returned to the decoder.
+
+When GD has fixed a partial assignment $S\subseteq \VCGV\times\{0,1\}$, FGD constructs an evidence-consistent source state:
 \begin{equation}
     p^{(0)}_i =
     \begin{cases}
@@ -311,9 +313,9 @@ When GD has fixed a partial assignment $S\subseteq \VCGV\times\{0,1\}$, the back
     \end{cases}
     \label{eq:evidence_conditioned_source_state}
 \end{equation}
-The refinement model is then evaluated from this state, and approximate inference is run under the same evidence-clamping mechanism described in Section~\ref{subsec:background_conditional_clamping} and used for GD in Section~\ref{subsubsec:chapter_3_egg_gd}. The resulting beliefs are returned to the GD rule.
+The refinement model is then evaluated from this state, and approximate inference is run under the same evidence-clamping mechanism described in Section~\ref{subsec:background_conditional_clamping} and used for GD in Section~\ref{subsubsec:chapter_3_egg_gd}. During FGD, the model recomputes the decoding signal after each partial assignment by reinitializing the flow state from the corresponding evidence-conditioned source state, unrolling the flow model, and running the evidence-clamped MRF inference step before selecting the next variable.
 
-This variant tests whether learned refinement remains useful when combined with adaptive decimation. It is more expensive than decoding a single refined score vector, because the backend may repeat refinement and inference during one GD pass.
+This variant tests whether learned refinement remains useful when combined with adaptive decimation. It is more expensive than decoding a single refined score vector, because of repeated refinement and inference during one FGD pass.
 
 The generic unrolling-and-decoding procedure is summarized in Algorithm~\ref{alg:unroll_decode}.
 
@@ -341,12 +343,21 @@ $\hat{x} \leftarrow \mathrm{Dec}(P,s^{(K)})$\;
 
 \end{algorithm}
 
+\subsection{Iterative Refinement Decoding}
+\label{subsec:iterative-refinement-decoding}
+
+For diffusion-inspired models, we report an iterative refinement (IR) decoding procedure. IR initializes the reverse process from a random binary assignment, obtained by drawing $n$ independent Bernoulli samples, and then unrolls the learned denoising process until a final sample is produced.
+
+This setting evaluates whether the model has learned local interactions well enough to turn an initially random assignment into a structured solution. In the results tables, \emph{sample feasibility} denotes the feasibility of the sample obtained after this unrolled refinement process, before any additional repair or feasibility-enforcing post-processing.
+
 \section{Main Results}
 \label{sec:chapter_4_main_results}
 
 We now report the main experimental results for the flow-based refinement models. The results are summarized in Table~\ref{tab:flow_inference_results}. We compare direct variable-score flow models, denoted DGN, with MRF-augmented flow models using either LBP or NMF inference. The suffix ``-v'' denotes models trained with the velocity-prediction objective, while the suffix ``-q'' denotes models trained to predict the denoised endpoint directly.
 
-For each model, we report three decoding variants. First, the raw rollout sample is evaluated for feasibility before any feasibility-preserving projection is applied. This measures whether the learned refinement dynamics themselves tend to produce valid assignments. Second, the final rollout state is decoded with EGG, which uses the scores produced after the rollout but does not update them during the construction process. Third, the final rollout state is decoded with GD, which uses the same feasibility-preserving decimation procedure with score updates. For MRF-augmented models, we additionally report a backend GD variant, in which the flow-conditioned MRF signal is recomputed during decimation.
+We report the MIS-S results as a stress test for the flow-based refinement models. The MIS instances are challenging in this setting because many variables have very small size factors, which leads to highly unbalanced ground-truth solution distributions. As a result, training the flow models on MIS has been less stable than on Set Cover and appears to require additional work on the loss, sampling distribution, or decoding-aware training procedure. For this reason, Table~\ref{tab:flow_inference_results} reports MIS-S results but omits MIS-M results. The MIS-S rows should therefore be interpreted primarily as an indication of the current limitations of the method on problems with hard exclusion constraints, rather than as a complete scalability evaluation on MIS.
+
+For each model, we report the sample feasiblity and relative gaps and runtime for three decoding variants. By rolling out the flow-model to $t=1$, a final Bernoulli-parameter state is obtained, from which we take a sample and evaluate this sample for feasibility before applying any feasibility-preserving decoder. This measures whether the learned refinement dynamics themselves tend to produce valid assignments. Second, the final rollout state is decoded with EGG, which uses the scores produced after the rollout but does not update them during the construction process. Third, the final rollout state is decoded with GD, which uses the same feasibility-preserving decimation procedure with score updates. For MRF-augmented flow models, we additionally report \emph{Flow Guided Decimation} (FGD), in which the flow-conditioned MRF signal is recomputed during decimation by repeatedly unrolling the flow model from an evidence-conditioned source state.
 
 Across the experiments, the most consistent pattern is that MRF-augmented flow models produce substantially better decoding signals than direct variable-score flow models. This is especially clear on Set Cover, where the FMRF-LBP variants achieve low relative gaps and high raw-sample feasibility. The difference between velocity prediction and direct endpoint denoising is generally smaller than the difference between factorized prediction and MRF-augmented prediction, suggesting that the structured inference layer is the main source of improvement in these experiments.
 
@@ -357,11 +368,11 @@ Across the experiments, the most consistent pattern is that MRF-augmented flow m
 
 Figure~\ref{fig:flow_fix_and_solve_pareto} summarizes the runtime--quality trade-offs for the flow-based models. Each point corresponds to a model--decoder combination, with runtime on the horizontal axis and relative gap on the vertical axis. The dashed curve marks the non-dominated frontier within each dataset: points on this curve are not simultaneously worse in both runtime and solution quality than another evaluated configuration.
 
-This figure complements Table~\ref{tab:flow_inference_results}. The table reports averaged metrics for each method, whereas the Pareto plot shows which configurations remain competitive once runtime is considered. This is important because backend GD and repeated refinement can reduce the gap, but they also add substantial computational cost.
+This figure complements Table~\ref{tab:flow_inference_results}. The table reports averaged metrics for each method, whereas the Pareto plot shows which configurations remain competitive once runtime is considered. This is important because GD and FGD can reduce the gap, but they also add substantial computational cost.
 
 On Set Cover, the Pareto frontier is dominated by MRF-augmented flow models, especially the LBP-based variants. Direct DGN flow models are fast but remain at larger gaps. FMRF-LBP variants move the frontier downward, showing that the additional structured inference cost can be justified when solution quality is prioritized. The NMF-based variants generally occupy an intermediate region: they improve over direct flow prediction, but are often dominated by LBP-based configurations.
 
-On MIS, the trade-off is less favorable. MRF-augmented flow models improve over direct flow prediction, but the best low-gap points require more expensive decoding. This is consistent with the table-based results: refinement helps produce better scores, but the exclusion structure of MIS makes sequential decoding more sensitive to early ranking errors. As a result, the runtime cost of backend or more elaborate decoding is less uniformly rewarded than on Set Cover.
+On MIS, the trade-off is less favorable. MRF-augmented flow models improve over direct flow prediction, but the best low-gap points require more expensive decoding. This is consistent with the table-based results: refinement helps produce better scores, but the exclusion structure of MIS makes sequential decoding more sensitive to early ranking errors. As a result, the runtime cost of FGD or more elaborate decoding is less uniformly rewarded than on Set Cover.
 
 Overall, the Pareto plot supports the main interpretation of the flow experiments. The value of the proposed models is not only that they improve average gap, but that they shift the runtime--quality frontier for Set Cover. For MIS, the improvement is present but more constrained by the interaction between refined scores and irreversible decoding decisions.
 
@@ -375,7 +386,7 @@ The same trend appears on SC-M. The DGN baselines have gaps around $14$--$16\%$,
 
 The comparison between velocity prediction and direct endpoint prediction is more subtle. On SC-S and SC-M, the ``-v'' and ``-q'' variants of FMRF-LBP are very close in both gap and runtime. Direct endpoint prediction is slightly better in some cases, while velocity prediction is slightly better in others. The main conclusion is therefore not that one target uniformly dominates the other, but rather that both objectives become effective once combined with an MRF-structured prediction layer.
 
-The backend GD variant provides a different trade-off. On SC-S, recomputing the flow-conditioned MRF signal during decimation gives the best flow-model gaps, reaching around $1.3$--$1.4\%$ for FMRF-LBP. This comes at a substantially higher runtime cost. On SC-M, however, backend GD is not uniformly beneficial: the extra conditioning and recomputation increase the runtime significantly and can also worsen the average gap relative to the simpler EGG or GD projection from a single rollout. This suggests that, for Set Cover, most of the useful information may already be contained in the final rollout state, and that repeated flow-conditioned reinference must be used carefully.
+The FGD variant provides a different trade-off. On SC-S, recomputing the flow-conditioned MRF signal during decimation gives the best flow-model gaps, reaching around $1.3$--$1.4\%$ for FMRF-LBP. This comes at a substantially higher runtime cost. On SC-M, however, FGD is not uniformly beneficial: the extra conditioning and recomputation increase the runtime significantly and can also worsen the average gap relative to the simpler EGG or GD projection from a single rollout. This suggests that, for Set Cover, most of the useful information may already be contained in the final rollout state, and that repeated flow-conditioned reinference must be used carefully.
 
 \subsection{Maximum Independent Set Results}
 
@@ -392,15 +403,21 @@ Overall, the MIS results show that MRF-augmented flow models can improve over fa
 \subsection{Diffusion-Inspired Denoising Results}
 \label{subsec:diffusion_denoising_results}
 
+Before presenting the denoising results, we define the model and decoding abbreviations used in Table~\ref{tab:denoising_inference_results}. \emph{DDGN} denotes the direct denoising GNN baseline, which predicts variable scores without
+an MRF inference layer. \emph{DLBP} and \emph{DNMF} denote denoising models whose predictions are passed through an MRF layer using LBP or NMF inference, respectively. The EGG and GD columns use the feasibility-preserving decoders introduced in Section~\ref{subsubsec:chapter_3_egg_gd}. The IR columns report \emph{Iterative Refinement}, where the diffusion-inspired denoising process is unrolled from a random binary initialization before decoding. 
+
+For diffusion-inspired models, sample feasibility refers to the feasibility of the final binary sample obtained after unrolling the denoising process from the chosen initial state. It is measured before applying EGG, GD, or any other feasibility-preserving projection.
+
 \input{resources/tab/chapter_4/denoising_inference_results.tex}
 
-Table~\ref{tab:denoising_inference_results} reports the completed denoising results. At this stage, only the Set Cover rows are complete and numerically meaningful. The incomplete MIS rows, as well as placeholder values such as $-100$, are excluded from the discussion and will be revisited once the corresponding experiments are complete.
+Table~\ref{tab:denoising_inference_results} reports the completed denoising results. At this stage, only the Set Cover rows are complete and numerically meaningful. We faced the same difficulties on MIS instances as those discussed at the
+beginning of Section~\ref{sec:chapter_4_main_results}, and therefore exclude the MIS denoising rows from the main presentation.
 
 On SC-S, the denoising models show the same broad pattern as the flow models: MRF-augmented denoising produces substantially better decoding signals than the direct denoising baseline. The direct DDGN model obtains an EGG and GD gap of approximately $8.3\%$, while DLBP reduces the GD gap to approximately $0.68\%$ and DNMF reduces it to approximately $1.86\%$. Thus, for small Set Cover instances, the strongest completed denoising result is obtained by combining denoising with LBP-based MRF inference.
 
 The raw feasibility rates support the same interpretation. DDGN produces feasible samples in only $7.4\%$ of SC-S instances, whereas DLBP produces feasible samples in approximately $88.9\%$ of cases. DNMF improves over DDGN but remains much lower than DLBP, with a feasibility rate of approximately $30.7\%$. This suggests that the LBP-based MRF layer does more than improve the final decoded objective value: it also guides the denoising trajectory toward states that are already much more compatible with the Set Cover constraints before projection.
 
-On SC-M, the same qualitative conclusion holds, but the differences between the inference backends become sharper. DDGN obtains an EGG and GD gap of approximately $10.5\%$, while DLBP achieves a GD gap close to zero, approximately $-0.23\%$, and an IR gap of approximately $0.87\%$. DNMF again improves over DDGN, but remains weaker than DLBP, with a GD gap of approximately $2.33\%$ and an IR gap of approximately $5.49\%$. The negative average gap for DLBP should be interpreted as a numerical outcome of the evaluation protocol, not as evidence that the model violates optimality; it most likely reflects comparison against reference solutions that are not always certified optimal, numerical tolerances, or solver/reference variability.
+On SC-M, the same qualitative conclusion holds, but the differences between the decoding strategy become sharper. DDGN obtains an EGG and GD gap of approximately $10.5\%$, while DLBP achieves a GD gap close to zero, approximately $-0.23\%$, and an IR gap of approximately $0.87\%$. DNMF again improves over DDGN, but remains weaker than DLBP, with a GD gap of approximately $2.33\%$ and an IR gap of approximately $5.49\%$. The negative average gap for DLBP should be interpreted as a numerical outcome of the evaluation protocol, not as evidence that the model violates optimality; it most likely reflects comparison against reference solutions that are not always certified optimal, numerical tolerances, or solver/reference variability.
 
 The completed denoising results therefore support the same Set Cover conclusion as the flow experiments: the strongest refinement signal is obtained when denoising is combined with LBP-based MRF inference. No conclusion is drawn here for MIS denoising, since those rows are incomplete.
 

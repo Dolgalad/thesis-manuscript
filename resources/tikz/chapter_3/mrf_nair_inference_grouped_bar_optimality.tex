@@ -7,7 +7,7 @@
 \begin{tikzpicture}
 \begin{axis}[
     width=0.82\textwidth,
-    height=0.42\textwidth,
+    height=0.32\textwidth,
     scale only axis,
     tick align=outside,
     tick pos=left,
@@ -19,8 +19,8 @@
     xtick={0,1,2,3},
     xticklabels={SC-S,SC-M,MIS-S,MIS-M},
     xlabel={Dataset},
-    ylabel={Optimality gap (\%)},
-    title={Average optimality gap by dataset},
+    ylabel={Relative gap (\%)},
+    title={},
     xtick style={color=black},
     ytick style={color=black},
     legend columns=4,
@@ -77,17 +77,24 @@
 \draw[draw=black,line width=0.3pt,fill=NMFEGGColor,fill opacity=0.55] (axis cs:0.222222222222,0) rectangle (axis cs:0.306666666667,5.73636363636);
 \draw[draw=black,line width=0.3pt,fill=NMFEGGColor,fill opacity=0.55] (axis cs:1.22222222222,0) rectangle (axis cs:1.30666666667,7.41416245648);
 \draw[draw=black,line width=0.3pt,fill=NMFEGGColor,fill opacity=0.55] (axis cs:2.22222222222,0) rectangle (axis cs:2.30666666667,17.7161045235);
-% missing: group=MIS-M, series=nmf
+\draw[draw=black,line width=0.3pt,fill=NMFEGGColor,fill opacity=0.55] (axis cs:3.22222222222,0) rectangle (axis cs:3.30666666667,21.8960582398);
 
 % --- NMF+GD ---
 \draw[draw=black,line width=0.3pt,fill=NMFGDColor,fill opacity=0.55] (axis cs:0.311111111111,0) rectangle (axis cs:0.395555555556,3.21016835017);
 \draw[draw=black,line width=0.3pt,fill=NMFGDColor,fill opacity=0.55] (axis cs:1.31111111111,0) rectangle (axis cs:1.39555555556,3.09595622843);
 \draw[draw=black,line width=0.3pt,fill=NMFGDColor,fill opacity=0.55] (axis cs:2.31111111111,0) rectangle (axis cs:2.39555555556,3.97726959031);
-% missing: group=MIS-M, series=nmf_gd
+\draw[draw=black,line width=0.3pt,fill=NMFGDColor,fill opacity=0.55] (axis cs:3.31111111111,0) rectangle (axis cs:3.39555555556,32.7651283466);
 
 
 \end{axis}
-\node[anchor=north, draw=lightgray204, fill=white, fill opacity=0.9, text opacity=1, inner sep=3pt] at ($(current bounding box.south) + (0, -0.25cm)$) {
+\node[anchor=north, 
+    draw=lightgray204, 
+    fill=white, 
+    fill opacity=0.9, 
+    text opacity=1, 
+    inner sep=3pt,
+    text width=0.81\textwidth
+    ] at ($(current bounding box.south) + (0.80, -0.25cm)$) {
 \begin{tikzpicture}[baseline]
 \matrix[
     matrix of nodes,

@@ -7,7 +7,13 @@
 \definecolor{lightgray204}{RGB}{200,200,200}
 \begin{tikzpicture}
 \begin{groupplot}[
-    group style={group size=2 by 2, horizontal sep=0.75cm, vertical sep=0.75cm, y descriptions at=edge left, ylabels at=edge left},
+    group style={
+        group size=2 by 2, 
+        horizontal sep=1.15cm, 
+        vertical sep=1.45cm, 
+        %y descriptions at=edge left, 
+        ylabels at=edge left
+    },
     width=0.42\textwidth,
     height=0.30\textwidth,
     scale only axis,
@@ -21,8 +27,8 @@
 
 \nextgroupplot[
     title={SC-S},
-    xtick style={draw=none},
-    ylabel={Gap (\%)},
+    %xtick style={draw=none},
+    ylabel={Opt. gap (\%)},
     xmode=log,
     log basis x={10},
     xmin=0.0567562755508, xmax=0.968195435621,
@@ -73,8 +79,8 @@ coordinates {(0.0681075306609,3.42222222222) (0.0787783249654,2) (0.184668398621
 
 \nextgroupplot[
     title={SC-M},
-    xtick style={draw=none},
-    ytick style={draw=none},
+    %xtick style={draw=none},
+    %ytick style={draw=none},
     xmode=log,
     log basis x={10},
     xmin=0.238198889955, xmax=2.98656015478,
@@ -126,7 +132,7 @@ coordinates {(0.285838667946,5.28993569488) (0.429974199682,5.16827411425) (0.43
 \nextgroupplot[
     title={MIS-S},
     xlabel={Runtime (s)},
-    ylabel={Gap (\%)},
+    ylabel={Opt. gap (\%)},
     xmode=log,
     log basis x={10},
     xmin=0.0747268671092, xmax=0.540046127636,
@@ -178,19 +184,67 @@ coordinates {(0.0896722405311,19.8447204969) (0.0906998283323,16.0517598344) (0.
 \nextgroupplot[
     title={MIS-M},
     xlabel={Runtime (s)},
-    ytick style={draw=none},
+    %ytick style={draw=none},
     xmode=log,
     log basis x={10},
-    xmin=0.1, xmax=1,
-    ymin=0, ymax=1,
+    xmin=0.281318552584, xmax=27.7299396752,
+    ymin=0.746970189617, ymax=46.0816189554,
 ]
+% mis_n200-300_p0.15 / var_logits_bce::EGG
+\addplot+[semithick, color=GNNEGGColor, mark=*, mark size=3, mark options={solid}]
+coordinates {(16.0125418943,8.62307821747) (3.32236805639,11.5818287493) (0.817481119186,14.4567988613) (0.6721715541,18.8500930524) (0.766448554079,22.35909347)};
+\node[font=\tiny, anchor=south west, text=GNNEGGColor] at (axis cs:16.0125418943,8.62307821747) {0.5};
+\node[font=\tiny, anchor=south west, text=GNNEGGColor] at (axis cs:3.32236805639,11.5818287493) {0.6};
+\node[font=\tiny, anchor=south west, text=GNNEGGColor] at (axis cs:0.817481119186,14.4567988613) {0.7};
+\node[font=\tiny, anchor=south west, text=GNNEGGColor] at (axis cs:0.6721715541,18.8500930524) {0.8};
+\node[font=\tiny, anchor=south west, text=GNNEGGColor] at (axis cs:0.766448554079,22.35909347) {0.9};
+% mis_n200-300_p0.15 / lbp_fce::EGG
+\addplot+[semithick, color=LBPEGGColor, mark=*, mark size=3, mark options={solid}]
+coordinates {(17.4046680459,6.76321658198) (4.84202782198,9.16579388704) (2.13859667372,11.1811214989) (1.92760799158,14.067312923) (1.90864207445,17.7029662942)};
+\node[font=\tiny, anchor=south west, text=LBPEGGColor] at (axis cs:17.4046680459,6.76321658198) {0.5};
+\node[font=\tiny, anchor=south west, text=LBPEGGColor] at (axis cs:4.84202782198,9.16579388704) {0.6};
+\node[font=\tiny, anchor=south west, text=LBPEGGColor] at (axis cs:2.13859667372,11.1811214989) {0.7};
+\node[font=\tiny, anchor=south west, text=LBPEGGColor] at (axis cs:1.92760799158,14.067312923) {0.8};
+\node[font=\tiny, anchor=south west, text=LBPEGGColor] at (axis cs:1.90864207445,17.7029662942) {0.9};
+% mis_n200-300_p0.15 / lbp_fce::GD
+\addplot+[semithick, color=LBPGDColor, mark=square, mark size=3, mark options={solid}]
+coordinates {(23.1082830627,15.3216587787) (6.53521346558,20.1629759614) (3.05583269889,26.0792901685) (2.48256496579,33.1532676477) (2.56006179909,40.850697944)};
+\node[font=\tiny, anchor=south west, text=LBPGDColor] at (axis cs:23.1082830627,15.3216587787) {0.5};
+\node[font=\tiny, anchor=south west, text=LBPGDColor] at (axis cs:6.53521346558,20.1629759614) {0.6};
+\node[font=\tiny, anchor=south west, text=LBPGDColor] at (axis cs:3.05583269889,26.0792901685) {0.7};
+\node[font=\tiny, anchor=south west, text=LBPGDColor] at (axis cs:2.48256496579,33.1532676477) {0.8};
+\node[font=\tiny, anchor=south west, text=LBPGDColor] at (axis cs:2.56006179909,40.850697944) {0.9};
+% mis_n200-300_p0.15 / nmf_fce::EGG
+\addplot+[semithick, color=NMFEGGColor, mark=*, mark size=3, mark options={solid}]
+coordinates {(9.15752722416,5.97789120105) (1.91550524235,8.69211799172) (0.462014088193,10.8302876648) (0.339487393009,13.8878797594) (0.337582263101,17.1195028398)};
+\node[font=\tiny, anchor=south west, text=NMFEGGColor] at (axis cs:9.15752722416,5.97789120105) {0.5};
+\node[font=\tiny, anchor=south west, text=NMFEGGColor] at (axis cs:1.91550524235,8.69211799172) {0.6};
+\node[font=\tiny, anchor=south west, text=NMFEGGColor] at (axis cs:0.462014088193,10.8302876648) {0.7};
+\node[font=\tiny, anchor=south west, text=NMFEGGColor] at (axis cs:0.339487393009,13.8878797594) {0.8};
+\node[font=\tiny, anchor=south west, text=NMFEGGColor] at (axis cs:0.337582263101,17.1195028398) {0.9};
+% mis_n200-300_p0.15 / nmf_fce::GD
+\addplot+[semithick, color=NMFGDColor, mark=square*, mark size=3, mark options={solid}]
+coordinates {(13.9604315588,15.1950554889) (2.57044626755,20.2416045739) (0.710165300948,25.1716758031) (0.405010286517,29.0793375788) (0.42691457994,29.9927811459)};
+\node[font=\tiny, anchor=south west, text=NMFGDColor] at (axis cs:13.9604315588,15.1950554889) {0.5};
+\node[font=\tiny, anchor=south west, text=NMFGDColor] at (axis cs:2.57044626755,20.2416045739) {0.6};
+\node[font=\tiny, anchor=south west, text=NMFGDColor] at (axis cs:0.710165300948,25.1716758031) {0.7};
+\node[font=\tiny, anchor=south west, text=NMFGDColor] at (axis cs:0.405010286517,29.0793375788) {0.8};
+\node[font=\tiny, anchor=south west, text=NMFGDColor] at (axis cs:0.42691457994,29.9927811459) {0.9};
+\addplot [thick, black, dashed]
+coordinates {(0.337582263101,17.1195028398) (0.339487393009,13.8878797594) (0.462014088193,10.8302876648) (1.91550524235,8.69211799172) (9.15752722416,5.97789120105)};
 
 \end{groupplot}
-\node[anchor=north, draw=lightgray204, fill=white, fill opacity=0.9, text opacity=1, inner sep=3pt] at ($(current bounding box.south) + (0cm, -0.45cm)$) {
+\node[anchor=north, 
+    draw=lightgray204, 
+    fill=white, 
+    fill opacity=0.9, 
+    text opacity=1,
+    text width=0.8\textwidth, 
+    inner sep=3pt] at ($(current bounding box.south) + (0cm, -0.45cm)$) {
 \begin{tikzpicture}[baseline]
 \matrix[matrix of nodes, nodes={anchor=west, font=\scriptsize}, column sep=8pt, row sep=3pt] {
-\tikz[baseline=-0.55ex]{\draw[very thick, color=GNNEGGColor] (0,0) -- (0.42,0); \draw[color=GNNEGGColor] plot[only marks, mark=*, mark size=2.0pt] coordinates {(0.21,0)};} & DGN+EGG & \tikz[baseline=-0.55ex]{\draw[very thick, color=LBPEGGColor] (0,0) -- (0.42,0); \draw[color=LBPEGGColor] plot[only marks, mark=*, mark size=2.0pt] coordinates {(0.21,0)};} & LMRF-LBP+EGG & \tikz[baseline=-0.55ex]{\draw[very thick, color=LBPGDColor] (0,0) -- (0.42,0); \draw[color=LBPGDColor] plot[only marks, mark=square, mark size=2.0pt] coordinates {(0.21,0)};} & LMRF-LBP+GD \\
-\tikz[baseline=-0.55ex]{\draw[very thick, color=NMFEGGColor] (0,0) -- (0.42,0); \draw[color=NMFEGGColor] plot[only marks, mark=*, mark size=2.0pt] coordinates {(0.21,0)};} & LMRF-NMF+EGG & \tikz[baseline=-0.55ex]{\draw[very thick, color=NMFGDColor] (0,0) -- (0.42,0); \draw[color=NMFGDColor] plot[only marks, mark=square*, mark size=2.0pt] coordinates {(0.21,0)};} & LMRF-NMF+GD &  &  \\
+\draw[semithick, color=GNNEGGColor] (0,0) -- (0.42,0); \draw[color=GNNEGGColor] plot[only marks, mark=*, mark size=3] coordinates {(0.21,0)}; & DGN+EGG & \draw[semithick, color=LBPEGGColor] (0,0) -- (0.42,0); \draw[color=LBPEGGColor] plot[only marks, mark=*, mark size=3] coordinates {(0.21,0)}; & LMRF-LBP+EGG & \draw[semithick, color=LBPGDColor] (0,0) -- (0.42,0); \draw[color=LBPGDColor] plot[only marks, mark=square, mark size=3] coordinates {(0.21,0)}; & LMRF-LBP+GD \\
+\draw[semithick, color=NMFEGGColor] (0,0) -- (0.42,0); \draw[color=NMFEGGColor] plot[only marks, mark=*, mark size=3] coordinates {(0.21,0)}; & LMRF-NMF+EGG & \draw[semithick, color=NMFGDColor] (0,0) -- (0.42,0); \draw[color=NMFGDColor] plot[only marks, mark=square*, mark size=3] coordinates {(0.21,0)}; & LMRF-NMF+GD &  &  \\
 };
 \end{tikzpicture}
 };

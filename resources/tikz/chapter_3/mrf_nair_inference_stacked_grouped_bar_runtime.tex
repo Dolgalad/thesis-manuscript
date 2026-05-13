@@ -7,7 +7,7 @@
 \begin{tikzpicture}
 \begin{axis}[
     width=0.82\textwidth,
-    height=0.42\textwidth,
+    height=0.32\textwidth,
     scale only axis,
     tick align=outside,
     tick pos=left,
@@ -226,7 +226,12 @@
 \draw[draw=none,pattern=north east lines,pattern color=black] (axis cs:2.22222222222,0.0141955267185) rectangle (axis cs:2.30666666667,0.105942607729);
 \draw[draw=black,line width=0.3pt,fill=NMFEGGColor,fill opacity=0.55] (axis cs:2.22222222222,0.105942607729) rectangle (axis cs:2.30666666667,0.973261369555);
 \draw[draw=none,pattern=crosshatch,pattern color=black] (axis cs:2.22222222222,0.105942607729) rectangle (axis cs:2.30666666667,0.973261369555);
-% missing: group=MIS-M, series=nmf
+\draw[draw=black,line width=0.3pt,fill=NMFEGGColor,fill opacity=0.55] (axis cs:3.22222222222,0) rectangle (axis cs:3.30666666667,0.0261628406327);
+\draw[draw=none,pattern=grid,pattern color=black] (axis cs:3.22222222222,0) rectangle (axis cs:3.30666666667,0.0261628406327);
+\draw[draw=black,line width=0.3pt,fill=NMFEGGColor,fill opacity=0.55] (axis cs:3.22222222222,0.0261628406327) rectangle (axis cs:3.30666666667,0.462378993549);
+\draw[draw=none,pattern=north east lines,pattern color=black] (axis cs:3.22222222222,0.0261628406327) rectangle (axis cs:3.30666666667,0.462378993549);
+\draw[draw=black,line width=0.3pt,fill=NMFEGGColor,fill opacity=0.55] (axis cs:3.22222222222,0.462378993549) rectangle (axis cs:3.30666666667,4.46050628857);
+\draw[draw=none,pattern=crosshatch,pattern color=black] (axis cs:3.22222222222,0.462378993549) rectangle (axis cs:3.30666666667,4.46050628857);
 
 % --- NMF+GD ---
 \draw[draw=black,line width=0.3pt,fill=NMFGDColor,fill opacity=0.55] (axis cs:0.311111111111,0) rectangle (axis cs:0.395555555556,0.00988469786414);
@@ -247,10 +252,22 @@
 \draw[draw=none,pattern=north east lines,pattern color=black] (axis cs:2.31111111111,0.0141955267185) rectangle (axis cs:2.39555555556,0.174286997016);
 \draw[draw=black,line width=0.3pt,fill=NMFGDColor,fill opacity=0.55] (axis cs:2.31111111111,0.174286997016) rectangle (axis cs:2.39555555556,1.04160575884);
 \draw[draw=none,pattern=crosshatch,pattern color=black] (axis cs:2.31111111111,0.174286997016) rectangle (axis cs:2.39555555556,1.04160575884);
-% missing: group=MIS-M, series=nmf_gd
+\draw[draw=black,line width=0.3pt,fill=NMFGDColor,fill opacity=0.55] (axis cs:3.31111111111,0) rectangle (axis cs:3.39555555556,0.0261628406327);
+\draw[draw=none,pattern=grid,pattern color=black] (axis cs:3.31111111111,0) rectangle (axis cs:3.39555555556,0.0261628406327);
+\draw[draw=black,line width=0.3pt,fill=NMFGDColor,fill opacity=0.55] (axis cs:3.31111111111,0.0261628406327) rectangle (axis cs:3.39555555556,0.710778218851);
+\draw[draw=none,pattern=north east lines,pattern color=black] (axis cs:3.31111111111,0.0261628406327) rectangle (axis cs:3.39555555556,0.710778218851);
+\draw[draw=black,line width=0.3pt,fill=NMFGDColor,fill opacity=0.55] (axis cs:3.31111111111,0.710778218851) rectangle (axis cs:3.39555555556,4.70890551387);
+\draw[draw=none,pattern=crosshatch,pattern color=black] (axis cs:3.31111111111,0.710778218851) rectangle (axis cs:3.39555555556,4.70890551387);
 
 \end{axis}
-\node[anchor=north, draw=lightgray204, fill=white, fill opacity=0.9, text opacity=1, inner sep=3pt] at ($(current bounding box.south) + (0, -0.25cm)$) {
+\node[anchor=north, 
+    draw=lightgray204, 
+    fill=white, 
+    fill opacity=0.9, 
+    text opacity=1, 
+    inner sep=3pt,
+    text width=0.81\textwidth
+    ] at ($(current bounding box.south) + (0.8, -0.25cm)$) {
 \begin{tikzpicture}[baseline]
 \matrix[
     matrix of nodes,
