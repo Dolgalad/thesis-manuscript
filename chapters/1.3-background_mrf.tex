@@ -99,9 +99,9 @@ For strictly positive distributions, the Hammersley--Clifford theorem connects t
 \begin{equation}
 p(x)=\frac{1}{Z}\prod_{c\in\mathcal{C}(G)}\POTENTIAL_c(x_c),
 \end{equation}
-where $\mathcal{C}(G)$ denotes the cliques of $G$, $\POTENTIAL_c(x_c)$ is a nonnegative potential function, and $Z$ is the partition function. Equivalently, defining local energies $E_c(x_c)=-\log \POTENTIAL_c(x_c)$ gives
+where $\CLIQUESET(G)$ denotes the cliques of $G$, $\POTENTIAL_c(x_c)$ is a nonnegative potential function, and $Z$ is the partition function. Equivalently, defining local energies $E_c(x_c)=-\log \POTENTIAL_c(x_c)$ gives
 \begin{equation}
-p(x)=\frac{1}{Z}\exp\!\left(-\sum_{c\in\mathcal{C}(G)}E_c(x_c)\right).
+p(x)=\frac{1}{Z}\exp\!\left(-\sum_{c\in\CLIQUESET(G)}E_c(x_c)\right).
 \end{equation}
 This factorized form is the representation used throughout the thesis.
 
@@ -111,9 +111,9 @@ For MRFs, the exponential-family parameterization arises naturally when the cliq
 \end{equation}
 In this case, the resulting distribution takes the exponential-family form
 \begin{equation}
-p(x;\GENEPARAM)=\frac{1}{Z(\GENEPARAM)}\exp\!\Big(\sum_{c\in\mathcal{C}(G)} \GENEPARAM_c^\top \SSTAT_c(x_c)\Big),
+p(x;\GENEPARAM)=\frac{1}{Z(\GENEPARAM)}\exp\!\Big(\sum_{c\in\CLIQUESET(G)} \GENEPARAM_c^\top \SSTAT_c(x_c)\Big),
 \end{equation}
-where the global feature vector $\SSTAT(x)$ decomposes as a sum of local clique features and $\GENEPARAM = (\GENEPARAM_c)_{c\in \mathcal{C}(G)}$ are the parameters of the distribution. In this formulation, the graph structure determines the decomposition of the sufficient statistics, while the parameters control the strength of local interactions.
+where the global feature vector $\SSTAT(x)$ decomposes as a sum of local clique features and $\GENEPARAM = (\GENEPARAM_c)_{c\in \CLIQUESET(G)}$ are the parameters of the distribution. In this formulation, the graph structure determines the decomposition of the sufficient statistics, while the parameters control the strength of local interactions.
 
 Table~\ref{tab:exp_family_examples} illustrates how different choices of sufficient statistics and natural parameters recover familiar distributions. The important point for this thesis is that the same exponential-family form can represent both independent binary variables and structured graphical models. In an MRF, the sufficient statistics decompose over variables and factors, and the associated parameters define local potentials.
 
@@ -171,19 +171,7 @@ We write $N(\FACTOR)$ for the set of variables incident to factor $\FACTOR$, and
 \end{equation*}
 Thus, unary, pairwise, and higher-order factors correspond to $|\FACTOR|=1$, $|\FACTOR|=2$, and $|\FACTOR|>2$, respectively. 
 
-For a global assignment $\XVEC$, we write
-\begin{equation*}
-    \XVEC_{\FACTOR} = (\XVEC_i)_{i\in N(\FACTOR)}
-\end{equation*}
-for the restriction of $\XVEC$ to the variables in the scope of factor $\FACTOR$. For $i\in N(\FACTOR)$, we write
-\begin{equation*}
-    \XVEC_{\FACTOR\setminus i} = (\XVEC_j)_{j\in N(\FACTOR)\setminus\{i\}}
-\end{equation*}
-for the assignment of all variables in the factor scope except $i$. Accordingly, a sum such as
-\begin{equation*}
-    \sum_{\XVEC_{\FACTOR\setminus i}}
-\end{equation*}
-ranges over all assignments to the variables in $N(\FACTOR)\setminus\{i\}$ for each fixed value of $\XVEC_i$.
+For a global assignment $\XVEC$, we write $\XVEC_{\FACTOR} = (\XVEC_i)_{i\in N(\FACTOR)}$ for the restriction of $\XVEC$ to the variables in the scope of factor $\FACTOR$. For $i\in N(\FACTOR)$, we write $\XVEC_{\FACTOR\setminus i} = (\XVEC_j)_{j\in N(\FACTOR)\setminus\{i\}}$ for the assignment of all variables in the factor scope except $i$. Accordingly, a sum such as $\sum_{\XVEC_{\FACTOR\setminus i}}$ ranges over all assignments to the variables in $N(\FACTOR)\setminus\{i\}$ for each fixed value of $\XVEC_i$.
 
 This representation is closely related to, but distinct from, the variable--constraint graphs introduced earlier for BILPs. A variable--constraint graph represents the input structure of an optimization instance and is used as the graph on which neural encoders operate. A factor graph represents a probabilistic model over solution variables and is used for inference. In many cases the two graphs have similar bipartite structure, because ILP constraints naturally suggest factor scopes, but they play different roles.
 

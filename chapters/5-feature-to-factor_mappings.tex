@@ -1,5 +1,5 @@
-\chapter{Feature-to-Factor Mappings for Approximate MRF inference}\label{chapter:5_feature-to-factor_mappings_for_approximate_mrf_inference}
-\chaptermark{F2F Mappings}
+\chapter{Feature-to-Factor Mappings for Approximate MRF Inference}\label{chapter:5_feature-to-factor_mappings_for_approximate_mrf_inference}
+\chaptermark{Feature-to-Factor}
 
 Chapters~\ref{chapter:3_differentiable_mrf_inference_for_BILPs} and~\ref{chapter:4_denoising_and_mrf_inference} used MRFs as structured prediction layers for BILP solution prediction. The model design separated three components: a GNN extracted features from the variable--constraint graph, an MRF layer converted these features into structured marginal predictions, and a feasibility-preserving decoder produced a valid assignment. This chapter keeps that pipeline fixed and focuses on a specific scalability bottleneck: the mapping from neural features to MRF factor parameters.
 

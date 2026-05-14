@@ -30,8 +30,8 @@ Binary integer linear programs (BILPs), which are the main focus of this thesis,
 
 A formulation is said to be \emph{compact} if the number of variables and constraints is polynomial in the size of the input~\cite{yannakakis_expressing_1988,carr_compact_2000}. This assumption is important for the methods developed in this thesis, since the variable-constraint graph must be represented explicitly. We therefore focus mainly on problems that admit compact BILP formulations. Compactness, however, does not imply that every constraint is small: a compact formulation may still contain constraints involving many variables. This distinction becomes important in the canonical MRF construction of Section~\ref{subsec:canonical-feasibility-cost-param} and in the approximate factor-graph models of Chapter~\ref{chapter:5_feature-to-factor_mappings_for_approximate_mrf_inference}.
 
-\subsubsection{LP relaxations and solver-state quantities}
-Given a BILP with feasible set $\mathcal{X}=\{0,1\}^n$, its linear programming relaxation is obtained by replacing the integrality constraints with continuous bounds:
+\subsubsection{Linear programming relaxations and solver-state quantities}
+Given a BILP with feasible set $\mathcal{X}=\{0,1\}^n$, its linear programming (LP) relaxation is obtained by replacing the integrality constraints with continuous bounds:
 \begin{equation}
 (P_{\mathrm{LP}}) \Leftrightarrow \left\{
 \begin{aligned}
@@ -44,7 +44,7 @@ The resulting LP provides a continuous approximation of the original integer pro
 
 For a detailed introduction to linear programming, including LP relaxations, duality, reduced costs, and sensitivity analysis, we refer the reader to the textbook of Bertsimas and Tsitsiklis~\cite{bertsimas_introduction_1997}.
 
-When the relaxation is solved by the simplex method, the solution is represented by a basis. The corresponding basis status of a variable or constraint records whether it is basic or nonbasic, and, if nonbasic, which bound is active. These quantities are often exposed by MILP solvers and are used as optimization-aware features in the variable-constraint graph representation described in Section~\ref{sec:vcg_definition} and in the learned predictors evaluated in Chapter~\ref{chapter:3_differentiable_mrf_inference_for_BILPs}.
+When the relaxation is solved by the simplex method, the solution is represented by a basis. The corresponding basis status of a variable or constraint records whether it is basic or nonbasic, and, if nonbasic, which bound is active. These quantities are often exposed by mixed-integer linear programming (MILP) solvers and are used as optimization-aware features in the variable-constraint graph representation described in Section~\ref{sec:vcg_definition} and in the learned predictors evaluated in Chapter~\ref{chapter:3_differentiable_mrf_inference_for_BILPs}.
 
 
 \subsection{Solving ILPs}
@@ -56,14 +56,14 @@ The most straightforward but impractical approach is exhaustive enumeration of a
 
 \paragraph{Branch-and-Bound} The Branch-and-Bound (B\&B) method~\cite{land_automatic_1960,dakin_tree-search_1965} explores the solution space through a search tree. At each node, the problem is restricted by branching on a decision variable, yielding subproblems that can be pruned using bounds, infeasibility, or integrality. Figure~\ref{fig:branch_and_bound_tree} illustrates this search-tree structure.
 
-Although B\&B is exact, its worst-case complexity remains exponential, and its practical performance depends heavily on choices such as variable selection, node selection, branching direction, and primal heuristics. These choices provide natural points of intervention for learning-augmented solvers, as reviewed in Chapter~\ref{chap:chapter_2_related_work}. Table~\ref{tab:branch_and_bound_strategies} summarizes these decision points, many of which have been targeted by learning-based methods. Classical examples include strong branching, pseudo-cost and reliability branching, feasibility-pump heuristics, RINS, and local branching~\cite{achterberg_branching_2005,benichou_experiments_1971,fischetti_feasibility_2005,danna_exploring_2005,fischetti_local_2003}.
+Although B\&B is exact, its worst-case complexity remains exponential, and its practical performance depends heavily on choices such as variable selection, node selection, branching direction, and primal heuristics. These choices provide natural points of intervention for learning-augmented solvers, as reviewed in Chapter~\ref{chap:chapter_2_related_work}. Table~\ref{tab:branch_and_bound_strategies} summarizes these decision points, many of which have been targeted by learning-based methods. Classical examples include strong branching, pseudo-cost and reliability branching, feasibility-pump heuristics, Relaxation Induced Neighborhood Search (RINS), and local branching~\cite{achterberg_branching_2005,benichou_experiments_1971,fischetti_feasibility_2005,danna_exploring_2005,fischetti_local_2003}.
 
 \input{resources/tikz/chapter_1/co/generic_branch_and_bound}
 
 \input{resources/tab/chapter_1/co/branch_and_bound_strategies}
 
 \paragraph{Cutting planes and Branch-and-Cut}
-Cutting planes strengthen the continuous relaxation of an ILP by adding valid inequalities that remove fractional LP solutions while preserving all integer-feasible solutions~\cite{gomory_outline_1958}. Modern MILP solvers combine this idea with B\&B in a Branch-and-Cut framework~\cite{balas_mixed_1996,cochran_branch_2011}: at each node, the LP relaxation is solved, violated cuts may be added to tighten the relaxation, and branching is applied if the relaxed solution remains fractional. Figure~\ref{fig:cutting_plane} illustrates the geometric role of a cut. As with branching, cut separation, cut selection, and cut scheduling involve heuristic choices that can be targeted by learning-based methods. 
+Cutting planes strengthen the continuous relaxation of an ILP by adding valid inequalities that remove fractional LP solutions while preserving all integer-feasible solutions~\cite{gomory_outline_1958}. Modern MILP solvers combine this idea with B\&B in a Branch-and-Cut (B\&C) framework~\cite{balas_mixed_1996,cochran_branch_2011}: at each node, the LP relaxation is solved, violated cuts may be added to tighten the relaxation, and branching is applied if the relaxed solution remains fractional. Figure~\ref{fig:cutting_plane} illustrates the geometric role of a cut. As with branching, cut separation, cut selection, and cut scheduling involve heuristic choices that can be targeted by learning-based methods. 
 
 Other exact frameworks, such as Branch-and-Price~\cite{barnhart_branch-and-price_1998,cochran_branchpriceandcut_2011}, combine branching with column generation and are particularly useful for formulations with a very large number of variables. They are not central to the methods developed in this thesis, so we do not discuss them further.
 
@@ -71,7 +71,7 @@ Other exact frameworks, such as Branch-and-Price~\cite{barnhart_branch-and-price
 
 \subsubsection{Primal heuristics and solution construction}
 
-Because exact ILP solving can be computationally expensive, modern solvers rely heavily on primal heuristics to quickly construct feasible incumbent solutions. Examples include diving heuristics, rounding and repair procedures such as the feasibility pump~\cite{fischetti_feasibility_2005}, and neighborhood-based methods such as RINS~\cite{danna_exploring_2005} and VNS~\cite{mladenovic_variable_1997,hansen_variable_2008}. These methods are relevant to this thesis because they highlight a central difficulty: a useful prediction is not merely a vector of independent variable scores, but a coherent assignment that satisfies the constraints. Chapter~\ref{chapter:3_differentiable_mrf_inference_for_BILPs} addresses this difficulty with MRF-based marginal inference and feasibility-preserving decoding, while Chapter~\ref{chapter:4_denoising_and_mrf_inference} studies denoising and flow-based refinement dynamics.
+Because exact ILP solving can be computationally expensive, modern solvers rely heavily on primal heuristics to quickly construct feasible incumbent solutions. Examples include diving heuristics, rounding and repair procedures such as the feasibility pump~\cite{fischetti_feasibility_2005}, and neighborhood-based methods such as RINS~\cite{danna_exploring_2005} and Variable Neighborhood Search (VNS)~\cite{mladenovic_variable_1997,hansen_variable_2008}. These methods are relevant to this thesis because they highlight a central difficulty: a useful prediction is not merely a vector of independent variable scores, but a coherent assignment that satisfies the constraints. Chapter~\ref{chapter:3_differentiable_mrf_inference_for_BILPs} addresses this difficulty with MRF-based marginal inference and feasibility-preserving decoding, while Chapter~\ref{chapter:4_denoising_and_mrf_inference} studies denoising and flow-based refinement dynamics.
 
 \paragraph{Diving and tree traversal}
 Diving heuristics follow a single branch of the B\&B tree downward, repeatedly selecting promising child nodes until a leaf or infeasible relaxation is reached. This differs from complete traversal strategies such as depth-first search and breadth-first search, which systematically backtrack to explore the tree. Figure~\ref{fig:diving_dfs_bfs} illustrates these different traversal patterns. Diving is particularly relevant in this thesis because several decoding procedures can be interpreted as learned or inference-guided forms of sequential solution construction.
@@ -143,13 +143,13 @@ Figure~\ref{fig:mis_example} illustrates an independent set and a maximum indepe
 	\label{fig:mis_example}
 \end{figure}
 
-Each constraint $x_i+x_j\leq 1$ prevents adjacent vertices from being selected simultaneously. Together with the binary constraints, these inequalities encode the independent sets of $\G$. Although correct, the edge formulation can have a weak LP relaxation. It can be strengthened using clique inequalities: in any clique $c\subseteq\GV$, at most one vertex can belong to an independent set. Let $\mathcal{C}$ denote a collection of cliques in $\G$; this yields the formulation
+Each constraint $x_i+x_j\leq 1$ prevents adjacent vertices from being selected simultaneously. Together with the binary constraints, these inequalities encode the independent sets of $\G$. Although correct, the edge formulation can have a weak LP relaxation. It can be strengthened using clique inequalities: in any clique $c\subseteq\GV$, at most one vertex can belong to an independent set. Let $\CLIQUESET$ denote a collection of cliques in $\G$; this yields the formulation
 \begin{align}
     \label{equ:mis_formulation_cliques}
     (P_\mathrm{MIS}) \Leftrightarrow \left\{
     \begin{array}{lll}
         \max        & \mathds{1}^T x   & \\
-        \text{s.t.} & \sum_{i\in c} x_i \leq 1 & \forall c \in \mathcal{C} \\
+        \text{s.t.} & \sum_{i\in c} x_i \leq 1 & \forall c \in \CLIQUESET \\
                     & x \in \{0,1\}^n
     \end{array}
     \right.
