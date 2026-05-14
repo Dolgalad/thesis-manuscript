@@ -111,14 +111,8 @@ For each factor $\FACTOR \in \FACTORSET$, we construct a factor embedding $\EMB'
 \end{equation}
 where $\operatorname*{F2F}$ is an operator over the set of dependent embeddings, which may range from simple pooling functions (e.g., sum, mean, or max) to learned aggregation mechanisms. In its simplest variant, F2F is permutation-invariant, but this is not the case for all variants explored in the experimental section. Learned aggregation mechanisms are described in the experimental section. This aggregation step yields a fixed-dimensional representation regardless of the size of $N(\FACTOR)$.
 
-\paragraph{Parameter prediction head.}
-The parameters of the approximate MRF are obtained by applying a learned prediction head to the factor embeddings. For each factor $\FACTOR \in \FACTORSET$ of arity $|\FACTOR|$, we define
-\begin{equation}
-\EPARAM_{\FACTOR} = \MLP_{|\FACTOR|}\!\left( h'_{\FACTOR} \right),
-\end{equation}
-where $\MLP_{|\FACTOR|} : \R^d \rightarrow \R^{2^{|\FACTOR|}}$ is a multi-layer perceptron whose output dimension matches the size of the over-complete canonical parameterization for factors of that arity (see Chapter~\ref{chapter:3_differentiable_mrf_inference_for_BILPs}).
-
-This formulation makes explicit the separation between the structure of the approximate MRF, which is fixed, and its parameterization, which is learned. Fully factorized distributions are recovered as a special case in which each factor depends only on a single variable embedding, while higher-arity factors allow the model to capture limited dependencies between variables without sacrificing tractability.
+\paragraph{Parameter prediction head}
+The parameters of the approximate MRF are obtained by applying a learned prediction head to the factor embeddings defined in Section~\ref{subsec:neural_parameter_predictor}.
 
 \section{Experiments}
 \label{sec:chapter_5_experiments}
@@ -136,13 +130,13 @@ To mitigate this effect, the experiments reported in this section use a variable
 
 Let $\XVEC=(\XVEC_v)_{v\in \VCGV}$ denote the binary decision variables and let $\MARGINAL_x = (\MARGINAL_v)_{v\in \VCGV}$ be the vector of unary marginals produced by the inference procedure, where
 \[
-\MARGINAL_v \;\triangleq\; \mathbb{P}_{p_{\EPARAM'}}(\XVEC_v=1).
+\MARGINAL_v \;\triangleq\; \mathbb{P}_{p_{\EPARAM}}(\XVEC_v=1).
 \]
 The marginals $\MARGINAL_{\XVEC}$ are computed by running loopy belief propagation on the chosen approximate factor graph. Let $\MARGINAL^{\star}=(\MARGINAL^{\star}_v)_{v\in\VCGV}$ denote the target unary marginals obtained from the reference solution distribution used for supervision.
 
 We train the model by minimizing a variable-level cross-entropy between the predicted and target unary marginals:
 \begin{equation}
-\mathcal{L}_{\mathrm{var}}(\EPARAM')
+\mathcal{L}_{\mathrm{var}}(\EPARAM)
 \;=\;
 -\sum_{v\in \VCGV}
 \Bigl[
@@ -152,7 +146,7 @@ We train the model by minimizing a variable-level cross-entropy between the pred
 \Bigr],
 \label{eq:var_ce_loss}
 \end{equation}
-where $\MARGINAL=\MARGINAL_{\XVEC}(\EPARAM')$ denotes the unary marginals returned by LBP on the approximate MRF parameterized by $\EPARAM'$.
+where $\MARGINAL=\MARGINAL_{\XVEC}(\EPARAM)$ denotes the unary marginals returned by LBP on the approximate MRF parameterized by $\EPARAM$.
 
 The first set of results evaluates tree-structured and pairwise approximations under this training objective. More expressive feature-to-factor mappings, including attention-based and transformer-based variants, are introduced and analyzed in subsequent experiments.
 
@@ -187,7 +181,7 @@ F2F-TRF & Transformer encoder over the dependency sequence & Model richer intera
 \subsubsection{Simple Aggregation}
 For both tree and pairwise approximations, the feature-to-factor mapping follows the generic formulation described in Section~\ref{sec:feature_factor_mapping}, with a simple aggregation operator. Concretely, for each factor $\FACTOR$ in the approximate graph, the corresponding factor embedding is obtained as
 \begin{equation*}
-\EMB'_{\FACTOR} = \max_{u \in N(\FACTOR)} h^{(T)}_u,
+\EMB'_{\FACTOR} = \max_{u \in N(\FACTOR)} \EMB^{(T)}_u,
 \end{equation*}
 where the maximum is taken element-wise over the embeddings of the dependency neighborhood defined by the precedence graph. The resulting factor embedding is then passed through an arity-specific parameter prediction head to produce the parameters of the approximate MRF.
 

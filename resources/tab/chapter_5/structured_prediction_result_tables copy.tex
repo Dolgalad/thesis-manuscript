@@ -1,0 +1,419 @@
+
+\begin{table}[t]
+\centering
+\resizebox{.99\textwidth}{!}{%
+\begin{tabular}{llcccccc}
+\toprule
+\multirow{2}{*}{\textbf{Dataset}} & \multirow{2}{*}{\textbf{Model}} & \multicolumn{3}{c}{\textbf{GD}} & \multicolumn{3}{c}{\textbf{EGG}} \\
+\cmidrule(lr){3-5} \cmidrule(lr){6-8}
+ &  & Rel. gap (\%) $\downarrow$ & Best (\%) $\downarrow$ & $t$ (s) $\downarrow$ & Rel. gap (\%) $\downarrow$ & Best (\%) $\downarrow$ & $t$ (s) $\downarrow$ \\
+\midrule
+\multirow{22}{*}{SC-S}
+& Var. Logits
+& $7.486 (\pm 6.869)$
+& $7.468$
+& $\mathbf{0.096 (\pm 0.005)}$
+& $15.107 (\pm 9.576)$
+& $14.695$
+& $0.011 (\pm 0.001)$ \\
+
+& MRF LBP
+& $\mathbf{1.653 (\pm 4.220)}$
+& $\mathbf{1.066}$
+& $0.991 (\pm 0.083)$
+& $6.100 (\pm 7.365)$
+& $5.973$
+& $0.005 (\pm 0.001)$ \\
+\cmidrule(lr){2-8}
+
+& F2F-MAX MST
+& $7.570 (\pm 6.881)$
+& $7.504$
+& $1.102 (\pm 0.052)$
+& $15.006 (\pm 9.543)$
+& $14.322$
+& $0.009 (\pm 0.001)$ \\
+
+& F2F-MAX ($\alpha \leq 2$)
+& $2.924 (\pm 4.804)$
+& $2.801$
+& $1.285 (\pm 0.046)$
+& $9.850 (\pm 8.457)$
+& $9.448$
+& $0.008 (\pm 0.001)$ \\
+
+& F2F-MAX ($\alpha \leq 3$)
+& $2.259 (\pm 4.404)$
+& $1.878$
+& $1.595 (\pm 0.088)$
+& $7.011 (\pm 7.477)$
+& $6.603$
+& $0.009 (\pm 0.001)$ \\
+
+& F2F-MAX ($\alpha \leq 4$)
+& $2.082 (\pm 4.446)$
+& $1.920$
+& $1.402 (\pm 0.160)$
+& $5.926 (\pm 6.817)$
+& $5.529$
+& $0.008 (\pm 0.001)$ \\
+\cmidrule(lr){2-8}
+
+& F2F-SEP MST
+& $7.512 (\pm 6.891)$
+& $7.359$
+& $1.109 (\pm 0.054)$
+& $15.825 (\pm 9.699)$
+& $15.460$
+& $0.007 (\pm 0.001)$ \\
+
+& F2F-SEP ($\alpha \leq 2$)
+& $3.301 (\pm 5.125)$
+& $3.054$
+& $0.990 (\pm 0.038)$
+& $10.149 (\pm 8.684)$
+& $10.028$
+& $0.005 (\pm 0.000)$ \\
+
+& F2F-SEP ($\alpha \leq 3$)
+& $10.255 (\pm 7.134)$
+& $3.170$
+& $1.030 (\pm 0.070)$
+& $18.415 (\pm 10.009)$
+& $7.488$
+& $0.005 (\pm 0.000)$ \\
+
+& F2F-SEP ($\alpha \leq 4$)
+& $2.520 (\pm 4.799)$
+& $2.412$
+& $1.045 (\pm 0.119)$
+& $5.983 (\pm 7.251)$
+& $5.759$
+& $0.005 (\pm 0.001)$ \\
+\cmidrule(lr){2-8}
+
+& F2F-VAR MST
+& $8.700 (\pm 7.419)$
+& $8.474$
+& $0.881 (\pm 0.055)$
+& $21.256 (\pm 11.103)$
+& $20.975$
+& $0.006 (\pm 0.001)$ \\
+
+& F2F-VAR ($\alpha \leq 2$)
+& $5.852 (\pm 6.408)$
+& $5.669$
+& $1.028 (\pm 0.062)$
+& $16.667 (\pm 10.226)$
+& $16.336$
+& $0.006 (\pm 0.001)$ \\
+
+& F2F-VAR ($\alpha \leq 3$)
+& $2.699 (\pm 4.829)$
+& $2.568$
+& $1.204 (\pm 0.070)$
+& $9.007 (\pm 8.301)$
+& $8.811$
+& $0.005 (\pm 0.001)$ \\
+
+& F2F-VAR ($\alpha \leq 4$)
+& $2.248 (\pm 4.627)$
+& $1.972$
+& $1.052 (\pm 0.101)$
+& $7.290 (\pm 7.222)$
+& $6.515$
+& $0.005 (\pm 0.000)$ \\
+\cmidrule(lr){2-8}
+
+& F2F-ATT MST
+& $7.510 (\pm 6.912)$
+& $7.264$
+& $0.908 (\pm 0.076)$
+& $15.650 (\pm 9.814)$
+& $15.203$
+& $0.005 (\pm 0.001)$ \\
+
+& F2F-ATT ($\alpha \leq 2$)
+& $3.370 (\pm 5.128)$
+& $3.190$
+& $1.028 (\pm 0.070)$
+& $10.227 (\pm 8.576)$
+& $10.146$
+& $0.005 (\pm 0.001)$ \\
+
+& F2F-ATT ($\alpha \leq 3$)
+& $2.444 (\pm 4.785)$
+& $2.024$
+& $1.244 (\pm 0.096)$
+& $6.593 (\pm 7.427)$
+& $6.344$
+& $0.005 (\pm 0.001)$ \\
+
+& F2F-ATT ($\alpha \leq 4$)
+& $2.331 (\pm 4.594)$
+& $2.129$
+& $1.000 (\pm 0.148)$
+& $\mathbf{5.444 (\pm 7.141)}$
+& $\mathbf{5.397}$
+& $0.005 (\pm 0.001)$ \\
+\cmidrule(lr){2-8}
+
+& F2F-TRF MST
+& $7.506 (\pm 6.681)$
+& $7.457$
+& $0.901 (\pm 0.058)$
+& $14.955 (\pm 9.687)$
+& $14.577$
+& $0.005 (\pm 0.001)$ \\
+
+& F2F-TRF ($\alpha \leq 2$)
+& $3.058 (\pm 4.805)$
+& $2.934$
+& $1.034 (\pm 0.068)$
+& $10.116 (\pm 8.550)$
+& $9.738$
+& $0.005 (\pm 0.001)$ \\
+
+& F2F-TRF ($\alpha \leq 3$)
+& $2.224 (\pm 4.589)$
+& $1.516$
+& $1.159 (\pm 0.077)$
+& $7.261 (\pm 7.799)$
+& $6.980$
+& $0.005 (\pm 0.000)$ \\
+
+& F2F-TRF ($\alpha \leq 4$)
+& $2.016 (\pm 4.396)$
+& $1.592$
+& $1.073 (\pm 0.149)$
+& $6.028 (\pm 7.183)$
+& $5.668$
+& $0.005 (\pm 0.001)$ \\
+\bottomrule
+\end{tabular}}
+\caption{Results on SC-S. Approximate MRF models significantly improve over the fully factorized baseline, with performance consistently improving as both the factor graph becomes more expressive (increasing factor arity) and the feature-to-factor mapping becomes more powerful (F2F-MAX $\rightarrow$ F2F-TRF). More expressive mappings yield lower optimality gaps and improved stability across seeds.}
+\label{tab:chapter_5_scp50_results}
+\end{table}
+
+\begin{table}[t]
+\centering
+\resizebox{.99\linewidth}{!}{
+\begin{tabular}{llcccccc}
+\toprule
+\multirow{2}{*}{\textbf{Dataset}} & \multirow{2}{*}{\textbf{Model}} & \multicolumn{3}{c}{\textbf{GD}} & \multicolumn{3}{c}{\textbf{EGG}} \\
+\cmidrule(lr){3-5} \cmidrule(lr){6-8}
+ &  & Rel. gap (\%) $\downarrow$ & Best (\%) $\downarrow$ & $t$ (s) $\downarrow$ & Rel. gap (\%) $\downarrow$ & Best (\%) $\downarrow$ & $t$ (s) $\downarrow$ \\
+\midrule
+\multirow{12}{*}{SC-M}
+& Var. Logits
+& $9.548 (\pm 3.960)$
+& $9.414$
+& $\mathbf{0.734 (\pm 0.142)}$
+& $19.129 (\pm 6.041)$
+& $18.863$
+& $0.087 (\pm 0.020)$ \\
+
+& MRF LBP
+& $\mathbf{0.847 (\pm 2.360)}$
+& $\mathbf{0.784}$
+& $3.361 (\pm 0.389)$
+& $\mathbf{7.873 (\pm 4.567)}$
+& $\mathbf{7.815}$
+& $\mathbf{0.043 (\pm 0.008)}$ \\
+\cmidrule(lr){2-8}
+
+& F2F-MAX MST
+& $9.484 (\pm 3.817)$
+& $9.376$
+& $2.464 (\pm 0.340)$
+& $18.937 (\pm 6.112)$
+& $18.805$
+& $0.048 (\pm 0.010)$ \\
+
+& F2F-MAX ($\alpha \leq 2$)
+& $6.943 (\pm 3.524)$
+& $6.831$
+& $0.744 (\pm 0.118)$
+& $12.948 (\pm 5.361)$
+& $12.823$
+& $0.087 (\pm 0.224)$ \\
+\cmidrule(lr){2-8}
+
+& F2F-SEP MST
+& $9.607 (\pm 3.940)$
+& $9.536$
+& $1.994 (\pm 0.283)$
+& $19.515 (\pm 6.197)$
+& $19.477$
+& $0.096 (\pm 0.302)$ \\
+
+& F2F-SEP ($\alpha \leq 2$)
+& $4.056 (\pm 3.172)$
+& $3.942$
+& $3.457 (\pm 0.367)$
+& $12.901 (\pm 5.609)$
+& $12.634$
+& $0.098 (\pm 0.303)$ \\
+\cmidrule(lr){2-8}
+
+& F2F-VAR MST
+& $11.548 (\pm 4.322)$
+& $11.482$
+& $1.906 (\pm 0.260)$
+& $26.359 (\pm 7.899)$
+& $26.217$
+& $0.087 (\pm 0.302)$ \\
+
+& F2F-VAR ($\alpha \leq 2$)
+& $7.553 (\pm 3.489)$
+& $7.415$
+& $3.037 (\pm 0.351)$
+& $20.660 (\pm 6.837)$
+& $20.645$
+& $0.086 (\pm 0.303)$ \\
+\cmidrule(lr){2-8}
+
+& F2F-ATT MST
+& $9.589 (\pm 3.832)$
+& $9.480$
+& $2.521 (\pm 0.356)$
+& $19.298 (\pm 6.217)$
+& $19.213$
+& $0.047 (\pm 0.009)$ \\
+
+& F2F-ATT ($\alpha \leq 2$)
+& $4.133 (\pm 3.202)$
+& $4.104$
+& $3.532 (\pm 0.466)$
+& $13.072 (\pm 5.512)$
+& $12.972$
+& $0.047 (\pm 0.010)$ \\
+\cmidrule(lr){2-8}
+
+& F2F-TRF MST
+& $9.569 (\pm 3.883)$
+& $9.529$
+& $1.856 (\pm 0.244)$
+& $18.969 (\pm 5.980)$
+& $18.873$
+& $0.079 (\pm 0.026)$ \\
+
+& F2F-TRF ($\alpha \leq 2$)
+& $3.827 (\pm 2.905)$
+& $3.517$
+& $3.181 (\pm 0.382)$
+& $12.667 (\pm 5.171)$
+& $12.362$
+& $0.076 (\pm 0.045)$ \\
+\bottomrule
+\end{tabular}}
+\caption{Results on SC-M. The benefits of approximate MRF modeling remain clear at this scale, with consistent improvements over the fully factorized baseline. Increasing the expressivity of both the factor graph and the mapping (F2F-MAX $\rightarrow$ F2F-TRF) leads to progressively better performance, confirming the importance of modeling structured dependencies beyond independent predictions.}
+\label{tab:chapter_5_scp_n120_results}
+\end{table}
+
+\begin{table}[t]
+\centering
+\resizebox{.99\textwidth}{!}{%
+\begin{tabular}{llcccccc}
+\toprule
+\multirow{2}{*}{\textbf{Dataset}} & \multirow{2}{*}{\textbf{Model}} & \multicolumn{3}{c}{\textbf{GD}} & \multicolumn{3}{c}{\textbf{EGG}} \\
+\cmidrule(lr){3-5} \cmidrule(lr){6-8}
+ &  & Rel. gap (\%) $\downarrow$ & Best (\%) $\downarrow$ & $t$ (s) $\downarrow$ & Rel. gap (\%) $\downarrow$ & Best (\%) $\downarrow$ & $t$ (s) $\downarrow$ \\
+\midrule
+\multirow{11}{*}{SC-L}
+& Var. Logits
+& $16.509 (\pm 5.774)$
+& $16.242$
+& $\mathbf{0.925 (\pm 0.360)}$
+& $36.884 (\pm 9.104)$
+& $36.715$
+& $0.080 (\pm 0.054)$ \\
+
+& F2F-MAX MST
+& $16.902 (\pm 5.811)$
+& $16.522$
+& $5.278 (\pm 1.200)$
+& $37.384 (\pm 9.479)$
+& $36.174$
+& $\mathbf{0.064 (\pm 0.020)}$ \\
+
+& F2F-MAX ($\alpha \leq 2$)
+& $45.974 (\pm 9.532)$
+& $37.205$
+& $24.243 (\pm 7.166)$
+& $93.978 (\pm 15.475)$
+& $77.028$
+& $0.090 (\pm 0.029)$ \\
+\cmidrule(lr){2-8}
+
+& F2F-SEP MST
+& $18.136 (\pm 5.984)$
+& $18.101$
+& $5.254 (\pm 1.207)$
+& $42.471 (\pm 10.041)$
+& $42.305$
+& $0.065 (\pm 0.020)$ \\
+
+& F2F-SEP ($\alpha \leq 2$)
+& $25.537 (\pm 6.804)$
+& $11.079$
+& $24.626 (\pm 7.292)$
+& $59.152 (\pm 12.020)$
+& $31.907$
+& $0.074 (\pm 0.023)$ \\
+\cmidrule(lr){2-8}
+
+& F2F-VAR MST
+& $19.313 (\pm 6.056)$
+& $19.277$
+& $3.044 (\pm 0.583)$
+& $44.621 (\pm 10.147)$
+& $43.967$
+& $0.094 (\pm 0.032)$ \\
+
+& F2F-VAR ($\alpha \leq 2$)
+& $17.243 (\pm 6.108)$
+& $17.198$
+& $25.273 (\pm 7.439)$
+& $43.418 (\pm 10.442)$
+& $42.911$
+& $0.107 (\pm 0.107)$ \\
+\cmidrule(lr){2-8}
+
+& F2F-ATT MST
+& $16.590 (\pm 5.696)$
+& $16.129$
+& $2.939 (\pm 0.509)$
+& $37.039 (\pm 9.251)$
+& $36.077$
+& $0.090 (\pm 0.023)$ \\
+
+& F2F-ATT ($\alpha \leq 2$)
+&  $\mathbf{11.915 (\pm 5.234)}$
+& $11.788$
+& $25.314 (\pm 7.397)$
+& $\mathbf{31.224 (\pm 8.363)}$
+& $30.854$
+& $0.109 (\pm 0.091)$ \\
+\cmidrule(lr){2-8}
+
+& F2F-TRF MST
+& $15.946 (\pm 5.679)$
+& $15.928$
+& $2.634 (\pm 0.444)$
+& $35.626 (\pm 9.239)$
+& $35.466$
+& $0.088 (\pm 0.022)$ \\
+
+& F2F-TRF ($\alpha \leq 2$)
+& $25.691 (\pm 7.276)$
+& $\mathbf{11.020}$
+& $24.144 (\pm 7.179)$
+& $63.249 (\pm 17.948)$
+& $\mathbf{30.654}$
+& $0.150 (\pm 0.407)$ \\
+\bottomrule
+\end{tabular}}
+\caption{Results on SC-L. In this high-arity regime, approximate MRF models face significant challenges. While structured models can still provide improvements in some configurations, performance becomes less stable, and several seeds fail to converge for more restrictive approximations. These results highlight the difficulty of scaling approximate MRF parameterizations and the limitations of low-arity factor approximations when modeling complex constraints.}
+\label{tab:chapter_5_scp_n150_results}
+\end{table}

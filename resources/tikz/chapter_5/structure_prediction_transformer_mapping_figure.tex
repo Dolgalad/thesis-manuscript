@@ -22,10 +22,10 @@
 % Left: dependency tokens for one target factor
 % =========================================================
 \begin{scope}[xshift=0cm]
-\node[vvec] (hi) at (0,1.8) {$h_i$};
-\node[vvec] (hj) at (0,0.6) {$h_j$};
-\node[cvec] (hc1) at (0,-0.8) {$h_{c_1}$};
-\node[cvec] (hc2) at (0,-2.0) {$h_{c_2}$};
+\node[vvec] (hi) at (0,1.8) {$\EMB_i$};
+\node[vvec] (hj) at (0,0.6) {$\EMB_j$};
+\node[cvec] (hc1) at (0,-0.8) {$\EMB_{c_1}$};
+\node[cvec] (hc2) at (0,-2.0) {$\EMB_{c_2}$};
 
 \node[draw,dashed,rounded corners=3pt,inner sep=5pt,fit=(hi)(hj)(hc1)(hc2)] {};
 %\node[lbl] at (0,-3.0) {dependencies of $\alpha'$};
@@ -80,10 +80,10 @@
 
 
 % labels inside slice
-\node[tiny] at (1.05,1.08) {$h_i\in\mathbb{R}^d$};
-\node[tiny] at (1.05,0.22) {$h_j\in\mathbb{R}^d$};
-\node[tiny] at (1.05,-0.63) {$h_{c_1}\in\mathbb{R}^d$};
-\node[tiny] at (1.05,-1.48) {$h_{c_2}\in\mathbb{R}^d$};
+\node[tiny] at (1.05,1.08) {$\EMB_i\in\mathbb{R}^d$};
+\node[tiny] at (1.05,0.22) {$\EMB_j\in\mathbb{R}^d$};
+\node[tiny] at (1.05,-0.63) {$\EMB_{c_1}\in\mathbb{R}^d$};
+\node[tiny] at (1.05,-1.48) {$\EMB_{c_2}\in\mathbb{R}^d$};
 
 % \node[tiny] at (2.15,1.08) {$\in\mathbb{R}^d$};
 % \node[tiny] at (2.15,0.22) {$\in\mathbb{R}^d$};
@@ -159,10 +159,10 @@
 \draw (2.7,-1.05) -- ($(2.7,-1.05)+(t)$);
 
 % labels inside slice
-\node[tiny] at (1.15,1.08) {$\tilde h_i \in \mathbb{R}^d$};
-\node[tiny] at (1.15,0.22) {$\tilde h_j \in \mathbb{R}^d$};
-\node[tiny] at (1.15,-0.63) {$\tilde h_{c_1} \in \mathbb{R}^d$};
-\node[tiny] at (1.15,-1.48) {$\tilde h_{c_2} \in \mathbb{R}^d$};
+\node[tiny] at (1.15,1.08) {$\tilde \EMB_i \in \mathbb{R}^d$};
+\node[tiny] at (1.15,0.22) {$\tilde \EMB_j \in \mathbb{R}^d$};
+\node[tiny] at (1.15,-0.63) {$\tilde \EMB_{c_1} \in \mathbb{R}^d$};
+\node[tiny] at (1.15,-1.48) {$\tilde \EMB_{c_2} \in \mathbb{R}^d$};
 
 \node[lbl] at (1.6,-2.75) {$g_L[m,:,:] \in \mathbb{R}^{S\times d}$};
 
@@ -176,7 +176,7 @@
 % Far right: pooled / selected representation
 % =========================================================
 \begin{scope}[xshift=15.5cm,yshift=-0.1cm]
-\node[ovec] (hout) at (1,-0) {$h_{\alpha}$};
+\node[ovec] (hout) at (1,-0) {$\EMB_{\alpha}$};
 \draw[->] (sum.east) -- (hout.west);
 %\node[lbl] at (0,-1.1) {factor embedding};
 \end{scope}
@@ -185,6 +185,6 @@
 %\node[lbl] at (8.0,2.25) {$g_0 \in \mathbb{R}^{N\times S\times d} \;\longrightarrow\; g_L \in \mathbb{R}^{N\times S\times d}$};
 
 \end{tikzpicture}}
-\caption{Transformer-based feature mapping. For each target factor $\alpha'$, the embeddings of its dependent variables and constraints are packed into a tensor slice $g_0[m,:,:] \in \mathbb{R}^{S\times d}$. A stack of transformer layers produces contextualized representations $g_L[m,:,:]$, from which the factor embedding $h_{\alpha}$ is derived. Over all target factors, the full tensor has shape $g_0,g_L \in \mathbb{R}^{N\times S\times d}$.}
+\caption{Transformer-based feature mapping. For each target factor $\alpha'$, the embeddings of its dependent variables and constraints are packed into a tensor slice $g_0[m,:,:] \in \mathbb{R}^{S\times d}$. A stack of transformer layers produces contextualized representations $g_L[m,:,:]$, from which the factor embedding $\EMB_{\alpha}$ is derived. Over all target factors, the full tensor has shape $g_0,g_L \in \mathbb{R}^{N\times S\times d}$.}
 \label{fig:chapter_5_structure_prediction_transformer_mapping_figure}
 \end{figure}

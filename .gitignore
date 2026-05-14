@@ -34,7 +34,12 @@
 
 # Temporary files
 tmp/
-build/
-tikz-cache/
 revision/
 old_chapters/
+
+# LaTeX build output
+build/*
+!build/.gitkeep
+!build/tikz-cache/
+build/tikz-cache/*
+!build/tikz-cache/.gitkeep

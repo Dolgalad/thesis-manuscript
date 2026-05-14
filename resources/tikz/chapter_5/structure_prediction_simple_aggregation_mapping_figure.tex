@@ -20,9 +20,9 @@
 % =========================================================
 \begin{scope}[xshift=0cm]
 
-\node[vvec] (h1) at (0,1.8) {$h_i$};
-\node[vvec] (h2) at (0,0.75) {$h_j$};
-\node[cvec] (h3) at (0,-0.3) {$h_c$};
+\node[vvec] (h1) at (0,1.8) {$\EMB_i$};
+\node[vvec] (h2) at (0,0.75) {$\EMB_j$};
+\node[cvec] (h3) at (0,-0.3) {$\EMB_c$};
 
 % dashed grouping box
 \node[draw,dashed,rounded corners=3pt,inner sep=5pt,fit=(h1)(h2)(h3)] (ingroup) {};
@@ -41,14 +41,14 @@
 \draw[rounded corners=3pt] (-0.2,2.5) rectangle (2.9,-1.4);
 
 % first row
-\node[tiny] (hi1) at (0.45,1.7) {$h_i^{(1)}$};
-\node[tiny] (hj1) at (1.35,1.7) {$h_j^{(1)}$};
-\node[tiny] (hc1) at (2.25,1.7) {$h_c^{(1)}$};
+\node[tiny] (hi1) at (0.45,1.7) {$\EMB_i^{(1)}$};
+\node[tiny] (hj1) at (1.35,1.7) {$\EMB_j^{(1)}$};
+\node[tiny] (hc1) at (2.25,1.7) {$\EMB_c^{(1)}$};
 
 % second row
-\node[tiny] at (0.45,0.95) {$h_i^{(2)}$};
-\node[tiny] at (1.35,0.95) {$h_j^{(2)}$};
-\node[tiny] at (2.25,0.95) {$h_j^{(2)}$};
+\node[tiny] at (0.45,0.95) {$\EMB_i^{(2)}$};
+\node[tiny] at (1.35,0.95) {$\EMB_j^{(2)}$};
+\node[tiny] at (2.25,0.95) {$\EMB_j^{(2)}$};
 
 % dots
 \node[tiny] at (0.45,0.25) {$\vdots$};
@@ -56,9 +56,9 @@
 \node[tiny] at (2.25,0.25) {$\vdots$};
 
 % last row
-\node[tiny] at (0.45,-0.65) {$h_i^{(d)}$};
-\node[tiny] at (1.35,-0.65) {$h_j^{(d)}$};
-\node[tiny] at (2.25,-0.65) {$h_{|N(\alpha)|}^{(d)}$};
+\node[tiny] at (0.45,-0.65) {$\EMB_i^{(d)}$};
+\node[tiny] at (1.35,-0.65) {$\EMB_j^{(d)}$};
+\node[tiny] at (2.25,-0.65) {$\EMB_{|N(\alpha)|}^{(d)}$};
 
 % dashed highlight on one column
 \begin{scope}[on background layer]
@@ -82,9 +82,9 @@
 % =========================================================
 \begin{scope}[xshift=6.9cm]
 
-\node[tiny] (ha1) at (2,1.8) {$h_{\alpha}^{(1)}$};
+\node[tiny] (ha1) at (2,1.8) {$\EMB_{\alpha}^{(1)}$};
 \node[tiny] (ha2) at (2,0.75) {$\vdots$};
-\node[tiny] (ha3) at (2,-0.3) {$h_{\alpha}^{(d)}$};
+\node[tiny] (ha3) at (2,-0.3) {$\EMB_{\alpha}^{(d)}$};
 
 \begin{scope}[on background layer]
 \node[
@@ -98,12 +98,12 @@
 
 \node[draw,rounded corners=3pt,inner sep=1pt,fit=(ha1)(ha2)(ha3)] (ingroup_a) {};
 
-\node[tiny,right=3mm of ha1] {$ = \square \left( h_i^{(1)}, h_j^{(1)}, h_c^{(1)} \right)$};
-\node[tiny,right=3mm of ha3] {$ = \square \left( h_i^{(d)}, h_j^{(d)}, h_c^{(d)} \right)$};
+\node[tiny,right=3mm of ha1] {$ = \square \left( \EMB_i^{(1)}, \EMB_j^{(1)}, \EMB_c^{(1)} \right)$};
+\node[tiny,right=3mm of ha3] {$ = \square \left( \EMB_i^{(d)}, \EMB_j^{(d)}, \EMB_c^{(d)} \right)$};
 
 \end{scope}
 
 \end{tikzpicture}
-\caption{Permutation-invariant construction of the factor embedding \(h_{\alpha}\) from the embeddings of the nodes in $N(\alpha) = \{ i,j,c \}$, illustrated here with coordinate-wise aggregation $\square$.}
+\caption{Permutation-invariant construction of the factor embedding \(\EMB_{\alpha}\) from the embeddings of the nodes in $N(\alpha) = \{ i,j,c \}$, illustrated here with coordinate-wise aggregation $\square$.}
 \label{fig:chapter_5_structure_prediction_simple_aggregation_mapping_figure}
 \end{figure}

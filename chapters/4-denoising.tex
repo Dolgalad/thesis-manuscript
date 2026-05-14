@@ -14,8 +14,6 @@ We study two refinement objectives. The first is flow-based: it defines a linear
 
 The test-time budget also changes. In the decoding experiments of Section~\ref{subsec:chapter_3_main_results}, the main inference budget came from fixed-iteration approximate inference and repeated GD updates. Here, the learned model itself is iterative, so the number of refinement steps becomes an additional runtime--quality parameter.
 
-The experiments use Set Cover (SC) and Maximum Independent Set (MIS), as before. These two families are useful because their decoding errors behave differently. In SC, adding sets can repair uncovered elements. In MIS, selecting one vertex immediately excludes its neighbors, making early ranking errors harder to recover from.
-
 The contributions of this chapter are:
 \begin{enumerate}
     \item a state-conditioned MRF refinement architecture in which factor parameters depend on the instance, the current Bernoulli-parameter state, and the refinement time;
@@ -32,7 +30,7 @@ The contributions of this chapter are:
 \section{State-Conditioned MRF Refinement Models}
 \label{sec:state_conditioned_mrf_refinement}
 
-The general flow-matching and denoising viewpoints were introduced in Section~\ref{sec:generative_denoising}, in particular in Paragraph~\ref{par:background_flow_matching} for flow-based generation. This chapter does not repeat that general construction. Instead, it specifies how the flow idea is instantiated for BILP solution prediction and how the resulting refinement states are combined with MRF-based structured inference.
+The general flow-matching and denoising viewpoints were introduced in Section~\ref{sec:generative_denoising}. This chapter does not repeat that general construction. Instead, it specifies how the flow idea is instantiated for BILP solution prediction and how the resulting refinement states are combined with MRF-based structured inference.
 
 The state space is the relaxed hypercube $[0,1]^n$, whose coordinates are interpreted as Bernoulli parameters for the binary decision variables. Unlike the one-shot predictors of Chapter~\ref{chapter:3_differentiable_mrf_inference_for_BILPs}, the MRF parameters are now conditioned on the current state of the refinement process. The graph encoder therefore predicts factor parameters for an MRF that changes along the refinement trajectory.
 
@@ -62,7 +60,7 @@ Thus $\FMP_t$ remains in $[0,1]^n$ and can be used as a time-dependent score vec
 \subsection{State-conditioned MRF architecture}
 \label{sec:state_conditioned_mrf_architecture}
 
-The architecture reuses the structured prediction pipeline from Chapter~\ref{chapter:3_differentiable_mrf_inference_for_BILPs}, with one additional input: the current refinement state. The BILP instance is represented by the fixed variable--constraint graph $\VCGFULL$. As in the graph-feature representation described in Section~\ref{sec:neural_networks}, the graph structure specifies the message-passing topology, while node and edge features carry the numerical information.
+The architecture reuses the structured prediction pipeline from Chapter~\ref{chapter:3_differentiable_mrf_inference_for_BILPs}, with one additional input: the current refinement state. The BILP instance is still represented by the fixed variable--constraint graph $\VCGFULL$. As in the graph-feature representation described in Section~\ref{sec:neural_networks}, the graph structure specifies the message-passing topology, while node and edge features carry the numerical information.
 
 At time $t$, the graph structure is unchanged. We condition the model through the time-dependent feature collection
 \begin{equation}
@@ -78,9 +76,11 @@ with
 \begin{equation}
     \FEATURES^V_t(i) = [\FEATURES^V(i), \FMP_{t,i}, \FMTIMEEMB(t)],
     \qquad
-    \FEATURES^C_t(j) = [\FEATURES^C(j), 0, \FMTIMEEMB(t)].
+    \FEATURES^C_t(j) = [\FEATURES^C(j), 0, \FMTIMEEMB(t)],
     \label{eq:flow_state_conditioned_features}
 \end{equation}
+where $\{ \FEATURES^V(i) \}_{i\in \VCGV}, \{ \FEATURES^C(j) \}_{j\in\VCGC}$ are the initial features of the variable and constraint nodes introduced in Section~\ref{sec:chapter_3_experiments} and Table~\ref{tab:dataset_features}.
+
 The variable features therefore contain the current relaxed value of each decision variable, while the constraint features receive a zero placeholder in the same coordinate. Both variable and constraint nodes receive the same time embedding.
 
 The graph encoder processes $(\VCG,\FMFEATURES_t)$ and produces node embeddings. These embeddings are mapped to MRF factor parameters. As in Chapter~\ref{chapter:3_differentiable_mrf_inference_for_BILPs}, unary factors are associated with variable nodes and non-unary factors with constraint nodes. The model therefore defines a state-conditioned MRF
@@ -111,7 +111,7 @@ This gives the model two mechanisms for incorporating structure. First, the neur
 
 \subsection{Velocity prediction by flow matching}
 
-The first training objective is the BILP-specific version of the conditional flow-matching objective introduced in Paragraph~\ref{par:background_flow_matching}. For the straight-line path in Equation~\eqref{eq:flow_probability_path}, the target velocity reduces to
+The first training objective is the BILP-specific version of the conditional flow-matching objective introduced in Section~\ref{par:background_flow_matching}. For the straight-line path in Equation~\eqref{eq:flow_probability_path}, the target velocity reduces to
 \begin{equation}
     \FMVELOCITY_t = \frac{d \FMP_t}{dt} = \FMPREF - \FMSOURCESTATE .
     \label{eq:flow_target_velocity}
@@ -247,7 +247,7 @@ For binary variable-score outputs, $\ell$ is a reconstruction loss such as binar
 
 At validation time, the model is evaluated as a one-shot denoiser: a clean reference solution is corrupted at one or more fixed timesteps, the model predicts clean scores, and these scores are greedily decoded. This is not an exact reverse diffusion sampler.
 
-At test time, we evaluate two related uses. First, a corrupted reference solution is denoised either directly or through the iterative pseudo-diffusion procedure. Second, a pure random binary state can be used as the initial state. In the iterative procedure, the model is evaluated from the chosen starting timestep down to zero. At each step, the model predicts scores, these scores are converted to probabilities if necessary, and a new binary state is sampled or thresholded. No additional forward corruption is applied inside this reverse loop.
+At test time, we evaluate the model using a pure random binary state as the initial state. The model is then applied through the iterative pseudo-diffusion procedure, starting from the chosen timestep and proceeding down to zero. At each step, the model predicts scores, these scores are converted to probabilities if necessary, and a new binary state is sampled or thresholded. No additional forward corruption is applied inside this reverse loop.
 
 The final binary state or final model scores are then passed to the same feasibility-preserving decoders used for the flow models. This procedure should be interpreted as a learned denoising heuristic, not as an exact probabilistic reverse process.
 
@@ -258,7 +258,7 @@ The flow and denoising models produce relaxed states, binary states, or variable
 
 This separation is important because the intermediate refinement states may be fractional, stochastic, or constraint-violating. It also allows the experiments to isolate the effect of the refinement model itself: the final decoding mechanisms are fixed, while the score-generation process changes from one-shot prediction to learned refinement.
 
-The decoding pipeline has three stages. We initialize a candidate state, unroll the learned flow or denoising dynamics for a prescribed number of steps, and decode the resulting state or scores with EGG, GD, or backend reinference.
+The pipeline has three stages: we initialize a candidate state, unroll the learned flow or denoising dynamics for a prescribed number of steps, and decode the resulting state or scores with EGG, GD, Flow-Guided Decimation (see Section~\ref{subsec:backend_reinference_decimation}) for flow-models or Iterative Refinement (see Section~\ref{subsec:iterative-refinement-decoding}) for the diffusion-inspired denoising models.
 
 \subsection{Random Bernoulli Initialization}
 
@@ -280,9 +280,9 @@ The model is then unrolled forward in time, producing a sequence of relaxed Bern
 \end{equation}
 The final vector is interpreted as variable-wise scores or Bernoulli parameters and is passed to a feasibility-preserving decoder.
 
-For the diffusion-inspired denoising model, the test-time initialization depends on the evaluation mode. In the corrupted-reference setting, the initial state is obtained by applying the replacement corruption process of Equation~\eqref{eq:diffusion_replace_corruption} to a reference solution. In the pure-noise setting, the initial state is a binary vector sampled independently from $\mathrm{Bernoulli}(1/2)$. The denoising model is then applied from the chosen initial timestep down to zero, and the resulting state or scores are decoded.
+For the diffusion-inspired denoising model, the test-time initialization is always a pure-noise state. Specifically, the initial state is a binary vector sampled independently from $\mathrm{Bernoulli}(1/2)$. The denoising model is then applied from the chosen initial timestep down to zero, and the resulting state or scores are decoded.
 
-Thus, random Bernoulli-parameter initialization is the source distribution for the flow models. The diffusion-inspired models instead test denoising from either corrupted reference assignments or pure binary noise.
+Thus, both model classes are evaluated on their ability to construct a feasible solution from initial noise, but they differ in the type of noise used as the source distribution. Flow models use random Bernoulli-parameter initialization, whereas diffusion-inspired models use pure binary noise.
 
 \subsection{Full and Partial Unrolling}
 
@@ -299,21 +299,21 @@ Partial unrolling is useful for two reasons. First, it defines a runtime--qualit
 \subsection{Flow Guided Decimation}
 \label{subsec:backend_reinference_decimation}
 
-For MRF-based flow refinement models, we also evaluate a stronger adaptive decoding method, which we call \emph{Flow Guided Decimation} (FGD). FGD uses the same guided-decimation interface introduced in Section~\ref{subsubsec:chapter_3_egg_gd}, but differs from standard GD in how the score signal is recomputed during decimation. In standard GD, the current partial assignment is imposed as evidence and the inference backend directly updates the beliefs of the remaining variables. In FGD, each decimation step instead performs a full conditioned flow-refinement pass: the flow state is initialized from an evidence-conditioned source state, the learned flow model is unrolled, and the resulting MRF-based beliefs are then used by the decimation rule.
+For MRF-based flow models, we also evaluate a stronger adaptive decoding method, which we call \emph{Flow Guided Decimation} (FGD). FGD uses the same guided-decimation interface introduced in Section~\ref{subsubsec:chapter_3_egg_gd}, but differs from standard GD in how the score signal is recomputed during decimation. In standard GD, the current partial assignment is imposed as evidence and the inference backend directly updates the beliefs of the remaining variables. In FGD, each decimation step instead performs a full conditioned flow-refinement pass: the flow state is initialized from an evidence-conditioned source state, the learned flow model is unrolled, and the resulting MRF-based beliefs are then used by the decimation rule.
 
 Thus, FGD is not simply GD applied to the final output of the flow model. It repeatedly invokes the learned flow dynamics inside the decimation loop, so that every new partial assignment changes the source state from which the flow is initialized and therefore changes the refined belief signal returned to the decoder.
 
-When GD has fixed a partial assignment $S\subseteq \VCGV\times\{0,1\}$, FGD constructs an evidence-consistent source state:
+When GD has fixed a partial assignment \(S:\VCGV' \to \{0,1\}\), with \(\VCGV' \subseteq \VCGV\), FGD constructs an evidence-consistent source state:
 \begin{equation}
     p^{(0)}_i =
     \begin{cases}
-        0, & (i,0)\in S,\\
-        1, & (i,1)\in S,\\
-        \text{random}, & i \text{ is unfixed}.
+        0, & \text{if } S(i)=0,\\
+        1, & \text{if } S(i)=1,\\
+        u_i,\quad u_i \sim \mathcal{U}[0,1], & i \text{ is unfixed}.
     \end{cases}
     \label{eq:evidence_conditioned_source_state}
 \end{equation}
-The refinement model is then evaluated from this state, and approximate inference is run under the same evidence-clamping mechanism described in Section~\ref{subsec:background_conditional_clamping} and used for GD in Section~\ref{subsubsec:chapter_3_egg_gd}. During FGD, the model recomputes the decoding signal after each partial assignment by reinitializing the flow state from the corresponding evidence-conditioned source state, unrolling the flow model, and running the evidence-clamped MRF inference step before selecting the next variable.
+The refinement model is then applied from this state, and approximate inference is run under the same evidence-clamping mechanism described in Section~\ref{subsec:background_conditional_clamping} and used for GD in Section~\ref{subsubsec:chapter_3_egg_gd}. During FGD, the model recomputes the decoding signal after each partial assignment by reinitializing the flow state from the corresponding evidence-conditioned source state, unrolling the flow model, and running the evidence-clamped MRF inference step before selecting the next variable.
 
 This variant tests whether learned refinement remains useful when combined with adaptive decimation. It is more expensive than decoding a single refined score vector, because of repeated refinement and inference during one FGD pass.
 
@@ -350,7 +350,7 @@ For diffusion-inspired models, we report an iterative refinement (IR) decoding p
 
 This setting evaluates whether the model has learned local interactions well enough to turn an initially random assignment into a structured solution. In the results tables, \emph{sample feasibility} denotes the feasibility of the sample obtained after this unrolled refinement process, before any additional repair or feasibility-enforcing post-processing.
 
-\section{Main Results}
+\section{Experimental Results}
 \label{sec:chapter_4_main_results}
 
 We now report the main experimental results for the flow-based refinement models. The results are summarized in Table~\ref{tab:flow_inference_results}. We compare direct variable-score flow models, denoted DGN, with MRF-augmented flow models using either LBP or NMF inference. The suffix ``-v'' denotes models trained with the velocity-prediction objective, while the suffix ``-q'' denotes models trained to predict the denoised endpoint directly.
@@ -404,24 +404,25 @@ Overall, the MIS results show that MRF-augmented flow models can improve over fa
 \label{subsec:diffusion_denoising_results}
 
 Before presenting the denoising results, we define the model and decoding abbreviations used in Table~\ref{tab:denoising_inference_results}. \emph{DDGN} denotes the direct denoising GNN baseline, which predicts variable scores without
-an MRF inference layer. \emph{DLBP} and \emph{DNMF} denote denoising models whose predictions are passed through an MRF layer using LBP or NMF inference, respectively. The EGG and GD columns use the feasibility-preserving decoders introduced in Section~\ref{subsubsec:chapter_3_egg_gd}. The IR columns report \emph{Iterative Refinement}, where the diffusion-inspired denoising process is unrolled from a random binary initialization before decoding. 
+an MRF inference layer. \emph{DLBP} and \emph{DNMF} denote denoising models whose predictions are passed through an MRF layer using LBP or NMF inference, respectively. The EGG and GD columns use the feasibility-preserving decoders introduced in Section~\ref{subsubsec:chapter_3_egg_gd}. The IR columns report \emph{Iterative Refinement} (see Section~\ref{subsec:iterative-refinement-decoding}), where the diffusion-inspired denoising process is unrolled from a random binary initialization before decoding. 
 
 For diffusion-inspired models, sample feasibility refers to the feasibility of the final binary sample obtained after unrolling the denoising process from the chosen initial state. It is measured before applying EGG, GD, or any other feasibility-preserving projection.
 
 \input{resources/tab/chapter_4/denoising_inference_results.tex}
 
-Table~\ref{tab:denoising_inference_results} reports the completed denoising results. At this stage, only the Set Cover rows are complete and numerically meaningful. We faced the same difficulties on MIS instances as those discussed at the
-beginning of Section~\ref{sec:chapter_4_main_results}, and therefore exclude the MIS denoising rows from the main presentation.
+Table~\ref{tab:denoising_inference_results} reports the completed denoising results. Overall, the Set Cover results are the most informative, while the MIS-S results confirm the difficulty of applying the denoising procedure to independent-set instances. As discussed at the beginning of Section~\ref{sec:chapter_4_main_results}, these instances are harder to decode reliably because feasibility is more fragile and good solutions are not obtained simply by thresholding the model output.
 
 On SC-S, the denoising models show the same broad pattern as the flow models: MRF-augmented denoising produces substantially better decoding signals than the direct denoising baseline. The direct DDGN model obtains an EGG and GD gap of approximately $8.3\%$, while DLBP reduces the GD gap to approximately $0.68\%$ and DNMF reduces it to approximately $1.86\%$. Thus, for small Set Cover instances, the strongest completed denoising result is obtained by combining denoising with LBP-based MRF inference.
 
 The raw feasibility rates support the same interpretation. DDGN produces feasible samples in only $7.4\%$ of SC-S instances, whereas DLBP produces feasible samples in approximately $88.9\%$ of cases. DNMF improves over DDGN but remains much lower than DLBP, with a feasibility rate of approximately $30.7\%$. This suggests that the LBP-based MRF layer does more than improve the final decoded objective value: it also guides the denoising trajectory toward states that are already much more compatible with the Set Cover constraints before projection.
 
-On SC-M, the same qualitative conclusion holds, but the differences between the decoding strategy become sharper. DDGN obtains an EGG and GD gap of approximately $10.5\%$, while DLBP achieves a GD gap close to zero, approximately $-0.23\%$, and an IR gap of approximately $0.87\%$. DNMF again improves over DDGN, but remains weaker than DLBP, with a GD gap of approximately $2.33\%$ and an IR gap of approximately $5.49\%$. The negative average gap for DLBP should be interpreted as a numerical outcome of the evaluation protocol, not as evidence that the model violates optimality; it most likely reflects comparison against reference solutions that are not always certified optimal, numerical tolerances, or solver/reference variability.
+On SC-M, the same qualitative conclusion holds, but the differences between the decoding strategies become sharper. DDGN obtains an EGG and GD gap of approximately $10.5\%$, while DLBP achieves a GD gap close to zero, approximately $-0.23\%$, and an IR gap of approximately $0.87\%$. DNMF again improves over DDGN, but remains weaker than DLBP, with a GD gap of approximately $2.33\%$ and an IR gap of approximately $5.49\%$. Accordingly, the negative average gap for DLBP indicates that its objective values are, on average, better than those of the heuristic reference solutions.
 
-The completed denoising results therefore support the same Set Cover conclusion as the flow experiments: the strongest refinement signal is obtained when denoising is combined with LBP-based MRF inference. No conclusion is drawn here for MIS denoising, since those rows are incomplete.
+On MIS-S, the same broad ordering between model classes is still visible after decoding, with the LBP-based model producing the strongest result, followed by the mean-field model and then the direct GNN baseline. However, the absolute performance is much weaker than on Set Cover. None of the denoising models produces feasible samples before post-processing, with all three models having a raw feasibility rate of $0\%$. Moreover, the EGG and IR gaps remain large, around $20$--$25\%$, indicating that the raw denoising outputs are difficult to decode into high-quality independent sets. GD substantially improves DLBP, reducing its gap to approximately $7.0\%$, but the corresponding DNMF gap remains much larger, at approximately $20.0\%$. Thus, although MIS-S preserves the qualitative advantage of MRF-based refinement, it also shows that the denoising models have limited ability to generate feasible MIS samples directly from pure binary noise.
 
-\subsection{Comparison with the Previous Chapter}
+The completed denoising results therefore support the same main conclusion as the flow experiments: the strongest refinement signal is obtained when denoising is combined with LBP-based MRF inference. This conclusion is clearest on Set Cover, where DLBP improves both feasibility and decoded objective values, while the MIS-S results highlight the remaining difficulty of producing feasible and high-quality independent-set solutions from noise.
+
+\subsection{Comparison to Models Without Refinement}
 \label{subsec:comparison_with_previous_chapter}
 
 Table~\ref{tab:mrf_nair_inference_results} reports the corresponding non-refinement results from Chapter~\ref{chapter:3_differentiable_mrf_inference_for_BILPs}. Comparing it with Tables~\ref{tab:flow_inference_results} and~\ref{tab:denoising_inference_results} clarifies the role of learned refinement.

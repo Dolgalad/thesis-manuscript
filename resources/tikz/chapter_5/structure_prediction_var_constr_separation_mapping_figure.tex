@@ -17,11 +17,11 @@
 % =========================================================
 \begin{scope}[xshift=0cm]
 
-\node[vvec] (hi) at (0,1.2) {$h_i$};
-\node[vvec] (hj) at (0,0.0) {$h_j$};
+\node[vvec] (hi) at (0,1.2) {$\EMB_i$};
+\node[vvec] (hj) at (0,0.0) {$\EMB_j$};
 
-\node[cvec] (hc1) at (0,-1.2) {$h_{c_1}$};
-\node[cvec] (hc2) at (0,-2.4) {$h_{c_2}$};
+\node[cvec] (hc1) at (0,-1.2) {$\EMB_{c_1}$};
+\node[cvec] (hc2) at (0,-2.4) {$\EMB_{c_2}$};
 
 \node[fit=(hc1)(hc2),inner sep=2pt] (hc_group) {};
 
@@ -50,20 +50,20 @@ node[midway, left=6pt] {};
 \draw[rounded corners=3pt] (-0.2,2.5) rectangle (2.1,-1.4);
 
 % first row
-\node[tiny] (ha11) at (0.45,1.7) {$h_{c_1}^{(1)}$};
-\node[tiny] (ha21) at (1.35,1.7) {$h_{c_2}^{(1)}$};
+\node[tiny] (ha11) at (0.45,1.7) {$\EMB_{c_1}^{(1)}$};
+\node[tiny] (ha21) at (1.35,1.7) {$\EMB_{c_2}^{(1)}$};
 
 % second row
-\node[tiny] at (0.45,0.95) {$h_{c_1}^{(2)}$};
-\node[tiny] at (1.35,0.95) {$h_{c_2}^{(2)}$};
+\node[tiny] at (0.45,0.95) {$\EMB_{c_1}^{(2)}$};
+\node[tiny] at (1.35,0.95) {$\EMB_{c_2}^{(2)}$};
 
 % dots
 \node[tiny] at (0.45,0.25) {$\vdots$};
 \node[tiny] at (1.35,0.25) {$\vdots$};
 
 % last row
-\node[tiny] at (0.45,-0.65) {$h_{c_1}^{(d)}$};
-\node[tiny] at (1.35,-0.65) {$h_{c_2}^{(d)}$};
+\node[tiny] at (0.45,-0.65) {$\EMB_{c_1}^{(d)}$};
+\node[tiny] at (1.35,-0.65) {$\EMB_{c_2}^{(d)}$};
 
 % dashed highlight on one coordinate row? no, keep column like previous
 \begin{scope}[on background layer]
@@ -89,10 +89,10 @@ node[midway, left=6pt] {};
 % =========================================================
 \begin{scope}[xshift=9.7cm]
 
-\node[vvec] (ohi) at (0,0.8) {$h_i$};
-\node[vvec] (ohj) at (0,-0.3) {$h_j$};
+\node[vvec] (ohi) at (0,0.8) {$\EMB_i$};
+\node[vvec] (ohj) at (0,-0.3) {$\EMB_j$};
 
-\node[ovec] (ohc1) at (0,-1.6) {$\underset{c \in \mathcal N(\alpha)\cap C}{\square} h_c$};
+\node[ovec] (ohc1) at (0,-1.6) {$\underset{c \in \mathcal N(\alpha)\cap C}{\square} \EMB_c$};
 
 \begin{scope}[on background layer]
 \node[
@@ -109,6 +109,6 @@ node[midway, left=6pt] {};
 \end{scope}
 
 \end{tikzpicture}
-\caption{Separating variable and constraint features in the parameter prediction head. Variable embeddings \(h_i\) and \(h_j\) are kept as distinct inputs, while only neighboring constraint embeddings are aggregated coordinate-wise into a last input.}
+\caption{Separating variable and constraint features in the parameter prediction head. Variable embeddings \(\EMB_i\) and \(\EMB_j\) are kept as distinct inputs, while only neighboring constraint embeddings are aggregated coordinate-wise into a last input.}
 \label{fig:chapter_5_structure_prediction_var_constr_separation_mapping_figure}
 \end{figure}

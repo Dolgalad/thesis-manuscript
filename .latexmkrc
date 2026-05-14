@@ -1,0 +1,1 @@
+$success_cmd = 'cp build/main.pdf main.pdf';

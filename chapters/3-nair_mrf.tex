@@ -170,6 +170,8 @@ $\EPARAM_{\FACTOR} \in \R^{\FDIM_{\FACTOR}}$ has one entry per local assignment.
 
 
 \subsection{Neural parameter predictor}
+\label{subsec:neural_parameter_predictor}
+
 The LMRF uses a neural network to predict the over-complete factor parameters of the MRF associated with a problem instance $(\PROB)$. The neural network encodes the variable--constraint graph $\VCGFULL$, while the predicted parameters are assigned to factors in the MRF factor graph $\FGFULL$. Our predictor combines two components:
 \begin{enumerate}
     \item \textbf{Graph encoder.} A multi-layer GNN operating on the variable–constraint bipartite graph computes embeddings $\EMB_u \in \R^{\EMBDIM}$ for each vertex $u \in \VCGV \cup \VCGC$. This serves as feature extraction from the structured problem representation.
@@ -246,6 +248,7 @@ Whereas predicting scores with the GNN does not provide any way of integrating p
     \begin{algorithm}[H]
         \LinesNumbered
         \caption{Diving decoder with optional guided decimation}
+        \label{alg:bp_guided_decimation}
         \KwData{$\PROB$, MRF parameters $\EPARAM$, inference method $\mathcal{I}$, update interval $k$}
         \KwResult{Feasible solution $\XVEC$}
         $\PARTSOL \gets \emptyset$ \tcp*{partial assignment}
@@ -264,7 +267,6 @@ Whereas predicting scores with the GNN does not provide any way of integrating p
         }
         Return $\XVEC$ induced by $\PARTSOL$\;
     \end{algorithm}
-    \label{alg:bp_guided_decimation}
     \end{minipage}
 \end{figure}
 
@@ -367,6 +369,8 @@ We evaluate these claims on two families of synthetic combinatorial optimization
 
 \subsection{Experimental protocol}
 This subsection describes the common experimental protocol used to compare the different prediction and inference methods. We first specify the families of predictors considered in the experiments, including the non-learned probabilistic baselines, the direct GNN logit predictor, and the learned MRF-based models. We then describe the shared training setup, the approximate inference budget, the decoding strategies used to convert scores or marginals into feasible solutions, and the metrics used to evaluate solution quality and runtime. For GD, we also evaluate cheaper update schedules that rerun inference only every $k$ decoding steps.
+
+The Python implementation used for the experiments in Chapters~\ref{chapter:3_differentiable_mrf_inference_for_BILPs}---\ref{chapter:5_feature-to-factor_mappings_for_approximate_mrf_inference}, including dataset generation, model training, approximate inference, decoding procedures, and evaluation scripts, is publicly available at: \url{https://github.com/Dolgalad/bpropy}. The repository also contains instructions for reproducing the main experimental results. Computational experiments were run on the Jean Zay supercomputer through an IDRIS/GENCI allocation.
 
 \paragraph{Compared methods}
 We compare five prediction methods, summarized in Table~\ref{tab:chapter_3_compared_methods}. All method names are defined before the table to make the comparison unambiguous. \emph{CMRF-LBP} and \emph{CMRF-NMF} are non-learned canonical-MRF baselines: their factor parameters are fixed by the feasibility-cost parameterization in Section~\ref{subsec:canonical-feasibility-cost-param}, and LBP or NMF is then used only as an approximate inference procedure. The Direct Graph Neural Network (\emph{DGN}) baseline uses the same neural backbone as the learned MRF models but outputs one logit per decision variable. \emph{LMRF-LBP} and \emph{LMRF-NMF} are learned-MRF predictors: a GNN predicts over-complete factor parameters, and LBP or NMF converts those parameters into approximate variable marginals.

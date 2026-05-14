@@ -17,11 +17,11 @@
 % =========================================================
 \begin{scope}[xshift=0cm]
 
-\node[vvec] (hi)  at (0, 1.2) {$h_i$};
-\node[vvec] (hj)  at (0, 0.0) {$h_j$};
+\node[vvec] (hi)  at (0, 1.2) {$\EMB_i$};
+\node[vvec] (hj)  at (0, 0.0) {$\EMB_j$};
 
-\node[cvec] (hc1) at (0,-1.2) {$h_{c_1}$};
-\node[cvec] (hc2) at (0,-2.4) {$h_{c_2}$};
+\node[cvec] (hc1) at (0,-1.2) {$\EMB_{c_1}$};
+\node[cvec] (hc2) at (0,-2.4) {$\EMB_{c_2}$};
 
 \node[draw,dashed,rounded corners=3pt,inner sep=5pt,fit=(hi)(hj)(hc1)(hc2)] {};
 
@@ -49,9 +49,9 @@
 
 % aggregated constraint embedding
 %\draw[->] (sum.east) -- (5.2,-1.8);
-%\node[ovec] (hcagg) at (6.1,-1.8) {$h^c_{ij}$};
+%\node[ovec] (hcagg) at (6.1,-1.8) {$\EMB^c_{ij}$};
 
-% from h_i
+% from \EMB_i
 \begin{scope}[on background layer]
     \draw[->] ([xshift=2mm]hi.east) -| ([xshift=1mm]b1.north);
     \draw[->] ([xshift=2mm]hi.east) -| ([xshift=1mm]b2.north);
@@ -67,9 +67,9 @@
 % =========================================================
 \begin{scope}[xshift=12.0cm]
 
-\node[vvec] (ohi) at (0, 0.8) {$h_i$};
-\node[vvec] (ohj) at (0,-0.3) {$h_j$};
-\node[ovec] (ohc)  at (0,-1.8) {$h^c_{ij}$};
+\node[vvec] (ohi) at (0, 0.8) {$\EMB_i$};
+\node[vvec] (ohj) at (0,-0.3) {$\EMB_j$};
+\node[ovec] (ohc)  at (0,-1.8) {$\EMB^c_{ij}$};
 \draw[->] (sum.east) -- ([xshift=-2mm]ohc.west);
 
 
@@ -85,6 +85,6 @@
 \end{scope}
 
 \end{tikzpicture}
-\caption{Attention-based aggregation of constraint embeddings. Variable embeddings \(h_i\) and \(h_j\) remain distinct inputs, while neighboring constraint embeddings are combined into \(h^c_{ij}\) by a weighted sum with attention coefficients \(\beta_{ij,c}\) predicted from \((h_i,h_j,h_c)\).}
+\caption{Attention-based aggregation of constraint embeddings. Variable embeddings \(\EMB_i\) and \(\EMB_j\) remain distinct inputs, while neighboring constraint embeddings are combined into \(\EMB^c_{ij}\) by a weighted sum with attention coefficients \(\beta_{ij,c}\) predicted from \((\EMB_i,\EMB_j,\EMB_c)\).}
 \label{fig:chapter_5_structure_prediction_constr_attention_mapping_figure}
 \end{figure}
