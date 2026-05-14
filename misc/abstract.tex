@@ -1,21 +1,46 @@
-\newpage
-\addcontentsline{toc}{chapter}{Résumé}
+% \newpage
+% \addcontentsline{toc}{chapter}{Abstract}
+\chapter*{Abstract}
+    
+Solving Integer Linear Programs (ILPs) remains difficult because constraints induce strong dependencies between decision variables. Graph neural networks are widely used to learn predictors for such structured optimization problems, but many approaches still output fully factorized distributions over variables: constraint information may be encoded internally, while final predictions treat variables as conditionally independent.
+
+This thesis studies Markov Random Field (MRF) models for binary ILP solution prediction. ILP variables are modeled as random variables, while objectives and constraints define factors over interacting subsets of variables. The resulting models are constraint-aware because the constraint structure is part of the predictive distribution itself, not only of the input representation. Since exact inference is generally intractable, we use approximate marginal inference, including Loopy Belief Propagation and Naive Mean-Field inference, to produce structured predictions.
+
+We define neural models that predict MRF parameters for each ILP instance and train them through differentiable approximate inference. The inferred marginals guide solution construction through guided decimation, a diving heuristic that progressively fixes variables and recomputes marginals conditioned on the current partial solution.
+
+Experiments on Maximum Independent Set and Set Cover show that MRF-based predictions provide stronger decoding signals than fully factorized predictors, and that conditioning marginals during guided decimation improves solution quality. We also study MRF-based targets in flow-matching and diffusion-inspired denoising models, where structured predictions support iterative refinement. Finally, we investigate alternative factor-graph parameterizations that trade precision for computational efficiency on high-arity constraints.
+
+\vspace{5pt}
+{\noindent \small \textbf{\textit{Keywords---}} Machine learning, structured prediction, integer linear programming, Markov Random Fields, approximate marginal inference, belief propagation, mean-field inference}
+
+\thesisclearpage
+
+% \addcontentsline{toc}{chapter}{Résumé}
 \chapter*{Résumé}
 
-Abstract en français\\
-\bigskip
+Résoudre des programmes linéaires en nombres entiers (Integer Linear Programs, ILP) demeure difficile, car les contraintes induisent de fortes dépendances entre les variables de décision. Les réseaux de neurones sur graphes sont largement utilisés pour ces problèmes structurés, mais de nombreuses approches produisent encore des distributions entièrement factorisées : l'information issue des contraintes peut être encodée en interne, tandis que les prédictions finales traitent les variables comme conditionnellement indépendantes.
 
-\textbf{Mots clés} : 
+Cette thèse étudie des modèles de champs aléatoires de Markov (Markov Random Fields, MRF) pour la prédiction de solutions de programmes linéaires binaires en nombres entiers. Les variables de l'ILP sont modélisées comme des variables aléatoires, tandis que les objectifs et les contraintes définissent des facteurs sur des sous-ensembles de variables en interaction. Ces modèles sont sensibles aux contraintes, car la structure des contraintes fait partie de la distribution prédictive elle-même. Comme l'inférence exacte est généralement intraitable, nous utilisons l'inférence marginale approchée, notamment la propagation de croyances avec cycles et l'inférence par champ moyen naïf.
 
+Nous définissons des modèles neuronaux qui prédisent les paramètres d'un MRF pour chaque instance d'ILP et les entraînons par inférence approchée différentiable. Les marginales inférées guident la construction de solutions par décimation guidée, une heuristique de plongée qui fixe progressivement les variables et recalcule les marginales conditionnées par la solution partielle courante.
 
-\newpage
+Les expériences sur Maximum Independent Set et Set Cover montrent que les prédictions fondées sur les MRF fournissent de meilleurs signaux de décodage que les prédicteurs factorisés, et que le conditionnement des marginales améliore la qualité des solutions. Nous étudions aussi ces cibles dans des modèles de flow matching et de débruitage inspirés de la diffusion, ainsi que des paramétrisations de graphes de facteurs échangeant précision et efficacité pour les contraintes de grande arité.
 
-\addcontentsline{toc}{chapter}{Abstract}
-\chapter*{Abstract}
+\vspace{5pt}
+{\noindent \small \textbf{\textit{Mots-clés---}} apprentissage automatique, prédiction structurée, programmation linéaire en nombres entiers, champs aléatoires de Markov, inférence marginale approchée, propagation de croyances, champ moyen naïf.}
 
-Abstract in english\\
-\bigskip
+\thesisclearpage
 
-\textbf{Keywords} : 
+%\bigskip
 
-\newpage
+% \textbf{Keywords}: Machine learning, structured prediction, integer linear programming, Markov Random Fields, approximate marginal inference, belief propagation, mean-field inference
+
+% Solving Integer Linear Programs (ILPs) remains difficult, in particular because constraints induce strong dependencies between the decision variables of the problem. Graph neural networks have become a central tool for defining neural predictors on such structured optimization instances. However, training and decoding these models often relies on a strong downstream independence assumption: the graph neural network is expected to capture interactions between variables through its embeddings, while the final output distribution is fully factorized over variables. As a result, correlations and local compatibility conditions induced by the constraints are not explicitly represented in the predictive distribution.
+
+% This thesis studies an alternative approach in which ILP solutions are modeled as samples from a Markov Random Field (MRF) whose factorization reflects the cost and constraint structure of the ILP. In this formulation, decision variables become random variables and constraints define factors over interacting subsets of variables. The model can therefore assign probability mass according to the compatibility of local constraint states, making the prediction constraint-aware in the sense that the constraint structure is part of the probabilistic model itself, not only part of the input representation. Although exact inference in such models is generally intractable, approximate marginal inference provides structured predictions and allows the model to condition its beliefs on partial information gathered during the solving process.
+
+% To this end, we define neural models that output the parameters of an MRF distribution whose structure reflects the ILP instance under consideration. We use approximate and parallelizable marginal inference schemes, including Loopy Belief Propagation and Naive Mean-Field inference, to define surrogate objectives for likelihood-based training in a supervised learning setting. The marginals produced by the model are then used in a diving heuristic, which we refer to as guided decimation: variables are progressively fixed, and after each partial assignment the model recomputes marginal beliefs conditioned on the solution constructed so far. We evaluate this approach on two classes of binary integer linear programs: Maximum Independent Set and Set Cover.
+
+% The experiments show that the proposed structured targets better capture the dependencies present in solution data and provide stronger decoding signals than fully factorized per-variable predictions. In particular, evaluating marginals conditioned on the current partial solution during diving leads to significantly higher-quality solutions than decoding from independent variable probabilities. We also investigate the advantages of such learning targets in a generative setting, through continuous flow-matching and diffusion-inspired denoising models. These results suggest that structured MRF-based predictions can support iterative refinement procedures that outperform standard GNN-based models while reducing the need for repeated approximate inference during this marginal-updating diving process.
+
+% Finally, the choice of factor graph and parameterization has an important impact on the stability, convergence behavior, and memory requirements of marginal inference. We therefore investigate alternative MRF factorizations that trade representational precision for computational efficiency, making structured marginal inference more practical for constraints involving many interacting variables.
