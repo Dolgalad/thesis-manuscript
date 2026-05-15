@@ -227,7 +227,7 @@ Decode the final state $\hat{y} \leftarrow \mathrm{Dec}(y^{(K)}, x)$\;
 \end{algorithm}
 
 \paragraph{From data generation to solution generation}
-In standard generative modeling, the objective is to sample realistic data points, such as images or signals. In this thesis, the generated object is instead a candidate solution to an optimization instance. This introduces an additional requirement: intermediate states of a denoising or flow model may be noisy, continuous, or infeasible, whereas the final output must be decoded into a discrete assignment satisfying the constraints of the original BILP. we focus on denoising-based generative models, since they provide the conceptual basis for the diffusion and flow-based refinement methods studied in Chapter~\ref{chapter:4_denoising_and_mrf_inference}.
+In standard generative modeling, the objective is to sample realistic data points, such as images or signals. In this thesis, the generated object is instead a candidate solution to an optimization instance. This introduces an additional requirement: intermediate states of a denoising or flow model may be noisy, continuous, or infeasible, whereas the final output must be decoded into a discrete assignment satisfying the constraints of the original BILP. We focus on denoising-based generative models, since they provide the conceptual basis for the diffusion and flow-based refinement methods studied in Chapter~\ref{chapter:4_denoising_and_mrf_inference}.
 
 
 \subsection{Neural Networks and Graph Neural Networks}
