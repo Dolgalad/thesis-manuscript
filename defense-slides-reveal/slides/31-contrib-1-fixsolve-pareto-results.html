@@ -1,0 +1,373 @@
+<section class="slide fixsolve-pareto-slide"
+         data-section="Contribution 1"
+         data-title="Fix-and-solve results">
+
+  <div class="slide-body fixsolve-pareto-body">
+
+    <div class="fixsolve-pareto-grid">
+
+      <!-- Left: Pareto plots + legend -->
+      <div class="analysis-card pareto-results-card fragment fade-up">
+        <p class="learning-label">Fix-and-solve results</p>
+        <h3>Each curve varies the proportion of fixed variables</h3>
+
+        <svg class="fixsolve-pareto-svg" viewBox="0 0 560 370" role="img"
+             aria-label="Pareto plots of runtime and relative optimality gap for fix-and-solve as fixing proportion varies">
+
+          <g class="pareto-mini" transform="translate(24 18)">
+            <text class="mini-title" x="141" y="10">SC-S</text>
+            <line class="mini-axis" x1="46" y1="122" x2="236" y2="122" />
+            <line class="mini-axis" x1="46" y1="122" x2="46" y2="18" />
+            <line class="mini-grid" x1="46" y1="125.6" x2="236" y2="125.6" />
+            <line class="mini-grid" x1="46" y1="92.1" x2="236" y2="92.1" />
+            <line class="mini-grid" x1="46" y1="58.7" x2="236" y2="58.7" />
+            <line class="mini-grid" x1="46" y1="25.2" x2="236" y2="25.2" />
+            <line class="mini-grid vertical" x1="49.7" y1="18" x2="49.7" y2="122" />
+            <line class="mini-grid vertical" x1="83.9" y1="18" x2="83.9" y2="122" />
+            <line class="mini-grid vertical" x1="157.5" y1="18" x2="157.5" y2="122" />
+            <line class="mini-grid vertical" x1="238.2" y1="18" x2="238.2" y2="122" />
+            <polyline class="pareto-series dgn-egg" points="68.0,103.3 58.2,87.4 59.5,67.7 63.1,43.4 65.3,30.0" />
+            <circle class="pareto-marker dgn-egg" cx="68.0" cy="103.3" r="4" />
+            <text class="p-label dgn-egg" x="72.8" y="99.1">0.5</text>
+            <circle class="pareto-marker dgn-egg" cx="58.2" cy="87.4" r="4" />
+            <circle class="pareto-marker dgn-egg" cx="59.5" cy="67.7" r="4" />
+            <circle class="pareto-marker dgn-egg" cx="63.1" cy="43.4" r="4" />
+            <circle class="pareto-marker dgn-egg" cx="65.3" cy="30.0" r="4" />
+            <text class="p-label dgn-egg" x="70.1" y="25.8">0.9</text>
+            <polyline class="pareto-series lbp-egg" points="125.0,110.0 123.2,101.1 119.4,94.1 119.3,83.2 119.1,69.8" />
+            <circle class="pareto-marker lbp-egg" cx="125.0" cy="110.0" r="4" />
+            <text class="p-label lbp-egg" x="129.8" y="105.8">0.5</text>
+            <circle class="pareto-marker lbp-egg" cx="123.2" cy="101.1" r="4" />
+            <circle class="pareto-marker lbp-egg" cx="119.4" cy="94.1" r="4" />
+            <circle class="pareto-marker lbp-egg" cx="119.3" cy="83.2" r="4" />
+            <circle class="pareto-marker lbp-egg" cx="119.1" cy="69.8" r="4" />
+            <text class="p-label lbp-egg" x="123.9" y="65.6">0.9</text>
+            <polyline class="pareto-series lbp-gd" points="196.0,107.8 204.3,101.1 210.9,96.6 218.6,92.1 223.8,89.9" />
+            <rect class="pareto-marker lbp-gd" x="192.3" y="104.1" width="7.4" height="7.4" rx="1.4" />
+            <text class="p-label lbp-gd" x="200.8" y="103.6">0.5</text>
+            <rect class="pareto-marker lbp-gd" x="200.6" y="97.4" width="7.4" height="7.4" rx="1.4" />
+            <rect class="pareto-marker lbp-gd" x="207.2" y="92.9" width="7.4" height="7.4" rx="1.4" />
+            <rect class="pareto-marker lbp-gd" x="214.9" y="88.4" width="7.4" height="7.4" rx="1.4" />
+            <rect class="pareto-marker lbp-gd" x="220.1" y="86.2" width="7.4" height="7.4" rx="1.4" />
+            <text class="p-label lbp-gd" x="228.6" y="85.7">0.9</text>
+            <polyline class="pareto-series nmf-egg" points="112.3,96.6 110.9,89.7 109.3,85.2 109.2,67.5 109.5,36.7" />
+            <circle class="pareto-marker nmf-egg" cx="112.3" cy="96.6" r="4" />
+            <text class="p-label nmf-egg" x="117.1" y="92.4">0.5</text>
+            <circle class="pareto-marker nmf-egg" cx="110.9" cy="89.7" r="4" />
+            <circle class="pareto-marker nmf-egg" cx="109.3" cy="85.2" r="4" />
+            <circle class="pareto-marker nmf-egg" cx="109.2" cy="67.5" r="4" />
+            <circle class="pareto-marker nmf-egg" cx="109.5" cy="36.7" r="4" />
+            <text class="p-label nmf-egg" x="114.3" y="32.5">0.9</text>
+            <polyline class="pareto-series nmf-gd" points="139.5,98.8 143.7,91.9 147.0,76.3 150.7,74.0 153.2,69.6" />
+            <rect class="pareto-marker nmf-gd" x="135.8" y="95.1" width="7.4" height="7.4" rx="1.4" />
+            <text class="p-label nmf-gd" x="144.3" y="94.6">0.5</text>
+            <rect class="pareto-marker nmf-gd" x="140.0" y="88.2" width="7.4" height="7.4" rx="1.4" />
+            <rect class="pareto-marker nmf-gd" x="143.3" y="72.6" width="7.4" height="7.4" rx="1.4" />
+            <rect class="pareto-marker nmf-gd" x="147.0" y="70.3" width="7.4" height="7.4" rx="1.4" />
+            <rect class="pareto-marker nmf-gd" x="149.5" y="65.9" width="7.4" height="7.4" rx="1.4" />
+            <text class="p-label nmf-gd" x="158.0" y="65.4">0.9</text>
+            <text class="mini-tick" x="49.7" y="139">0.06</text>
+            <text class="mini-tick" x="83.9" y="139">0.1</text>
+            <text class="mini-tick" x="157.5" y="139">0.3</text>
+            <text class="mini-tick" x="238.2" y="139">1</text>
+            <text class="mini-tick ytick" x="39" y="128.6">0</text>
+            <text class="mini-tick ytick" x="39" y="95.1">3</text>
+            <text class="mini-tick ytick" x="39" y="61.7">6</text>
+            <text class="mini-tick ytick" x="39" y="28.2">9</text>
+            <text class="mini-x-label" x="141" y="154">runtime (s)</text>
+          </g>
+          <g class="pareto-mini" transform="translate(292 18)">
+            <text class="mini-title" x="141" y="10">SC-M</text>
+            <line class="mini-axis" x1="46" y1="122" x2="236" y2="122" />
+            <line class="mini-axis" x1="46" y1="122" x2="46" y2="18" />
+            <line class="mini-grid" x1="46" y1="117.5" x2="236" y2="117.5" />
+            <line class="mini-grid" x1="46" y1="85.8" x2="236" y2="85.8" />
+            <line class="mini-grid" x1="46" y1="54.1" x2="236" y2="54.1" />
+            <line class="mini-grid" x1="46" y1="22.5" x2="236" y2="22.5" />
+            <line class="mini-grid vertical" x1="63.3" y1="18" x2="63.3" y2="122" />
+            <line class="mini-grid vertical" x1="153.8" y1="18" x2="153.8" y2="122" />
+            <line class="mini-grid vertical" x1="236.3" y1="18" x2="236.3" y2="122" />
+            <polyline class="pareto-series dgn-egg" points="178.4,101.9 110.0,90.9 59.7,75.6 60.2,57.8 67.0,30.0" />
+            <circle class="pareto-marker dgn-egg" cx="178.4" cy="101.9" r="4" />
+            <text class="p-label dgn-egg" x="183.2" y="97.7">0.5</text>
+            <circle class="pareto-marker dgn-egg" cx="110.0" cy="90.9" r="4" />
+            <circle class="pareto-marker dgn-egg" cx="59.7" cy="75.6" r="4" />
+            <circle class="pareto-marker dgn-egg" cx="60.2" cy="57.8" r="4" />
+            <circle class="pareto-marker dgn-egg" cx="67.0" cy="30.0" r="4" />
+            <text class="p-label dgn-egg" x="71.8" y="25.8">0.9</text>
+            <polyline class="pareto-series lbp-egg" points="165.5,110.0 128.6,105.7 97.4,98.8 93.9,92.3 93.2,79.7" />
+            <circle class="pareto-marker lbp-egg" cx="165.5" cy="110.0" r="4" />
+            <text class="p-label lbp-egg" x="170.3" y="105.8">0.5</text>
+            <circle class="pareto-marker lbp-egg" cx="128.6" cy="105.7" r="4" />
+            <circle class="pareto-marker lbp-egg" cx="97.4" cy="98.8" r="4" />
+            <circle class="pareto-marker lbp-egg" cx="93.9" cy="92.3" r="4" />
+            <circle class="pareto-marker lbp-egg" cx="93.2" cy="79.7" r="4" />
+            <text class="p-label lbp-egg" x="98.0" y="75.5">0.9</text>
+            <polyline class="pareto-series lbp-gd" points="213.0,108.4 209.3,106.5 209.8,104.5 215.9,101.8 222.3,98.5" />
+            <rect class="pareto-marker lbp-gd" x="209.3" y="104.7" width="7.4" height="7.4" rx="1.4" />
+            <text class="p-label lbp-gd" x="217.8" y="104.2">0.5</text>
+            <rect class="pareto-marker lbp-gd" x="205.6" y="102.8" width="7.4" height="7.4" rx="1.4" />
+            <rect class="pareto-marker lbp-gd" x="206.1" y="100.8" width="7.4" height="7.4" rx="1.4" />
+            <rect class="pareto-marker lbp-gd" x="212.2" y="98.1" width="7.4" height="7.4" rx="1.4" />
+            <rect class="pareto-marker lbp-gd" x="218.6" y="94.8" width="7.4" height="7.4" rx="1.4" />
+            <text class="p-label lbp-gd" x="227.1" y="94.3">0.9</text>
+            <polyline class="pareto-series nmf-egg" points="161.2,107.2 117.3,100.0 91.7,89.1 90.4,76.6 90.3,55.1" />
+            <circle class="pareto-marker nmf-egg" cx="161.2" cy="107.2" r="4" />
+            <text class="p-label nmf-egg" x="166.0" y="103.0">0.5</text>
+            <circle class="pareto-marker nmf-egg" cx="117.3" cy="100.0" r="4" />
+            <circle class="pareto-marker nmf-egg" cx="91.7" cy="89.1" r="4" />
+            <circle class="pareto-marker nmf-egg" cx="90.4" cy="76.6" r="4" />
+            <circle class="pareto-marker nmf-egg" cx="90.3" cy="55.1" r="4" />
+            <text class="p-label nmf-egg" x="95.1" y="50.9">0.9</text>
+            <polyline class="pareto-series nmf-gd" points="149.1,105.8 134.5,97.8 135.8,91.2 139.5,82.1 142.7,78.4" />
+            <rect class="pareto-marker nmf-gd" x="145.4" y="102.1" width="7.4" height="7.4" rx="1.4" />
+            <text class="p-label nmf-gd" x="153.9" y="101.6">0.5</text>
+            <rect class="pareto-marker nmf-gd" x="130.8" y="94.1" width="7.4" height="7.4" rx="1.4" />
+            <rect class="pareto-marker nmf-gd" x="132.1" y="87.5" width="7.4" height="7.4" rx="1.4" />
+            <rect class="pareto-marker nmf-gd" x="135.8" y="78.4" width="7.4" height="7.4" rx="1.4" />
+            <rect class="pareto-marker nmf-gd" x="139.0" y="74.7" width="7.4" height="7.4" rx="1.4" />
+            <text class="p-label nmf-gd" x="147.5" y="74.2">0.9</text>
+            <text class="mini-tick" x="63.3" y="139">0.3</text>
+            <text class="mini-tick" x="153.8" y="139">1</text>
+            <text class="mini-tick" x="236.3" y="139">3</text>
+            <text class="mini-tick ytick" x="39" y="120.5">0</text>
+            <text class="mini-tick ytick" x="39" y="88.8">4</text>
+            <text class="mini-tick ytick" x="39" y="57.1">8</text>
+            <text class="mini-tick ytick" x="39" y="25.5">12</text>
+            <text class="mini-x-label" x="141" y="154">runtime (s)</text>
+          </g>
+          <g class="pareto-mini" transform="translate(24 190)">
+            <text class="mini-title" x="141" y="10">MIS-S</text>
+            <line class="mini-axis" x1="46" y1="122" x2="236" y2="122" />
+            <line class="mini-axis" x1="46" y1="122" x2="46" y2="18" />
+            <line class="mini-grid" x1="46" y1="120.0" x2="236" y2="120.0" />
+            <line class="mini-grid" x1="46" y1="82.6" x2="236" y2="82.6" />
+            <line class="mini-grid" x1="46" y1="45.1" x2="236" y2="45.1" />
+            <line class="mini-grid" x1="46" y1="20.2" x2="236" y2="20.2" />
+            <line class="mini-grid vertical" x1="52.6" y1="18" x2="52.6" y2="122" />
+            <line class="mini-grid vertical" x1="112.9" y1="18" x2="112.9" y2="122" />
+            <line class="mini-grid vertical" x1="179.5" y1="18" x2="179.5" y2="122" />
+            <line class="mini-grid vertical" x1="237.8" y1="18" x2="237.8" y2="122" />
+            <polyline class="pareto-series dgn-egg" points="162.3,106.7 77.3,100.0 64.6,92.4 63.5,83.0 73.9,73.6" />
+            <circle class="pareto-marker dgn-egg" cx="162.3" cy="106.7" r="4" />
+            <text class="p-label dgn-egg" x="167.1" y="102.5">0.5</text>
+            <circle class="pareto-marker dgn-egg" cx="77.3" cy="100.0" r="4" />
+            <circle class="pareto-marker dgn-egg" cx="64.6" cy="92.4" r="4" />
+            <circle class="pareto-marker dgn-egg" cx="63.5" cy="83.0" r="4" />
+            <circle class="pareto-marker dgn-egg" cx="73.9" cy="73.6" r="4" />
+            <text class="p-label dgn-egg" x="78.7" y="69.4">0.9</text>
+            <polyline class="pareto-series lbp-egg" points="205.2,110.0 180.1,101.9 173.4,97.8 171.8,88.7 171.1,81.1" />
+            <circle class="pareto-marker lbp-egg" cx="205.2" cy="110.0" r="4" />
+            <text class="p-label lbp-egg" x="210.0" y="105.8">0.5</text>
+            <circle class="pareto-marker lbp-egg" cx="180.1" cy="101.9" r="4" />
+            <circle class="pareto-marker lbp-egg" cx="173.4" cy="97.8" r="4" />
+            <circle class="pareto-marker lbp-egg" cx="171.8" cy="88.7" r="4" />
+            <circle class="pareto-marker lbp-egg" cx="171.1" cy="81.1" r="4" />
+            <text class="p-label lbp-egg" x="175.9" y="76.9">0.9</text>
+            <polyline class="pareto-series lbp-gd" points="218.5,89.4 194.7,77.1 197.4,65.1 199.1,47.3 205.5,30.0" />
+            <rect class="pareto-marker lbp-gd" x="214.8" y="85.7" width="7.4" height="7.4" rx="1.4" />
+            <text class="p-label lbp-gd" x="223.3" y="85.2">0.5</text>
+            <rect class="pareto-marker lbp-gd" x="191.0" y="73.4" width="7.4" height="7.4" rx="1.4" />
+            <rect class="pareto-marker lbp-gd" x="193.7" y="61.4" width="7.4" height="7.4" rx="1.4" />
+            <rect class="pareto-marker lbp-gd" x="195.4" y="43.6" width="7.4" height="7.4" rx="1.4" />
+            <rect class="pareto-marker lbp-gd" x="201.8" y="26.3" width="7.4" height="7.4" rx="1.4" />
+            <text class="p-label lbp-gd" x="210.3" y="25.8">0.9</text>
+            <polyline class="pareto-series nmf-egg" points="180.3,109.9 122.2,104.4 116.8,97.3 111.5,90.4 111.1,82.1" />
+            <circle class="pareto-marker nmf-egg" cx="180.3" cy="109.9" r="4" />
+            <text class="p-label nmf-egg" x="185.1" y="105.7">0.5</text>
+            <circle class="pareto-marker nmf-egg" cx="122.2" cy="104.4" r="4" />
+            <circle class="pareto-marker nmf-egg" cx="116.8" cy="97.3" r="4" />
+            <circle class="pareto-marker nmf-egg" cx="111.5" cy="90.4" r="4" />
+            <circle class="pareto-marker nmf-egg" cx="111.1" cy="82.1" r="4" />
+            <text class="p-label nmf-egg" x="115.9" y="77.9">0.9</text>
+            <polyline class="pareto-series nmf-gd" points="168.5,88.2 130.8,81.1 124.6,71.7 126.9,60.6 130.8,59.2" />
+            <rect class="pareto-marker nmf-gd" x="164.8" y="84.5" width="7.4" height="7.4" rx="1.4" />
+            <text class="p-label nmf-gd" x="173.3" y="84.0">0.5</text>
+            <rect class="pareto-marker nmf-gd" x="127.1" y="77.4" width="7.4" height="7.4" rx="1.4" />
+            <rect class="pareto-marker nmf-gd" x="120.9" y="68.0" width="7.4" height="7.4" rx="1.4" />
+            <rect class="pareto-marker nmf-gd" x="123.2" y="56.9" width="7.4" height="7.4" rx="1.4" />
+            <rect class="pareto-marker nmf-gd" x="127.1" y="55.5" width="7.4" height="7.4" rx="1.4" />
+            <text class="p-label nmf-gd" x="135.6" y="55.0">0.9</text>
+            <text class="mini-tick" x="52.6" y="139">0.08</text>
+            <text class="mini-tick" x="112.9" y="139">0.15</text>
+            <text class="mini-tick" x="179.5" y="139">0.3</text>
+            <text class="mini-tick" x="237.8" y="139">0.55</text>
+            <text class="mini-tick ytick" x="39" y="123.0">5</text>
+            <text class="mini-tick ytick" x="39" y="85.6">20</text>
+            <text class="mini-tick ytick" x="39" y="48.1">35</text>
+            <text class="mini-tick ytick" x="39" y="23.2">45</text>
+            <text class="mini-x-label" x="141" y="154">runtime (s)</text>
+          </g>
+          <g class="pareto-mini" transform="translate(292 190)">
+            <text class="mini-title" x="141" y="10">MIS-M</text>
+            <line class="mini-axis" x1="46" y1="122" x2="236" y2="122" />
+            <line class="mini-axis" x1="46" y1="122" x2="46" y2="18" />
+            <line class="mini-grid" x1="46" y1="123.7" x2="236" y2="123.7" />
+            <line class="mini-grid" x1="46" y1="89.3" x2="236" y2="89.3" />
+            <line class="mini-grid" x1="46" y1="54.9" x2="236" y2="54.9" />
+            <line class="mini-grid" x1="46" y1="20.5" x2="236" y2="20.5" />
+            <line class="mini-grid vertical" x1="48.7" y1="18" x2="48.7" y2="122" />
+            <line class="mini-grid vertical" x1="98.5" y1="18" x2="98.5" y2="122" />
+            <line class="mini-grid vertical" x1="144.0" y1="18" x2="144.0" y2="122" />
+            <line class="mini-grid vertical" x1="193.8" y1="18" x2="193.8" y2="122" />
+            <line class="mini-grid vertical" x1="239.3" y1="18" x2="239.3" y2="122" />
+            <polyline class="pareto-series dgn-egg" points="213.3,103.9 148.2,97.1 90.1,90.5 82.0,80.5 87.5,72.4" />
+            <circle class="pareto-marker dgn-egg" cx="213.3" cy="103.9" r="4" />
+            <text class="p-label dgn-egg" x="218.1" y="99.7">0.5</text>
+            <circle class="pareto-marker dgn-egg" cx="148.2" cy="97.1" r="4" />
+            <circle class="pareto-marker dgn-egg" cx="90.1" cy="90.5" r="4" />
+            <circle class="pareto-marker dgn-egg" cx="82.0" cy="80.5" r="4" />
+            <circle class="pareto-marker dgn-egg" cx="87.5" cy="72.4" r="4" />
+            <text class="p-label dgn-egg" x="92.3" y="68.2">0.9</text>
+            <polyline class="pareto-series lbp-egg" points="216.7,108.2 163.8,102.7 130.0,98.1 125.7,91.4 125.2,83.1" />
+            <circle class="pareto-marker lbp-egg" cx="216.7" cy="108.2" r="4" />
+            <text class="p-label lbp-egg" x="221.5" y="104.0">0.5</text>
+            <circle class="pareto-marker lbp-egg" cx="163.8" cy="102.7" r="4" />
+            <circle class="pareto-marker lbp-egg" cx="130.0" cy="98.1" r="4" />
+            <circle class="pareto-marker lbp-egg" cx="125.7" cy="91.4" r="4" />
+            <circle class="pareto-marker lbp-egg" cx="125.2" cy="83.1" r="4" />
+            <text class="p-label lbp-egg" x="130.0" y="78.9">0.9</text>
+            <polyline class="pareto-series lbp-gd" points="228.5,88.6 176.2,77.5 144.7,63.9 136.1,47.7 137.4,30.0" />
+            <rect class="pareto-marker lbp-gd" x="224.8" y="84.9" width="7.4" height="7.4" rx="1.4" />
+            <text class="p-label lbp-gd" x="233.3" y="84.4">0.5</text>
+            <rect class="pareto-marker lbp-gd" x="172.5" y="73.8" width="7.4" height="7.4" rx="1.4" />
+            <rect class="pareto-marker lbp-gd" x="141.0" y="60.2" width="7.4" height="7.4" rx="1.4" />
+            <rect class="pareto-marker lbp-gd" x="132.4" y="44.0" width="7.4" height="7.4" rx="1.4" />
+            <rect class="pareto-marker lbp-gd" x="133.7" y="26.3" width="7.4" height="7.4" rx="1.4" />
+            <text class="p-label lbp-gd" x="142.2" y="25.8">0.9</text>
+            <polyline class="pareto-series nmf-egg" points="190.1,110.0 125.4,103.8 66.5,98.9 53.8,91.9 53.5,84.4" />
+            <circle class="pareto-marker nmf-egg" cx="190.1" cy="110.0" r="4" />
+            <text class="p-label nmf-egg" x="194.9" y="105.8">0.5</text>
+            <circle class="pareto-marker nmf-egg" cx="125.4" cy="103.8" r="4" />
+            <circle class="pareto-marker nmf-egg" cx="66.5" cy="98.9" r="4" />
+            <circle class="pareto-marker nmf-egg" cx="53.8" cy="91.9" r="4" />
+            <circle class="pareto-marker nmf-egg" cx="53.5" cy="84.4" r="4" />
+            <text class="p-label nmf-egg" x="58.3" y="80.2">0.9</text>
+            <polyline class="pareto-series nmf-gd" points="207.6,88.9 137.6,77.3 84.3,66.0 61.1,57.0 63.3,54.9" />
+            <rect class="pareto-marker nmf-gd" x="203.9" y="85.2" width="7.4" height="7.4" rx="1.4" />
+            <text class="p-label nmf-gd" x="212.4" y="84.7">0.5</text>
+            <rect class="pareto-marker nmf-gd" x="133.9" y="73.6" width="7.4" height="7.4" rx="1.4" />
+            <rect class="pareto-marker nmf-gd" x="80.6" y="62.3" width="7.4" height="7.4" rx="1.4" />
+            <rect class="pareto-marker nmf-gd" x="57.4" y="53.3" width="7.4" height="7.4" rx="1.4" />
+            <rect class="pareto-marker nmf-gd" x="59.6" y="51.2" width="7.4" height="7.4" rx="1.4" />
+            <text class="p-label nmf-gd" x="68.1" y="50.7">0.9</text>
+            <text class="mini-tick" x="48.7" y="139">0.3</text>
+            <text class="mini-tick" x="98.5" y="139">1</text>
+            <text class="mini-tick" x="144.0" y="139">3</text>
+            <text class="mini-tick" x="193.8" y="139">10</text>
+            <text class="mini-tick" x="239.3" y="139">30</text>
+            <text class="mini-tick ytick" x="39" y="126.7">0</text>
+            <text class="mini-tick ytick" x="39" y="92.3">15</text>
+            <text class="mini-tick ytick" x="39" y="57.9">30</text>
+            <text class="mini-tick ytick" x="39" y="23.5">45</text>
+            <text class="mini-x-label" x="141" y="154">runtime (s)</text>
+          </g>
+
+
+          <text class="local-axis-label rotated" x="-185" y="9">Opt. gap (%)</text>
+        </svg>
+
+        <div class="pareto-plot-legend">
+          <span class="legend-entry">
+            <span class="legend-line dgn-egg-line"></span>
+            DGN+EGG
+          </span>
+
+          <span class="legend-entry">
+            <span class="legend-line lbp-egg-line"></span>
+            LMRF-LBP+EGG
+          </span>
+
+          <span class="legend-entry">
+            <span class="legend-line lbp-gd-line"></span>
+            LMRF-LBP+GD
+          </span>
+
+          <span class="legend-entry">
+            <span class="legend-line nmf-egg-line"></span>
+            LMRF-NMF+EGG
+          </span>
+
+          <span class="legend-entry">
+            <span class="legend-line nmf-gd-line"></span>
+            LMRF-NMF+GD
+          </span>
+        </div>
+
+        <p>
+          Each marker corresponds to a fixing ratio <strong>p ∈ {0.5, 0.6, 0.7, 0.8, 0.9}</strong>.
+          Lower-left is better; axes are scaled independently per dataset.
+        </p>
+      </div>
+
+      <!-- Right: conclusions and runtime split -->
+      <div class="analysis-card pareto-interpretation-card fragment fade-up">
+        <p class="learning-label">Interpretation</p>
+        <h3>Fixing more variables changes both the residual search and the risk</h3>
+
+        <div class="pareto-summary-list">
+
+          <div class="pareto-summary-item">
+            <span class="summary-dot quality-dot"></span>
+            <div>
+              <h4>The trade-off is along each curve</h4>
+              <p>
+                Increasing <span class="inline-math">p</span> leaves fewer variables to SCIP,
+                but also commits the solver to more learned fixings.
+              </p>
+            </div>
+          </div>
+
+          <div class="pareto-summary-item">
+            <span class="summary-dot gd-dot"></span>
+            <div>
+              <h4>EGG and GD define different fixing policies</h4>
+              <p>
+                EGG uses one set of scores, while GD updates scores through conditional
+                inference as the partial assignment grows.
+              </p>
+            </div>
+          </div>
+
+          <div class="pareto-summary-item">
+            <span class="summary-dot runtime-dot"></span>
+            <div>
+              <h4>Runtime is not only solver time</h4>
+              <p>
+                For one-shot EGG, residual SCIP solving usually dominates. For LBP+GD,
+                repeated inference and decoding can become a major runtime component.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="runtime-split-box">
+          <span class="runtime-split-label">Runtime split</span>
+          <p>
+            The model forward pass is small. The practical question is whether
+            <strong>more adaptive fixing</strong> makes the residual SCIP solve sufficiently easier.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="fixsolve-pareto-takeaway fragment fade-up">
+      Fix-and-solve evaluates prediction as solver assistance:
+      <strong>the best method is the one that gives useful fixings at the right fixing ratio</strong>,
+      not simply the fastest standalone decoder.
+    </div>
+
+    <aside class="notes">
+      This slide should be read as a family of Pareto curves, not isolated method points.
+      For each method and decoder, p varies from 0.5 to 0.9. Increasing p fixes more
+      variables before SCIP is called. This can reduce the residual search space, but also
+      increases the risk of committing to wrong fixings. Mention that the average runtime
+      decomposition shows different regimes: one-shot EGG is mostly dominated by the
+      residual SCIP solve, whereas LBP+GD can spend a large part of the total time in
+      repeated inference and decoding.
+    </aside>
+
+  </div>
+</section>

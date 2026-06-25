@@ -1,0 +1,204 @@
+.main-result-slide .main-result-body {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 0.72rem;
+  height: 100%;
+  min-height: 0;
+}
+
+.result-headline,
+.result-takeaway {
+  padding: 0.56rem 0.85rem;
+  border-radius: 22px;
+  text-align: center;
+}
+
+.result-headline {
+  background: rgba(240, 253, 244, 0.94);
+  border: 1px solid rgba(22, 101, 52, 0.18);
+}
+
+.result-headline strong {
+  color: rgba(22, 101, 52, 0.82);
+  font-size: clamp(0.58em, 0.9vw, 0.74em);
+  font-weight: 950;
+}
+
+.result-headline span {
+  color: rgba(38, 50, 70, 0.68);
+  font-size: clamp(0.42em, 0.64vw, 0.52em);
+  font-weight: 760;
+}
+
+.result-grid {
+  display: grid;
+  grid-template-columns: 1.35fr 0.75fr;
+  gap: 0.82rem;
+  min-height: 0;
+}
+
+.result-table-card,
+.result-reading-card {
+  min-height: 0;
+  padding: 0.68rem 0.74rem;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(38, 50, 70, 0.12);
+  box-shadow: 0 16px 36px rgba(38, 50, 70, 0.055);
+}
+
+.result-table-card {
+  background: rgba(240, 247, 255, 0.92);
+  border-color: rgba(45, 80, 150, 0.2);
+}
+
+.result-reading-card {
+  background: rgba(255, 247, 237, 0.92);
+  border-color: rgba(160, 105, 35, 0.2);
+}
+
+.result-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 0.28rem;
+}
+
+.result-table th {
+  color: rgba(38, 50, 70, 0.54);
+  font-size: clamp(0.27em, 0.41vw, 0.34em);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  text-align: center;
+  line-height: 1.05;
+}
+
+.result-table th span {
+  color: rgba(38, 50, 70, 0.42);
+  font-size: 0.88em;
+  font-weight: 850;
+}
+
+.result-table td {
+  padding: 0.34rem 0.22rem;
+  background: rgba(255, 255, 255, 0.88);
+  color: rgba(38, 50, 70, 0.76);
+  font-size: clamp(0.31em, 0.48vw, 0.4em);
+  font-weight: 820;
+  text-align: center;
+}
+
+.result-table td:first-child {
+  border-radius: 13px 0 0 13px;
+  font-weight: 950;
+  color: rgba(45, 80, 150, 0.78);
+}
+
+.result-table td:last-child {
+  border-radius: 0 13px 13px 0;
+}
+
+.result-table .best {
+  color: rgba(22, 101, 52, 0.9);
+  background: rgba(220, 252, 231, 0.82);
+  font-weight: 950;
+}
+
+.result-table .warning {
+  color: rgba(185, 28, 28, 0.78);
+  background: rgba(254, 242, 242, 0.78);
+  font-weight: 900;
+}
+
+.result-caption {
+  margin: 0.28rem 0 0;
+  color: rgba(38, 50, 70, 0.62);
+  font-size: clamp(0.34em, 0.5vw, 0.42em);
+  font-weight: 700;
+  text-align: center;
+}
+
+.reading-stack {
+  display: grid;
+  gap: 0.42rem;
+  min-height: 0;
+}
+
+.reading-item {
+  padding: 0.45rem 0.55rem;
+  border-radius: 17px;
+  background: rgba(255, 255, 255, 0.86);
+  border: 2px solid rgba(38, 50, 70, 0.1);
+}
+
+.reading-item span {
+  display: block;
+  color: rgba(38, 50, 70, 0.52);
+  font-size: clamp(0.3em, 0.45vw, 0.38em);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.reading-item strong {
+  display: block;
+  margin: 0.08rem 0 0.12rem;
+  color: rgba(38, 50, 70, 0.82);
+  font-size: clamp(0.42em, 0.62vw, 0.52em);
+  font-weight: 950;
+}
+
+.reading-item p {
+  margin: 0;
+  color: rgba(38, 50, 70, 0.62);
+  font-size: clamp(0.32em, 0.48vw, 0.4em);
+  font-weight: 680;
+  line-height: 1.1;
+}
+
+.baseline-item {
+  border-color: rgba(45, 80, 150, 0.2);
+}
+
+.canonical-item {
+  border-color: rgba(160, 105, 35, 0.25);
+}
+
+.learned-item {
+  border-color: rgba(22, 101, 52, 0.28);
+}
+
+.caution-item {
+  border-color: rgba(109, 40, 217, 0.22);
+  background: rgba(245, 243, 255, 0.82);
+}
+
+.result-takeaway {
+  background: rgba(245, 243, 255, 0.94);
+  border: 1px solid rgba(109, 40, 217, 0.18);
+  color: rgba(76, 29, 149, 0.78);
+  font-size: clamp(0.4em, 0.62vw, 0.5em);
+  font-weight: 850;
+}
+
+.result-takeaway strong {
+  color: rgba(76, 29, 149, 0.9);
+  font-weight: 950;
+}
+
+.runtime-title {
+  margin-top: 0.48rem;
+  color: rgba(160, 105, 35, 0.78);
+  font-weight: 900;
+}
+
+.runtime-table td {
+  padding-top: 0.26rem;
+  padding-bottom: 0.26rem;
+}
+
+.runtime-table .fastest {
+  color: rgba(45, 80, 150, 0.86);
+  background: rgba(219, 234, 254, 0.78);
+  font-weight: 950;
+}

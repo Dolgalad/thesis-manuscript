@@ -1,0 +1,320 @@
+/* src/styles/slides/31-contrib-1-fixsolve-pareto-results.css */
+
+.fixsolve-pareto-slide .fixsolve-pareto-body {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 0.72rem;
+  height: 100%;
+  min-height: 0;
+}
+
+.fixsolve-pareto-grid {
+  display: grid;
+  grid-template-columns: 1.12fr 0.88fr;
+  gap: 0.9rem;
+  min-height: 0;
+}
+
+.fixsolve-pareto-slide .analysis-card {
+  min-height: 0;
+  padding: 0.72rem 0.78rem;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(38, 50, 70, 0.12);
+  box-shadow: 0 16px 36px rgba(38, 50, 70, 0.055);
+}
+
+.pareto-results-card {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto auto;
+  gap: 0.22rem;
+  background: rgba(240, 247, 255, 0.92);
+  border-color: rgba(45, 80, 150, 0.2);
+}
+
+.pareto-interpretation-card {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  gap: 0.3rem;
+  background: rgba(255, 247, 237, 0.92);
+  border-color: rgba(160, 105, 35, 0.2);
+}
+
+.fixsolve-pareto-slide .analysis-card h3 {
+  margin: 0;
+  color: rgba(38, 50, 70, 0.88);
+  font-size: clamp(0.64em, 0.9vw, 0.82em);
+  font-weight: 850;
+  line-height: 1.05;
+}
+
+.fixsolve-pareto-slide .analysis-card p:not(.learning-label) {
+  margin: 0;
+  color: rgba(38, 50, 70, 0.62);
+  font-size: clamp(0.35em, 0.54vw, 0.44em);
+  font-weight: 650;
+  line-height: 1.12;
+  text-align: center;
+}
+
+.fixsolve-pareto-svg {
+  width: 100%;
+  height: min(41vh, 370px);
+  min-height: 285px;
+  overflow: visible;
+}
+
+.mini-title {
+  fill: rgba(38, 50, 70, 0.82);
+  font-size: 13px;
+  font-weight: 950;
+  text-anchor: middle;
+}
+
+.mini-axis {
+  stroke: rgba(38, 50, 70, 0.48);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.mini-grid {
+  stroke: rgba(38, 50, 70, 0.1);
+  stroke-width: 1.5;
+}
+
+.mini-tick {
+  fill: rgba(38, 50, 70, 0.46);
+  font-size: 10px;
+  font-weight: 800;
+  text-anchor: middle;
+}
+
+.mini-tick.ytick {
+  text-anchor: end;
+}
+
+.mini-x-label,
+.local-axis-label {
+  fill: rgba(38, 50, 70, 0.46);
+  font-size: 10px;
+  font-weight: 850;
+  text-anchor: middle;
+}
+
+.local-axis-label.rotated {
+  transform: rotate(-90deg);
+}
+
+.pareto-series {
+  fill: none;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.pareto-marker {
+  stroke: rgba(255, 255, 255, 0.92);
+  stroke-width: 1.4;
+}
+
+.p-label {
+  font-size: 8.2px;
+  font-weight: 900;
+  paint-order: stroke;
+  stroke: rgba(255, 255, 255, 0.85);
+  stroke-width: 2px;
+  stroke-linejoin: round;
+}
+
+.dgn-egg {
+  stroke: rgba(38, 50, 70, 0.74);
+  fill: rgba(38, 50, 70, 0.74);
+  color: rgba(38, 50, 70, 0.74);
+}
+
+.lbp-egg {
+  stroke: rgba(45, 80, 150, 0.86);
+  fill: rgba(45, 80, 150, 0.86);
+  color: rgba(45, 80, 150, 0.86);
+}
+
+.lbp-gd {
+  stroke: rgba(109, 40, 217, 0.78);
+  fill: rgba(109, 40, 217, 0.78);
+  color: rgba(109, 40, 217, 0.78);
+}
+
+.nmf-egg {
+  stroke: rgba(22, 101, 52, 0.78);
+  fill: rgba(22, 101, 52, 0.78);
+  color: rgba(22, 101, 52, 0.78);
+}
+
+.nmf-gd {
+  stroke: rgba(160, 105, 35, 0.82);
+  fill: rgba(160, 105, 35, 0.82);
+  color: rgba(160, 105, 35, 0.82);
+}
+
+.pareto-plot-legend {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.28rem;
+  flex-wrap: wrap;
+  padding: 0.28rem 0.38rem;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.66);
+  border: 1px solid rgba(45, 80, 150, 0.12);
+}
+
+.legend-entry {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.26rem;
+  padding: 0.16rem 0.34rem;
+  border-radius: 999px;
+  color: rgba(38, 50, 70, 0.62);
+  background: rgba(255, 255, 255, 0.76);
+  border: 1px solid rgba(38, 50, 70, 0.1);
+  font-size: clamp(0.25em, 0.38vw, 0.31em);
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.legend-line {
+  width: 1.15rem;
+  height: 0;
+  border-top: 3px solid currentColor;
+  border-radius: 999px;
+}
+
+.dgn-egg-line { color: rgba(38, 50, 70, 0.74); }
+.lbp-egg-line { color: rgba(45, 80, 150, 0.86); }
+.lbp-gd-line { color: rgba(109, 40, 217, 0.78); }
+.nmf-egg-line { color: rgba(22, 101, 52, 0.78); }
+.nmf-gd-line { color: rgba(160, 105, 35, 0.82); }
+
+.pareto-summary-list {
+  display: grid;
+  grid-template-rows: repeat(3, auto);
+  gap: 0.42rem;
+  align-content: center;
+  min-height: 0;
+}
+
+.pareto-summary-item {
+  display: grid;
+  grid-template-columns: 1.1rem minmax(0, 1fr);
+  gap: 0.46rem;
+  align-items: start;
+  padding: 0.48rem 0.55rem;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.86);
+  border: 2px solid rgba(160, 105, 35, 0.14);
+}
+
+.summary-dot {
+  width: 0.78rem;
+  height: 0.78rem;
+  margin-top: 0.1rem;
+  border-radius: 999px;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.9);
+}
+
+.quality-dot { background: rgba(45, 80, 150, 0.86); }
+.gd-dot { background: rgba(109, 40, 217, 0.78); }
+.runtime-dot { background: rgba(160, 105, 35, 0.78); }
+
+.pareto-summary-item h4 {
+  margin: 0 0 0.12rem 0;
+  color: rgba(38, 50, 70, 0.82);
+  font-size: clamp(0.4em, 0.58vw, 0.48em);
+  font-weight: 950;
+  line-height: 1.05;
+}
+
+.fixsolve-pareto-slide .pareto-summary-item p {
+  margin: 0;
+  color: rgba(38, 50, 70, 0.58);
+  font-size: clamp(0.3em, 0.45vw, 0.36em);
+  font-weight: 650;
+  line-height: 1.16;
+  text-align: left;
+}
+
+.inline-math {
+  color: rgba(76, 29, 149, 0.82);
+  font-weight: 950;
+  white-space: nowrap;
+}
+
+.runtime-split-box {
+  padding: 0.48rem 0.58rem;
+  border-radius: 18px;
+  background: rgba(245, 243, 255, 0.82);
+  border: 1.5px solid rgba(109, 40, 217, 0.16);
+}
+
+.runtime-split-label {
+  display: inline-block;
+  margin-bottom: 0.18rem;
+  padding: 0.18rem 0.42rem;
+  border-radius: 999px;
+  color: rgba(76, 29, 149, 0.82);
+  background: rgba(237, 233, 254, 0.95);
+  border: 1px solid rgba(109, 40, 217, 0.16);
+  font-size: clamp(0.28em, 0.42vw, 0.34em);
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.fixsolve-pareto-slide .runtime-split-box p {
+  margin: 0;
+  color: rgba(76, 29, 149, 0.72);
+  font-size: clamp(0.32em, 0.48vw, 0.38em);
+  font-weight: 780;
+  line-height: 1.16;
+  text-align: left;
+}
+
+.runtime-split-box strong {
+  color: rgba(76, 29, 149, 0.9);
+  font-weight: 950;
+}
+
+.fixsolve-pareto-takeaway {
+  padding: 0.55rem 0.85rem;
+  border-radius: 20px;
+  background: rgba(245, 243, 255, 0.94);
+  border: 1px solid rgba(109, 40, 217, 0.18);
+  color: rgba(76, 29, 149, 0.78);
+  font-size: clamp(0.4em, 0.62vw, 0.5em);
+  font-weight: 850;
+  text-align: center;
+}
+
+.fixsolve-pareto-takeaway strong {
+  color: rgba(76, 29, 149, 0.9);
+  font-weight: 950;
+}
+
+@media (max-height: 760px) {
+  .fixsolve-pareto-slide .fixsolve-pareto-body { gap: 0.48rem; }
+  .fixsolve-pareto-slide .analysis-card { padding: 0.58rem 0.65rem; }
+  .fixsolve-pareto-svg { height: 295px; min-height: 265px; }
+  .pareto-plot-legend { gap: 0.18rem; padding: 0.22rem 0.3rem; }
+  .legend-entry { padding: 0.13rem 0.28rem; }
+  .pareto-summary-list { gap: 0.28rem; }
+  .pareto-summary-item { padding: 0.38rem 0.45rem; }
+  .runtime-split-box { padding: 0.38rem 0.48rem; }
+}
+
+.fixsolve-pareto-slide .pareto-series {
+  fill: none !important;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.95;
+}

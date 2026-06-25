@@ -1,0 +1,271 @@
+/* src/styles/slides/18-fitting-mrfs.css */
+
+.mrf-fit-body {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.mrf-fit-layout {
+  --diagram-col: 48%;
+  --grid-gap: 1.2%;
+  --formula-col: 50.8%;
+
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--diagram-col) var(--formula-col);
+  gap: var(--grid-gap);
+  width: 100%;
+  height: 100%;
+  max-height: 560px;
+  align-items: stretch;
+}
+
+.mrf-fit-diagram-panel,
+.mrf-fit-formula-panel {
+  position: relative;
+  min-height: 0;
+  height: 100%;
+  padding: 0.55em;
+  border-radius: 22px;
+  background: white;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  box-shadow: 0 12px 26px rgba(15, 23, 42, 0.08);
+  box-sizing: border-box;
+}
+
+.mrf-fit-diagram-panel {
+  overflow: hidden;
+}
+
+.mrf-fit-formula-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+.mrf-fit-svg {
+  width: 100%;
+  height: 100%;
+  max-height: 500px;
+  display: block;
+}
+
+.mrf-fit-formula {
+  width: 100%;
+  font-size: 0.48em;
+  line-height: 1.25;
+  color: #0f172a;
+}
+
+.mrf-fit-kicker {
+  margin-bottom: 0.5em;
+  font-size: 0.72em;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(71, 85, 105, 0.9);
+}
+
+.mrf-fit-block {
+  padding: 0.28em 0.48em;
+  margin-bottom: 0.42em;
+  border-radius: 16px;
+  background: rgba(248, 250, 252, 0.95);
+  border: 1px solid rgba(148, 163, 184, 0.28);
+}
+
+.mrf-fit-main-card {
+  background: rgba(239, 246, 255, 0.95);
+  border-color: rgba(59, 130, 246, 0.25);
+}
+
+.mrf-fit-text {
+  margin: 0.28em 0 0.42em;
+  padding: 0.42em 0.62em;
+  border-radius: 16px;
+  background: rgba(255, 247, 237, 0.92);
+  border: 1px solid rgba(249, 115, 22, 0.22);
+  color: rgba(30, 41, 59, 0.92);
+  font-weight: 650;
+  font-size: 0.86em;
+}
+
+.mrf-fit-warning {
+  background: rgba(254, 242, 242, 0.95);
+  border-color: rgba(220, 38, 38, 0.22);
+}
+
+.mrf-fit-final {
+  background: rgba(240, 253, 250, 0.95);
+  border-color: rgba(20, 184, 166, 0.26);
+}
+
+/* SVG boxes */
+
+.mrf-fit-input-box {
+  fill: rgba(239, 246, 255, 0.95);
+  stroke: rgba(29, 78, 216, 0.55);
+  stroke-width: 3;
+}
+
+.mrf-fit-model-box {
+  fill: rgba(248, 250, 252, 0.98);
+  stroke: rgba(71, 85, 105, 0.38);
+  stroke-width: 3;
+}
+
+.mrf-fit-mrf-box {
+  fill: rgba(240, 253, 250, 0.95);
+  stroke: rgba(20, 184, 166, 0.55);
+  stroke-width: 3;
+}
+
+.mrf-fit-bad-box {
+  fill: rgba(254, 242, 242, 0.96);
+  stroke: rgba(220, 38, 38, 0.42);
+  stroke-width: 3;
+}
+
+.mrf-fit-infer-box {
+  fill: rgba(239, 246, 255, 0.96);
+  stroke: rgba(29, 78, 216, 0.42);
+  stroke-width: 3;
+}
+
+.mrf-fit-target-box {
+  fill: rgba(255, 247, 237, 0.96);
+  stroke: rgba(249, 115, 22, 0.55);
+  stroke-width: 3;
+}
+
+.mrf-fit-box-title,
+.mrf-fit-loss-title {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 21px;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  fill: rgba(51, 65, 85, 0.92);
+}
+
+.mrf-fit-box-text,
+.mrf-fit-loss-text {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 20px;
+  font-weight: 750;
+  fill: #0f172a;
+}
+
+/* SVG arrows */
+
+.mrf-fit-arrow,
+.mrf-fit-loss-arrow,
+.mrf-fit-blocked-arrow,
+.mrf-fit-good-arrow {
+  fill: none;
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.mrf-fit-arrow,
+.mrf-fit-loss-arrow {
+  stroke: rgba(71, 85, 105, 0.5);
+  marker-end: url(#mrf-fit-arrowhead);
+}
+
+.mrf-fit-blocked-arrow {
+  stroke: rgba(220, 38, 38, 0.42);
+  stroke-dasharray: 8 8;
+  marker-end: url(#mrf-fit-arrowhead);
+}
+
+.mrf-fit-good-arrow {
+  stroke: rgba(29, 78, 216, 0.52);
+  stroke-dasharray: 9 8;
+  marker-end: url(#mrf-fit-arrowhead-blue);
+}
+
+.mrf-fit-cross {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 42px;
+  font-weight: 950;
+  fill: rgba(220, 38, 38, 0.72);
+  paint-order: stroke;
+  stroke: rgba(255, 255, 255, 0.95);
+  stroke-width: 6px;
+}
+
+.mrf-fit-caption {
+  text-anchor: middle;
+  font-size: 20px;
+  font-weight: 750;
+  fill: rgba(30, 41, 59, 0.82);
+}
+
+/* Bottom bridge */
+
+.mrf-fit-bottom-bridge {
+  position: absolute;
+  left: 7%;
+  right: 7%;
+  bottom: 0.45em;
+  z-index: 20;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45em;
+
+  padding: 0.55em 0.9em;
+  border-radius: 999px;
+
+  background: rgba(248, 250, 252, 0.96);
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  box-shadow: 0 12px 26px rgba(15, 23, 42, 0.10);
+
+  color: #0f172a;
+  font-size: 0.46em;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.mrf-fit-bridge-prefix {
+  font-weight: 850;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(71, 85, 105, 0.85);
+}
+
+.mrf-fit-bridge-arrow {
+  color: rgba(194, 65, 12, 0.9);
+  font-weight: 900;
+}
+
+.mrf-fit-bottom-bridge strong {
+  color: rgba(29, 78, 216, 0.95);
+  font-weight: 900;
+}
+
+/* Fragment emphasis */
+
+.mrf-fit-slide:has(.mrf-fit-main-card.visible) .mrf-fit-main-card {
+  outline: 2px solid rgba(59, 130, 246, 0.24);
+}
+
+.mrf-fit-slide:has(.mrf-fit-warning.visible) .mrf-fit-warning {
+  outline: 2px solid rgba(220, 38, 38, 0.18);
+}
+
+.mrf-fit-slide:has(.mrf-fit-final.visible) .mrf-fit-final {
+  outline: 2px solid rgba(20, 184, 166, 0.24);
+}
+
+.mrf-fit-slide:has(.mrf-fit-bottom-bridge.visible) .mrf-fit-bottom-bridge {
+  outline: 2px solid rgba(29, 78, 216, 0.18);
+}

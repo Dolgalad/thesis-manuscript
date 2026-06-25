@@ -1,0 +1,143 @@
+/* src/styles/slides/03-why-ilps.css */
+
+.why-ilps-slide .why-ilps-body {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.why-ilps-layout {
+  display: grid;
+  grid-template-columns: 1fr auto 1.15fr auto 1fr;
+  gap: 1.1rem;
+  align-items: stretch;
+  width: 100%;
+  height: min(64vh, 520px);
+}
+
+.why-ilps-card {
+  border: 1px solid rgba(40, 50, 70, 0.16);
+  border-radius: 28px;
+  padding: 1.15rem 1.25rem;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 18px 45px rgba(20, 30, 50, 0.08);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.65rem;
+
+  overflow: hidden;
+}
+
+.why-ilps-card-emphasis {
+  background: rgba(235, 241, 255, 0.9);
+  border-color: rgba(70, 100, 170, 0.28);
+}
+
+.why-ilps-label {
+  margin: 0;
+  font-size: 0.56em;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(45, 60, 90, 0.62);
+}
+
+.why-ilps-card h3 {
+  margin: 0;
+  font-size: clamp(0.85em, 1.25vw, 1.08em);
+  line-height: 1.12;
+}
+
+.why-ilps-card p {
+  margin: 0;
+  font-size: clamp(0.56em, 0.82vw, 0.72em);
+  line-height: 1.28;
+}
+
+.why-ilps-mini-takeaway {
+  margin-top: 0.35rem !important;
+  font-weight: 700;
+}
+
+.why-ilps-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8em;
+  font-weight: 700;
+  color: rgba(45, 60, 90, 0.42);
+}
+
+.choice-icons {
+  display: flex;
+  gap: 0.45rem;
+  margin: 0.25rem 0 0.35rem;
+}
+
+.choice-icons span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 999px;
+  background: rgba(245, 247, 252, 0.95);
+  border: 2px solid rgba(45, 60, 90, 0.18);
+  font-size: 0.72em;
+  font-weight: 700;
+}
+
+.choice-icons span:nth-child(2),
+.choice-icons span:nth-child(4),
+.choice-icons span:nth-child(5) {
+  background: #dfe9ff;
+  border-color: rgba(45, 80, 150, 0.55);
+}
+
+.constraint-sketch {
+  width: 100%;
+  height: 210px;
+  display: block;
+}
+
+.constraint-edge {
+  stroke: rgba(55, 70, 95, 0.38);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.var-node {
+  fill: #f7f8fb;
+  stroke: rgba(45, 60, 90, 0.42);
+  stroke-width: 4;
+}
+
+.var-node.active {
+  fill: #dfe9ff;
+  stroke: rgba(45, 80, 150, 0.7);
+}
+
+.var-label,
+.constraint-label {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-weight: 700;
+  fill: #263246;
+}
+
+.var-label {
+  font-size: 24px;
+}
+
+.constraint-box {
+  fill: #fff0dc;
+  stroke: rgba(160, 105, 35, 0.7);
+  stroke-width: 4;
+}
+
+.constraint-label {
+  font-size: 20px;
+}

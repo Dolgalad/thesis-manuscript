@@ -1,0 +1,26 @@
+{
+  "name": "defense-slides-reveal",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "slides": "node js/build-slides.js",
+    "slides:watch": "chokidar \"index.template.html\" \"slides/**/*.html\" \"css/**/*.css\" -c \"npm run slides\"",
+    "dev": "npm run slides && concurrently \"npm:slides:watch\" \"npm:vite\"",
+    "vite": "vite --host 127.0.0.1 --port 8000",
+    "start": "npm run dev",
+    "build": "npm run slides && vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 8000"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "reveal.js": "^5.2.1"
+  },
+  "devDependencies": {
+    "chokidar-cli": "^3.0.0",
+    "concurrently": "^9.2.1",
+    "vite": "^8.0.16"
+  }
+}

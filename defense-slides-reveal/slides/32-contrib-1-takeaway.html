@@ -1,0 +1,84 @@
+<section class="slide contrib1-takeaway-slide"
+         data-section="Contribution 1"
+         data-title="Takeaway">
+
+  <div class="slide-body contrib1-takeaway-body">
+
+    <div class="contrib1-takeaway-hero fragment fade-up">
+      <p class="learning-label">Contribution 1 · Main message</p>
+      <h3>Structured prediction is useful because ILP variables are not independent</h3>
+
+      <div class="takeaway-formula-row">
+        <div class="formula-block independent-block">
+          <span class="formula-label">Independent scoring</span>
+          <span class="formula-text">score each variable separately</span>
+        </div>
+
+        <div class="formula-arrow">→</div>
+
+        <div class="formula-block structured-block">
+          <span class="formula-label">MRF prediction</span>
+          <span class="formula-text">reason over coupled assignments</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="contrib1-takeaway-grid">
+
+      <div class="takeaway-card dependency-card fragment fade-up">
+        <div class="takeaway-icon">1</div>
+        <div class="takeaway-content">
+          <h4>Explicit output dependencies matter</h4>
+          <p>
+            Constraints induce dependencies between decision variables. Modeling these
+            dependencies directly gives predictions that are better aligned with feasible
+            combinatorial structure.
+          </p>
+        </div>
+      </div>
+
+      <div class="takeaway-card inference-card fragment fade-up">
+        <div class="takeaway-icon">2</div>
+        <div class="takeaway-content">
+          <h4>Approximate MRF inference gives stronger decoding signals</h4>
+          <p>
+            LBP and NMF transform local factor parameters into marginal beliefs, providing
+            more informative scores than independent variable predictions.
+          </p>
+        </div>
+      </div>
+
+      <div class="takeaway-card decimation-card fragment fade-up">
+        <div class="takeaway-icon">3</div>
+        <div class="takeaway-content">
+          <h4>Guided decimation benefits from conditioning</h4>
+          <p>
+            Recomputing beliefs after partial assignments makes decoding adaptive:
+            each fixing changes the context for the remaining variables.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="contrib1-final-message fragment fade-up">
+      <span class="final-label">Takeaway</span>
+      <span>
+        The learned MRF is not only a predictor of variables; it is a
+        <strong>structured source of decoding information</strong> that can guide both
+        heuristic construction and solver-assisted fix-and-solve.
+      </span>
+    </div>
+
+    <aside class="notes">
+      This is the closing slide for Contribution 1. The key message is that explicitly
+      modeling dependencies between output variables matters for ILP solution prediction.
+      Independent scores can be useful, but approximate inference over a learned MRF
+      gives stronger decoding signals because it aggregates information through the
+      factors. Guided decimation further benefits from conditioning: after some variables
+      are fixed, beliefs are recomputed and the next decisions are made in a changed
+      context. This prepares the transition toward the next contribution.
+    </aside>
+
+  </div>
+</section>

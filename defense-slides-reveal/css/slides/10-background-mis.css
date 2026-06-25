@@ -1,0 +1,235 @@
+.mis-example-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.mis-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "first";
+  gap: 0.48em;
+  width: min(100%, 760px);
+  margin: 0.22em auto 0;
+  align-items: center;
+  transition:
+    width 420ms ease,
+    grid-template-columns 420ms ease,
+    gap 420ms ease;
+}
+
+.mis-first-fragment {
+  grid-area: first;
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: 0.48em;
+  min-width: 0;
+  transform: translateY(0.12em);
+  transform-origin: center center;
+  transition:
+    transform 420ms ease,
+    gap 420ms ease;
+}
+
+.mis-graph-panel,
+.mis-intro-panel,
+.mis-bilp-panel {
+  position: relative;
+  padding: 0.45em;
+  border-radius: 24px;
+  background: white;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+  transition:
+    min-height 420ms ease,
+    padding 420ms ease,
+    border-radius 420ms ease,
+    box-shadow 420ms ease;
+}
+
+.mis-graph-panel {
+  overflow: visible;
+  min-height: 385px;
+}
+
+.mis-intro-panel {
+  display: grid;
+  grid-template-columns: 1.35fr 0.9fr;
+  gap: 0.55em;
+  align-items: center;
+  padding: 0.55em 0.7em;
+}
+
+.mis-definition,
+.mis-selected-set {
+  margin: 0;
+  font-size: 0.49em;
+  color: #334155;
+  text-align: center;
+  transition: font-size 420ms ease, padding 420ms ease;
+}
+
+.mis-definition strong {
+  color: #0f172a;
+}
+
+.mis-selected-set {
+  color: #1d4ed8;
+  font-weight: 700;
+  border-left: 1px solid rgba(15, 23, 42, 0.12);
+  padding-left: 0.55em;
+  transition:
+    font-size 420ms ease,
+    padding 420ms ease,
+    border 420ms ease;
+}
+
+.mis-selected-set .katex-display {
+  margin: 0.2em 0 0;
+  font-size: 0.95em;
+}
+
+.mis-bilp-panel.fragment:not(.visible) {
+  position: absolute;
+  width: 0;
+  height: 0;
+  padding: 0;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.mis-bilp-panel {
+  grid-area: bilp;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 500px;
+  padding: 0.9em;
+}
+
+.mis-layout:has(.mis-bilp-panel.visible) {
+  grid-template-columns: minmax(120px, 0.18fr) minmax(0, 1fr);
+  grid-template-areas: "first bilp";
+  width: 100%;
+  gap: 0.78em;
+  align-items: center;
+}
+
+.mis-layout:has(.mis-bilp-panel.visible) .mis-first-fragment {
+  gap: 0.28em;
+  transform: translateY(0);
+}
+
+.mis-layout:has(.mis-bilp-panel.visible) .mis-graph-panel {
+  min-height: 145px;
+  padding: 0.18em;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+}
+
+.mis-layout:has(.mis-bilp-panel.visible) .mis-intro-panel {
+  grid-template-columns: 1fr;
+  gap: 0.2em;
+  padding: 0.28em;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+}
+
+.mis-layout:has(.mis-bilp-panel.visible) .mis-definition,
+.mis-layout:has(.mis-bilp-panel.visible) .mis-selected-set {
+  font-size: 0.28em;
+  line-height: 1.18;
+}
+
+.mis-layout:has(.mis-bilp-panel.visible) .mis-selected-set {
+  border-left: 0;
+  border-top: 1px solid rgba(15, 23, 42, 0.12);
+  padding-left: 0;
+  padding-top: 0.2em;
+}
+
+.mis-graph {
+  width: 100%;
+  height: 385px;
+  overflow: visible;
+  transition: height 420ms ease;
+}
+
+.mis-layout:has(.mis-bilp-panel.visible) .mis-graph {
+  height: 145px;
+}
+
+.mis-edge {
+  stroke: #64748b;
+  stroke-width: 5.5;
+  stroke-linecap: round;
+}
+
+.mis-edge-hit {
+  stroke: transparent;
+  stroke-width: 30;
+  stroke-linecap: round;
+  cursor: help;
+}
+
+.mis-edge-group:hover .mis-edge {
+  stroke: #0f172a;
+  stroke-width: 7;
+}
+
+.edge-tooltip {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 140ms ease, transform 140ms ease;
+}
+
+.mis-edge-group:hover .edge-tooltip {
+  opacity: 1;
+}
+
+.edge-tooltip rect {
+  fill: #0f172a;
+  stroke: none;
+  filter: drop-shadow(0 10px 18px rgba(15, 23, 42, 0.24));
+}
+
+.edge-tooltip text {
+  text-anchor: middle;
+  font-size: 24px;
+  font-weight: 700;
+  fill: white;
+}
+
+.mis-node circle {
+  fill: #f8fafc;
+  stroke: #1e293b;
+  stroke-width: 3;
+}
+
+.mis-node.selected circle {
+  fill: rgba(59, 130, 246, 0.22);
+  stroke: #1d4ed8;
+  stroke-width: 4;
+}
+
+.mis-node text {
+  text-anchor: middle;
+  font-size: 30px;
+  font-weight: 700;
+  fill: #0f172a;
+  pointer-events: none;
+}
+
+.mis-bilp-panel .katex-display {
+  font-size: 0.9em;
+}
+
+.mis-bilp-panel p {
+  margin-top: 0.8em;
+  font-size: 0.5em;
+  color: #475569;
+  text-align: center;
+}

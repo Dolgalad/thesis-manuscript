@@ -1,0 +1,118 @@
+/* src/styles/slides/13-baseline-factorized.css */
+
+.baseline-factorized-pipeline {
+  grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+  height: min(64vh, 520px);
+}
+
+.baseline-factorized-slide .learning-step {
+  padding: 0.95rem 1rem;
+}
+
+.baseline-factorized-slide .learning-step h3 {
+  font-size: clamp(0.72em, 1.05vw, 0.92em);
+}
+
+.baseline-factorized-slide .learning-step p {
+  font-size: clamp(0.46em, 0.72vw, 0.61em);
+}
+
+.baseline-factorized-slide .learning-label {
+  font-size: 0.46em;
+}
+
+.baseline-factorized-slide .prob-row {
+  grid-template-columns: 2rem 1fr 2.65rem;
+  font-size: 0.55em;
+}
+
+.conflict-row .prob-bar {
+  outline: 2px solid rgba(194, 65, 12, 0.45);
+}
+
+.conflict-row .prob-bar span {
+  background: rgba(194, 65, 12, 0.55);
+}
+
+.repair-step {
+  background: rgba(255, 250, 242, 0.9);
+  border-color: rgba(194, 65, 12, 0.22);
+}
+
+.repair-svg {
+  overflow: visible;
+}
+
+.repair-title {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 20px;
+  font-weight: 800;
+  fill: rgba(45, 60, 90, 0.78);
+}
+
+.repair-subtitle {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  fill: rgba(45, 60, 90, 0.62);
+}
+
+.repair-on {
+  fill: rgba(219, 234, 254, 0.96);
+  stroke: rgba(45, 80, 150, 0.72);
+  stroke-width: 4;
+}
+
+.repair-off {
+  fill: rgba(245, 247, 252, 0.96);
+  stroke: rgba(100, 116, 139, 0.5);
+  stroke-width: 4;
+}
+
+.repair-on.conflict {
+  fill: rgba(255, 237, 213, 0.96);
+  stroke: rgba(194, 65, 12, 0.78);
+}
+
+.repair-off.repaired {
+  fill: rgba(220, 252, 231, 0.92);
+  stroke: rgba(22, 101, 52, 0.62);
+}
+
+.repair-conflict-edge {
+  stroke: rgba(194, 65, 12, 0.8);
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.repair-warning {
+  text-anchor: middle;
+  font-size: 17px;
+  font-weight: 800;
+  fill: rgba(194, 65, 12, 0.9);
+}
+
+.repair-arrow {
+  fill: none;
+  stroke: rgba(45, 60, 90, 0.38);
+  stroke-width: 6;
+  stroke-linecap: round;
+  marker-end: none;
+}
+
+.repair-check {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 44px;
+  font-weight: 900;
+  fill: rgba(22, 101, 52, 0.78);
+}
+
+.baseline-takeaway {
+  background: rgba(255, 250, 242, 0.96);
+  border: 1px solid rgba(194, 65, 12, 0.18);
+}

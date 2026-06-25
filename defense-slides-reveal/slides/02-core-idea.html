@@ -1,0 +1,104 @@
+<section class="slide core-idea-slide"
+         data-section="Introduction"
+         data-title="Core idea">
+
+  <div class="slide-body core-idea-body">
+
+    <div class="core-two-step">
+
+      <!-- Step 1: BILP solution as structured object -->
+      <div class="core-idea-panel solution-panel">
+
+        <svg class="solution-graph" viewBox="0 0 520 330" role="img"
+             aria-label="Binary ILP solution represented as a structured graph">
+
+          <!-- edges / constraints -->
+          <line class="solution-edge" x1="110" y1="95"  x2="250" y2="70" />
+          <line class="solution-edge" x1="250" y1="70"  x2="405" y2="120" />
+          <line class="solution-edge" x1="110" y1="95"  x2="180" y2="225" />
+          <line class="solution-edge" x1="180" y1="225" x2="350" y2="240" />
+          <line class="solution-edge" x1="405" y1="120" x2="350" y2="240" />
+          <line class="solution-edge" x1="250" y1="70"  x2="180" y2="225" />
+
+          <!-- nodes / binary variables -->
+          <circle class="solution-node selected" cx="110" cy="95" r="34" />
+          <text class="solution-label" x="110" y="103">1</text>
+
+          <circle class="solution-node" cx="250" cy="70" r="34" />
+          <text class="solution-label" x="250" y="78">0</text>
+
+          <circle class="solution-node selected" cx="405" cy="120" r="34" />
+          <text class="solution-label" x="405" y="128">1</text>
+
+          <circle class="solution-node" cx="180" cy="225" r="34" />
+          <text class="solution-label" x="180" y="233">0</text>
+
+          <circle class="solution-node selected" cx="350" cy="240" r="34" />
+          <text class="solution-label" x="350" y="248">1</text>
+        </svg>
+
+        <h3>BILP solutions are structured</h3>
+
+        <p>
+          The output is a binary assignment, but its components are coupled by
+          constraints and objectives.
+        </p>
+      </div>
+
+      <!-- Step 2: output modeled as MRF / factor graph -->
+      <div class="core-idea-panel mrf-panel fragment fade-left">
+
+        <svg class="factor-graph" viewBox="0 0 520 330" role="img"
+             aria-label="Simple factor graph representing structured output">
+
+          <!-- variable nodes -->
+          <circle class="fg-variable" cx="110" cy="90" r="30" />
+          <text class="fg-label" x="110" y="98">x₁</text>
+
+          <circle class="fg-variable" cx="110" cy="240" r="30" />
+          <text class="fg-label" x="110" y="248">x₂</text>
+
+          <circle class="fg-variable" cx="410" cy="90" r="30" />
+          <text class="fg-label" x="410" y="98">x₃</text>
+
+          <circle class="fg-variable" cx="410" cy="240" r="30" />
+          <text class="fg-label" x="410" y="248">x₄</text>
+
+          <!-- factor nodes -->
+          <rect class="fg-factor" x="235" y="70" width="50" height="50" rx="10" />
+          <text class="fg-factor-label" x="260" y="102">ψ</text>
+
+          <rect class="fg-factor" x="235" y="210" width="50" height="50" rx="10" />
+          <text class="fg-factor-label" x="260" y="242">ψ</text>
+
+          <!-- factor graph edges -->
+          <line class="fg-edge" x1="140" y1="90" x2="235" y2="95" />
+          <line class="fg-edge" x1="285" y1="95" x2="380" y2="90" />
+
+          <line class="fg-edge" x1="140" y1="240" x2="235" y2="235" />
+          <line class="fg-edge" x1="285" y1="235" x2="380" y2="240" />
+
+          <line class="fg-edge weak" x1="260" y1="120" x2="260" y2="210" />
+        </svg>
+
+        <h3>Structured output in the learning pipeline</h3>
+
+        <p>
+          We study how to model the prediction itself as an MRF, so that
+          dependencies between variables appear in the output distribution.
+        </p>
+      </div>
+
+    </div>
+
+    <aside class="notes">
+      First, introduce the object we are predicting: a binary ILP solution.
+      Although it can be written as a vector, it should be understood as a structured
+      object because the variables interact through constraints and objectives.
+      Then introduce the thesis direction: rather than treating the prediction as
+      independent binary classifications, we add structure to the output of the
+      learning pipeline by modeling the prediction as an MRF.
+    </aside>
+
+  </div>
+</section>

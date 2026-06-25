@@ -1,0 +1,146 @@
+      <section class="slide set-cover-slide"
+               data-section="Background"
+               data-title="BILP Example: Set Cover">
+      
+        <div class="slide-body set-cover-body">
+      
+          <p class="set-cover-definition">
+            Given a universe \(U\) and subsets \(S_1,\dots,S_m\), choose as few subsets as possible
+            so that every element is covered.
+          </p>
+      
+          <div class="set-cover-layout">
+      
+            <div class="set-cover-figure-panel">
+      
+              <svg class="set-cover-svg" viewBox="0 0 660 470" role="img"
+                   aria-label="Set cover example with five elements and four sets">
+      
+                <!-- Sets as translucent ellipses -->
+      
+                <ellipse class="set-ellipse set-s1 selected"
+                         cx="205" cy="210" rx="185" ry="130"
+                         transform="rotate(25 205 210)" />
+      
+                <ellipse class="set-ellipse set-s2"
+                         cx="390" cy="130" rx="150" ry="72"
+                         transform="rotate(8 390 130)" />
+      
+                <ellipse class="set-ellipse set-s3"
+                         cx="280" cy="325" rx="155" ry="72"
+                         transform="rotate(2 280 325)" />
+      
+                <ellipse class="set-ellipse set-s4 selected"
+                         cx="455" cy="260" rx="155" ry="70"
+                         transform="rotate(-47 455 260)" />
+      
+                <!-- Set labels -->
+      
+                <text class="set-label set-label-s1" x="60" y="90">
+                  S₁ = {1,2,4}
+                </text>
+      
+                <text class="set-label set-label-s2" x="365" y="45">
+                  S₂ = {2,3}
+                </text>
+      
+                <text class="set-label set-label-s3" x="115" y="405">
+                  S₃ = {4,5}
+                </text>
+      
+                <text class="set-label set-label-s4" x="492" y="385">
+                  S₄ = {3,5}
+                </text>
+      
+                <!-- Element nodes with local hover tooltips -->
+      
+                <g class="element-group">
+                  <circle class="element-hit" cx="105" cy="165" r="42" />
+                  <circle class="element-node" cx="105" cy="165" r="28" />
+                  <text class="element-label" x="105" y="175">1</text>
+      
+                  <g class="element-tooltip" transform="translate(105 105)">
+                    <rect x="-100" y="-39" width="200" height="46" rx="13" />
+                    <text y="-11">y₁ ≥ 1</text>
+                  </g>
+                </g>
+      
+                <g class="element-group">
+                  <circle class="element-hit" cx="300" cy="165" r="42" />
+                  <circle class="element-node" cx="300" cy="165" r="28" />
+                  <text class="element-label" x="300" y="175">2</text>
+      
+                  <g class="element-tooltip" transform="translate(300 105)">
+                    <rect x="-112" y="-39" width="224" height="46" rx="13" />
+                    <text y="-11">y₁ + y₂ ≥ 1</text>
+                  </g>
+                </g>
+      
+                <g class="element-group">
+                  <circle class="element-hit" cx="500" cy="165" r="42" />
+                  <circle class="element-node" cx="500" cy="165" r="28" />
+                  <text class="element-label" x="500" y="175">3</text>
+      
+                  <g class="element-tooltip" transform="translate(500 105)">
+                    <rect x="-112" y="-39" width="224" height="46" rx="13" />
+                    <text y="-11">y₂ + y₄ ≥ 1</text>
+                  </g>
+                </g>
+      
+                <g class="element-group">
+                  <circle class="element-hit" cx="205" cy="315" r="42" />
+                  <circle class="element-node" cx="205" cy="315" r="28" />
+                  <text class="element-label" x="205" y="325">4</text>
+      
+                  <g class="element-tooltip" transform="translate(205 255)">
+                    <rect x="-112" y="-39" width="224" height="46" rx="13" />
+                    <text y="-11">y₁ + y₃ ≥ 1</text>
+                  </g>
+                </g>
+      
+                <g class="element-group">
+                  <circle class="element-hit" cx="405" cy="315" r="42" />
+                  <circle class="element-node" cx="405" cy="315" r="28" />
+                  <text class="element-label" x="405" y="325">5</text>
+      
+                  <g class="element-tooltip" transform="translate(405 255)">
+                    <rect x="-112" y="-39" width="224" height="46" rx="13" />
+                    <text y="-11">y₃ + y₄ ≥ 1</text>
+                  </g>
+                </g>
+      
+              </svg>
+      
+            </div>
+      
+            <div class="set-cover-bilp-panel">
+      
+              \[
+                \begin{aligned}
+                \min_{y} \quad
+                  & \sum_{j=1}^{m} y_j \\
+                \text{s.t.} \quad
+                  & \sum_{j : i \in S_j} y_j \geq 1,
+                  && \forall i \in U, \\
+                  & y_j \in \{0,1\},
+                  && \forall j \in \{1,\dots,m\}.
+                \end{aligned}
+              \]
+      
+              <p>
+                \(y_j = 1\) means subset \(S_j\) is selected.
+              </p>
+      
+              <p class="set-cover-solution fragment">
+                Example minimum cover:
+                \[
+                  \{S_1,S_4\}
+                \]
+              </p>
+      
+            </div>
+      
+          </div>
+      
+        </div>
+      </section>

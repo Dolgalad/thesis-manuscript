@@ -1,0 +1,148 @@
+<section class="slide training-slide"
+         data-section="Background"
+         data-title="Training neural networks">
+
+  <div class="slide-body training-body">
+
+    <div class="training-layout">
+
+      <div class="training-diagram-panel">
+
+        <svg class="training-svg" viewBox="0 0 620 430" role="img"
+             aria-label="Supervised neural network training pipeline">
+
+          <!-- input -->
+          <g class="fragment" data-fragment-index="1">
+            <rect class="training-input-box" x="45" y="150" width="125" height="92" rx="20"></rect>
+            <text class="training-box-title" x="107" y="185">input</text>
+            <text class="training-box-text" x="107" y="215">instance</text>
+          </g>
+
+          <!-- model -->
+          <g class="fragment" data-fragment-index="2">
+            <rect class="training-model-box" x="245" y="130" width="145" height="132" rx="24"></rect>
+            <text class="training-box-title" x="318" y="165">neural</text>
+            <text class="training-box-title" x="318" y="195">network</text>
+            <text class="training-box-text" x="318" y="230">parameters θ</text>
+          </g>
+
+          <!-- prediction -->
+          <g class="fragment" data-fragment-index="3">
+            <rect class="training-pred-box" x="465" y="150" width="115" height="92" rx="20"></rect>
+            <text class="training-box-title" x="523" y="185">prediction</text>
+            <text class="training-box-text" x="523" y="215">\(\hat y\)</text>
+          </g>
+
+          <!-- arrows -->
+          <g class="fragment" data-fragment-index="2">
+            <path class="training-arrow" d="M170 196 L245 196"></path>
+          </g>
+
+          <g class="fragment" data-fragment-index="3">
+            <path class="training-arrow" d="M390 196 L465 196"></path>
+          </g>
+
+          <!-- target -->
+          <g class="fragment" data-fragment-index="4">
+            <rect class="training-target-box" x="465" y="295" width="115" height="72" rx="18"></rect>
+            <text class="training-box-title" x="523" y="323">target</text>
+            <text class="training-box-text" x="523" y="348">\(y\)</text>
+          </g>
+
+          <!-- loss comparison -->
+          <g class="fragment" data-fragment-index="5">
+            <path class="training-compare-line" d="M523 242 L523 295"></path>
+            <rect class="training-loss-box" x="238" y="315" width="160" height="70" rx="20"></rect>
+            <text class="training-loss-title" x="318" y="343">loss</text>
+            <text class="training-loss-text" x="318" y="365">\(L(\hat y, y)\)</text>
+
+            <path class="training-loss-arrow" d="M465 332 C430 332, 415 350, 398 350"></path>
+          </g>
+
+          <!-- update loop -->
+          <g class="fragment" data-fragment-index="6">
+            <path class="training-update-loop"
+                  d="M265 315 C185 300, 185 100, 290 100 C370 100, 400 112, 405 145"></path>
+            <text class="training-update-text" x="235" y="92">update θ by gradient descent</text>
+          </g>
+
+          <text class="training-caption fragment" data-fragment-index="6" x="310" y="410">
+            training means reducing prediction error over labeled examples
+          </text>
+
+        </svg>
+
+      </div>
+
+      <div class="training-formula-panel">
+        <div class="training-formula">
+
+          <div class="training-kicker">Supervised setting</div>
+
+          <div class="training-block">
+            \[
+            \mathcal{D}
+            =
+            \{(x^{(k)}, y^{(k)})\}_{k=1}^{N}
+            \]
+          </div>
+
+          <div class="fragment training-text" data-fragment-index="1">
+            Each training example contains an input \(x^{(k)}\) and a known target label \(y^{(k)}\).
+          </div>
+
+          <div class="fragment training-block training-main-card" data-fragment-index="3">
+            \[
+            \hat y^{(k)}
+            =
+            f_\theta(x^{(k)})
+            \]
+          </div>
+
+          <div class="fragment training-block" data-fragment-index="5">
+            \[
+            \min_\theta
+            \frac{1}{N}
+            \sum_{k=1}^{N}
+            L\!\left(f_\theta(x^{(k)}), y^{(k)}\right)
+            \]
+          </div>
+
+          <div class="fragment training-block training-main-card" data-fragment-index="7">
+            \[
+            L(\hat p, y)
+            =
+            -\sum_{c=1}^{C}
+            \mathbf{1}[y=c]\log \hat p_c
+            \]
+          </div>
+
+          <div class="fragment training-text training-warning" data-fragment-index="8">
+            For classification, the loss penalizes assigning low probability to the correct class.
+          </div>
+
+        </div>
+      </div>
+
+      <div class="training-bottom-bridge fragment" data-fragment-index="9">
+        <span class="training-bridge-prefix">In our case:</span>
+        the network will not directly output labels
+        <span class="training-bridge-arrow">→</span>
+        <strong>it predicts parameters for an inference model</strong>
+      </div>
+
+    </div>
+
+    <aside class="notes">
+      This slide introduces supervised training. A neural network maps an input
+      example to a prediction. The loss function measures how different the
+      prediction is from the target label. Training adjusts the parameters of the
+      network to reduce the average loss over the dataset. For classification,
+      cross-entropy is the standard loss: it penalizes the model when it assigns
+      low probability to the correct class. This prepares the transition to our
+      setting, where the network predicts parameters of an MRF and the loss is
+      applied after approximate inference.
+    </aside>
+
+  </div>
+</section>

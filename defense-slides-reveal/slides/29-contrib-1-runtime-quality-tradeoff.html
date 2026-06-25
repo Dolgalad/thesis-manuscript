@@ -1,0 +1,148 @@
+<section class="slide runtime-quality-slide"
+         data-section="Contribution 1"
+         data-title="Runtime-quality trade-off">
+
+  <div class="slide-body runtime-quality-body">
+
+    <div class="runtime-quality-grid">
+
+      <!-- Left: conceptual trade-off curve -->
+      <div class="analysis-card tradeoff-card fragment fade-up">
+        <p class="learning-label">Runtime versus solution quality</p>
+        <h3>Structured inference improves decisions, but it is not free</h3>
+
+        <svg class="tradeoff-svg" viewBox="0 0 520 300" role="img"
+             aria-label="Runtime quality trade-off for MRF inference and guided decimation">
+
+          <!-- axes -->
+          <line class="axis-line" x1="62" y1="236" x2="472" y2="236" />
+          <line class="axis-line" x1="62" y1="236" x2="62" y2="42" />
+
+          <!-- grid -->
+          <line class="grid-line" x1="62" y1="236" x2="472" y2="236" />
+          <line class="grid-line" x1="62" y1="188" x2="472" y2="188" />
+          <line class="grid-line" x1="62" y1="140" x2="472" y2="140" />
+          <line class="grid-line" x1="62" y1="92" x2="472" y2="92" />
+          <line class="grid-line" x1="62" y1="42" x2="472" y2="42" />
+
+          <line class="grid-line vertical" x1="62" y1="42" x2="62" y2="236" />
+          <line class="grid-line vertical" x1="160" y1="42" x2="160" y2="236" />
+          <line class="grid-line vertical" x1="270" y1="42" x2="270" y2="236" />
+          <line class="grid-line vertical" x1="372" y1="42" x2="372" y2="236" />
+          <line class="grid-line vertical" x1="472" y1="42" x2="472" y2="236" />
+
+          <!-- qualitative pareto frontier -->
+          <path class="pareto-band"
+                d="M78,210 C132,174 178,126 230,92 C280,64 326,52 374,48 C412,47 443,50 464,56
+                   L464,78 C424,74 384,76 344,88 C296,103 250,130 206,166 C162,199 118,224 78,236 Z" />
+          
+          <path class="pareto-line"
+                d="M82,214 C132,174 180,126 230,92 C282,64 328,52 374,48 C412,47 443,50 464,56" />
+          <!-- methods / regimes -->
+          <g class="tradeoff-point fast-point" transform="translate(118 188)">
+            <circle r="8" />
+            <text x="0" y="-16">Direct scores</text>
+          </g>
+          
+          <g class="tradeoff-point inference-point" transform="translate(242 102)">
+            <circle r="8" />
+            <text x="0" y="-16">MRF inference</text>
+          </g>
+          
+          <g class="tradeoff-point gd-point" transform="translate(374 50)">
+            <circle r="8" />
+            <text x="0" y="-16">GD + reinference</text>
+          </g>
+          <!-- arrows -->
+          <path class="tradeoff-arrow" d="M135,178 C166,148 194,122 224,104" />
+          <path class="tradeoff-arrow" d="M262,94 C300,66 330,54 358,50" />
+          <!-- tick labels -->
+          <text class="tick-label ytick" x="48" y="240">low</text>
+          <text class="tick-label ytick" x="48" y="48">high</text>
+
+          <!-- labels -->
+          <text class="axis-label" x="267" y="285">Runtime / inference budget</text>
+          <g class="y-axis-math-label" transform="translate(12 139) rotate(-90)">
+            <foreignObject x="-130" y="-13" width="260" height="26">
+              <div xmlns="http://www.w3.org/1999/xhtml" class="svg-math-label">
+                Solution quality
+              </div>
+            </foreignObject>
+          </g>
+        </svg>
+       <p>
+         Quality improves as more structured inference is used, but the gains eventually
+         saturate while runtime continues to increase.
+       </p>
+      </div>
+
+      <!-- Right: interpretation cards -->
+      <div class="analysis-card regimes-card fragment fade-up">
+        <p class="learning-label">How to read the results</p>
+        <h3>Inference is a controllable budget</h3>
+
+        <div class="runtime-regime-list">
+
+          <div class="runtime-regime regime-fast">
+            <div class="regime-icon">1</div>
+            <div class="regime-content">
+              <h4>Fast prediction</h4>
+              <p>
+                A direct GNN score is cheap and often useful, but the final scores are
+                essentially one-shot variable preferences.
+              </p>
+            </div>
+          </div>
+
+          <div class="runtime-regime regime-structured">
+            <div class="regime-icon">2</div>
+            <div class="regime-content">
+              <h4>Structured marginal inference</h4>
+              <p>
+                LBP or NMF adds cost, but transforms local factor parameters into
+                constraint-aware marginal beliefs.
+              </p>
+            </div>
+          </div>
+
+          <div class="runtime-regime regime-adaptive">
+            <div class="regime-icon">3</div>
+            <div class="regime-content">
+              <h4>Adaptive decoding</h4>
+              <p>
+                Guided decimation can improve decisions by conditioning on partial
+                assignments, at the price of repeated inference.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="honest-box">
+          <span class="honest-label">Conclusion</span>
+          <p>
+            MRF inference is most valuable when its structured signal changes decoding
+            decisions enough to justify the added runtime.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="runtime-quality-takeaway fragment fade-up">
+      The method exposes a tunable trade-off:
+      <strong>more inference can improve quality</strong>,
+      but the best operating point depends on the available runtime budget.
+    </div>
+
+    <aside class="notes">
+      This slide should be presented as an honest synthesis of the previous results.
+      The key message is not that MRF inference is always faster or always better.
+      The point is that it provides a structured signal that improves decoding, especially
+      under guided decimation, but repeated inference has a measurable computational
+      cost. The inference budget and reinference frequency therefore become practical
+      hyperparameters controlling the runtime-quality trade-off.
+    </aside>
+
+  </div>
+</section>

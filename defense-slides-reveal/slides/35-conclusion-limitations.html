@@ -1,0 +1,82 @@
+<section class="slide limitations-slide"
+         data-section="Conclusion"
+         data-title="Limitations">
+
+  <div class="slide-body limitations-body">
+
+    <div class="limitations-header fragment fade-up">
+      <p class="learning-label">Conclusion · Limitations</p>
+      <h3>What are the boundaries of the approach?</h3>
+      <p>
+        The proposed models improve structured prediction and decoding, but they remain
+        approximate tools for solver assistance rather than replacements for exact optimization.
+      </p>
+    </div>
+
+    <div class="limitations-grid">
+
+      <article class="limitation-card limitation-inference fragment fade-up">
+        <div class="limitation-index">01</div>
+        <div class="limitation-content">
+          <h4>Approximate inference is not a certificate</h4>
+          <p>
+            LBP and NMF provide useful marginal estimates, but they do not guarantee exact
+            marginals, feasibility, or optimality of the decoded solution.
+          </p>
+        </div>
+      </article>
+
+      <article class="limitation-card limitation-runtime fragment fade-up">
+        <div class="limitation-index">02</div>
+        <div class="limitation-content">
+          <h4>Repeated inference can be expensive</h4>
+          <p>
+            Guided decimation benefits from recomputing beliefs after conditioning, but this
+            can dominate runtime when many inference calls are required.
+          </p>
+        </div>
+      </article>
+
+      <article class="limitation-card limitation-arity fragment fade-up">
+        <div class="limitation-index">03</div>
+        <div class="limitation-content">
+          <h4>High-arity constraints remain difficult</h4>
+          <p>
+            Large factors are hard to parameterize and infer over directly, motivating compact
+            approximations and factor mappings with controlled expressiveness.
+          </p>
+        </div>
+      </article>
+
+      <article class="limitation-card limitation-refinement fragment fade-up">
+        <div class="limitation-index">04</div>
+        <div class="limitation-content">
+          <h4>Some refinement results are exploratory</h4>
+          <p>
+            The refinement and fix-and-solve analyses indicate promising directions, but they
+            should be viewed as preliminary evidence rather than a final solver integration.
+          </p>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="limitations-takeaway fragment fade-up">
+      <span class="takeaway-label">Perspective</span>
+      <span>
+        These limitations point toward the same direction:
+        <strong>structured learning is useful, but it must be paired with scalable inference and solver-aware evaluation.</strong>
+      </span>
+    </div>
+
+    <aside class="notes">
+      This slide should be delivered honestly. The method improves decoding signals, but
+      approximate inference does not provide optimality certificates. Guided decimation can
+      be expensive because repeated inference is required. High-arity constraints remain a
+      central scalability challenge. Finally, some of the refinement and fix-and-solve
+      experiments should be presented as exploratory: they show useful trends, but not yet
+      a fully mature solver integration.
+    </aside>
+
+  </div>
+</section>

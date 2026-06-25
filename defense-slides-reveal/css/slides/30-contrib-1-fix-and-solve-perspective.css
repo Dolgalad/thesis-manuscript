@@ -1,0 +1,362 @@
+/* src/styles/slides/30-contrib-1-fix-and-solve-perspective.css */
+
+.fixsolve-slide .fixsolve-body {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 0.72rem;
+  height: 100%;
+  min-height: 0;
+}
+
+.fixsolve-grid {
+  display: grid;
+  grid-template-columns: 1.08fr 0.92fr;
+  gap: 0.9rem;
+  min-height: 0;
+}
+
+/* Cards --------------------------------------------------------------- */
+
+.fixsolve-slide .analysis-card {
+  min-height: 0;
+  padding: 0.72rem 0.78rem;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(38, 50, 70, 0.12);
+  box-shadow: 0 16px 36px rgba(38, 50, 70, 0.055);
+}
+
+.fixsolve-pipeline-card {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  gap: 0.26rem;
+  background: rgba(240, 247, 255, 0.92);
+  border-color: rgba(45, 80, 150, 0.2);
+}
+
+.fixsolve-method-card {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  gap: 0.3rem;
+  background: rgba(255, 247, 237, 0.92);
+  border-color: rgba(160, 105, 35, 0.2);
+}
+
+.fixsolve-slide .analysis-card h3 {
+  margin: 0;
+  color: rgba(38, 50, 70, 0.88);
+  font-size: clamp(0.64em, 0.9vw, 0.82em);
+  font-weight: 850;
+  line-height: 1.05;
+}
+
+.fixsolve-slide .analysis-card p:not(.learning-label) {
+  margin: 0;
+  color: rgba(38, 50, 70, 0.62);
+  font-size: clamp(0.35em, 0.54vw, 0.44em);
+  font-weight: 650;
+  line-height: 1.12;
+  text-align: center;
+}
+
+/* Pipeline SVG -------------------------------------------------------- */
+
+.fixsolve-svg {
+  width: 100%;
+  height: min(38vh, 310px);
+  min-height: 250px;
+  overflow: visible;
+}
+
+.pipeline-flow-bg {
+  fill: none;
+  stroke: rgba(45, 80, 150, 0.12);
+  stroke-width: 28;
+  stroke-linecap: round;
+}
+
+.stage-box {
+  fill: rgba(255, 255, 255, 0.9);
+  stroke: rgba(45, 80, 150, 0.18);
+  stroke-width: 2;
+  filter: drop-shadow(0 10px 16px rgba(38, 50, 70, 0.08));
+}
+
+.stage-box.emphasized {
+  fill: rgba(245, 243, 255, 0.92);
+  stroke: rgba(109, 40, 217, 0.2);
+}
+
+.stage-title {
+  fill: rgba(38, 50, 70, 0.82);
+  font-size: 13px;
+  font-weight: 950;
+  text-anchor: middle;
+}
+
+.stage-subtitle {
+  fill: rgba(76, 29, 149, 0.68);
+  font-size: 10px;
+  font-weight: 900;
+  text-anchor: middle;
+}
+
+.stage-caption {
+  fill: rgba(38, 50, 70, 0.54);
+  font-size: 10px;
+  font-weight: 850;
+  text-anchor: middle;
+}
+
+.math-caption {
+  fill: rgba(76, 29, 149, 0.78);
+  font-size: 11px;
+  font-weight: 950;
+  text-anchor: middle;
+}
+
+.pipeline-arrow {
+  fill: none;
+  stroke: rgba(38, 50, 70, 0.34);
+  stroke-width: 3.2;
+  stroke-linecap: round;
+}
+
+.arrow-head {
+  fill: rgba(38, 50, 70, 0.34);
+}
+
+/* Mini graph ---------------------------------------------------------- */
+
+.graph-edge {
+  stroke: rgba(38, 50, 70, 0.22);
+  stroke-width: 2;
+}
+
+.var-node {
+  fill: rgba(45, 80, 150, 0.82);
+  stroke: rgba(255, 255, 255, 0.9);
+  stroke-width: 1.8;
+}
+
+.constraint-node {
+  fill: rgba(160, 105, 35, 0.78);
+  stroke: rgba(255, 255, 255, 0.9);
+  stroke-width: 1.6;
+}
+
+/* Scores and fixings -------------------------------------------------- */
+
+.score-bar {
+  height: 8px;
+}
+
+.low-score {
+  fill: rgba(45, 80, 150, 0.72);
+}
+
+.mid-score {
+  fill: rgba(109, 40, 217, 0.6);
+}
+
+.high-score {
+  fill: rgba(160, 105, 35, 0.68);
+}
+
+.score-dot {
+  stroke: rgba(255, 255, 255, 0.9);
+  stroke-width: 1.6;
+}
+
+.fixed-one,
+.fixed-cell.one {
+  fill: rgba(22, 101, 52, 0.78);
+}
+
+.fixed-zero,
+.fixed-cell.zero {
+  fill: rgba(160, 105, 35, 0.78);
+}
+
+.unresolved,
+.free-cell {
+  fill: rgba(38, 50, 70, 0.12);
+  stroke: rgba(38, 50, 70, 0.24);
+  stroke-width: 1.6;
+}
+
+.fixed-cell {
+  stroke: rgba(255, 255, 255, 0.88);
+  stroke-width: 1.4;
+}
+
+.cell-label {
+  fill: white;
+  font-size: 11px;
+  font-weight: 950;
+  text-anchor: middle;
+}
+
+.cell-label.free {
+  fill: rgba(38, 50, 70, 0.58);
+}
+
+.solver-label {
+  fill: rgba(45, 80, 150, 0.74);
+  font-size: 12px;
+  font-weight: 950;
+  text-anchor: middle;
+}
+
+/* Legend -------------------------------------------------------------- */
+
+.fixsolve-legend text {
+  fill: rgba(38, 50, 70, 0.56);
+  font-size: 11px;
+  font-weight: 850;
+}
+
+/* Method card --------------------------------------------------------- */
+
+.fixsolve-step-list {
+  display: grid;
+  grid-template-rows: repeat(4, auto);
+  gap: 0.34rem;
+  align-content: center;
+  min-height: 0;
+}
+
+.fixsolve-step {
+  display: grid;
+  grid-template-columns: 2.05rem minmax(0, 1fr);
+  gap: 0.48rem;
+  align-items: start;
+
+  padding: 0.42rem 0.52rem;
+  border-radius: 17px;
+  background: rgba(255, 255, 255, 0.86);
+  border: 2px solid rgba(160, 105, 35, 0.14);
+}
+
+.step-number {
+  width: 1.58rem;
+  height: 1.58rem;
+  border-radius: 999px;
+
+  display: grid;
+  place-items: center;
+
+  color: white;
+  background: rgba(45, 80, 150, 0.84);
+  font-size: clamp(0.36em, 0.52vw, 0.44em);
+  font-weight: 950;
+  box-shadow: 0 8px 18px rgba(38, 50, 70, 0.12);
+}
+
+.step-content h4 {
+  margin: 0 0 0.12rem 0;
+  color: rgba(38, 50, 70, 0.82);
+  font-size: clamp(0.4em, 0.58vw, 0.48em);
+  font-weight: 950;
+  line-height: 1.05;
+}
+
+.fixsolve-slide .step-content p {
+  margin: 0;
+  color: rgba(38, 50, 70, 0.58);
+  font-size: clamp(0.3em, 0.45vw, 0.36em);
+  font-weight: 650;
+  line-height: 1.16;
+  text-align: left;
+}
+
+.inline-math {
+  color: rgba(76, 29, 149, 0.82);
+  font-weight: 950;
+  white-space: nowrap;
+}
+
+/* Equation box -------------------------------------------------------- */
+
+.fixsolve-equation-box {
+  padding: 0.48rem 0.58rem;
+  border-radius: 18px;
+  background: rgba(245, 243, 255, 0.82);
+  border: 1.5px solid rgba(109, 40, 217, 0.16);
+}
+
+.equation-label {
+  display: inline-block;
+  margin-bottom: 0.18rem;
+  padding: 0.18rem 0.42rem;
+  border-radius: 999px;
+
+  color: rgba(76, 29, 149, 0.82);
+  background: rgba(237, 233, 254, 0.95);
+  border: 1px solid rgba(109, 40, 217, 0.16);
+
+  font-size: clamp(0.28em, 0.42vw, 0.34em);
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.equation-text {
+  color: rgba(76, 29, 149, 0.72);
+  font-size: clamp(0.32em, 0.48vw, 0.38em);
+  font-weight: 780;
+  line-height: 1.16;
+}
+
+/* Bottom takeaway ----------------------------------------------------- */
+
+.fixsolve-takeaway {
+  padding: 0.55rem 0.85rem;
+  border-radius: 20px;
+  background: rgba(245, 243, 255, 0.94);
+  border: 1px solid rgba(109, 40, 217, 0.18);
+  color: rgba(76, 29, 149, 0.78);
+  font-size: clamp(0.4em, 0.62vw, 0.5em);
+  font-weight: 850;
+  text-align: center;
+}
+
+.fixsolve-takeaway strong {
+  color: rgba(76, 29, 149, 0.9);
+  font-weight: 950;
+}
+
+/* Small-screen safety ------------------------------------------------- */
+
+@media (max-height: 760px) {
+  .fixsolve-slide .fixsolve-body {
+    gap: 0.48rem;
+  }
+
+  .fixsolve-slide .analysis-card {
+    padding: 0.58rem 0.65rem;
+  }
+
+  .fixsolve-svg {
+    height: 235px;
+    min-height: 220px;
+  }
+
+  .fixsolve-step-list {
+    gap: 0.24rem;
+  }
+
+  .fixsolve-step {
+    padding: 0.34rem 0.44rem;
+    gap: 0.38rem;
+  }
+
+  .step-number {
+    width: 1.42rem;
+    height: 1.42rem;
+  }
+
+  .fixsolve-equation-box {
+    padding: 0.38rem 0.48rem;
+  }
+}

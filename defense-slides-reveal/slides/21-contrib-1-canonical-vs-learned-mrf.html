@@ -1,0 +1,178 @@
+<section class="slide canonical-vs-learned-mrf-slide"
+         data-section="Contribution 1"
+         data-title="Canonical MRF vs learned MRF">
+
+  <div class="slide-body canonical-learned-body">
+
+    <!-- Shared input -->
+    <div class="shared-bilp-card fragment fade-up">
+      <div class="shared-bilp-copy">
+        <p class="learning-label">Shared input</p>
+        <h3>Same BILP structure</h3>
+        <p>
+          Both parameterizations use the same variable-constraint graph and the same MRF factor scopes.
+        </p>
+      </div>
+
+      <svg class="shared-bilp-svg" viewBox="0 0 560 145" role="img"
+           aria-label="Shared BILP variable-constraint graph">
+
+        <text class="shared-graph-title" x="280" y="18">
+          \(G_{vc}=(V\cup C,E)\)
+        </text>
+
+        <!-- variables -->
+        <circle class="lc-variable" cx="82" cy="46" r="18" />
+        <text class="lc-label" x="82" y="54">x₁</text>
+
+        <circle class="lc-variable" cx="82" cy="90" r="18" />
+        <text class="lc-label" x="82" y="98">x₂</text>
+
+        <circle class="lc-variable" cx="82" cy="130" r="18" />
+        <text class="lc-label" x="82" y="138">x₃</text>
+
+        <circle class="lc-variable" cx="178" cy="90" r="18" />
+        <text class="lc-label" x="178" y="98">x₄</text>
+
+        <!-- constraints -->
+        <rect class="lc-constraint" x="335" y="48" width="60" height="36" rx="10" />
+        <text class="lc-label" x="365" y="72">c₁</text>
+
+        <rect class="lc-constraint" x="335" y="102" width="60" height="36" rx="10" />
+        <text class="lc-label" x="365" y="126">c₂</text>
+
+        <!-- incidence edges -->
+        <line class="lc-edge" x1="100" y1="46"  x2="335" y2="66" />
+        <line class="lc-edge" x1="100" y1="90"  x2="335" y2="66" />
+        <line class="lc-edge" x1="196" y1="90"  x2="335" y2="66" />
+
+        <line class="lc-edge" x1="100" y1="90"  x2="335" y2="120" />
+        <line class="lc-edge" x1="100" y1="130" x2="335" y2="120" />
+        <line class="lc-edge" x1="196" y1="90"  x2="335" y2="120" />
+
+        <text class="shared-caption blue" x="145" y="27">decision variables</text>
+        <text class="shared-caption orange" x="470" y="88">linear constraints</text>
+      </svg>
+    </div>
+
+    <div class="mrf-compare-grid">
+
+      <!-- Canonical MRF -->
+      <div class="learning-step cmrf-panel fragment fade-up">
+        <p class="learning-label">Canonical MRF</p>
+        <h3>Hand-designed feasibility-cost parameters</h3>
+
+        <div class="theta-decomposition canonical-theta">
+          <div class="theta-lhs">
+            \(\bar{\theta}(P)=\)
+          </div>
+
+
+          <div class="theta-blocks">
+            <div class="theta-param-card unary-param">
+              <div class="theta-param-title">unary parameters</div>
+              <div class="theta-param-main">
+                \(\{\bar{\theta}_i\}_{i\in V}\)
+              </div>
+              <div class="theta-param-sub">
+                variable costs
+              </div>
+              <div class="theta-param-formula">
+                \[
+                  \bar{\theta}_i(x_i)=c_i x_i
+                \]
+              </div>
+            </div>
+
+            <div class="theta-param-card factor-param">
+              <div class="theta-param-title">constraint factor parameters</div>
+              <div class="theta-param-main">
+                \(\{\bar{\theta}_{\alpha}\}_{\alpha\in F}\)
+              </div>
+              <div class="theta-param-sub">
+                local feasibility table
+              </div>
+              <div class="theta-param-formula feasibility-formula">
+                \[
+                  \bar{\theta}_{\alpha}(x_{\alpha}) =
+                  \begin{cases}
+                    0, & x_{\alpha}\in\mathcal{F}_{\alpha},\\
+                    -M, & \text{otherwise}.
+                  \end{cases}
+                \]
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <p>
+          The parameters are fixed by the BILP objective and by hand-coded local
+          feasibility penalties.
+        </p>
+      </div>
+
+      <!-- Learned MRF -->
+      <div class="learning-step lmrf-panel fragment fade-up">
+        <p class="learning-label">Learned MRF</p>
+        <h3>Predicted factor parameters</h3>
+
+        <div class="theta-decomposition learned-theta">
+          <div class="theta-lhs">
+            \(\hat{\theta}(P;\omega)=\)
+          </div>
+
+
+          <div class="theta-blocks">
+            <div class="theta-param-card unary-param">
+              <div class="theta-param-title">unary parameters</div>
+              <div class="theta-param-main">
+                \(\{\hat{\theta}_i\}_{i\in V}\)
+              </div>
+              <div class="theta-param-sub">
+                variable head
+              </div>
+              <div class="theta-param-formula">
+                \[
+                  \hat{\theta}_i = h_V(\nu_i)
+                \]
+              </div>
+            </div>
+
+            <div class="theta-param-card factor-param">
+              <div class="theta-param-title">constraint factor parameters</div>
+              <div class="theta-param-main">
+                \(\{\hat{\theta}_{\alpha}\}_{\alpha\in F}\)
+              </div>
+              <div class="theta-param-sub">
+                constraint / factor head
+              </div>
+              <div class="theta-param-formula">
+                \[
+                  \hat{\theta}_{\alpha}=h_F(\nu_{\alpha})
+                \]
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <p>
+          The scopes are still induced by the BILP, but the log-potential tables are
+          predicted from GNN embeddings.
+        </p>
+      </div>
+
+    </div>
+
+    <aside class="notes">
+      The important contrast is not the input graph: both models see the same BILP
+      and use the same factor scopes. The canonical MRF uses fixed parameters:
+      unary terms encode the objective and constraint factors encode feasibility by
+      assigning zero to locally feasible assignments and a large negative value to
+      infeasible ones. The learned MRF replaces this hand-designed construction by
+      learned parameter heads applied to GNN embeddings.
+    </aside>
+
+  </div>
+</section>

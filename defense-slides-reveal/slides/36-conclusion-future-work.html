@@ -1,0 +1,94 @@
+<section class="slide future-work-slide"
+         data-section="Conclusion"
+         data-title="Future work">
+
+  <div class="slide-body future-work-body">
+
+    <div class="future-work-header fragment fade-up">
+      <p class="learning-label">Conclusion · Future work</p>
+      <h3>From structured prediction to solver-ready assistance</h3>
+      <p>
+        The next step is to make learned structured predictions more scalable, more reliable,
+        and more tightly integrated with exact optimization tools.
+      </p>
+    </div>
+
+    <div class="future-work-grid">
+
+      <article class="future-card future-inference fragment fade-up">
+        <div class="future-index">01</div>
+        <div class="future-content">
+          <h4>Better approximate inference</h4>
+          <p>
+            Explore stronger inference schemes, adaptive iteration budgets, or learned
+            inference schedules that spend computation only where it is useful.
+          </p>
+        </div>
+      </article>
+
+      <article class="future-card future-factors fragment fade-up">
+        <div class="future-index">02</div>
+        <div class="future-content">
+          <h4>Scalable factor parameterizations</h4>
+          <p>
+            Design compact mappings for high-arity constraints that preserve useful
+            structure without requiring full exponential-size factor tables.
+          </p>
+        </div>
+      </article>
+
+      <article class="future-card future-solvers fragment fade-up">
+        <div class="future-index">03</div>
+        <div class="future-content">
+          <h4>Closer integration with exact solvers</h4>
+          <p>
+            Use learned marginals not only for standalone decoding, but also for fixing,
+            branching, primal heuristics, or solver-side search guidance.
+          </p>
+        </div>
+      </article>
+
+      <article class="future-card future-benchmarks fragment fade-up">
+        <div class="future-index">04</div>
+        <div class="future-content">
+          <h4>Broader BILP and MILP benchmarks</h4>
+          <p>
+            Test the approach on more diverse problem classes, larger instances, mixed
+            variables, and benchmarks closer to practical optimization settings.
+          </p>
+        </div>
+      </article>
+
+      <article class="future-card future-certificates fragment fade-up">
+        <div class="future-index">05</div>
+        <div class="future-content">
+          <h4>Feasibility and certificates</h4>
+          <p>
+            Strengthen the treatment of feasibility, repair, residual solving, and
+            certification so predictions become safer to use inside optimization pipelines.
+          </p>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="future-work-takeaway fragment fade-up">
+      <span class="takeaway-label">Perspective</span>
+      <span>
+        The long-term goal is not to replace exact optimization, but to develop
+        <strong>learning components that expose useful structure to solvers.</strong>
+      </span>
+    </div>
+
+    <aside class="notes">
+      This slide presents future work. The first direction is better approximate inference,
+      including learned inference schedules or adaptive budgets. The second is more scalable
+      factor parameterization, especially for high-arity constraints. The third is tighter
+      integration with exact solvers, where learned marginals could guide fixing, branching,
+      or primal heuristics. The fourth is evaluation on broader BILP and MILP benchmarks.
+      The fifth is a stronger treatment of feasibility and certificates, so learned predictions
+      can be used more safely in solver-assisted pipelines.
+    </aside>
+
+  </div>
+</section>

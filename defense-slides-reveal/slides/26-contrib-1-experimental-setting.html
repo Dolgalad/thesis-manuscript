@@ -1,0 +1,83 @@
+<section class="slide experimental-setting-slide"
+         data-section="Contribution 1"
+         data-title="Experimental setting">
+
+  <div class="slide-body experimental-setting-body">
+
+    <div class="experiment-grid">
+
+      <div class="experiment-card problem-card fragment fade-up">
+        <p class="learning-label">Representative BILP families</p>
+        <h3>Two complementary constraint structures</h3>
+
+        <div class="problem-pair">
+          <div class="problem-mini mis-mini">
+            <strong>MIS</strong>
+            <span>pairwise exclusion</span>
+            <code>\(x_i+x_j\le 1\)</code>
+          </div>
+
+          <div class="problem-mini sc-mini">
+            <strong>Set Cover</strong>
+            <span>higher-arity coverage</span>
+            <code>\(\sum_{j:s_j\in S_i}x_j\ge 1\)</code>
+          </div>
+        </div>
+      </div>
+
+      <div class="experiment-card model-card fragment fade-up">
+        <p class="learning-label">Compared predictors</p>
+        <h3>From independent scores to structured beliefs</h3>
+
+        <div class="model-lanes">
+          <div class="model-lane baseline-lane">
+            <span>factorized GNN</span>
+            <strong>variable logits</strong>
+          </div>
+
+          <div class="model-lane canonical-lane">
+            <span>canonical MRF</span>
+            <strong>fixed feasibility-cost potentials</strong>
+          </div>
+
+          <div class="model-lane learned-lane">
+            <span>learned MRF</span>
+            <strong>GNN-predicted factor potentials</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="experiment-card evaluation-card fragment fade-up">
+        <p class="learning-label">Evaluation</p>
+        <h3>Quality–runtime trade-off</h3>
+
+        <div class="metric-row">
+          <div class="metric-chip">optimality gap</div>
+          <div class="metric-chip">feasibility after decoding</div>
+          <div class="metric-chip">end-to-end test time</div>
+        </div>
+
+        <p>
+          Runtime includes preprocessing, neural prediction, approximate inference,
+          and decoding.
+        </p>
+      </div>
+
+    </div>
+
+    <div class="experiment-takeaway fragment fade-up">
+      Goal: test whether explicit MRF inference gives better decoding signals than independent variable scores.
+    </div>
+
+    <aside class="notes">
+      The experiments focus on Maximum Independent Set and Set Cover because they
+      expose different structures. MIS has pairwise exclusion constraints, while Set
+      Cover has coverage constraints that may involve many variables. The comparison
+      includes factorized neural baselines, canonical MRFs with hand-designed
+      feasibility-cost potentials, and learned MRFs whose factor potentials are
+      predicted from the variable-constraint graph. The main metrics are solution
+      quality, typically relative optimality gap, and end-to-end runtime.
+    </aside>
+
+  </div>
+</section>

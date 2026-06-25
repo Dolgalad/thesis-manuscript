@@ -1,0 +1,61 @@
+.reveal .toc-slide .slide-body {
+  justify-content: center;
+}
+
+.reveal .toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  width: min(100%, 980px);
+}
+
+.reveal .toc-list li {
+  display: grid;
+  grid-template-columns: 3.6em 1fr;
+  align-items: center;
+  column-gap: 1em;
+
+  font-size: 0.82em;
+  line-height: 1.2;
+
+  padding: 0.55em 0.2em;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.reveal .toc-list li:last-child {
+  border-bottom: none;
+}
+
+.reveal .toc-number {
+  width: 2.35em;
+  height: 2.35em;
+  border-radius: 50%;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  font-weight: 800;
+  font-size: 0.72em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+
+  color: #ffffff;
+  background: var(--accent, #2563eb);
+  border: 2px solid rgba(15, 23, 42, 0.12);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.16);
+}
+
+.reveal .toc-text {
+  font-weight: 650;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+}
+
+.reveal .toc-list li:hover .toc-number {
+  transform: scale(1.06);
+}
+
+.reveal .toc-list li:hover .toc-text {
+  color: var(--accent);
+}

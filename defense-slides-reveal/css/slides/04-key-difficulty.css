@@ -1,0 +1,229 @@
+/* src/styles/slides/04-key-difficulty.css */
+
+.key-difficulty-slide .key-difficulty-body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.difficulty-intro {
+  margin: 0 auto 1rem;
+  padding: 0.8rem 1.2rem;
+  max-width: 88%;
+  border-radius: 20px;
+  background: rgba(235, 241, 255, 0.9);
+  font-size: 0.82em;
+  line-height: 1.25;
+  text-align: center;
+}
+
+.difficulty-examples {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.4rem;
+  width: 100%;
+}
+
+.difficulty-card {
+  border: 1px solid rgba(40, 50, 70, 0.16);
+  border-radius: 28px;
+  padding: 1rem 1.2rem 1.15rem;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 18px 45px rgba(20, 30, 50, 0.08);
+  overflow: hidden;
+}
+
+.difficulty-label {
+  margin: 0 0 0.25rem;
+  font-size: 0.54em;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(45, 60, 90, 0.62);
+}
+
+.difficulty-card h3 {
+  margin: 0.35rem 0 0.35rem;
+  font-size: clamp(0.82em, 1.2vw, 1.02em);
+  line-height: 1.12;
+}
+
+.difficulty-card p {
+  margin: 0;
+  font-size: clamp(0.55em, 0.8vw, 0.7em);
+  line-height: 1.28;
+}
+
+.difficulty-svg {
+  width: 100%;
+  height: min(28vh, 270px);
+  display: block;
+}
+
+/* Common labels */
+
+.node-label,
+.small-label,
+.set-label,
+.constraint-pill-text {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-weight: 700;
+  fill: #263246;
+}
+
+.node-label {
+  font-size: 21px;
+}
+
+.small-label,
+.set-label {
+  font-size: 21px;
+}
+
+.constraint-pill {
+  fill: rgba(255, 240, 220, 0.95);
+  stroke: rgba(160, 105, 35, 0.45);
+  stroke-width: 3;
+}
+
+.constraint-pill-text {
+  font-size: 20px;
+}
+
+/* MIS */
+
+.mis-edge {
+  stroke: rgba(55, 70, 95, 0.32);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.mis-edge.conflict {
+  stroke: rgba(150, 60, 60, 0.5);
+  stroke-width: 7;
+}
+
+.mis-node {
+  fill: #f7f8fb;
+  stroke: rgba(45, 60, 90, 0.42);
+  stroke-width: 4;
+}
+
+.mis-node.selected {
+  fill: #dfe9ff;
+  stroke: rgba(45, 80, 150, 0.75);
+}
+
+.mis-node.forbidden {
+  fill: rgba(255, 225, 225, 0.95);
+  stroke: rgba(150, 60, 60, 0.65);
+}
+
+/* Set Cover */
+
+.cover-edge {
+  stroke: rgba(55, 70, 95, 0.26);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.cover-edge.active {
+  stroke: rgba(45, 80, 150, 0.55);
+  stroke-width: 6;
+}
+
+.element-node {
+  stroke-width: 4;
+}
+
+.element-node.covered {
+  fill: #dfe9ff;
+  stroke: rgba(45, 80, 150, 0.7);
+}
+
+.element-node.uncovered {
+  fill: rgba(255, 225, 225, 0.95);
+  stroke: rgba(150, 60, 60, 0.65);
+}
+
+.set-node {
+  fill: #f7f8fb;
+  stroke: rgba(45, 60, 90, 0.42);
+  stroke-width: 4;
+}
+
+.set-node.selected {
+  fill: #dfe9ff;
+  stroke: rgba(45, 80, 150, 0.75);
+}
+
+.set-node.needed {
+  fill: #fff0dc;
+  stroke: rgba(160, 105, 35, 0.7);
+}
+
+.difficulty-takeaway {
+  margin: 1rem auto 0;
+  padding: 0.75rem 1.15rem;
+  border-radius: 18px;
+  background: rgba(245, 247, 252, 0.95);
+  font-size: 0.78em;
+  font-weight: 700;
+  text-align: center;
+}
+
+.key-difficulty-slide .key-difficulty-body {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.75rem;
+  box-sizing: border-box;
+}
+
+.difficulty-intro {
+  margin: 0 auto;
+  padding: 0.65rem 1.1rem;
+  max-width: 88%;
+  border-radius: 20px;
+  background: rgba(235, 241, 255, 0.9);
+  font-size: 0.78em;
+  line-height: 1.22;
+  text-align: center;
+}
+
+.difficulty-examples {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.15rem;
+  width: 100%;
+  min-height: 0;
+}
+
+.difficulty-card {
+  border: 1px solid rgba(40, 50, 70, 0.16);
+  border-radius: 28px;
+  padding: 0.8rem 1rem 0.9rem;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 18px 45px rgba(20, 30, 50, 0.08);
+  overflow: hidden;
+}
+
+.difficulty-svg {
+  width: 100%;
+  height: min(24vh, 230px);
+  display: block;
+}
+
+.difficulty-takeaway {
+  margin: 0 auto;
+  padding: 0.6rem 1.05rem;
+  border-radius: 18px;
+  background: rgba(245, 247, 252, 0.95);
+  font-size: 0.72em;
+  font-weight: 700;
+  text-align: center;
+}

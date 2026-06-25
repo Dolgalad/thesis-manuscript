@@ -1,0 +1,265 @@
+/* src/styles/slides/21-contrib-1-canonical-vs-learned-mrf.css */
+
+.canonical-vs-learned-mrf-slide .canonical-learned-body {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 0.55rem;
+  height: 100%;
+  min-height: 0;
+}
+
+/* Shared BILP input ------------------------------------------------------ */
+
+.shared-bilp-card {
+  display: grid;
+  grid-template-columns: 0.82fr 1.55fr;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.42rem 0.75rem;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(38, 50, 70, 0.1);
+  box-shadow: 0 12px 28px rgba(38, 50, 70, 0.05);
+}
+
+.shared-bilp-copy {
+  display: grid;
+  gap: 0.12rem;
+}
+
+.shared-bilp-copy h3 {
+  margin: 0;
+  color: rgba(38, 50, 70, 0.88);
+  font-size: clamp(0.68em, 0.95vw, 0.84em);
+  font-weight: 850;
+  line-height: 1.02;
+}
+
+.shared-bilp-copy p:not(.learning-label) {
+  margin: 0;
+  color: rgba(38, 50, 70, 0.62);
+  font-size: clamp(0.38em, 0.6vw, 0.49em);
+  font-weight: 620;
+  line-height: 1.14;
+}
+
+.shared-bilp-svg {
+  width: 100%;
+  height: clamp(88px, 12.5vh, 112px);
+  overflow: visible;
+}
+
+.shared-bilp-svg .lc-edge {
+  stroke-width: 3.8;
+}
+
+.shared-bilp-svg .lc-variable,
+.shared-bilp-svg .lc-constraint {
+  stroke-width: 3;
+}
+
+.shared-graph-title,
+.shared-caption {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-weight: 850;
+}
+
+.shared-graph-title {
+  font-size: 16px;
+  fill: rgba(38, 50, 70, 0.72);
+}
+
+.shared-caption {
+  font-size: 12px;
+}
+
+.shared-caption.blue {
+  fill: rgba(45, 80, 150, 0.68);
+}
+
+.shared-caption.orange {
+  fill: rgba(160, 105, 35, 0.72);
+}
+
+/* Comparison panels ----------------------------------------------------- */
+
+.mrf-compare-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.8rem;
+  min-height: 0;
+}
+
+.canonical-vs-learned-mrf-slide .learning-step {
+  min-height: 0;
+  padding: 0.5rem 0.68rem 0.56rem;
+  border-radius: 21px;
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  gap: 0.22rem;
+}
+
+.canonical-vs-learned-mrf-slide .learning-label {
+  font-size: 0.38em;
+  margin-bottom: 0;
+}
+
+.canonical-vs-learned-mrf-slide .learning-step h3 {
+  margin: 0;
+  font-size: clamp(0.62em, 0.9vw, 0.78em);
+  line-height: 1.02;
+}
+
+.canonical-vs-learned-mrf-slide .learning-step p {
+  margin: 0;
+  font-size: clamp(0.36em, 0.56vw, 0.46em);
+  line-height: 1.12;
+}
+
+.cmrf-panel {
+  background: rgba(255, 247, 237, 0.92);
+  border-color: rgba(160, 105, 35, 0.24);
+}
+
+.lmrf-panel {
+  background: rgba(240, 247, 255, 0.92);
+  border-color: rgba(45, 80, 150, 0.24);
+}
+
+/* Theta decomposition --------------------------------------------------- */
+
+.theta-decomposition {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.32rem;
+  min-height: 0;
+}
+
+.theta-lhs {
+  color: rgba(38, 50, 70, 0.86);
+  font-size: clamp(0.58em, 0.95vw, 0.82em);
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.theta-brace {
+  color: rgba(38, 50, 70, 0.42);
+  font-family: Georgia, serif;
+  font-size: clamp(2.2em, 5vw, 4.2em);
+  font-weight: 400;
+  line-height: 0.78;
+}
+
+.theta-brace-close {
+  margin-left: -0.08rem;
+}
+
+.theta-blocks {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.15fr);
+  gap: 0.46rem;
+  min-width: 0;
+  min-height: 0;
+}
+
+.theta-param-card {
+  min-width: 0;
+  padding: 0.48rem 0.45rem 0.5rem;
+  border-radius: 17px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2.5px solid rgba(38, 50, 70, 0.14);
+  box-shadow: 0 10px 22px rgba(38, 50, 70, 0.045);
+  display: grid;
+  gap: 0.14rem;
+  align-content: start;
+  text-align: center;
+}
+
+.theta-param-card.unary-param {
+  border-color: rgba(45, 80, 150, 0.36);
+}
+
+.theta-param-card.factor-param {
+  border-color: rgba(160, 105, 35, 0.45);
+}
+
+.theta-param-title {
+  color: rgba(38, 50, 70, 0.58);
+  font-size: clamp(0.34em, 0.52vw, 0.44em);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.theta-param-main {
+  color: rgba(38, 50, 70, 0.86);
+  font-size: clamp(0.48em, 0.72vw, 0.62em);
+  font-weight: 850;
+  line-height: 1.05;
+}
+
+.theta-param-sub {
+  color: rgba(38, 50, 70, 0.56);
+  font-size: clamp(0.33em, 0.5vw, 0.42em);
+  font-weight: 760;
+  line-height: 1.08;
+}
+
+.theta-param-formula {
+  color: rgba(38, 50, 70, 0.84);
+  font-size: clamp(0.38em, 0.58vw, 0.49em);
+  font-weight: 800;
+  line-height: 1.05;
+}
+
+.theta-param-formula .MathJax,
+.theta-param-formula mjx-container {
+  margin: 0 !important;
+}
+
+.feasibility-formula {
+  font-size: clamp(0.32em, 0.5vw, 0.42em);
+}
+
+/* Slightly give the learned blocks more balanced widths */
+.learned-theta .theta-blocks {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+/* Small-screen safety --------------------------------------------------- */
+
+@media (max-height: 760px) {
+  .canonical-vs-learned-mrf-slide .canonical-learned-body {
+    gap: 0.42rem;
+  }
+
+  .shared-bilp-card {
+    padding-top: 0.34rem;
+    padding-bottom: 0.34rem;
+  }
+
+  .shared-bilp-svg {
+    height: 82px;
+  }
+
+  .canonical-vs-learned-mrf-slide .learning-step {
+    padding-top: 0.42rem;
+    padding-bottom: 0.46rem;
+    gap: 0.16rem;
+  }
+
+  .theta-param-card {
+    padding: 0.38rem 0.36rem;
+    gap: 0.1rem;
+  }
+
+  .theta-brace {
+    font-size: 2.5em;
+  }
+
+  .canonical-vs-learned-mrf-slide .learning-step p {
+    line-height: 1.07;
+  }
+}

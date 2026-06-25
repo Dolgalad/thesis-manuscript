@@ -1,0 +1,151 @@
+<section class="slide energy-slide"
+         data-section="Background"
+         data-title="ILP as a factorized energy model">
+
+  <div class="slide-body energy-body">
+
+    <div class="energy-layout">
+
+      <div class="energy-formula-panel">
+        <div class="energy-formula">
+
+          <div class="energy-kicker">Binary ILP</div>
+
+          <div class="energy-block">
+            \[
+            \max_{x \in \{0,1\}^n} c^\top x
+            \quad \text{s.t.} \quad Ax \leq b
+            \]
+          </div>
+
+          <div class="fragment energy-arrow" data-fragment-index="1">
+            \[
+            \Downarrow
+            \]
+          </div>
+
+          <div class="fragment energy-block" data-fragment-index="1">
+            \[
+            E(x)
+            =
+            -c^\top x
+            +
+            \sum_{a=1}^{m}
+            \mathbf{1}[A_a x \leq b_a]
+            \]
+          </div>
+
+          <div class="fragment energy-indicator" data-fragment-index="2">
+            \[
+            \mathbf{1}[A_a x \leq b_a]
+            =
+            \begin{cases}
+            0, & A_a x \leq b_a,\\
+            +\infty, & \text{otherwise}.
+            \end{cases}
+            \]
+          </div>
+
+        </div>
+      </div>
+
+      <div class="energy-graph-panel">
+
+        <svg class="energy-svg" viewBox="0 0 620 430" role="img"
+             aria-label="Factorized energy model induced by an ILP">
+
+          <!-- objective contribution -->
+          <g class="fragment" data-fragment-index="1">
+            <rect class="energy-objective-box" x="65" y="45" width="180" height="62" rx="18"></rect>
+            <text class="energy-objective-text" x="155" y="84">
+              objective
+            </text>
+            <text class="energy-objective-formula" x="155" y="125">
+              −cᵀx
+            </text>
+          </g>
+
+          <!-- variable nodes -->
+          <g class="fragment" data-fragment-index="1">
+            <g class="energy-var-node" transform="translate(170 190)">
+              <circle r="34"></circle>
+              <text y="8">x₁</text>
+            </g>
+
+            <g class="energy-var-node" transform="translate(170 285)">
+              <circle r="34"></circle>
+              <text y="8">x₂</text>
+            </g>
+
+            <g class="energy-var-node" transform="translate(170 380)">
+              <circle r="34"></circle>
+              <text y="8">x₃</text>
+            </g>
+          </g>
+
+          <!-- factor nodes -->
+          <g class="fragment" data-fragment-index="3">
+            <g class="energy-factor-node" transform="translate(450 190)">
+              <rect x="-58" y="-30" width="116" height="60" rx="16"></rect>
+              <text y="7">E₁</text>
+            </g>
+
+            <g class="energy-factor-node" transform="translate(450 285)">
+              <rect x="-58" y="-30" width="116" height="60" rx="16"></rect>
+              <text y="7">E₂</text>
+            </g>
+
+            <g class="energy-factor-node" transform="translate(450 380)">
+              <rect x="-58" y="-30" width="116" height="60" rx="16"></rect>
+              <text y="7">E₃</text>
+            </g>
+          </g>
+
+          <!-- edges -->
+          <g class="fragment" data-fragment-index="4">
+            <line class="energy-edge" x1="170" y1="190" x2="450" y2="190" />
+            <line class="energy-edge" x1="170" y1="285" x2="450" y2="190" />
+
+            <line class="energy-edge" x1="170" y1="190" x2="450" y2="285" />
+            <line class="energy-edge" x1="170" y1="285" x2="450" y2="285" />
+            <line class="energy-edge" x1="170" y1="380" x2="450" y2="285" />
+
+            <line class="energy-edge" x1="170" y1="285" x2="450" y2="380" />
+            <line class="energy-edge" x1="170" y1="380" x2="450" y2="380" />
+          </g>
+
+          <text class="energy-side-label fragment" data-fragment-index="1" x="170" y="150">
+            variables
+          </text>
+
+          <text class="energy-side-label fragment" data-fragment-index="3" x="450" y="150">
+            constraint energies
+          </text>
+
+          <text class="energy-caption fragment" data-fragment-index="4" x="310" y="32">
+            each row of A becomes one local energy term
+          </text>
+
+        </svg>
+
+      </div>
+
+      <div class="energy-mrf-bridge fragment" data-fragment-index="5">
+        <span class="energy-bridge-prefix">Next:</span>
+        this factorized energy defines a graphical model over solutions
+        <span class="energy-bridge-arrow">→</span>
+        <strong>Markov random fields</strong>
+      </div>
+
+    </div>
+
+    <aside class="notes">
+      Before introducing Markov random fields formally, this slide shows that a binary
+      ILP can already be interpreted as an energy model over assignments. The objective
+      contributes a global linear score, while each constraint row contributes a local
+      extended-valued energy: zero when the row is satisfied and infinity otherwise.
+      This gives a natural factorization along the constraint nodes of the bipartite graph.
+    </aside>
+
+  </div>
+</section>

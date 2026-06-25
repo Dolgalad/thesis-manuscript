@@ -1,0 +1,277 @@
+<section class="slide learned-mrf-pipeline-slide"
+         data-section="Background"
+         data-title="Proposed pipeline: learned MRF predictor">
+
+  <div class="slide-body learning-context-body learned-mrf-body">
+
+    <div class="learning-pipeline learned-mrf-compact-pipeline">
+
+      <!-- Step 1: encoded BILP graph -->
+      <div class="learning-step fragment fade-up">
+        <p class="learning-label">Encoded input</p>
+
+        <svg class="learning-svg" viewBox="0 0 500 280" role="img"
+             aria-label="Variable-constraint graph encoded by a GNN">
+
+          <!-- variable nodes -->
+          <circle class="lc-variable" cx="95" cy="58" r="24" />
+          <text class="lc-label" x="95" y="66">x₁</text>
+
+          <circle class="lc-variable" cx="95" cy="125" r="24" />
+          <text class="lc-label" x="95" y="133">x₂</text>
+
+          <circle class="lc-variable" cx="95" cy="192" r="24" />
+          <text class="lc-label" x="95" y="200">x₃</text>
+
+          <circle class="lc-variable" cx="95" cy="250" r="24" />
+          <text class="lc-label" x="95" y="258">x₄</text>
+
+          <!-- constraint nodes -->
+          <rect class="lc-constraint" x="240" y="82" width="74" height="44" rx="11" />
+          <text class="lc-label" x="277" y="110">c₁</text>
+
+          <rect class="lc-constraint" x="240" y="188" width="74" height="44" rx="11" />
+          <text class="lc-label" x="277" y="216">c₂</text>
+
+          <!-- graph edges -->
+          <line class="lc-edge" x1="119" y1="58"  x2="240" y2="104" />
+          <line class="lc-edge" x1="119" y1="125" x2="240" y2="104" />
+          <line class="lc-edge" x1="119" y1="192" x2="240" y2="210" />
+          <line class="lc-edge" x1="119" y1="250" x2="240" y2="210" />
+          <line class="lc-edge" x1="119" y1="125" x2="240" y2="210" />
+
+          <!-- embeddings badge -->
+          <rect class="lc-feature-box" x="360" y="82" width="105" height="128" rx="18" />
+          <text class="lc-feature-text" x="412" y="116">GNN</text>
+          <text class="lc-feature-text small" x="412" y="148">embeddings</text>
+          <text class="lc-feature-text small" x="412" y="178">\(\nu_x,\nu_c\)</text>
+        </svg>
+
+        <h3>Variable-constraint graph</h3>
+
+        <p>
+          A GNN encodes variables and constraints into node embeddings.
+        </p>
+      </div>
+
+      <div class="learning-arrow fragment fade-up" aria-hidden="true">→</div>
+
+      <!-- Step 2: MRF parameter prediction -->
+      <div class="learning-step mrf-head-step fragment fade-up">
+        <p class="learning-label">MRF parameter head</p>
+
+        <svg class="learning-svg mrf-mapping-svg" viewBox="0 0 500 280" role="img"
+             aria-label="Variable and constraint embeddings mapped to MRF factor parameters">
+
+          <text class="mrf-head-title" x="250" y="26">predict factor log-potentials</text>
+
+          <!-- left: embeddings -->
+          <g transform="translate(52 54)">
+            <circle class="mrf-embed var" cx="40" cy="38" r="23" />
+            <text class="mrf-mini-text" x="40" y="45">\(\nu_{x_1}\)</text>
+
+            <circle class="mrf-embed var" cx="40" cy="98" r="23" />
+            <text class="mrf-mini-text" x="40" y="105">\(\nu_{x_2}\)</text>
+
+            <rect class="mrf-embed cons" x="16" y="145" width="48" height="40" rx="10" />
+            <text class="mrf-mini-text" x="40" y="170">\(\nu_{c_1}\)</text>
+          </g>
+
+          <!-- middle: heads -->
+          <g transform="translate(177 56)">
+            <rect class="mrf-head-box unary" x="0" y="0" width="128" height="58" rx="17" />
+            <text class="mrf-box-text" x="64" y="25">unary head</text>
+            <text class="mrf-box-text small" x="64" y="45">variables</text>
+
+            <rect class="mrf-head-box factor" x="0" y="104" width="128" height="66" rx="17" />
+            <text class="mrf-box-text" x="64" y="130">factor head</text>
+            <text class="mrf-box-text small" x="64" y="151">constraints</text>
+          </g>
+
+          <!-- arrows into heads -->
+          <path class="mrf-param-arrow" d="M115 92 C145 90, 157 86, 177 85" />
+          <path class="mrf-param-arrow" d="M115 152 C145 140, 158 112, 177 85" />
+
+          <path class="mrf-param-arrow constraint-map" d="M116 219 C145 219, 158 194, 177 193" />
+
+          <!-- right: parameters -->
+          <g transform="translate(345 54)">
+            <rect class="theta-table unary" x="0" y="0" width="112" height="64" rx="15" />
+            <text class="theta-text" x="56" y="25">\(\hat{\theta}_{i}\)</text>
+            <text class="theta-text small" x="56" y="47">unary</text>
+
+            <rect class="theta-table factor" x="0" y="102" width="112" height="92" rx="15" />
+            <text class="theta-text" x="56" y="24">\(\hat{\theta}_{\alpha}\)</text>
+            <text class="theta-text small" x="56" y="46">non-unary</text>
+            <text class="theta-grid" x="34" y="72">00</text>
+            <text class="theta-grid" x="78" y="72">11</text>
+          </g>
+
+          <!-- arrows to parameter tables -->
+          <path class="mrf-param-arrow" d="M305 85 C322 85, 328 86, 345 86" />
+          <path class="mrf-param-arrow constraint-map" d="M305 193 C323 193, 329 194, 345 194" />
+
+          <text class="mrf-assembled" x="250" y="256">
+            \( \hat{\theta} = \{\hat{\theta}_i\}_{i\in V} \cup \{\hat{\theta}_\alpha\}_{\alpha\in F} \)
+          </text>
+        </svg>
+
+        <h3>Predict MRF parameters</h3>
+
+        <p>
+          Variable embeddings give unary factors; constraint embeddings give interaction factors.
+        </p>
+      </div>
+
+      <div class="learning-arrow fragment fade-up" aria-hidden="true">→</div>
+
+      <!-- Step 3: LBP / NMF inference -->
+      <div class="learning-step inference-step fragment fade-up">
+        <p class="learning-label">Approximate inference</p>
+
+        <svg class="learning-svg inference-svg" viewBox="0 0 500 280" role="img"
+             aria-label="LBP or NMF produces marginals">
+
+          <text class="inference-title" x="250" y="30">inference on the learned MRF</text>
+
+          <!-- compact factor graph -->
+          <g transform="translate(56 58)">
+            <circle class="fg-var" cx="55" cy="42" r="22" />
+            <text class="lc-label" x="55" y="50">x₁</text>
+
+            <circle class="fg-var" cx="55" cy="112" r="22" />
+            <text class="lc-label" x="55" y="120">x₂</text>
+
+            <circle class="fg-var" cx="55" cy="182" r="22" />
+            <text class="lc-label" x="55" y="190">x₃</text>
+
+            <rect class="fg-factor unary-factor" x="148" y="20" width="52" height="40" rx="11" />
+            <text class="factor-symbol" x="174" y="45">\(\hat{\theta}_1\)</text>
+
+            <rect class="fg-factor" x="188" y="84" width="64" height="54" rx="13" />
+            <text class="factor-symbol" x="220" y="117">\(\hat{\theta}_\alpha\)</text>
+
+            <line class="fg-edge blue" x1="77" y1="42" x2="148" y2="40" />
+            <path id="inf-mrf-e1" class="fg-edge blue" d="M77 42 L188 111" />
+            <path id="inf-mrf-e2" class="fg-edge blue" d="M77 112 L188 111" />
+            <path id="inf-mrf-e3" class="fg-edge blue" d="M77 182 L188 111" />
+
+            <circle class="inf-dot blue" r="5">
+              <animateMotion dur="2.2s" repeatCount="indefinite">
+                <mpath href="#inf-mrf-e1" />
+              </animateMotion>
+            </circle>
+
+            <circle class="inf-dot orange" r="5">
+              <animateMotion dur="2.4s" repeatCount="indefinite" begin="0.5s">
+                <mpath href="#inf-mrf-e2" />
+              </animateMotion>
+            </circle>
+
+            <circle class="inf-dot blue" r="5">
+              <animateMotion dur="2.6s" repeatCount="indefinite" begin="0.9s">
+                <mpath href="#inf-mrf-e3" />
+              </animateMotion>
+            </circle>
+          </g>
+
+          <!-- inference methods -->
+          <g transform="translate(332 72)">
+            <rect class="inference-method" x="0" y="0" width="110" height="46" rx="14" />
+            <text class="method-text" x="55" y="29">LBP</text>
+
+            <text class="method-or" x="55" y="76">or</text>
+
+            <rect class="inference-method" x="0" y="100" width="110" height="46" rx="14" />
+            <text class="method-text" x="55" y="129">NMF</text>
+          </g>
+
+          <text class="marginal-text" x="250" y="238">\(\mu_i\), \(\mu_\alpha\)</text>
+          <text class="marginal-subtext" x="250" y="262">approximate marginals</text>
+        </svg>
+
+        <h3>Infer marginals</h3>
+
+        <p>
+          LBP or NMF converts learned potentials into structured beliefs.
+        </p>
+      </div>
+
+      <div class="learning-arrow fragment fade-up" aria-hidden="true">→</div>
+
+      <!-- Step 4: marginal-guided decoding -->
+      <div class="learning-step decoding-step fragment fade-up">
+        <p class="learning-label">Decoding</p>
+
+        <svg class="learning-svg decoding-svg" viewBox="0 0 500 280" role="img"
+             aria-label="Marginals and conditional marginals guide decoding">
+
+          <text class="decode-title" x="250" y="30">marginal-guided decoding</text>
+
+          <!-- marginal panel -->
+          <g transform="translate(52 66)">
+            <rect class="decode-score-box" x="0" y="0" width="170" height="144" rx="18" />
+            <text class="decode-score-title" x="85" y="28">\(\mu_i(1)\)</text>
+
+            <line class="decode-score-line" x1="42" y1="60" x2="135" y2="60" />
+            <circle class="decode-score-dot" cx="116" cy="60" r="7" />
+            <text class="decode-score-label" x="26" y="66">x₁</text>
+
+            <line class="decode-score-line" x1="42" y1="92" x2="135" y2="92" />
+            <circle class="decode-score-dot selected" cx="128" cy="92" r="7" />
+            <text class="decode-score-label" x="26" y="98">x₂</text>
+
+            <line class="decode-score-line" x1="42" y1="124" x2="135" y2="124" />
+            <circle class="decode-score-dot" cx="66" cy="124" r="7" />
+            <text class="decode-score-label" x="26" y="130">x₃</text>
+          </g>
+
+          <path class="decode-flow-arrow" d="M238 136 C266 136, 282 136, 310 136" />
+
+          <!-- conditional decoding panel -->
+          <g transform="translate(318 70)">
+            <circle class="repair-on selected" cx="36" cy="40" r="23" />
+            <text class="lc-label" x="36" y="48">1</text>
+
+            <circle class="repair-off" cx="101" cy="40" r="23" />
+            <text class="lc-label" x="101" y="48">?</text>
+
+            <circle class="repair-off" cx="166" cy="40" r="23" />
+            <text class="lc-label" x="166" y="48">?</text>
+
+            <text class="decode-fix-text" x="101" y="100">fix one variable</text>
+            <text class="decode-fix-subtext" x="101" y="127">condition MRF</text>
+            <text class="decode-cond-text" x="101" y="158">\(\mu_i(\cdot \mid x_A)\)</text>
+          </g>
+
+          <text class="decode-footer" x="250" y="244">
+            used later for Guided Decimation
+          </text>
+        </svg>
+
+        <h3>Decode with beliefs</h3>
+
+        <p>
+          Decoding can use marginals, then recompute conditional marginals after fixings.
+        </p>
+      </div>
+
+    </div>
+
+    <div class="learning-context-takeaway learned-mrf-takeaway fragment fade-up">
+      Proposed idea: predict factor potentials, infer marginals, then decode with structured information.
+    </div>
+
+    <aside class="notes">
+      This slide contrasts with the factorized baseline. The GNN encoder is still
+      present conceptually, but it is not shown as a separate block. Its output is a
+      set of embeddings on the variable-constraint graph. Variable embeddings are
+      mapped to unary factor parameters, while constraint embeddings are mapped to
+      non-unary factor parameters. The resulting learned MRF is passed to LBP or
+      NMF to compute marginals. During guided decimation, fixing variables gives a
+      conditioned MRF, and inference produces conditional marginals for the remaining
+      variables.
+    </aside>
+
+  </div>
+</section>

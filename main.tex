@@ -11,7 +11,7 @@
                a4paper,
 			  ]{report}
 
-%% Margins 
+%% Margins
 \usepackage[%a4paper,
 		%width=150mm,
 		top=25mm,
@@ -362,8 +362,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newif\ifprintversion
-% \printversiontrue   % uncomment for print version
-\printversionfalse    % PDF/screen version
+\printversiontrue   % uncomment for print version
+%\printversionfalse    % PDF/screen version
 
 \ifprintversion
   \newcommand{\thesisclearpage}{\cleardoublepage}
@@ -379,8 +379,8 @@
 %% Title pages
 \input{misc/titleLIPN}
 
-%\addcontentsline{toc}{chapter}{Thanks}
-%\input{misc/remerciements}
+\thesisclearpage
+\input{misc/thanks.tex}
 
 % %%% Abstract
 \thesisclearpage

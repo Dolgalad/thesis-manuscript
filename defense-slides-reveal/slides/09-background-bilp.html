@@ -1,0 +1,48 @@
+<section class="slide bilp-structured-slide"
+         data-section="Background"
+         data-title="Binary ILPs as structured prediction">
+
+  <div class="slide-body bilp-structured-body">
+
+    <div class="bilp-left-column">
+      <div class="bilp-problem-block">
+        <div class="bilp-equation">
+          \[
+          \begin{aligned}
+          \max_x \quad & c^\top x \\
+          \text{s.t.} \quad & Ax \leq b \\
+                             & x \in \{0,1\}^n
+          \end{aligned}
+          \]
+        </div>
+      </div>
+    </div>
+
+    <div class="bilp-right-column">
+
+      <div class="bilp-point fragment fade-up">
+        <strong>Decision variables</strong>
+        <span>\(x_i \in \{0,1\}\)</span>
+      </div>
+
+      <div class="bilp-point fragment fade-up">
+        <strong>Constraints</strong>
+        <span>\(Ax \leq b\) couples variables.</span>
+      </div>
+
+      <div class="bilp-point fragment fade-up">
+        <strong>Feasible set</strong>
+        <span>\(\mathcal X = \{x \in \{0,1\}^n : Ax \leq b\}\)</span>
+      </div>
+
+    </div>
+
+    <aside class="notes">
+      This slide introduces the basic structured prediction view of binary ILPs.
+      The BILP defines binary variables, a linear objective, and linear constraints.
+      The constraints define a feasible set, so the prediction is a complete binary
+      assignment rather than independent labels.
+    </aside>
+
+  </div>
+</section>

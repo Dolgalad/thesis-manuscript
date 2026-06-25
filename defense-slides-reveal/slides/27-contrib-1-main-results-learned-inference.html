@@ -1,0 +1,197 @@
+<section class="slide main-result-slide"
+         data-section="Contribution 1"
+         data-title="Main result: learned inference improves decoding">
+
+  <div class="slide-body main-result-body">
+
+    <div class="result-headline fragment fade-up">
+      <strong>Learned MRFs improve decoding quality</strong>
+      <span>especially when LBP marginals are used inside Guided Decimation.</span>
+    </div>
+
+    <div class="result-grid fragment fade-up">
+
+      <div class="result-table-card">
+        <p class="learning-label">Relative optimality gap ↓</p>
+
+        <table class="result-table">
+          <thead>
+            <tr>
+              <th>Dataset</th>
+              <th>DGN<br><span>EGG</span></th>
+              <th>CMRF-LBP<br><span>GD</span></th>
+              <th>CMRF-NMF<br><span>GD</span></th>
+              <th>LMRF-LBP<br><span>EGG</span></th>
+              <th>LMRF-LBP<br><span>GD</span></th>
+              <th>LMRF-NMF<br><span>GD</span></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td>SC-S</td>
+              <td>7.80</td>
+              <td>3.43</td>
+              <td>1.47</td>
+              <td>3.75</td>
+              <td class="best">1.00</td>
+              <td>3.21</td>
+            </tr>
+
+            <tr>
+              <td>SC-M</td>
+              <td>10.32</td>
+              <td>3.92</td>
+              <td>1.47</td>
+              <td>5.04</td>
+              <td class="best">0.27</td>
+              <td>3.10</td>
+            </tr>
+
+            <tr>
+              <td>MIS-S</td>
+              <td>22.11</td>
+              <td>4.35</td>
+              <td>5.47</td>
+              <td>15.58</td>
+              <td class="best">3.49</td>
+              <td>3.98</td>
+            </tr>
+
+            <tr>
+              <td>MIS-M</td>
+              <td>49.96</td>
+              <td>4.85</td>
+              <td>6.43</td>
+              <td>19.44</td>
+              <td class="best">3.08</td>
+              <td class="warning">32.77</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p class="result-caption">
+          Values are mean relative gaps in %. Lower is better.
+        </p>
+
+	<p class="result-caption runtime-title">
+          Runtime in seconds ↓
+        </p>
+        
+        <table class="result-table runtime-table">
+          <thead>
+            <tr>
+              <th>Dataset</th>
+              <th>DGN<br><span>EGG</span></th>
+              <th>CMRF-LBP<br><span>GD</span></th>
+              <th>CMRF-NMF<br><span>GD</span></th>
+              <th>LMRF-LBP<br><span>EGG</span></th>
+              <th>LMRF-LBP<br><span>GD</span></th>
+              <th>LMRF-NMF<br><span>GD</span></th>
+            </tr>
+          </thead>
+        
+          <tbody>
+            <tr>
+              <td>SC-S</td>
+              <td class="fastest">0.128</td>
+              <td>0.482</td>
+              <td>0.374</td>
+              <td>0.319</td>
+              <td>0.936</td>
+              <td>0.415</td>
+            </tr>
+        
+            <tr>
+              <td>SC-M</td>
+              <td class="fastest">0.590</td>
+              <td>1.725</td>
+              <td>1.222</td>
+              <td>1.156</td>
+              <td>3.839</td>
+              <td>1.586</td>
+            </tr>
+        
+            <tr>
+              <td>MIS-S</td>
+              <td class="fastest">0.822</td>
+              <td>1.380</td>
+              <td>1.248</td>
+              <td>1.046</td>
+              <td>1.360</td>
+              <td>1.042</td>
+            </tr>
+        
+            <tr>
+              <td>MIS-M</td>
+              <td>4.895</td>
+              <td>6.087</td>
+              <td>4.987</td>
+              <td class="fastest">4.146</td>
+              <td>4.885</td>
+              <td>4.709</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="result-reading-card">
+        <p class="learning-label">How to read the comparison</p>
+
+        <div class="reading-stack">
+
+          <div class="reading-item baseline-item">
+            <span>Factorized baseline</span>
+            <strong>DGN + EGG</strong>
+            <p>
+              Uses independent variable scores; fast, but weakest quality.
+            </p>
+          </div>
+
+          <div class="reading-item canonical-item">
+            <span>Canonical MRF</span>
+            <strong>CMRF + GD</strong>
+            <p>
+              Hand-crafted feasibility potentials already give strong structured marginals.
+            </p>
+          </div>
+
+          <div class="reading-item learned-item">
+            <span>Learned MRF</span>
+            <strong>LMRF-LBP + GD</strong>
+            <p>
+              Learned factor potentials + conditional marginals give the best gaps.
+            </p>
+          </div>
+
+          <div class="reading-item caution-item">
+            <span>Inference matters</span>
+            <strong>LBP vs NMF</strong>
+            <p>
+              NMF is competitive on Set Cover, but LBP is more robust on MIS.
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div class="result-takeaway fragment fade-up">
+      The gain does not come only from better neural scores: it comes from using
+      <strong>structured marginals</strong> and recomputing them during decoding.
+    </div>
+
+    <aside class="notes">
+      This slide should be read as a hierarchy of comparisons. First, the factorized
+      DGN baseline gives independent variable scores and is decoded with EGG. The
+      canonical MRF, even though hand-crafted, already improves substantially because
+      feasibility is represented inside the inference model. The learned MRF improves
+      further, especially with LBP and Guided Decimation. EGG uses one set of marginals
+      greedily, while GD repeatedly conditions on the partial solution and recomputes
+      beliefs. The NMF variant performs well on Set Cover, but it is less robust on MIS,
+      especially on the medium MIS instances where LMRF-NMF with GD degrades.
+    </aside>
+
+  </div>
+</section>

@@ -1,0 +1,374 @@
+/* src/styles/slides/16-mrf-inference-belief-propagation.css */
+
+.bp-body {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.bp-layout {
+  --formula-col: 52%;
+  --grid-gap: 1.2%;
+  --graph-col: 46.8%;
+
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--formula-col) var(--graph-col);
+  gap: var(--grid-gap);
+  width: 100%;
+  height: 100%;
+  max-height: 560px;
+  align-items: stretch;
+}
+
+.bp-formula-panel,
+.bp-graph-panel {
+  position: relative;
+  min-height: 0;
+  height: 100%;
+  padding: 0.55em;
+  border-radius: 22px;
+  background: white;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  box-shadow: 0 12px 26px rgba(15, 23, 42, 0.08);
+  box-sizing: border-box;
+}
+
+.bp-formula-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+.bp-graph-panel {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.bp-formula {
+  width: 100%;
+  font-size: 0.49em;
+  line-height: 1.28;
+  color: #0f172a;
+}
+
+.bp-kicker {
+  margin-bottom: 0.55em;
+  font-size: 0.72em;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(71, 85, 105, 0.9);
+}
+
+.bp-block {
+  padding: 0.3em 0.48em;
+  margin-bottom: 0.45em;
+  border-radius: 16px;
+  background: rgba(248, 250, 252, 0.95);
+  border: 1px solid rgba(148, 163, 184, 0.28);
+}
+
+.bp-main-card {
+  background: rgba(239, 246, 255, 0.95);
+  border-color: rgba(59, 130, 246, 0.25);
+}
+
+.bp-text {
+  margin: 0.35em 0 0.45em;
+  padding: 0.48em 0.68em;
+  border-radius: 16px;
+  background: rgba(255, 247, 237, 0.92);
+  border: 1px solid rgba(249, 115, 22, 0.22);
+  color: rgba(30, 41, 59, 0.92);
+  font-weight: 650;
+  font-size: 0.9em;
+}
+
+.bp-svg {
+  width: 100%;
+  height: 82%;
+  min-height: 0;
+  display: block;
+}
+
+/* SVG graph styling */
+
+.bp-edge {
+  stroke: rgba(71, 85, 105, 0.5);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.bp-var-node circle {
+  fill: rgba(219, 234, 254);
+  stroke: rgba(29, 78, 216, 0.9);
+  stroke-width: 4;
+}
+
+.bp-factor-node rect {
+  fill: rgba(255, 237, 213);
+  stroke: rgba(194, 65, 12, 0.9);
+  stroke-width: 4;
+}
+
+.bp-var-node text,
+.bp-factor-node text {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 26px;
+  font-weight: 800;
+  fill: #0f172a;
+}
+
+.bp-side-label {
+  text-anchor: middle;
+  font-size: 21px;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  fill: rgba(71, 85, 105, 0.82);
+}
+
+/* Message arrows */
+
+.bp-message {
+  fill: none;
+  stroke-width: 5;
+  stroke-linecap: round;
+  marker-end: url(#arrow);
+}
+
+.bp-message-blue {
+  stroke: rgba(29, 78, 216, 0.78);
+}
+
+.bp-message-orange {
+  stroke: rgba(194, 65, 12, 0.78);
+}
+
+.bp-message-label {
+  text-anchor: middle;
+  font-size: 18px;
+  font-weight: 800;
+  fill: rgba(30, 41, 59, 0.82);
+  paint-order: stroke;
+  stroke: rgba(255, 255, 255, 0.92);
+  stroke-width: 5px;
+}
+
+/* Exact / loopy cards */
+
+.bp-exact-card {
+  fill: rgba(240, 253, 250, 0.96);
+  stroke: rgba(20, 184, 166, 0.48);
+  stroke-width: 3;
+}
+
+.bp-loopy-card {
+  fill: rgba(255, 247, 237, 0.96);
+  stroke: rgba(249, 115, 22, 0.48);
+  stroke-width: 3;
+}
+
+.bp-exact-title,
+.bp-loopy-title {
+  text-anchor: middle;
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  fill: rgba(71, 85, 105, 0.9);
+}
+
+.bp-exact-text {
+  text-anchor: middle;
+  font-size: 20px;
+  font-weight: 850;
+  fill: rgba(15, 118, 110, 0.95);
+}
+
+.bp-loopy-text {
+  text-anchor: middle;
+  font-size: 20px;
+  font-weight: 850;
+  fill: rgba(194, 65, 12, 0.95);
+}
+
+/* Bottom bridge */
+
+.bp-bottom-bridge {
+  position: absolute;
+  left: 7%;
+  right: 7%;
+  bottom: 0.45em;
+  z-index: 20;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45em;
+
+  padding: 0.55em 0.9em;
+  border-radius: 999px;
+
+  background: rgba(248, 250, 252, 0.96);
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  box-shadow: 0 12px 26px rgba(15, 23, 42, 0.10);
+
+  color: #0f172a;
+  font-size: 0.46em;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.bp-bridge-prefix {
+  font-weight: 850;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(71, 85, 105, 0.85);
+}
+
+.bp-bridge-arrow {
+  color: rgba(194, 65, 12, 0.9);
+  font-weight: 900;
+}
+
+.bp-bottom-bridge strong {
+  color: rgba(29, 78, 216, 0.95);
+  font-weight: 900;
+}
+
+/* Fragment emphasis */
+
+.bp-slide:has(.bp-main-card.visible) .bp-main-card {
+  outline: 2px solid rgba(59, 130, 246, 0.24);
+}
+
+.bp-slide:has(.bp-text.visible) .bp-text {
+  outline: 2px solid rgba(249, 115, 22, 0.24);
+}
+
+.bp-slide:has(.bp-bottom-bridge.visible) .bp-bottom-bridge {
+  outline: 2px solid rgba(29, 78, 216, 0.18);
+}
+
+/* Animated BP messages */
+
+.bp-message-path {
+  fill: none;
+  stroke-width: 4.5;
+  stroke-linecap: round;
+  opacity: 0.72;
+}
+
+.bp-message-v2f {
+  stroke: rgba(29, 78, 216, 0.46);
+}
+
+.bp-message-f2v {
+  stroke: rgba(194, 65, 12, 0.42);
+}
+
+.bp-message-dot {
+  filter: drop-shadow(0 2px 4px rgba(15, 23, 42, 0.22));
+}
+
+.bp-message-dot-v2f {
+  fill: rgba(29, 78, 216, 0.95);
+}
+
+.bp-message-dot-f2v {
+  fill: rgba(194, 65, 12, 0.92);
+}
+
+.bp-message-label {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 18px;
+  font-weight: 850;
+  fill: rgba(29, 78, 216, 0.92);
+  paint-order: stroke;
+  stroke: rgba(255, 255, 255, 0.94);
+  stroke-width: 5px;
+}
+
+.bp-message-label-f2v {
+  fill: rgba(194, 65, 12, 0.95);
+}
+
+
+.bp-graph-caption {
+  text-anchor: middle;
+  font-size: 20px;
+  font-weight: 750;
+  fill: rgba(30, 41, 59, 0.82);
+}
+
+.bp-f2v-card {
+  font-size: 0.86em;
+  padding-left: 0.34em;
+  padding-right: 0.34em;
+}
+
+.bp-f2v-card .MathJax,
+.bp-f2v-card mjx-container {
+  font-size: 0.86em !important;
+}
+
+.bp-exact-loopy-row {
+  height: 18%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.55em;
+  align-items: stretch;
+  margin-top: 0.25em;
+}
+
+.bp-exact-loopy-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.32);
+  box-sizing: border-box;
+
+  text-align: center;
+  line-height: 1.1;
+}
+
+.bp-exact-html-card {
+  background: rgba(240, 253, 250, 0.96);
+  border-color: rgba(20, 184, 166, 0.48);
+}
+
+.bp-loopy-html-card {
+  background: rgba(255, 247, 237, 0.96);
+  border-color: rgba(249, 115, 22, 0.48);
+}
+
+.bp-card-title {
+  margin-bottom: 0.2em;
+  font-size: 0.34em;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(71, 85, 105, 0.9);
+}
+
+.bp-card-text {
+  font-size: 0.38em;
+  font-weight: 850;
+}
+
+.bp-exact-html-card .bp-card-text {
+  color: rgba(15, 118, 110, 0.95);
+}
+
+.bp-loopy-html-card .bp-card-text {
+  color: rgba(194, 65, 12, 0.95);
+}

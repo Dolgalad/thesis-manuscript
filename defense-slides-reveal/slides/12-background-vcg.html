@@ -1,0 +1,148 @@
+<section class="slide vcg-slide"
+         data-section="Background"
+         data-title="Variable-constraint graph and GNNs">
+
+  <div class="slide-body vcg-body">
+
+    <p class="vcg-top-citation fragment" data-fragment-index="1">
+      Variable-constraint bipartite graph representation introduced by
+      <span data-cite="gasse_exact_2019"></span>.
+    </p>
+
+    <div class="vcg-layout">
+
+      <div class="vcg-lp-panel">
+        <div class="vcg-lp-formula">
+
+          <div class="lp-line">
+            <span>\(\max_x\)</span>
+            <span>\(4\)</span><span class="lp-var lp-var-1">\(x_1\)</span>
+            <span>\(+2\)</span><span class="lp-var lp-var-2">\(x_2\)</span>
+            <span>\(+3\)</span><span class="lp-var lp-var-3">\(x_3\)</span>
+          </div>
+
+          <div class="lp-line lp-constraint lp-cons-1">
+            \(2x_1 + x_2 \leq 4\)
+          </div>
+
+          <div class="lp-line lp-constraint lp-cons-2">
+            \(x_1 + 3x_2 + x_3 \leq 5\)
+          </div>
+
+          <div class="lp-line lp-constraint lp-cons-3">
+            \(2x_2 + 4x_3 \leq 6\)
+          </div>
+
+          <div class="lp-line">
+            \(x \in \{0,1\}^3\)
+          </div>
+        </div>
+      </div>
+
+      <div class="vcg-graph-panel">
+
+        <svg class="vcg-svg" viewBox="0 0 620 430" role="img"
+             aria-label="Variable-constraint graph for a binary linear program">
+
+          <!-- coefficient edges: one edge for each nonzero coefficient -->
+          <g class="fragment" data-fragment-index="3">
+            <line class="vcg-edge" x1="180" y1="95" x2="440" y2="95" />
+            <line class="vcg-edge" x1="180" y1="95" x2="440" y2="215" />
+
+            <line class="vcg-edge" x1="180" y1="215" x2="440" y2="95" />
+            <line class="vcg-edge" x1="180" y1="215" x2="440" y2="215" />
+            <line class="vcg-edge" x1="180" y1="215" x2="440" y2="335" />
+
+            <line class="vcg-edge" x1="180" y1="335" x2="440" y2="215" />
+            <line class="vcg-edge" x1="180" y1="335" x2="440" y2="335" />
+          </g>
+
+          <!-- edge feature labels: nonzero coefficients -->
+          <g class="vcg-edge-features fragment" data-fragment-index="4">
+            <text x="300" y="80">2</text>
+            <text x="298" y="145">1</text>
+            <text x="298" y="120">1</text>
+            <text x="305" y="210">3</text>
+            <text x="302" y="275">2</text>
+            <text x="300" y="300">1</text>
+            <text x="302" y="355">4</text>
+          </g>
+
+          <!-- variable nodes -->
+          <g class="fragment" data-fragment-index="1">
+            <g class="vcg-var-node" transform="translate(180 95)">
+              <circle r="34"></circle>
+              <text y="8">x₁</text>
+              <text class="vcg-feature fragment" data-fragment-index="4" y="-48">c₁=4</text>
+            </g>
+
+            <g class="vcg-var-node" transform="translate(180 215)">
+              <circle r="34"></circle>
+              <text y="8">x₂</text>
+              <text class="vcg-feature fragment" data-fragment-index="4" y="-48">c₂=2</text>
+            </g>
+
+            <g class="vcg-var-node" transform="translate(180 335)">
+              <circle r="34"></circle>
+              <text y="8">x₃</text>
+              <text class="vcg-feature fragment" data-fragment-index="4" y="-48">c₃=3</text>
+            </g>
+          </g>
+
+          <!-- constraint nodes -->
+          <g class="fragment" data-fragment-index="2">
+            <g class="vcg-cons-node" transform="translate(440 95)">
+              <rect x="-42" y="-28" width="84" height="56" rx="14"></rect>
+              <text y="8">a₁</text>
+              <text class="vcg-feature fragment" data-fragment-index="4" y="-44">b₁=4</text>
+            </g>
+
+            <g class="vcg-cons-node" transform="translate(440 215)">
+              <rect x="-42" y="-28" width="84" height="56" rx="14"></rect>
+              <text y="8">a₂</text>
+              <text class="vcg-feature fragment" data-fragment-index="4" y="-44">b₂=5</text>
+            </g>
+
+            <g class="vcg-cons-node" transform="translate(440 335)">
+              <rect x="-42" y="-28" width="84" height="56" rx="14"></rect>
+              <text y="8">a₃</text>
+              <text class="vcg-feature fragment" data-fragment-index="4" y="-44">b₃=6</text>
+            </g>
+          </g>
+
+          <text class="vcg-side-label fragment" data-fragment-index="1" x="180" y="30">
+            variables
+          </text>
+
+          <text class="vcg-side-label fragment" data-fragment-index="2" x="440" y="30">
+            constraints
+          </text>
+
+        </svg>
+
+
+      </div>
+
+      <!-- Animated copies. These are positioned relative to the whole slide layout,
+           not to one panel, so their origins and targets stay aligned. -->
+      <div class="vcg-fly-layer" aria-hidden="true">
+        <span class="fly-var fly-var-1 fragment" data-fragment-index="1">\(x_1\)</span>
+        <span class="fly-var fly-var-2 fragment" data-fragment-index="1">\(x_2\)</span>
+        <span class="fly-var fly-var-3 fragment" data-fragment-index="1">\(x_3\)</span>
+
+        <span class="fly-cons fly-cons-1 fragment" data-fragment-index="2">\(2x_1+x_2\leq4\)</span>
+        <span class="fly-cons fly-cons-2 fragment" data-fragment-index="2">\(x_1+3x_2+x_3\leq5\)</span>
+        <span class="fly-cons fly-cons-3 fragment" data-fragment-index="2">\(2x_2+4x_3\leq6\)</span>
+      </div>
+
+    </div>
+
+    <aside class="notes">
+      This slide introduces the variable-constraint graph. Variable nodes correspond
+      to decision variables, constraint nodes correspond to linear constraints, and
+      edges indicate nonzero coefficients in the constraint matrix. This graph is the
+      input representation used by the GNN.
+    </aside>
+
+  </div>
+</section>

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>PhD Defense</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Reveal.js core CSS -->
+  <link rel="stylesheet" href="node_modules/reveal.js/dist/reveal.css">
+
+  <!-- Reveal.js theme -->
+  <link rel="stylesheet" href="node_modules/reveal.js/dist/theme/white.css">
+
+  <!-- Code highlighting, optional but useful later -->
+  <link rel="stylesheet" href="node_modules/reveal.js/plugin/highlight/monokai.css">
+
+  <!-- Your custom CSS -->
+  <link rel="stylesheet" href="css/slides.css">
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="section-banner" id="section-banner" aria-hidden="true">
+      <div class="section-banner-inner">
+        <p id="banner-section">Section</p>
+        <h2 id="banner-title">Slide title</h2>
+      </div>
+    </div>
+
+    <div class="slides">
+	    {{SLIDES}}
+    </div>
+  </div>
+
+  <!-- Reveal.js scripts -->
+  <script src="node_modules/reveal.js/dist/reveal.js"></script>
+  <script src="node_modules/reveal.js/plugin/notes/notes.js"></script>
+  <script src="node_modules/reveal.js/plugin/math/math.js"></script>
+  <script src="node_modules/reveal.js/plugin/highlight/highlight.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bibtex-js-parser/umd/bibtex-js-parser.js"></script>
+  <script src="js/bibliography.js"></script>
+
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: true,
+      transition: "slide",
+      overview: true,
+
+      plugins: [
+        RevealNotes,
+        RevealMath.KaTeX,
+        RevealHighlight
+      ]
+    });
+  </script>
+  <script>
+    function updateSectionBanner(event) {
+      const slide = event.currentSlide || Reveal.getCurrentSlide();
+  
+      const banner = document.getElementById("section-banner");
+      const section = document.getElementById("banner-section");
+      const title = document.getElementById("banner-title");
+  
+      if (!slide || slide.classList.contains("title-slide")) {
+        document.body.classList.add("hide-section-banner");
+        return;
+      }
+  
+      document.body.classList.remove("hide-section-banner");
+  
+      section.textContent = slide.dataset.section || "";
+      title.textContent = slide.dataset.title || "";
+    }
+  
+    Reveal.on("ready", updateSectionBanner);
+    Reveal.on("slidechanged", updateSectionBanner);
+  </script>
+</body>
+</html>

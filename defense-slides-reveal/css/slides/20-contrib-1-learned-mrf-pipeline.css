@@ -1,0 +1,310 @@
+/* src/styles/slides/14-learned-mrf-pipeline.css */
+
+.learned-mrf-compact-pipeline {
+  grid-template-columns: 1fr auto 1.08fr auto 1fr auto 1fr;
+  gap: 0.8rem;
+  height: min(64vh, 520px);
+}
+
+.learned-mrf-pipeline-slide .learning-step {
+  padding: 0.9rem 0.9rem;
+  border-radius: 24px;
+}
+
+.learned-mrf-pipeline-slide .learning-step h3 {
+  font-size: clamp(0.68em, 1vw, 0.9em);
+}
+
+.learned-mrf-pipeline-slide .learning-step p {
+  font-size: clamp(0.44em, 0.7vw, 0.58em);
+}
+
+.learned-mrf-pipeline-slide .learning-label {
+  font-size: 0.44em;
+}
+
+.learned-mrf-pipeline-slide .learning-arrow {
+  font-size: 1.45em;
+}
+
+/* MRF parameter prediction block */
+
+.mrf-head-step {
+  background: rgba(240, 247, 255, 0.92);
+  border-color: rgba(45, 80, 150, 0.24);
+}
+
+.mrf-head-title,
+.inference-title,
+.decode-title {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 19px;
+  font-weight: 850;
+  fill: rgba(38, 50, 70, 0.82);
+}
+
+.mrf-embed.var {
+  fill: rgba(219, 234, 254, 0.96);
+  stroke: rgba(45, 80, 150, 0.72);
+  stroke-width: 4;
+}
+
+.mrf-embed.cons {
+  fill: rgba(255, 240, 220, 0.96);
+  stroke: rgba(160, 105, 35, 0.72);
+  stroke-width: 4;
+}
+
+.mrf-mini-text {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 13px;
+  font-weight: 800;
+  fill: #263246;
+}
+
+.mrf-head-box {
+  fill: rgba(255, 255, 255, 0.88);
+  stroke-width: 3.5;
+}
+
+.mrf-head-box.unary {
+  stroke: rgba(45, 80, 150, 0.52);
+}
+
+.mrf-head-box.factor {
+  stroke: rgba(160, 105, 35, 0.56);
+}
+
+.mrf-box-text,
+.theta-text {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 17px;
+  font-weight: 850;
+  fill: #263246;
+}
+
+.mrf-box-text.small,
+.theta-text.small {
+  font-size: 14px;
+  fill: rgba(38, 50, 70, 0.66);
+}
+
+.mrf-param-arrow {
+  fill: none;
+  stroke: rgba(45, 80, 150, 0.42);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.mrf-param-arrow.constraint-map {
+  stroke: rgba(160, 105, 35, 0.46);
+}
+
+.theta-table {
+  fill: rgba(255, 255, 255, 0.92);
+  stroke-width: 3.5;
+}
+
+.theta-table.unary {
+  stroke: rgba(45, 80, 150, 0.5);
+}
+
+.theta-table.factor {
+  stroke: rgba(160, 105, 35, 0.56);
+}
+
+.theta-grid {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 14px;
+  font-weight: 800;
+  fill: rgba(38, 50, 70, 0.76);
+}
+
+.mrf-assembled {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 17px;
+  font-weight: 850;
+  fill: rgba(38, 50, 70, 0.82);
+}
+
+/* Inference block */
+
+.inference-step {
+  background: rgba(245, 243, 255, 0.9);
+  border-color: rgba(109, 40, 217, 0.18);
+}
+
+.fg-var {
+  fill: rgba(219, 234, 254, 0.96);
+  stroke: rgba(45, 80, 150, 0.72);
+  stroke-width: 4;
+}
+
+.fg-factor {
+  fill: rgba(255, 240, 220, 0.96);
+  stroke: rgba(160, 105, 35, 0.72);
+  stroke-width: 4;
+}
+
+.unary-factor {
+  fill: rgba(219, 234, 254, 0.7);
+  stroke: rgba(45, 80, 150, 0.58);
+}
+
+.factor-symbol {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 13px;
+  font-weight: 850;
+  fill: #263246;
+}
+
+.fg-edge {
+  fill: none;
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.fg-edge.blue {
+  stroke: rgba(45, 80, 150, 0.46);
+}
+
+.inf-dot.blue {
+  fill: rgba(45, 80, 150, 0.9);
+}
+
+.inf-dot.orange {
+  fill: rgba(160, 105, 35, 0.9);
+}
+
+.inference-method {
+  fill: rgba(255, 255, 255, 0.9);
+  stroke: rgba(109, 40, 217, 0.34);
+  stroke-width: 3.5;
+}
+
+.method-text {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 22px;
+  font-weight: 900;
+  fill: rgba(76, 29, 149, 0.82);
+}
+
+.method-or {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 16px;
+  font-weight: 800;
+  fill: rgba(76, 29, 149, 0.48);
+}
+
+.marginal-text {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 22px;
+  font-weight: 900;
+  fill: rgba(38, 50, 70, 0.86);
+}
+
+.marginal-subtext {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 15px;
+  font-weight: 800;
+  fill: rgba(38, 50, 70, 0.58);
+}
+
+/* Decoding block */
+
+.decoding-step {
+  background: rgba(240, 253, 244, 0.9);
+  border-color: rgba(22, 101, 52, 0.2);
+}
+
+.decode-score-box {
+  fill: rgba(255, 255, 255, 0.9);
+  stroke: rgba(22, 101, 52, 0.24);
+  stroke-width: 3.5;
+}
+
+.decode-score-title {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 20px;
+  font-weight: 900;
+  fill: rgba(22, 101, 52, 0.76);
+}
+
+.decode-score-line {
+  stroke: rgba(38, 50, 70, 0.2);
+  stroke-width: 7;
+  stroke-linecap: round;
+}
+
+.decode-score-dot {
+  fill: rgba(45, 80, 150, 0.72);
+}
+
+.decode-score-dot.selected {
+  fill: rgba(22, 101, 52, 0.86);
+}
+
+.decode-score-label {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 15px;
+  font-weight: 850;
+  fill: rgba(38, 50, 70, 0.72);
+}
+
+.decode-flow-arrow {
+  fill: none;
+  stroke: rgba(22, 101, 52, 0.36);
+  stroke-width: 7;
+  stroke-linecap: round;
+}
+
+.repair-on.selected {
+  fill: rgba(220, 252, 231, 0.96);
+  stroke: rgba(22, 101, 52, 0.72);
+}
+
+.decode-fix-text,
+.decode-fix-subtext,
+.decode-cond-text,
+.decode-footer {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-weight: 850;
+}
+
+.decode-fix-text {
+  font-size: 17px;
+  fill: rgba(38, 50, 70, 0.72);
+}
+
+.decode-fix-subtext {
+  font-size: 15px;
+  fill: rgba(22, 101, 52, 0.68);
+}
+
+.decode-cond-text {
+  font-size: 18px;
+  fill: rgba(22, 101, 52, 0.78);
+}
+
+.decode-footer {
+  font-size: 17px;
+  fill: rgba(22, 101, 52, 0.76);
+}
+
+.learned-mrf-takeaway {
+  background: rgba(240, 253, 244, 0.96);
+  border: 1px solid rgba(22, 101, 52, 0.18);
+}

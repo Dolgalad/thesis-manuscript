@@ -1,0 +1,477 @@
+/* src/styles/slides/25-contrib-1-guided-decimation-intuition.css */
+
+.guided-decimation-slide .guided-decimation-body {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 0.72rem;
+  height: 100%;
+  min-height: 0;
+}
+
+.gd-intuition-grid {
+  display: grid;
+  grid-template-columns: 0.95fr 1.22fr;
+  gap: 0.9rem;
+  min-height: 0;
+}
+
+.gd-graph-card,
+.gd-state-card {
+  min-height: 0;
+  padding: 0.72rem 0.78rem;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(38, 50, 70, 0.12);
+  box-shadow: 0 16px 36px rgba(38, 50, 70, 0.055);
+}
+
+.gd-graph-card {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  gap: 0.26rem;
+  background: rgba(240, 247, 255, 0.92);
+  border-color: rgba(45, 80, 150, 0.2);
+}
+
+.gd-state-card {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: 0.26rem;
+  background: rgba(240, 253, 244, 0.92);
+  border-color: rgba(22, 101, 52, 0.2);
+}
+
+.gd-graph-card h3,
+.gd-state-card h3 {
+  margin: 0;
+  color: rgba(38, 50, 70, 0.88);
+  font-size: clamp(0.66em, 0.92vw, 0.84em);
+  font-weight: 850;
+  line-height: 1.05;
+}
+
+.gd-graph-card p:not(.learning-label) {
+  margin: 0;
+  color: rgba(38, 50, 70, 0.62);
+  font-size: clamp(0.36em, 0.56vw, 0.46em);
+  font-weight: 650;
+  line-height: 1.12;
+}
+
+/* MIS graph ------------------------------------------------------------- */
+
+.gd-mis-svg {
+  width: 100%;
+  height: min(42vh, 330px);
+  min-height: 240px;
+  overflow: visible;
+}
+
+.mis-edge {
+  stroke: rgba(38, 50, 70, 0.24);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.mis-node circle {
+  fill: rgba(255, 255, 255, 0.94);
+  stroke-width: 4;
+}
+
+.mis-node text {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  fill: rgba(38, 50, 70, 0.82);
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.mis-node.base circle {
+  stroke: rgba(45, 80, 150, 0.38);
+}
+
+.mis-node.selected circle {
+  fill: rgba(220, 252, 231, 0.96);
+  stroke: rgba(22, 101, 52, 0.72);
+}
+
+.mis-node.removed circle {
+  fill: rgba(254, 242, 242, 0.96);
+  stroke: rgba(185, 28, 28, 0.48);
+}
+
+.mis-node.removed text {
+  fill: rgba(185, 28, 28, 0.7);
+}
+
+.selected-halo {
+  fill: none;
+  stroke: rgba(22, 101, 52, 0.2);
+  stroke-width: 8;
+}
+
+.legend-dot {
+  stroke: none;
+}
+
+.selected-dot {
+  fill: rgba(22, 101, 52, 0.72);
+}
+
+.removed-dot {
+  fill: rgba(185, 28, 28, 0.5);
+}
+
+.candidate-dot {
+  fill: rgba(45, 80, 150, 0.52);
+}
+
+.legend-text {
+  dominant-baseline: middle;
+  fill: rgba(38, 50, 70, 0.62);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+/* Graph state controlled by solver-state fragments --------------------- */
+/* No transition here: the graph content simply changes between fragments. */
+
+.gd-colored-state,
+.gd-colored-legend {
+  opacity: 0;
+  transition: none !important;
+}
+
+/* Reveal marks the active state block with .current-fragment.
+   From state 2 onward, show the committed graph state. */
+.guided-decimation-slide:has(.gd-state-2.current-fragment) .gd-colored-state,
+.guided-decimation-slide:has(.gd-state-2.current-fragment) .gd-colored-legend,
+.guided-decimation-slide:has(.gd-state-3.current-fragment) .gd-colored-state,
+.guided-decimation-slide:has(.gd-state-3.current-fragment) .gd-colored-legend,
+.guided-decimation-slide:has(.gd-state-3.visible) .gd-colored-state,
+.guided-decimation-slide:has(.gd-state-3.visible) .gd-colored-legend {
+  opacity: 1;
+}
+
+/* Solver state layers --------------------------------------------------- */
+
+.gd-state-layers {
+  position: relative;
+  min-height: 0;
+  height: 100%;
+}
+
+.gd-state-box {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-rows: auto auto auto minmax(0, 1fr) auto;
+  gap: 0.3rem;
+  padding: 0.56rem 0.62rem;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid rgba(22, 101, 52, 0.16);
+  box-shadow: 0 10px 24px rgba(38, 50, 70, 0.04);
+}
+
+.gd-state-2 {
+  background: rgba(255, 247, 237, 0.94);
+  border-color: rgba(160, 105, 35, 0.24);
+}
+
+.gd-state-3 {
+  background: rgba(245, 243, 255, 0.94);
+  border-color: rgba(109, 40, 217, 0.22);
+}
+
+.gd-state-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.gd-state-header span {
+  color: rgba(22, 101, 52, 0.72);
+  font-size: clamp(0.34em, 0.52vw, 0.42em);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.gd-state-2 .gd-state-header span {
+  color: rgba(160, 105, 35, 0.78);
+}
+
+.gd-state-3 .gd-state-header span {
+  color: rgba(76, 29, 149, 0.72);
+}
+
+.gd-state-header strong {
+  color: rgba(38, 50, 70, 0.78);
+  font-size: clamp(0.37em, 0.56vw, 0.46em);
+  font-weight: 900;
+}
+
+.partial-solution {
+  padding: 0.34rem 0.45rem;
+  border-radius: 13px;
+  background: rgba(240, 253, 244, 0.75);
+  color: rgba(38, 50, 70, 0.72);
+  font-size: clamp(0.37em, 0.56vw, 0.46em);
+  font-weight: 800;
+  text-align: center;
+}
+
+.selected-partial {
+  background: rgba(220, 252, 231, 0.86);
+  color: rgba(22, 101, 52, 0.82);
+}
+
+.conditioned-partial {
+  background: rgba(255, 255, 255, 0.76);
+  color: rgba(76, 29, 149, 0.78);
+}
+
+.score-caption {
+  color: rgba(38, 50, 70, 0.56);
+  font-size: clamp(0.32em, 0.48vw, 0.4em);
+  font-weight: 800;
+  text-align: center;
+}
+
+/* Score table ----------------------------------------------------------- */
+
+.score-table {
+  display: grid;
+  align-content: start;
+  gap: 0.22rem;
+  min-height: 0;
+}
+
+.score-table.conditioned {
+  gap: 0.32rem;
+  align-content: center;
+}
+
+.score-row {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr) 7.5rem;
+  align-items: center;
+  gap: 0.36rem;
+  padding: 0.25rem 0.34rem;
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.84);
+  border: 1.5px solid rgba(38, 50, 70, 0.08);
+}
+
+.score-row.selected-score {
+  border-color: rgba(22, 101, 52, 0.34);
+  background: rgba(220, 252, 231, 0.7);
+}
+
+.score-row span,
+.score-row strong {
+  color: rgba(38, 50, 70, 0.78);
+  font-size: clamp(0.32em, 0.49vw, 0.4em);
+  font-weight: 850;
+}
+
+.score-row strong {
+  justify-self: end;
+  color: rgba(38, 50, 70, 0.68);
+}
+
+.score-track {
+  height: 0.43rem;
+  border-radius: 999px;
+  background: rgba(38, 50, 70, 0.12);
+  overflow: hidden;
+}
+
+.score-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: rgba(22, 101, 52, 0.62);
+}
+
+.score-91 {
+  width: 91%;
+}
+
+.score-73 {
+  width: 73%;
+}
+
+.score-62 {
+  width: 62%;
+}
+
+.score-58 {
+  width: 58%;
+}
+
+.score-49 {
+  width: 49%;
+}
+
+.score-41 {
+  width: 41%;
+}
+
+.score-36 {
+  width: 36%;
+}
+
+/* Commit update --------------------------------------------------------- */
+
+.candidate-update-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.42rem;
+  align-content: center;
+  min-height: 0;
+}
+
+.update-card {
+  display: grid;
+  gap: 0.14rem;
+  padding: 0.5rem 0.6rem;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.86);
+  border: 2px solid rgba(160, 105, 35, 0.18);
+  text-align: center;
+}
+
+.update-card span {
+  color: rgba(38, 50, 70, 0.54);
+  font-size: clamp(0.32em, 0.48vw, 0.4em);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.update-card strong {
+  color: rgba(38, 50, 70, 0.76);
+  font-size: clamp(0.42em, 0.62vw, 0.52em);
+  font-weight: 900;
+}
+
+.selected-update {
+  border-color: rgba(22, 101, 52, 0.3);
+  background: rgba(220, 252, 231, 0.74);
+}
+
+.selected-update strong {
+  color: rgba(22, 101, 52, 0.82);
+}
+
+.removed-update {
+  border-color: rgba(185, 28, 28, 0.24);
+  background: rgba(254, 242, 242, 0.76);
+}
+
+.removed-update strong {
+  color: rgba(185, 28, 28, 0.74);
+}
+
+.candidate-update {
+  border-color: rgba(45, 80, 150, 0.2);
+  background: rgba(240, 247, 255, 0.8);
+}
+
+.candidate-update strong {
+  color: rgba(45, 80, 150, 0.78);
+}
+
+/* Chips ---------------------------------------------------------------- */
+
+.decision-chip,
+.condition-chip {
+  justify-self: center;
+  padding: 0.34rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(220, 252, 231, 0.9);
+  border: 1px solid rgba(22, 101, 52, 0.22);
+  color: rgba(22, 101, 52, 0.78);
+  font-size: clamp(0.33em, 0.5vw, 0.42em);
+  font-weight: 900;
+  text-align: center;
+}
+
+.condition-chip {
+  background: rgba(255, 255, 255, 0.82);
+  border-color: rgba(160, 105, 35, 0.22);
+  color: rgba(160, 105, 35, 0.78);
+}
+
+.conditioned-chip {
+  background: rgba(245, 243, 255, 0.9);
+  border-color: rgba(109, 40, 217, 0.2);
+  color: rgba(76, 29, 149, 0.76);
+}
+
+/* Bottom takeaway ------------------------------------------------------- */
+
+.gd-takeaway {
+  padding: 0.55rem 0.85rem;
+  border-radius: 20px;
+  background: rgba(255, 247, 237, 0.94);
+  border: 1px solid rgba(160, 105, 35, 0.18);
+  color: rgba(38, 50, 70, 0.68);
+  font-size: clamp(0.4em, 0.62vw, 0.52em);
+  font-weight: 760;
+  text-align: center;
+}
+
+.gd-takeaway strong {
+  color: rgba(160, 105, 35, 0.82);
+  font-weight: 900;
+}
+
+/* Small-screen safety --------------------------------------------------- */
+
+@media (max-height: 760px) {
+  .guided-decimation-slide .guided-decimation-body {
+    gap: 0.48rem;
+  }
+
+  .gd-graph-card,
+  .gd-state-card {
+    padding: 0.58rem 0.65rem;
+  }
+
+  .gd-mis-svg {
+    height: 230px;
+    min-height: 210px;
+  }
+
+  .gd-state-box {
+    padding: 0.42rem 0.5rem;
+    gap: 0.22rem;
+  }
+
+  .score-table {
+    gap: 0.16rem;
+  }
+
+  .score-row {
+    padding-top: 0.18rem;
+    padding-bottom: 0.18rem;
+  }
+
+  .candidate-update-grid {
+    gap: 0.3rem;
+  }
+
+  .update-card {
+    padding: 0.4rem 0.5rem;
+  }
+
+  .partial-solution,
+  .decision-chip,
+  .condition-chip {
+    padding-top: 0.26rem;
+    padding-bottom: 0.26rem;
+  }
+}

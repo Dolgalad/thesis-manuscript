@@ -1,0 +1,164 @@
+<section class="slide fg-slide"
+         data-section="Background"
+         data-title="Factor graphs and overcomplete parameterization">
+
+  <div class="slide-body fg-body">
+
+    <div class="fg-layout">
+
+      <div class="fg-graph-panel">
+	<div class="fg-graph-wrap">
+
+        <svg class="fg-svg" viewBox="0 0 620 430" role="img"
+             aria-label="Factor graph with variable nodes and factor nodes">
+
+          <!-- edges -->
+          <g>
+            <line class="fg-edge" x1="170" y1="105" x2="450" y2="145" />
+            <line class="fg-edge" x1="170" y1="215" x2="450" y2="145" />
+
+            <line class="fg-edge" x1="170" y1="215" x2="450" y2="285" />
+            <line class="fg-edge" x1="170" y1="325" x2="450" y2="285" />
+          </g>
+
+          <!-- variables -->
+          <g>
+            <g class="fg-var-node" transform="translate(170 105)">
+              <circle r="34"></circle>
+              <text y="8">x₁</text>
+            </g>
+
+            <g class="fg-var-node" transform="translate(170 215)">
+              <circle r="34"></circle>
+              <text y="8">x₂</text>
+            </g>
+
+            <g class="fg-var-node" transform="translate(170 325)">
+              <circle r="34"></circle>
+              <text y="8">x₃</text>
+            </g>
+          </g>
+
+          <!-- factors -->
+          <g>
+            <g class="fg-factor-node" transform="translate(450 145)">
+              <rect x="-52" y="-30" width="104" height="60" rx="16"></rect>
+              <text y="8">α₁</text>
+            </g>
+
+            <g class="fg-factor-node" transform="translate(450 285)">
+              <rect x="-52" y="-30" width="104" height="60" rx="16"></rect>
+              <text y="8">α₂</text>
+            </g>
+          </g>
+
+          <text class="fg-side-label" x="170" y="45">
+            variables
+          </text>
+
+          <text class="fg-side-label" x="450" y="45">
+            factors
+          </text>
+        </svg>
+	</div>
+	<div class="fragment fg-assignment-table-card" data-fragment-index="6">
+        <div class="fg-table-title">
+          Factor \(\alpha_1\): assignments over \(x_1,x_2\)
+        </div>
+      
+        <table class="fg-assignment-table">
+          <thead>
+            <tr>
+              <th>\(x_1\)</th>
+              <th>\(x_2\)</th>
+              <th>\(\theta_{\alpha_1}\)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>0</td>
+              <td>0</td>
+              <td>\(\theta_{\alpha_1,00}\)</td>
+            </tr>
+            <tr>
+              <td>0</td>
+              <td>1</td>
+              <td>\(\theta_{\alpha_1,01}\)</td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>0</td>
+              <td>\(\theta_{\alpha_1,10}\)</td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>1</td>
+              <td>\(\theta_{\alpha_1,11}\)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      </div>
+
+      <div class="fg-formula-panel">
+        <div class="fg-formula">
+
+          <div class="fg-kicker">Canonical overcomplete exponential family</div>
+
+          <!--<div class="fragment fg-block" data-fragment-index="3">
+            \[
+            p_\theta(x)
+            =
+            \frac{1}{Z(\theta)}
+            \exp\left(
+              \sum_{F \in \mathcal{F}}
+              \langle \theta_F, \phi_F(x_F) \rangle
+            \right)
+            \]
+	  </div>-->
+
+          <div class="fg-block fg-assignment-card">
+            <div class="fg-label">One feature per factor assignment</div>
+            \[
+            \phi_{F,z}(x_F)
+            =
+            \mathbf{1}[x_F = z],
+            \qquad
+            z \in \{0,1\}^{|F|}
+            \]
+          </div>
+
+          <div class="fg-block">
+            \[
+            \langle \theta_F, \phi_F(x_F) \rangle
+            =
+            \sum_{z \in \{0,1\}^{|F|}}
+            \theta_{F,z}
+            \mathbf{1}[x_F = z]
+            \]
+          </div>
+
+          <div class="fragment fg-warning" data-fragment-index="6">
+            <span class="fg-warning-prefix">Limitation:</span>
+            a factor of arity \(d\) requires \(2^d\) parameters.
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <aside class="notes">
+      This slide introduces factor graphs as an explicit representation of the
+      factorization used by the MRF. Variable nodes represent random variables,
+      factor nodes represent local functions or energies. In the canonical
+      overcomplete exponential-family parameterization, each possible assignment
+      of a factor receives its own indicator feature and parameter. For binary
+      variables, a factor involving d variables therefore requires 2 to the d
+      parameters. This is expressive but becomes expensive for high-arity ILP
+      constraints.
+    </aside>
+
+  </div>
+</section>

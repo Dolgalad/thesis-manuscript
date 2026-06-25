@@ -1,0 +1,193 @@
+/* src/styles/slides/05-learning-context.css */
+
+.learning-context-slide .learning-context-body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.learning-pipeline {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  gap: 1rem;
+  align-items: stretch;
+  width: 100%;
+  height: min(64vh, 520px);
+}
+
+.learning-step {
+  border: 1px solid rgba(40, 50, 70, 0.16);
+  border-radius: 28px;
+  padding: 1.05rem 1.15rem;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 18px 45px rgba(20, 30, 50, 0.08);
+
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  row-gap: 0.45rem;
+  overflow: hidden;
+}
+
+.learning-step-emphasis {
+  background: rgba(235, 241, 255, 0.9);
+  border-color: rgba(70, 100, 170, 0.28);
+}
+
+.learning-label {
+  margin: 0;
+  font-size: 0.52em;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(45, 60, 90, 0.62);
+}
+
+.learning-step h3 {
+  margin: 0;
+  font-size: clamp(0.8em, 1.15vw, 1em);
+  line-height: 1.12;
+}
+
+.learning-step p {
+  margin: 0;
+  font-size: clamp(0.52em, 0.78vw, 0.67em);
+  line-height: 1.25;
+}
+
+.learning-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.7em;
+  font-weight: 700;
+  color: rgba(45, 60, 90, 0.42);
+}
+
+.learning-svg {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  display: block;
+}
+
+/* Shared SVG elements */
+
+.lc-edge {
+  stroke: rgba(55, 70, 95, 0.34);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.lc-variable {
+  fill: #dfe9ff;
+  stroke: rgba(45, 80, 150, 0.7);
+  stroke-width: 4;
+}
+
+.lc-constraint {
+  fill: #fff0dc;
+  stroke: rgba(160, 105, 35, 0.7);
+  stroke-width: 4;
+}
+
+.lc-feature-box {
+  fill: rgba(245, 247, 252, 0.95);
+  stroke: rgba(45, 60, 90, 0.24);
+  stroke-width: 3;
+}
+
+.lc-label,
+.lc-feature-text {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-weight: 700;
+  fill: #263246;
+}
+
+.lc-label {
+  font-size: 22px;
+}
+
+.lc-feature-text {
+  font-size: 20px;
+}
+
+.lc-feature-text.small {
+  font-size: 18px;
+  opacity: 0.72;
+}
+
+/* Message passing animation */
+
+.lc-arrowhead {
+  fill: rgba(45, 80, 150, 0.55);
+}
+
+.lc-edge.message {
+  stroke: rgba(45, 80, 150, 0.45);
+  stroke-width: 4.5;
+  fill: none;
+}
+
+.lc-edge.message.reverse {
+  stroke: rgba(160, 105, 35, 0.38);
+}
+
+.lc-message-dot {
+  fill: rgba(45, 80, 150, 0.9);
+}
+
+.lc-message-dot.alt {
+  fill: rgba(160, 105, 35, 0.88);
+}
+
+/* Probability output */
+
+.probability-output {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.65rem;
+  height: 100%;
+  min-height: 0;
+  padding: 0.4rem 0;
+}
+
+.prob-row {
+  display: grid;
+  grid-template-columns: 2.3rem 1fr 3rem;
+  gap: 0.5rem;
+  align-items: center;
+  font-size: 0.62em;
+  font-weight: 700;
+}
+
+.prob-bar {
+  height: 0.7rem;
+  border-radius: 999px;
+  background: rgba(45, 60, 90, 0.12);
+  overflow: hidden;
+}
+
+.prob-bar span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: rgba(45, 80, 150, 0.58);
+}
+
+.prob-value {
+  text-align: right;
+  color: rgba(45, 60, 90, 0.78);
+}
+
+.learning-context-takeaway {
+  margin: 1rem auto 0;
+  padding: 0.75rem 1.15rem;
+  border-radius: 18px;
+  background: rgba(245, 247, 252, 0.95);
+  font-size: 0.78em;
+  font-weight: 700;
+  text-align: center;
+}

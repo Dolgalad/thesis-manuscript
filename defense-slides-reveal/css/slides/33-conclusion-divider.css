@@ -1,0 +1,64 @@
+/* src/styles/slides/33-contrib-1-conclusion-bridge.css */
+
+.contribution-conclusion-divider-slide .section-divider-kicker {
+  color: rgba(194, 65, 12, 0.86);
+}
+
+.contribution-conclusion-content {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.78),
+      rgba(255, 247, 237, 0.74)
+    );
+  border-color: rgba(194, 65, 12, 0.18);
+}
+
+.contribution-conclusion-divider-slide .section-divider-subtitle {
+  max-width: 860px;
+  font-size: 16;
+}
+
+.conclusion-bridge-points {
+  display: flex;
+  justify-content: center;
+  gap: 0.52rem;
+  flex-wrap: wrap;
+
+  margin-top: 1.05rem;
+}
+
+.bridge-point {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.36rem;
+
+  padding: 0.36rem 0.58rem;
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.68);
+  border: 1px solid rgba(194, 65, 12, 0.16);
+  color: rgba(38, 50, 70, 0.66);
+
+  font-size: clamp(0.34em, 0.52vw, 0.42em);
+  font-weight: 850;
+  line-height: 1;
+}
+
+.bridge-point-number {
+  color: rgba(194, 65, 12, 0.82);
+  font-size: 0.82em;
+  font-weight: 950;
+  letter-spacing: 0.05em;
+}
+
+@media (max-height: 760px) {
+  .conclusion-bridge-points {
+    margin-top: 0.72rem;
+    gap: 0.38rem;
+  }
+
+  .bridge-point {
+    padding: 0.3rem 0.48rem;
+  }
+}

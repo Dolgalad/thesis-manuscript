@@ -1,0 +1,94 @@
+/* src/styles/slides/09-background-bilp.css */
+
+.bilp-structured-slide .bilp-structured-body {
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  gap: 2rem;
+}
+
+/* Hard split: left half and right half */
+.bilp-left-column {
+  width: 45%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.bilp-right-column {
+  width: 45%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.65rem;
+}
+
+/* Small card, not full width */
+.bilp-problem-block {
+  width: fit-content;
+  max-width: 360px;
+
+  padding: 0.65rem 0.85rem;
+  border-radius: 16px;
+
+  background: rgba(245, 247, 252, 0.96);
+  border: 1px solid rgba(40, 50, 70, 0.13);
+  box-shadow: 0 10px 28px rgba(20, 30, 50, 0.06);
+
+  text-align: left;
+}
+
+/* Important: control MathJax block behavior */
+.bilp-equation {
+  font-size: 0.56em;
+  line-height: 1;
+  width: fit-content;
+}
+
+.bilp-equation mjx-container {
+  display: inline-block !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  margin: 0 !important;
+  text-align: left !important;
+}
+
+/* Right fragments */
+.bilp-point {
+  width: 100%;
+  max-width: 520px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+
+  padding: 0.55rem 0.75rem;
+  border-radius: 15px;
+
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(40, 50, 70, 0.12);
+  box-shadow: 0 10px 24px rgba(20, 30, 50, 0.05);
+
+  font-size: 0.56em;
+  line-height: 1.18;
+}
+
+.bilp-point strong {
+  color: rgba(45, 80, 150, 0.95);
+  font-weight: 800;
+}
+
+.bilp-point span {
+  color: rgba(30, 40, 60, 0.86);
+}
+
+.bilp-point mjx-container {
+  display: inline-block !important;
+  margin: 0 !important;
+  font-size: 88% !important;
+}

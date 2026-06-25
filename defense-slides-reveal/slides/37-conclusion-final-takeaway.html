@@ -1,0 +1,74 @@
+<section class="slide final-takeaway-slide"
+         data-section="Conclusion"
+         data-title="Final takeaway">
+
+  <div class="slide-body final-takeaway-body">
+
+    <div class="final-takeaway-panel fragment fade-up">
+
+      <p class="learning-label">Conclusion · Final takeaway</p>
+
+      <h3>
+        From independent variable scoring<br />
+        to structured, constraint-aware prediction
+      </h3>
+
+      <div class="final-takeaway-flow">
+
+        <div class="final-flow-block independent-flow">
+          <span class="flow-kicker">Classical learning view</span>
+          <span class="flow-title">Predict variables independently</span>
+          <span class="flow-detail">
+            Useful scores, but weak representation of constraint-induced dependencies.
+          </span>
+        </div>
+
+        <div class="final-flow-arrow">→</div>
+
+        <div class="final-flow-block structured-flow">
+          <span class="flow-kicker">Thesis view</span>
+          <span class="flow-title">Predict a structured model</span>
+          <span class="flow-detail">
+            MRF factors and approximate inference put part of the ILP structure inside prediction.
+          </span>
+        </div>
+
+      </div>
+
+      <p class="final-statement">
+        MRFs provide a principled interface between machine learning and combinatorial
+        optimization: <strong>learn local structure, infer global beliefs, and decode with constraints in mind.</strong>
+      </p>
+
+    </div>
+
+    <div class="final-message-row fragment fade-up">
+
+      <div class="final-message-card">
+        <span class="final-message-number">01</span>
+        <span>Constraints shape the output space.</span>
+      </div>
+
+      <div class="final-message-card">
+        <span class="final-message-number">02</span>
+        <span>Approximate inference makes these dependencies usable.</span>
+      </div>
+
+      <div class="final-message-card">
+        <span class="final-message-number">03</span>
+        <span>Structured predictions can assist both decoding and exact solvers.</span>
+      </div>
+
+    </div>
+
+    <aside class="notes">
+      This is the final scientific takeaway. The thesis argues that learning for BILP
+      solution prediction should not stop at independent variable scores. Since constraints
+      couple the variables, predictions should also represent dependencies. Markov Random
+      Fields give a principled way to encode objectives and constraints as factors, and
+      approximate inference turns these factors into marginal beliefs that can guide decoding,
+      guided decimation, and solver-assisted fixing.
+    </aside>
+
+  </div>
+</section>

@@ -1,0 +1,173 @@
+.decoding-strategies-slide .decoding-strategies-body {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 0.85rem;
+  height: 100%;
+  min-height: 0;
+}
+
+.decoder-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.95rem;
+  min-height: 0;
+}
+
+.decoder-card {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  gap: 0.45rem;
+  padding: 0.85rem;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(38, 50, 70, 0.12);
+  box-shadow: 0 16px 36px rgba(38, 50, 70, 0.055);
+}
+
+.egg-card {
+  background: rgba(240, 247, 255, 0.92);
+  border-color: rgba(45, 80, 150, 0.2);
+}
+
+.gd-card {
+  background: rgba(240, 253, 244, 0.92);
+  border-color: rgba(22, 101, 52, 0.2);
+}
+
+.decoder-card h3 {
+  margin: 0;
+  color: rgba(38, 50, 70, 0.88);
+  font-size: clamp(0.72em, 1vw, 0.92em);
+  font-weight: 850;
+}
+
+.decoder-card p:not(.learning-label) {
+  margin: 0;
+  color: rgba(38, 50, 70, 0.62);
+  font-size: clamp(0.4em, 0.62vw, 0.52em);
+  font-weight: 650;
+  line-height: 1.15;
+}
+
+.decoder-intuition {
+  display: grid;
+  align-content: center;
+  gap: 0.65rem;
+}
+
+.belief-list {
+  display: grid;
+  gap: 0.38rem;
+}
+
+.belief-list div {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  padding: 0.46rem 0.65rem;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid rgba(45, 80, 150, 0.18);
+}
+
+.belief-list span,
+.belief-list strong {
+  color: rgba(38, 50, 70, 0.78);
+  font-size: clamp(0.44em, 0.68vw, 0.56em);
+  font-weight: 850;
+}
+
+.belief-list strong {
+  justify-self: end;
+  color: rgba(45, 80, 150, 0.78);
+}
+
+.decoder-choice {
+  justify-self: center;
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(219, 234, 254, 0.9);
+  border: 1px solid rgba(45, 80, 150, 0.2);
+  color: rgba(45, 80, 150, 0.82);
+  font-size: clamp(0.4em, 0.62vw, 0.52em);
+  font-weight: 900;
+}
+
+.gd-timeline {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.45rem;
+}
+
+.gd-step {
+  padding: 0.58rem 0.35rem;
+  border-radius: 16px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid rgba(22, 101, 52, 0.18);
+  color: rgba(38, 50, 70, 0.72);
+  font-size: clamp(0.4em, 0.62vw, 0.52em);
+  font-weight: 900;
+}
+
+.gd-step.selected {
+  background: rgba(220, 252, 231, 0.92);
+  border-color: rgba(22, 101, 52, 0.3);
+  color: rgba(22, 101, 52, 0.78);
+}
+
+.gd-step.infer {
+  background: rgba(245, 243, 255, 0.92);
+  border-color: rgba(109, 40, 217, 0.22);
+  color: rgba(76, 29, 149, 0.76);
+}
+
+.gd-step.muted {
+  color: rgba(38, 50, 70, 0.42);
+}
+
+.gd-arrow {
+  color: rgba(38, 50, 70, 0.34);
+  font-size: 0.8em;
+  font-weight: 900;
+}
+
+.conditional-belief {
+  display: grid;
+  place-items: center;
+  margin: 0.55rem auto;
+  padding: 0.25rem 0.75rem;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid rgba(22, 101, 52, 0.2);
+  color: rgba(22, 101, 52, 0.78);
+  font-size: clamp(0.62em, 0.9vw, 0.8em);
+  font-weight: 900;
+}
+
+.conditional-belief .MathJax,
+.conditional-belief mjx-container {
+  margin: 0 !important;
+}
+
+.schedule-strip {
+  padding: 0.62rem 0.85rem;
+  border-radius: 20px;
+  background: rgba(255, 247, 237, 0.94);
+  border: 1px solid rgba(160, 105, 35, 0.18);
+  text-align: center;
+}
+
+.schedule-strip strong {
+  color: rgba(160, 105, 35, 0.82);
+  font-size: clamp(0.44em, 0.68vw, 0.56em);
+  font-weight: 900;
+}
+
+.schedule-strip span {
+  color: rgba(38, 50, 70, 0.66);
+  font-size: clamp(0.4em, 0.62vw, 0.52em);
+  font-weight: 760;
+}

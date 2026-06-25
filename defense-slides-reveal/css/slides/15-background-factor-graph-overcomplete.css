@@ -1,0 +1,320 @@
+/* src/styles/slides/15-factor-graph-overcomplete.css */
+
+.fg-body {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.fg-layout {
+  --graph-col: 45%;
+  --grid-gap: 1.2%;
+  --formula-col: 53.8%;
+
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--graph-col) var(--formula-col);
+  gap: var(--grid-gap);
+  width: 100%;
+  height: 100%;
+  max-height: 560px;
+  align-items: stretch;
+}
+
+.fg-graph-panel,
+.fg-formula-panel {
+  position: relative;
+  min-height: 0;
+  height: 100%;
+  padding: 0.55em;
+  border-radius: 22px;
+  background: white;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  box-shadow: 0 12px 26px rgba(15, 23, 42, 0.08);
+  box-sizing: border-box;
+}
+
+.fg-graph-panel {
+  overflow: hidden;
+}
+
+.fg-formula-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+.fg-svg {
+  width: 100%;
+  height: 50%;
+  max-height: 390px;
+  display: block;
+}
+
+.fg-formula {
+  width: 100%;
+  font-size: 0.54em;
+  line-height: 1.34;
+  color: #0f172a;
+}
+
+.fg-kicker {
+  margin-bottom: 0.6em;
+  font-size: 0.72em;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(71, 85, 105, 0.9);
+}
+
+.fg-block {
+  padding: 0.34em 0.5em;
+  margin-bottom: 0.52em;
+  border-radius: 16px;
+  background: rgba(248, 250, 252, 0.95);
+  border: 1px solid rgba(148, 163, 184, 0.28);
+}
+
+.fg-assignment-card {
+  background: rgba(239, 246, 255, 0.95);
+  border-color: rgba(59, 130, 246, 0.25);
+}
+
+.fg-label {
+  margin-bottom: 0.15em;
+  font-size: 0.68em;
+  font-weight: 850;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: rgba(71, 85, 105, 0.85);
+}
+
+.fg-warning {
+  padding: 0.55em 0.75em;
+  border-radius: 16px;
+  background: rgba(255, 247, 237, 0.95);
+  border: 1px solid rgba(249, 115, 22, 0.28);
+  color: rgba(30, 41, 59, 0.94);
+  font-size: 0.92em;
+  font-weight: 750;
+}
+
+.fg-warning-prefix {
+  font-weight: 900;
+  color: rgba(194, 65, 12, 0.95);
+}
+
+/* SVG styling */
+
+.fg-edge {
+  stroke: rgba(71, 85, 105, 0.55);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.fg-var-node circle {
+  fill: rgba(219, 234, 254, 0.95);
+  stroke: rgba(29, 78, 216, 0.8);
+  stroke-width: 4;
+}
+
+.fg-factor-node rect {
+  fill: rgba(255, 237, 213, 0.95);
+  stroke: rgba(194, 65, 12, 0.75);
+  stroke-width: 4;
+}
+
+.fg-var-node text,
+.fg-factor-node text {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 28px;
+  font-weight: 800;
+  fill: #0f172a;
+}
+
+.fg-side-label {
+  text-anchor: middle;
+  font-size: 22px;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  fill: rgba(71, 85, 105, 0.82);
+}
+
+.fg-caption {
+  text-anchor: middle;
+  font-size: 20px;
+  font-weight: 750;
+  fill: rgba(30, 41, 59, 0.82);
+}
+
+/* Bottom bridge */
+
+.fg-bottom-bridge {
+  position: absolute;
+  left: 7%;
+  right: 7%;
+  bottom: 0.45em;
+  z-index: 20;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45em;
+
+  padding: 0.55em 0.9em;
+  border-radius: 999px;
+
+  background: rgba(248, 250, 252, 0.96);
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  box-shadow: 0 12px 26px rgba(15, 23, 42, 0.10);
+
+  color: #0f172a;
+  font-size: 0.46em;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.fg-bridge-prefix {
+  font-weight: 850;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(71, 85, 105, 0.85);
+}
+
+.fg-bridge-arrow {
+  color: rgba(194, 65, 12, 0.9);
+  font-weight: 900;
+}
+
+.fg-bottom-bridge strong {
+  color: rgba(29, 78, 216, 0.95);
+  font-weight: 900;
+}
+
+/* Fragment emphasis */
+
+.fg-slide:has(.fg-assignment-card.visible) .fg-assignment-card {
+  outline: 2px solid rgba(59, 130, 246, 0.26);
+}
+
+.fg-slide:has(.fg-warning.visible) .fg-warning {
+  outline: 2px solid rgba(249, 115, 22, 0.28);
+}
+
+.fg-slide:has(.fg-bottom-bridge.visible) .fg-bottom-bridge {
+  outline: 2px solid rgba(29, 78, 216, 0.18);
+}
+
+
+.fg-assignment-table-card {
+  margin-top: 0.35em;
+  padding: 0.45em 0.55em;
+  border-radius: 16px;
+  background: rgba(239, 246, 255, 0.95);
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  box-sizing: border-box;
+  font-size: 0.36em;
+  color: #0f172a;
+}
+
+.fg-table-title {
+  margin-bottom: 0.25em;
+  text-align: center;
+  font-size: 0.92em;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+  color: rgba(30, 41, 59, 0.9);
+}
+
+.fg-assignment-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.fg-assignment-table th,
+.fg-assignment-table td {
+  padding: 0.18em 0.25em;
+  text-align: center;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.28);
+  white-space: nowrap;
+}
+
+.fg-assignment-table th {
+  font-weight: 850;
+  color: rgba(71, 85, 105, 0.92);
+}
+
+.fg-assignment-table td {
+  font-weight: 650;
+}
+
+.fg-assignment-table tr:last-child td {
+  border-bottom: none;
+}
+
+.fg-slide:has(.fg-assignment-table-card.visible) .fg-assignment-table-card {
+  outline: 2px solid rgba(59, 130, 246, 0.22);
+}
+
+
+.fg-graph-panel {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.fg-graph-wrap {
+  width: 100%;
+  height: 72%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(0);
+  transition: transform 650ms ease, height 650ms ease;
+}
+
+.fg-svg {
+  width: 100%;
+  height: 100%;
+  max-height: 430px;
+  display: block;
+}
+
+.fg-slide:has(.fg-assignment-table-card.visible) .fg-graph-panel {
+  justify-content: flex-start;
+}
+
+.fg-slide:has(.fg-assignment-table-card.visible) .fg-graph-wrap {
+  height: 58%;
+  transform: translateY(-0.25em);
+}
+
+.fg-assignment-table-card.fragment {
+  opacity: 0;
+  visibility: hidden;
+  max-height: 0;
+  margin-top: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  overflow: hidden;
+  transition:
+    opacity 450ms ease,
+    max-height 650ms ease,
+    margin-top 650ms ease,
+    padding-top 650ms ease,
+    padding-bottom 650ms ease;
+}
+
+.fg-assignment-table-card.fragment.visible {
+  opacity: 1;
+  visibility: visible;
+  max-height: 13em;
+  margin-top: 0.35em;
+  padding-top: 0.45em;
+  padding-bottom: 0.45em;
+}

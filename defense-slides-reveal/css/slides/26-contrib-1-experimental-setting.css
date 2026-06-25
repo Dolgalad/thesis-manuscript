@@ -1,0 +1,141 @@
+.experimental-setting-slide .experimental-setting-body {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 0.85rem;
+  height: 100%;
+  min-height: 0;
+}
+
+.experiment-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.72rem;
+  min-height: 0;
+}
+
+.experiment-card {
+  padding: 0.72rem 0.85rem;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(38, 50, 70, 0.12);
+  box-shadow: 0 14px 32px rgba(38, 50, 70, 0.052);
+}
+
+.experiment-card h3 {
+  margin: 0 0 0.48rem;
+  color: rgba(38, 50, 70, 0.88);
+  font-size: clamp(0.68em, 0.95vw, 0.86em);
+  font-weight: 850;
+  line-height: 1.05;
+}
+
+.problem-card {
+  background: rgba(240, 247, 255, 0.92);
+  border-color: rgba(45, 80, 150, 0.2);
+}
+
+.model-card {
+  background: rgba(255, 247, 237, 0.92);
+  border-color: rgba(160, 105, 35, 0.2);
+}
+
+.evaluation-card {
+  background: rgba(240, 253, 244, 0.92);
+  border-color: rgba(22, 101, 52, 0.2);
+}
+
+.problem-pair,
+.model-lanes,
+.metric-row {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.problem-pair {
+  grid-template-columns: 1fr 1fr;
+}
+
+.model-lanes {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.metric-row {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 0.45rem;
+}
+
+.problem-mini,
+.model-lane,
+.metric-chip {
+  padding: 0.55rem 0.65rem;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.88);
+  border: 2px solid rgba(38, 50, 70, 0.1);
+  text-align: center;
+}
+
+.problem-mini strong,
+.model-lane strong {
+  display: block;
+  color: rgba(38, 50, 70, 0.84);
+  font-size: clamp(0.48em, 0.72vw, 0.6em);
+  font-weight: 900;
+}
+
+.problem-mini span,
+.model-lane span {
+  display: block;
+  margin: 0.12rem 0 0.2rem;
+  color: rgba(38, 50, 70, 0.58);
+  font-size: clamp(0.34em, 0.5vw, 0.42em);
+  font-weight: 820;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.problem-mini code {
+  display: block;
+  color: rgba(38, 50, 70, 0.76);
+  font-size: clamp(0.38em, 0.56vw, 0.46em);
+  font-weight: 800;
+}
+
+.mis-mini,
+.baseline-lane {
+  border-color: rgba(45, 80, 150, 0.26);
+}
+
+.sc-mini,
+.canonical-lane {
+  border-color: rgba(160, 105, 35, 0.28);
+}
+
+.learned-lane {
+  border-color: rgba(22, 101, 52, 0.28);
+}
+
+.metric-chip {
+  color: rgba(22, 101, 52, 0.78);
+  font-size: clamp(0.42em, 0.62vw, 0.5em);
+  font-weight: 900;
+}
+
+.evaluation-card p {
+  margin: 0;
+  color: rgba(38, 50, 70, 0.62);
+  font-size: clamp(0.38em, 0.58vw, 0.46em);
+  font-weight: 650;
+  line-height: 1.12;
+  text-align: center;
+}
+
+.experiment-takeaway {
+  padding: 0.55rem 0.85rem;
+  border-radius: 20px;
+  background: rgba(245, 243, 255, 0.94);
+  border: 1px solid rgba(109, 40, 217, 0.18);
+  color: rgba(76, 29, 149, 0.78);
+  font-size: clamp(0.42em, 0.64vw, 0.52em);
+  font-weight: 850;
+  text-align: center;
+}

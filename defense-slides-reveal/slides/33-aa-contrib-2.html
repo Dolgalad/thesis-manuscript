@@ -1,0 +1,209 @@
+<section class="slide section-divider-slide contribution-divider-slide contribution-2-divider-slide"
+         data-section="Contribution 2"
+         data-title="MRF-augmented denoising refinement">
+
+  <div class="slide-body section-divider-body">
+
+    <div class="section-divider-content contribution-divider-content contribution-2-divider-content">
+      <p class="section-divider-kicker">Contribution 2 · Chapter 5</p>
+
+      <h2>MRF-Augmented Denoising</h2>
+
+      <p class="section-divider-subtitle">
+        From one-shot prediction to learned refinement dynamics
+      </p>
+    </div>
+
+    <aside class="notes">
+      This section introduces the Chapter 5 denoising contribution. The central idea is
+      to move from a single prediction pass to an iterative refinement process. A noisy or
+      corrupted binary assignment is progressively denoised, and the denoising model can
+      use an MRF inference layer to propagate constraint-aware information before decoding.
+    </aside>
+
+  </div>
+</section>
+
+<section class="slide denoising-training-slide"
+         data-section="Contribution 2"
+         data-title="Training a denoising MRF predictor">
+
+  <div class="slide-body denoising-training-body">
+
+    <div class="denoise-flow-row">
+
+      <div class="denoise-card denoise-card-clean fade-up">
+        <p class="denoise-label">Reference solution</p>
+        <svg class="denoise-state-svg" viewBox="0 0 420 180" role="img" aria-label="Clean binary solution">
+          <g transform="translate(42 42)">
+            <circle class="state-bit state-one" cx="0" cy="0" r="24"/><text class="state-text" x="0" y="7">1</text>
+            <circle class="state-bit state-zero" cx="74" cy="0" r="24"/><text class="state-text" x="74" y="7">0</text>
+            <circle class="state-bit state-one" cx="148" cy="0" r="24"/><text class="state-text" x="148" y="7">1</text>
+            <circle class="state-bit state-zero" cx="222" cy="0" r="24"/><text class="state-text" x="222" y="7">0</text>
+            <circle class="state-bit state-one" cx="296" cy="0" r="24"/><text class="state-text" x="296" y="7">1</text>
+          </g>
+        </svg>
+        <h3>Clean target</h3>
+        <p>Start from a solved training instance with target solution <span class="math-inline">\(x^\star\)</span>.</p>
+      </div>
+
+      <div class="denoise-arrow fragment fade-up" data-fragment-index="1" aria-hidden="true">→</div>
+
+      <div class="denoise-card fragment fade-up" data-fragment-index="1">
+        <p class="denoise-label">Corruption</p>
+        <svg class="denoise-state-svg" viewBox="0 0 420 180" role="img" aria-label="Corrupted binary solution">
+          <g transform="translate(42 42)">
+            <circle class="state-bit state-one muted" cx="0" cy="0" r="24"/><text class="state-text" x="0" y="7">1</text>
+            <circle class="state-bit state-noisy" cx="74" cy="0" r="24"/><text class="state-text" x="74" y="7">?</text>
+            <circle class="state-bit state-noisy" cx="148" cy="0" r="24"/><text class="state-text" x="148" y="7">?</text>
+            <circle class="state-bit state-zero muted" cx="222" cy="0" r="24"/><text class="state-text" x="222" y="7">0</text>
+            <circle class="state-bit state-noisy" cx="296" cy="0" r="24"/><text class="state-text" x="296" y="7">?</text>
+          </g>
+        </svg>
+        <h3>Noisy state</h3>
+        <p>Randomly replace or mask entries to obtain <span class="math-inline">\(\tilde{x}_t\)</span>.</p>
+      </div>
+
+      <div class="denoise-arrow fragment fade-up" data-fragment-index="2" aria-hidden="true">→</div>
+
+      <div class="denoise-card denoise-card-mrf fragment fade-up" data-fragment-index="2">
+        <p class="denoise-label">Denoising MRF</p>
+        <svg class="denoise-mrf-svg" viewBox="0 0 420 180" role="img" aria-label="MRF denoising layer">
+          <line class="mrf-edge" x1="95" y1="50" x2="180" y2="90"/>
+          <line class="mrf-edge" x1="95" y1="130" x2="180" y2="90"/>
+          <line class="mrf-edge" x1="180" y1="90" x2="265" y2="50"/>
+          <line class="mrf-edge" x1="180" y1="90" x2="265" y2="130"/>
+          <line class="mrf-edge" x1="265" y1="50" x2="350" y2="90"/>
+
+          <circle class="mrf-var" cx="95" cy="50" r="21"/><text class="mrf-text" x="95" y="57">x₁</text>
+          <circle class="mrf-var" cx="95" cy="130" r="21"/><text class="mrf-text" x="95" y="137">x₂</text>
+          <rect class="mrf-factor" x="154" y="68" width="52" height="44" rx="10"/><text class="mrf-text" x="180" y="96">θ</text>
+          <circle class="mrf-var" cx="265" cy="50" r="21"/><text class="mrf-text" x="265" y="57">x₃</text>
+          <circle class="mrf-var" cx="265" cy="130" r="21"/><text class="mrf-text" x="265" y="137">x₄</text>
+          <rect class="mrf-factor" x="324" y="68" width="52" height="44" rx="10"/><text class="mrf-text" x="350" y="96">φ</text>
+        </svg>
+        <h3>Predict + infer</h3>
+        <p>Predict state-conditioned factors, then run LBP or NMF for marginals.</p>
+      </div>
+
+    </div>
+
+    <div class="denoise-equation fragment fade-up" data-fragment-index="2">
+      <span>Training loss</span>
+      \(\mathcal{L}_{\mathrm{denoise}} = \mathbb{E}_{x^\star,t,\tilde{x}_t}\big[\ell(D_\omega(P,\tilde{x}_t,t),x^\star)\big]\)
+      <small>At test time: unroll denoising from a random binary initialization, then decode.</small>
+    </div>
+
+    <aside class="notes">
+      The denoising setup samples a clean solution, corrupts it according to a noise level,
+      and trains the model to reconstruct the clean solution. The MRF-augmented versions
+      differ from the direct DDGN baseline because their predictions pass through LBP or
+      NMF before decoding. This makes denoising a structured refinement process rather
+      than independent variable correction.
+    </aside>
+
+  </div>
+</section>
+
+<section class="slide denoising-results-slide"
+         data-section="Contribution 2"
+         data-title="Diffusion-inspired denoising results">
+
+  <div class="slide-body denoising-results-body">
+
+    <div class="results-grid">
+      <div class="result-panel fragment fade-up">
+        <p class="result-panel-title">Raw sample feasibility</p>
+        <div class="bar-row"><span>SC-S DDGN</span><div class="bar-track"><i style="width:7.4%"></i></div><b>7.4%</b></div>
+        <div class="bar-row highlight"><span>SC-S DLBP</span><div class="bar-track"><i style="width:88.9%"></i></div><b>88.9%</b></div>
+        <div class="bar-row"><span>SC-S DNMF</span><div class="bar-track"><i style="width:30.7%"></i></div><b>30.7%</b></div>
+        <div class="bar-row highlight"><span>SC-M DLBP</span><div class="bar-track"><i style="width:84.6%"></i></div><b>84.6%</b></div>
+      </div>
+
+      <div class="result-panel fragment fade-up">
+        <p class="result-panel-title">Best GD gap on Set Cover</p>
+        <div class="gap-row"><span>SC-S DDGN</span><b>—</b></div>
+        <div class="gap-row highlight"><span>SC-S DLBP</span><b>0.68%</b></div>
+        <div class="gap-row"><span>SC-S DNMF</span><b>1.86%</b></div>
+        <div class="gap-row highlight"><span>SC-M DLBP</span><b>−0.23%</b></div>
+        <p class="result-note">Negative gap means better than the heuristic reference on average.</p>
+      </div>
+
+      <div class="result-panel result-panel-wide fragment fade-up">
+        <p class="result-panel-title">Problem-dependent behavior</p>
+        <div class="contrast-row">
+          <div>
+            <strong>Set Cover</strong>
+            <span>LBP-based denoising produces feasible samples frequently and low-gap decoded solutions.</span>
+          </div>
+          <div>
+            <strong>MIS</strong>
+            <span>Raw feasibility remains 0%; GD improves DLBP to about 7.0%, but decoding is brittle.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="notes">
+      The table in the manuscript compares DDGN, DLBP and DNMF. For Set Cover, DLBP
+      clearly dominates the direct denoising baseline and the NMF variant. On SC-S it
+      reaches 88.867 percent raw feasibility and a GD gap of 0.680 percent. On SC-M it
+      reaches 84.615 percent raw feasibility and a GD gap of -0.233 percent. For MIS-S,
+      raw feasibility is still zero for all denoising models, but GD reduces the DLBP gap
+      to about 7.015 percent. The main message is that MRF-augmented denoising is useful,
+      but the interaction with decoding depends on the problem structure.
+    </aside>
+
+  </div>
+</section>
+
+<section class="slide denoising-takeaway-slide"
+         data-section="Contribution 2"
+         data-title="Takeaway: learned refinement with MRFs">
+
+  <header class="slide-header">
+    <p class="slide-kicker">Takeaway</p>
+    <h2>Refinement works best when it remains structured</h2>
+  </header>
+
+  <div class="slide-body denoising-takeaway-body">
+
+    <div class="takeaway-statement fragment fade-up">
+      <span>Chapter 5 changes the prediction view:</span>
+      <strong>solution generation becomes a trajectory, not a one-shot score vector.</strong>
+    </div>
+
+    <div class="takeaway-three">
+      <div class="takeaway-item fragment fade-up">
+        <p class="takeaway-number">01</p>
+        <h3>Condition on the current state</h3>
+        <p>The model sees the noisy assignment and the refinement time.</p>
+      </div>
+
+      <div class="takeaway-item fragment fade-up">
+        <p class="takeaway-number">02</p>
+        <h3>Use MRF inference inside refinement</h3>
+        <p>LBP or NMF transforms local predictions into structured marginals.</p>
+      </div>
+
+      <div class="takeaway-item fragment fade-up">
+        <p class="takeaway-number">03</p>
+        <h3>Decode with feasibility in mind</h3>
+        <p>Final quality still depends on the interaction between refinement and decoding.</p>
+      </div>
+    </div>
+
+    <div class="denoise-final-message fragment fade-up">
+      Strong on covering problems; more fragile on packing problems with hard exclusion constraints.
+    </div>
+
+    <aside class="notes">
+      The final takeaway is balanced. MRF-augmented denoising supports the thesis theme:
+      independent variable scores are not enough, and structured inference improves the
+      learned signal. However, refinement is not a replacement for careful decoding. It is
+      especially promising for Set Cover, while MIS remains challenging because early
+      selection mistakes can irreversibly remove useful vertices.
+    </aside>
+
+  </div>
+</section>
