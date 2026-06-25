@@ -43,3 +43,7 @@ build/*
 !build/tikz-cache/
 build/tikz-cache/*
 !build/tikz-cache/.gitkeep
+
+# backup
+*.bak
+*.tar.gz
