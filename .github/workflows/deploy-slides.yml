@@ -47,11 +47,16 @@ jobs:
       - name: Build slides
         run: npm run build
 
+      - name: Upload debug dist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: defense-slides-dist-debug
+          path: defense-slides-reveal/dist
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: defense-slides-reveal/dist
-
   deploy:
     environment:
       name: github-pages
