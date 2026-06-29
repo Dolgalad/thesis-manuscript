@@ -32,6 +32,34 @@
     <div class="slides">
 	    {{SLIDES}}
     </div>
+
+    <div class="slide-footer" id="slide-footer" aria-hidden="true">
+      <div class="slide-footer-title">
+        <span id="footer-section">Section</span>
+        <span class="footer-separator">/</span>
+        <span id="footer-title">Slide title</span>
+      </div>
+    
+      <div class="slide-footer-nav" aria-hidden="false">
+        <button class="footer-arrow footer-arrow-prev" id="footer-prev" type="button" aria-label="Previous slide">
+          ‹
+        </button>
+        
+	<input
+          class="slide-footer-number"
+          id="footer-slide-number"
+          type="text"
+          inputmode="numeric"
+          aria-label="Go to slide number"
+          value="01"
+        />
+    
+        <button class="footer-arrow footer-arrow-next" id="footer-next" type="button" aria-label="Next slide">
+          ›
+        </button>
+      </div>
+    </div>
+
   </div>
 
   <!-- Reveal.js scripts -->
