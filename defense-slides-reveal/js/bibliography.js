@@ -11,7 +11,7 @@ async function buildBibliography() {
     const response = await fetch("assets/defense-references.bib");
 
     if (!response.ok) {
-      throw new Error(`Could not load references.bib: ${response.status} ${response.statusText}`);
+      throw new Error(`Could not load assets/defense-references.bib: ${response.status} ${response.statusText}`);
     }
 
     const bibtex = await response.text();
