@@ -16,6 +16,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "bibtex-js-parser": "^1.1.6",
     "reveal.js": "^5.2.1"
   },
   "devDependencies": {

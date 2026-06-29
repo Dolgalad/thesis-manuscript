@@ -1,3 +1,5 @@
+import BibtexParser from "bibtex-js-parser";
+
 async function buildBibliography() {
   const bibliography = document.getElementById("bibliography");
 
@@ -20,9 +22,9 @@ async function buildBibliography() {
 
     const bibtex = await response.text();
 
-    if (typeof BibtexParser === "undefined") {
-      throw new Error("BibtexParser is not defined. The parser script probably did not load.");
-    }
+    //if (typeof BibtexParser === "undefined") {
+    //  throw new Error("BibtexParser is not defined. The parser script probably did not load.");
+    //}
 
     const parsed = BibtexParser.parseToJSON(bibtex);
 
