@@ -1453,3 +1453,61 @@ body.hide-slide-footer .reveal .progress {
 .footer-arrow:focus {
   outline: none;
 }
+
+/* Foot head size */
+/* Better header/footer sizing on large fullscreen displays */
+.section-banner {
+  height: clamp(100px, 8vh, 140px);
+
+  padding-left: clamp(56px, 4vw, 96px);
+  padding-right: clamp(56px, 4vw, 96px);
+}
+
+.section-banner-inner p {
+  font-size: clamp(0.72em, 1.42vw, 1.08em);
+}
+
+.section-banner-inner h2 {
+  font-size: clamp(1.23em, 2.02vw, 1.77em);
+}
+
+.slide-footer {
+  left: clamp(56px, 4vw, 96px);
+  right: clamp(56px, 4vw, 96px);
+  height: clamp(42px, 4.6vh, 70px);
+
+  font-size: clamp(0.63em, 1.28vw, 1.02em);
+
+}
+
+.reveal .progress {
+  height: clamp(42px, 4.6vh, 70px);
+}
+
+.slide-footer-number {
+  font-size: 0.95em;
+  width: 2.5em;
+  height: 1.65em;
+}
+
+.footer-arrow {
+  font-size: 1.18em;
+  width: 1.9em;
+  height: 1.9em;
+}
+
+/* Keep slide content below the larger banner/footer */
+.reveal .slides section:not(.title-slide) {
+  padding-top: clamp(90px, 7vh, 130px);
+  padding-bottom: clamp(54px, 5.2vh, 82px);
+}
+
+.slide-footer,
+.reveal .progress {
+  height: clamp(58px, 6vh, 90px);
+}
+
+.reveal .slides section:not(.title-slide) {
+  padding-top: clamp(110px, 8.8vh, 155px);
+  padding-bottom: clamp(70px, 6.8vh, 105px);
+}
