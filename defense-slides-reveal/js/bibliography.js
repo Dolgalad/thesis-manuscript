@@ -1,4 +1,15 @@
-import BibtexParser from "bibtex-js-parser";
+import * as BibtexParserModule from "bibtex-js-parser";
+
+const BibtexParser =
+  BibtexParserModule.BibtexParser ||
+  BibtexParserModule.default ||
+  BibtexParserModule;
+
+const parseBibtex =
+  BibtexParser.parseToJSON ||
+  BibtexParser.parse ||
+  BibtexParserModule.parseToJSON ||
+  BibtexParserModule.parse;
 
 async function buildBibliography() {
   const bibliography = document.getElementById("bibliography");
@@ -26,7 +37,13 @@ async function buildBibliography() {
     //  throw new Error("BibtexParser is not defined. The parser script probably did not load.");
     //}
 
-    const parsed = BibtexParser.parseToJSON(bibtex);
+    //const parsed = BibtexParser.parseToJSON(bibtex);
+    if (typeof parseBibtex !== "function") {
+      console.log("BibTeX parser module:", BibtexParserModule);
+      throw new Error("BibTeX parser loaded, but no parse function was found.");
+    }
+    
+    const parsed = parseBibtex(bibtex);
 
     console.log("Parsed BibTeX entries:", parsed);
     console.log("First parsed entry: ", parsed[0]);
