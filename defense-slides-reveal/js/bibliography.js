@@ -8,7 +8,11 @@ async function buildBibliography() {
 
   try {
     // Change this to "references.bib" if the file is next to index.html
-    const response = await fetch("assets/defense-references.bib");
+    const bibPath = `${import.meta.env.BASE_URL}assets/defense-references.bib`;
+
+    //const response = await fetch("assets/defense-references.bib");
+    const response = await fetch(bibPath);
+
 
     if (!response.ok) {
       throw new Error(`Could not load assets/defense-references.bib: ${response.status} ${response.statusText}`);
