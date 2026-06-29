@@ -1,10 +1,10 @@
 <section class="slide marginals-use-slide"
-         data-section="Contribution 1"
+         data-section="Contribution: Differentiable MRF inference for BILPs"
          data-title="What are the marginals used for?">
 
   <div class="slide-body marginals-use-body">
 
-    <div class="marginals-flow fragment fade-up">
+    <div class="marginals-flow fade-up">
 
       <div class="marginal-source-card">
         <p class="learning-label">Inference output</p>
@@ -60,15 +60,6 @@
 
     </div>
 
-    <div class="marginal-constraint-summary fragment fade-up">
-      <div>
-        <strong>Next:</strong>
-        <span>
-          clamp a partial solution \(x_A\), rerun inference, and use
-          \(\mu_i(\cdot \mid x_A)\) to guide Guided Decimation.
-        </span>
-      </div>
-    </div>
     <aside class="notes">
       The marginal of a variable is not just an independent probability output by a
       classifier. It is the result of running approximate inference on the MRF, so it

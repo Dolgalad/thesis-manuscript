@@ -1,5 +1,5 @@
 <section class="slide gd-analysis-slide"
-         data-section="Contribution 1"
+         data-section="Contribution: Differentiable MRF inference for BILPs"
          data-title="Analysis of guided decimation">
 
   <div class="slide-body gd-analysis-body">
@@ -8,7 +8,7 @@
 
       <!-- Left: marginal evolution during guided decimation -->
       <!-- Left: delta marginal evolution during guided decimation -->
-      <div class="analysis-card marginal-evolution-card fragment fade-up">
+      <div class="analysis-card marginal-evolution-card fade-up">
         <p class="learning-label">During guided decimation</p>
         <h3>Conditioning changes the marginal distribution</h3>
       
@@ -147,7 +147,7 @@
       </div>
       
       <!-- Right: theta distributions grouped by feasibility -->
-      <div class="analysis-card theta-distribution-card fragment fade-up">
+      <div class="analysis-card theta-distribution-card fade-up">
         <p class="learning-label">Learned factor parameters</p>
         <h3>\(\theta\) separates feasible and infeasible assignments</h3>
 
@@ -207,11 +207,6 @@
         </p>
       </div>
 
-    </div>
-
-    <div class="gd-analysis-takeaway fragment fade-up">
-      The decoder is adaptive: variable scores are not fixed once, but updated through
-      <strong>conditional inference</strong> under the current partial solution.
     </div>
 
     <aside class="notes">

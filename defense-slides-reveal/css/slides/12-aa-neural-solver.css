@@ -1,0 +1,308 @@
+/* src/styles/slides/21-background-neural-ilp-predictors.css */
+
+.neural-ilp-pipeline-slide {
+  --neural-ilp-width: min(100%, 1180px);
+  --neural-ilp-gap: clamp(0.7rem, 1.6vh, 1.25rem);
+}
+
+.neural-ilp-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--neural-ilp-gap);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.neural-ilp-compact-pipeline {
+  width: var(--neural-ilp-width);
+  max-width: var(--neural-ilp-width);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: clamp(0.45rem, 0.9vw, 0.8rem);
+  align-items: stretch;
+  height: min(56vh, 470px);
+  box-sizing: border-box;
+}
+
+.neural-ilp-pipeline-slide .learning-step {
+  min-width: 0;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(0.55rem, 1.2vw, 0.9rem);
+  border-radius: clamp(18px, 1.8vw, 24px);
+  text-align: center;
+}
+
+.neural-ilp-pipeline-slide .learning-svg {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  max-height: min(35vh, 292px);
+  flex: 1 1 auto;
+  display: block;
+}
+
+.neural-ilp-pipeline-slide .learning-step h3 {
+  margin: clamp(0.35rem, 0.8vh, 0.6rem) 0 0;
+  font-size: clamp(0.78rem, 1.15vw, 1.05rem);
+  line-height: 1.08;
+  text-align: center;
+}
+
+.neural-ilp-pipeline-slide .learning-label {
+  margin: 0 0 clamp(0.3rem, 0.7vh, 0.5rem);
+  font-size: clamp(0.54rem, 0.72vw, 0.72rem);
+  line-height: 1;
+  text-align: center;
+}
+
+.neural-ilp-pipeline-slide .learning-arrow {
+  align-self: center;
+  font-size: clamp(1.1rem, 2vw, 1.55rem);
+  line-height: 1;
+}
+
+.neural-ilp-input-step {
+  background: rgba(240, 247, 255, 0.92);
+  border-color: rgba(45, 80, 150, 0.24);
+}
+
+.neural-ilp-gnn-step {
+  background: rgba(245, 243, 255, 0.9);
+  border-color: rgba(109, 40, 217, 0.18);
+}
+
+.neural-ilp-decode-step {
+  background: rgba(240, 253, 244, 0.9);
+  border-color: rgba(22, 101, 52, 0.2);
+}
+
+.neural-ilp-title {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 19px;
+  font-weight: 850;
+  fill: rgba(38, 50, 70, 0.82);
+}
+
+.ilp-var,
+.ilp-embed.var {
+  fill: rgba(219, 234, 254, 0.96);
+  stroke: rgba(45, 80, 150, 0.72);
+  stroke-width: 4;
+}
+
+.ilp-cons,
+.ilp-embed.cons {
+  fill: rgba(255, 240, 220, 0.96);
+  stroke: rgba(160, 105, 35, 0.72);
+  stroke-width: 4;
+}
+
+.ilp-edge {
+  stroke: rgba(45, 80, 150, 0.34);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.ilp-node-label,
+.ilp-mini-text {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 17px;
+  font-weight: 850;
+  fill: #263246;
+}
+
+.ilp-mini-text {
+  font-size: 13px;
+}
+
+.ilp-feature-box,
+.ilp-gnn-box,
+.ilp-score-box,
+.ilp-rank-box {
+  fill: rgba(255, 255, 255, 0.9);
+  stroke-width: 3.5;
+}
+
+.ilp-feature-box {
+  stroke: rgba(45, 80, 150, 0.2);
+}
+
+.ilp-gnn-box {
+  stroke: rgba(109, 40, 217, 0.34);
+}
+
+.ilp-score-box,
+.ilp-rank-box {
+  stroke: rgba(22, 101, 52, 0.24);
+}
+
+.ilp-feature-text,
+.ilp-box-text,
+.ilp-score-title,
+.ilp-method-text,
+.ilp-rank-text {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-weight: 900;
+  fill: rgba(38, 50, 70, 0.84);
+}
+
+.ilp-feature-text,
+.ilp-box-text {
+  font-size: 20px;
+}
+
+.ilp-feature-text.small,
+.ilp-box-text.small {
+  font-size: 15px;
+  font-weight: 850;
+  fill: rgba(38, 50, 70, 0.62);
+}
+
+.ilp-flow-arrow {
+  fill: none;
+  stroke: rgba(45, 80, 150, 0.36);
+  stroke-width: 7;
+  stroke-linecap: round;
+}
+
+.ilp-score-title {
+  font-size: 19px;
+  fill: rgba(22, 101, 52, 0.76);
+}
+
+.ilp-score-line {
+  stroke: rgba(38, 50, 70, 0.2);
+  stroke-width: 7;
+  stroke-linecap: round;
+}
+
+.ilp-score-dot {
+  fill: rgba(45, 80, 150, 0.72);
+}
+
+.ilp-score-dot.selected {
+  fill: rgba(22, 101, 52, 0.86);
+}
+
+.ilp-score-label {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 14px;
+  font-weight: 850;
+  fill: rgba(38, 50, 70, 0.72);
+}
+
+.ilp-footer,
+.ilp-solution-text {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 16px;
+  font-weight: 850;
+  fill: rgba(38, 50, 70, 0.66);
+}
+
+.ilp-rank-text {
+  font-size: 24px;
+  fill: rgba(22, 101, 52, 0.84);
+}
+
+.ilp-rank-text.muted {
+  font-size: 20px;
+  fill: rgba(38, 50, 70, 0.46);
+}
+
+.ilp-method-box {
+  fill: rgba(255, 255, 255, 0.9);
+  stroke-width: 3.5;
+}
+
+.ilp-method-box.greedy {
+  stroke: rgba(22, 101, 52, 0.38);
+}
+
+.ilp-method-box.repair {
+  stroke: rgba(45, 80, 150, 0.34);
+}
+
+.ilp-method-box.solver {
+  stroke: rgba(109, 40, 217, 0.34);
+}
+
+.ilp-method-text {
+  font-size: 17px;
+  fill: rgba(38, 50, 70, 0.78);
+}
+
+.neural-ilp-caption-strip {
+  width: var(--neural-ilp-width);
+  max-width: var(--neural-ilp-width);
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  column-gap: clamp(0.45rem, 0.9vw, 0.8rem);
+  row-gap: clamp(0.35rem, 0.8vh, 0.55rem);
+  margin: clamp(0.35rem, 1.1vh, 0.8rem) auto 0;
+  padding: clamp(0.6rem, 1.15vh, 0.85rem) clamp(0.85rem, 1.6vw, 1.4rem);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.76);
+  border: 1px solid rgba(40, 50, 70, 0.12);
+  box-shadow: 0 14px 34px rgba(20, 30, 50, 0.08);
+  text-align: center;
+}
+
+.neural-ilp-caption {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.28rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(240, 247, 255, 0.72);
+  border: 1px solid rgba(45, 80, 150, 0.12);
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+  font-size: clamp(0.72rem, 1vw, 0.95rem);
+  font-weight: 800;
+  line-height: 1.18;
+  color: rgba(38, 50, 70, 0.74);
+}
+
+.neural-ilp-caption.fragment.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+@media (max-height: 780px) {
+  .neural-ilp-compact-pipeline {
+    height: min(52vh, 430px);
+  }
+
+  .neural-ilp-pipeline-slide .learning-svg {
+    max-height: min(31vh, 258px);
+  }
+
+  .neural-ilp-caption-strip {
+    margin-top: 0.45rem;
+    padding-block: 0.5rem;
+  }
+
+  .neural-ilp-caption {
+    font-size: clamp(0.66rem, 0.9vw, 0.84rem);
+    padding-block: 0.22rem;
+  }
+}

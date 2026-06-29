@@ -4,13 +4,11 @@
       
         <div class="slide-body mis-example-body">
       
-          <p class="mis-definition">
-            An <strong>independent set</strong> is a set of vertices with no edge between any selected pair.
-          </p>
-      
           <div class="mis-layout">
       
-            <div class="mis-graph-panel">
+            <div class="mis-first-fragment">
+      
+              <div class="mis-graph-panel">
       
               <svg class="mis-graph" viewBox="0 0 620 520" role="img"
                    aria-label="Example graph for maximum independent set">
@@ -180,7 +178,22 @@
       
             </div>
       
-            <div class="mis-bilp-panel">
+            <div class="mis-intro-panel">
+              <p class="mis-definition">
+                An <strong>independent set</strong> is a set of vertices with no edge between any selected pair.
+              </p>
+
+              <p class="mis-selected-set">
+                Example solution on this graph:
+                \[
+                  S = \{2,3,6,7\}
+                \]
+              </p>
+            </div>
+
+            </div>
+
+            <div class="mis-bilp-panel fragment fade-in" data-fragment-index="1">
               \[
                 \begin{aligned}
                 \max_{x} \quad
@@ -196,17 +209,9 @@
               <p>
                 \(x_i = 1\) means vertex \(i\) is selected.
               </p>
-      
-              <p class="mis-selected-set fragment">
-                Example solution:
-                \[
-                  S = \{2,3,6,7\}
-                \]
-              </p>
             </div>
       
           </div>
       
         </div>
       </section>
-

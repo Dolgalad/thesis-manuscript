@@ -1,34 +1,28 @@
 #!/usr/bin/env python3
 """
-manage_slides.py
+manage_slides_safe.py
 
-Utility for managing Reveal.js slide fragments stored as separate HTML files.
+Idempotent Reveal.js slide manager.
+
+Design principle:
+  format/renumber must be safe to run repeatedly.
+  One run computes one canonical deck state, writes exactly that state,
+  removes duplicate/orphan slide files, and rebuilds css/slides.css imports.
 
 Expected structure:
+  slides/*.html
+  css/slides/*.css
+  css/slides.css
 
-  slides/
-    001-title.html
-    002-outline.html
-    ...
-
-  css/
-    slides.css
-    slides/
-      001-title.css
-      002-outline.css
-      ...
-
-The build script can remain simple: it only concatenates slide HTML files
-in lexicographical order.
-
-This tool handles:
-  - inserting slides from an HTML file containing one or more <section> blocks
-  - removing slides
-  - moving slides
-  - renumbering slides
-  - formatting slide HTML indentation
-  - checking consistency
-  - syncing css/slides.css imports
+Canonical naming:
+  normal slide with data-section and data-title:
+    NN-section-title.html
+  title slide class="title-slide":
+    NN-title.html
+  divider slide with section-divider-slide attribute:
+    NN-title-or-section.html
+  when data-section == data-title:
+    NN-title.html
 
 All mutating commands support --simulate.
 """
@@ -36,121 +30,71 @@ All mutating commands support --simulate.
 from __future__ import annotations
 
 import argparse
+import datetime as dt
 import html
 import re
+import shutil
 import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Optional
 
-
-# ---------------------------------------------------------------------
-# Configuration
-# ---------------------------------------------------------------------
-
 PROJECT_ROOT = Path.cwd()
-
 SLIDES_DIR = PROJECT_ROOT / "slides"
 CSS_DIR = PROJECT_ROOT / "css"
 CSS_SLIDES_DIR = CSS_DIR / "slides"
 CSS_MANIFEST = CSS_DIR / "slides.css"
 
-print("Slides dir : ", SLIDES_DIR)
-print("css dir : ", CSS_DIR)
-print("css manifest : ", CSS_MANIFEST)
-
 IMPORT_BEGIN = "/* BEGIN AUTO SLIDE IMPORTS */"
 IMPORT_END = "/* END AUTO SLIDE IMPORTS */"
 
-NUMBER_WIDTH = 3
-
-SECTION_RE = re.compile(
-    r"<section\b[^>]*>.*?</section>",
-    flags=re.IGNORECASE | re.DOTALL,
-)
-
-IMPORT_RE = re.compile(
-    r"""@import\s+(?:url\()?["'](?P<path>./slides/[^"')]+\.css)["']\)?\s*;"""
-)
+SECTION_RE = re.compile(r"<section\b[^>]*>.*?</section>", flags=re.I | re.S)
+OPEN_SECTION_RE = re.compile(r"<section\b[^>]*>", flags=re.I | re.S)
+IMPORT_RE = re.compile(r"""^\s*@import\s+(?:url\()?['\"](?P<path>\./slides/[^'\")]+\.css)['\"]\)?\s*;\s*$""", flags=re.I | re.M)
+ANY_SLIDE_IMPORT_RE = re.compile(r"""\s*@import\s+(?:url\()?['\"]\./slides/[^'\")]+\.css['\"]\)?\s*;\s*\n?""", flags=re.I)
 
 VOID_TAGS = {
-    "area",
-    "base",
-    "br",
-    "col",
-    "embed",
-    "hr",
-    "img",
-    "input",
-    "link",
-    "meta",
-    "param",
-    "source",
-    "track",
-    "wbr",
+    "area", "base", "br", "col", "embed", "hr", "img", "input", "link",
+    "meta", "param", "source", "track", "wbr",
 }
+RAW_TEXT_TAGS = {"script", "style", "pre", "code", "textarea"}
 
-RAW_TEXT_TAGS = {
-    "script",
-    "style",
-    "pre",
-    "code",
-    "textarea",
-}
-
-
-# ---------------------------------------------------------------------
-# Data structures
-# ---------------------------------------------------------------------
 
 @dataclass(frozen=True)
-class SlideEntry:
-    number: int
+class SlideSource:
+    path: Path
+    order_number: Optional[int]
+    order_width: Optional[int]
+    old_slug: str
+    content: str
+    section: str
+    canonical_slug: str
+
+
+@dataclass(frozen=True)
+class CanonicalSlide:
+    index: int
     slug: str
-    html_path: Path
-    css_path: Optional[Path]
-
-    @property
-    def basename(self) -> str:
-        return f"{self.number:0{NUMBER_WIDTH}d}-{self.slug}"
-
-    @property
-    def html_name(self) -> str:
-        return f"{self.basename}.html"
-
-    @property
-    def css_name(self) -> str:
-        return f"{self.basename}.css"
+    html_name: str
+    css_name: str
+    source: SlideSource
+    css_source: Optional[Path]
+    css_content: Optional[str]
 
 
 @dataclass(frozen=True)
-class FileMove:
-    src: Path
-    dst: Path
-
-
-@dataclass(frozen=True)
-class FileWrite:
+class WriteOp:
     path: Path
     content: str
 
 
 @dataclass(frozen=True)
-class FileDelete:
+class DeleteOp:
     path: Path
 
 
-@dataclass(frozen=True)
-class PlannedSlide:
-    slug: str
-    html_source_path: Optional[Path]
-    html_content: Optional[str]
-    css_source_path: Optional[Path]
-    css_content: Optional[str]
-
-
 # ---------------------------------------------------------------------
-# Utility helpers
+# Basic helpers
 # ---------------------------------------------------------------------
 
 def die(message: str, code: int = 1) -> None:
@@ -163,25 +107,78 @@ def ensure_dirs() -> None:
     CSS_SLIDES_DIR.mkdir(parents=True, exist_ok=True)
 
 
-def parse_slide_filename(path: Path) -> Optional[tuple[int, str]]:
-    match = re.match(rf"^(\d{{{NUMBER_WIDTH}}})-(.+)\.html$", path.name)
+def parse_numbered_stem(path: Path, suffix: str) -> tuple[Optional[int], Optional[int], str]:
+    if path.suffix != suffix:
+        return None, None, path.stem
+    match = re.match(r"^(\d+)-(.+)$", path.stem)
+    if not match:
+        return None, None, path.stem
+    raw_number = match.group(1)
+    return int(raw_number), len(raw_number), match.group(2)
+
+
+def detect_number_width(paths: Iterable[Path], explicit: Optional[int] = None) -> int:
+    if explicit is not None:
+        return explicit
+
+    counts: dict[int, int] = {}
+    for path in paths:
+        _, width, _ = parse_numbered_stem(path, path.suffix)
+        if width is not None:
+            counts[width] = counts.get(width, 0) + 1
+
+    if not counts:
+        return 2
+
+    # Most common width. Ties prefer the smaller width, so 02 wins over 002 if mixed.
+    return sorted(counts.items(), key=lambda item: (-item[1], item[0]))[0][0]
+
+
+def natural_file_order(path: Path) -> tuple[int, int, str]:
+    number, _, _ = parse_numbered_stem(path, path.suffix)
+    if number is None:
+        return (1, 10**9, path.name)
+    return (0, number, path.name)
+
+
+def read_text(path: Path) -> str:
+    return path.read_text(encoding="utf-8")
+
+
+def normalize_newline(content: str) -> str:
+    return content if content.endswith("\n") else content + "\n"
+
+
+# ---------------------------------------------------------------------
+# HTML metadata and formatting
+# ---------------------------------------------------------------------
+
+def opening_section_tag(section: str) -> str:
+    match = OPEN_SECTION_RE.search(section)
+    return match.group(0) if match else ""
+
+
+def attr_value(section: str, attr: str) -> Optional[str]:
+    tag = opening_section_tag(section)
+    if not tag:
+        return None
+    match = re.search(rf"\b{re.escape(attr)}\s*=\s*(['\"])(.*?)\1", tag, flags=re.I | re.S)
     if not match:
         return None
-    return int(match.group(1)), match.group(2)
+    return html.unescape(match.group(2)).strip()
 
 
-def parse_css_filename(path: Path) -> Optional[tuple[int, str]]:
-    match = re.match(rf"^(\d{{{NUMBER_WIDTH}}})-(.+)\.css$", path.name)
-    if not match:
-        return None
-    return int(match.group(1)), match.group(2)
+def has_attr(section: str, attr: str) -> bool:
+    tag = opening_section_tag(section)
+    return bool(re.search(rf"\b{re.escape(attr)}(?:\s*=|\s|>|/)", tag, flags=re.I))
 
 
-def numbered_name(number: int, slug: str, suffix: str) -> str:
-    return f"{number:0{NUMBER_WIDTH}d}-{slug}{suffix}"
+def has_class(section: str, class_name: str) -> bool:
+    classes = attr_value(section, "class") or ""
+    return class_name in classes.split()
 
 
-def extract_text_from_html(fragment: str) -> str:
+def extract_text(fragment: str) -> str:
     text = re.sub(r"<script\b[^>]*>.*?</script>", " ", fragment, flags=re.I | re.S)
     text = re.sub(r"<style\b[^>]*>.*?</style>", " ", text, flags=re.I | re.S)
     text = re.sub(r"<[^>]+>", " ", text)
@@ -190,144 +187,88 @@ def extract_text_from_html(fragment: str) -> str:
     return text.strip()
 
 
-def first_heading_text(section: str) -> Optional[str]:
-    match = re.search(
-        r"<h[1-3]\b[^>]*>(.*?)</h[1-3]>",
-        section,
-        flags=re.I | re.S,
-    )
-    if not match:
-        return None
-    return extract_text_from_html(match.group(1))
+def first_heading(section: str) -> Optional[str]:
+    match = re.search(r"<h[1-3]\b[^>]*>(.*?)</h[1-3]>", section, flags=re.I | re.S)
+    return extract_text(match.group(1)) if match else None
 
 
-def data_title_text(section: str) -> Optional[str]:
-    match = re.search(
-        r"<section\b[^>]*\bdata-title=[\"']([^\"']+)[\"']",
-        section,
-        flags=re.I | re.S,
-    )
-    if not match:
-        return None
-    return html.unescape(match.group(1)).strip()
-
-
-def slugify(text: str, fallback: str = "slide", max_words: int = 8) -> str:
+def slugify(text: Optional[str], fallback: str = "slide", max_words: int = 10) -> str:
+    if not text:
+        return fallback
+    text = html.unescape(text).lower()
     text = re.sub(r"\$.*?\$", " ", text)
     text = re.sub(r"\\\w+(?:\{[^}]*\})?", " ", text)
-    text = html.unescape(text)
-    text = text.lower()
     text = re.sub(r"[^a-z0-9]+", " ", text)
     words = [word for word in text.split() if word]
-
-    if not words:
-        return fallback
-
-    return "-".join(words[:max_words])
+    return "-".join(words[:max_words]) if words else fallback
 
 
-def slug_from_section(section: str, fallback_index: int) -> str:
-    title = data_title_text(section)
+def slug_from_section(section: str, fallback: str) -> str:
+    data_section = attr_value(section, "data-section")
+    data_title = attr_value(section, "data-title")
 
-    if not title:
-        title = first_heading_text(section)
+    section_slug = slugify(data_section, fallback="") if data_section else ""
+    title_slug = slugify(data_title, fallback="") if data_title else ""
 
-    if not title:
-        title = extract_text_from_html(section)
+    title_slide = has_class(section, "title-slide")
+    divider_slide = has_attr(section, "section-divider-slide")
 
-    return slugify(title, fallback=f"slide-{fallback_index}")
+    if title_slide or divider_slide:
+        return title_slug or section_slug or slugify(first_heading(section), fallback=fallback)
+
+    if section_slug and title_slug:
+        if section_slug == title_slug:
+            return title_slug
+        return f"{section_slug}-{title_slug}"
+
+    return title_slug or section_slug or slugify(first_heading(section) or extract_text(section), fallback=fallback)
 
 
 def unique_slugs(slugs: Iterable[str]) -> list[str]:
     seen: dict[str, int] = {}
     result: list[str] = []
-
     for slug in slugs:
-        base = slug
+        base = slug or "slide"
         count = seen.get(base, 0)
-
-        if count == 0:
-            result.append(base)
-        else:
-            result.append(f"{base}-{count + 1}")
-
+        result.append(base if count == 0 else f"{base}-{count + 1}")
         seen[base] = count + 1
-
     return result
 
 
-def make_text_write(path: Path, content: str) -> FileWrite:
-    if not content.endswith("\n"):
-        content += "\n"
-    return FileWrite(path, content)
-
-
-def make_html_write(path: Path, content: str) -> FileWrite:
-    return FileWrite(path, format_html_fragment(content))
-
-
-# ---------------------------------------------------------------------
-# HTML formatting
-# ---------------------------------------------------------------------
-
 def format_html_fragment(source: str, indent: str = "  ") -> str:
-    """
-    Lightweight formatter for Reveal.js slide fragments.
-
-    This is intentionally conservative:
-      - preserves content inside raw text tags reasonably well
-      - indents nested tags by two spaces
-      - returns a trailing newline
-
-    It is not a full browser-grade HTML formatter, but it is suitable for
-    predictable Reveal.js slide fragments.
-    """
     source = source.strip()
-
-    tokens = re.findall(
-        r"<!--.*?-->|<!\[CDATA\[.*?\]\]>|</?[^>]+>|[^<]+",
-        source,
-        flags=re.S,
-    )
+    tokens = re.findall(r"<!--.*?-->|<!\[CDATA\[.*?\]\]>|</?[^>]+>|[^<]+", source, flags=re.S)
 
     lines: list[str] = []
     level = 0
     raw_stack: list[str] = []
 
-    def current_indent() -> str:
+    def pad() -> str:
         return indent * max(level, 0)
 
     for token in tokens:
         if not token:
             continue
-
         stripped = token.strip()
-
         if not stripped:
             continue
 
         if raw_stack:
-            closing_raw = re.match(
-                rf"</{re.escape(raw_stack[-1])}\s*>",
-                stripped,
-                flags=re.I,
-            )
-
+            closing_raw = re.match(rf"</{re.escape(raw_stack[-1])}\s*>", stripped, flags=re.I)
             if closing_raw:
                 level -= 1
-                lines.append(current_indent() + stripped)
+                lines.append(pad() + stripped)
                 raw_stack.pop()
             else:
-                raw_lines = token.strip("\n").splitlines()
-                for raw_line in raw_lines:
+                for raw_line in token.strip("\n").splitlines():
                     if raw_line.strip():
-                        lines.append(current_indent() + raw_line.rstrip())
+                        lines.append(pad() + raw_line.rstrip())
             continue
 
         close_match = re.match(r"</([a-zA-Z0-9:-]+)\s*>", stripped)
         if close_match:
             level -= 1
-            lines.append(current_indent() + stripped)
+            lines.append(pad() + stripped)
             continue
 
         open_match = re.match(r"<([a-zA-Z0-9:-]+)(\s|>|/)", stripped)
@@ -336,709 +277,421 @@ def format_html_fragment(source: str, indent: str = "  ") -> str:
             is_comment = stripped.startswith("<!--")
             is_doctype = stripped.startswith("<!")
             is_inline_closed = re.search(rf"</{re.escape(tag)}\s*>", stripped, flags=re.I)
-            is_self_closing = (
-                stripped.endswith("/>")
-                or tag in VOID_TAGS
-                or is_comment
-                or is_doctype
-                or bool(is_inline_closed)
-            )
+            is_self_closing = stripped.endswith("/>") or tag in VOID_TAGS or is_comment or is_doctype or bool(is_inline_closed)
 
-            lines.append(current_indent() + stripped)
-
+            lines.append(pad() + stripped)
             if not is_self_closing:
                 level += 1
                 if tag in RAW_TEXT_TAGS:
                     raw_stack.append(tag)
-
             continue
 
         text = re.sub(r"\s+", " ", stripped)
         if text:
-            lines.append(current_indent() + text)
+            lines.append(pad() + text)
 
-    formatted = "\n".join(line.rstrip() for line in lines if line.strip())
-    return formatted + "\n"
-
-
-def html_needs_formatting(path: Path) -> bool:
-    original = path.read_text(encoding="utf-8")
-    formatted = format_html_fragment(original)
-    return original != formatted
+    return "\n".join(line.rstrip() for line in lines if line.strip()) + "\n"
 
 
 # ---------------------------------------------------------------------
-# Slide discovery
+# Planning
 # ---------------------------------------------------------------------
 
-def read_slide_entries() -> list[SlideEntry]:
+def load_slide_sources() -> list[SlideSource]:
     if not SLIDES_DIR.exists():
         return []
 
-    entries: list[SlideEntry] = []
+    html_files = sorted(SLIDES_DIR.glob("*.html"), key=natural_file_order)
+    sources: list[SlideSource] = []
 
-    for html_path in sorted(SLIDES_DIR.glob("*.html")):
-        parsed = parse_slide_filename(html_path)
+    for fallback_index, path in enumerate(html_files, start=1):
+        number, width, old_slug = parse_numbered_stem(path, ".html")
+        content = read_text(path)
+        sections = SECTION_RE.findall(content)
 
-        if parsed is None:
-            continue
+        if len(sections) != 1:
+            # Keep it visible and fail instead of guessing. This prevents destructive cleanup.
+            die(f"{path} must contain exactly one <section> block; found {len(sections)}.")
 
-        number, slug = parsed
-        css_path = CSS_SLIDES_DIR / f"{number:0{NUMBER_WIDTH}d}-{slug}.css"
+        section = sections[0]
+        canonical_slug = slug_from_section(section, fallback=f"slide-{fallback_index}")
+        sources.append(
+            SlideSource(
+                path=path,
+                order_number=number,
+                order_width=width,
+                old_slug=old_slug,
+                content=format_html_fragment(section),
+                section=section,
+                canonical_slug=canonical_slug,
+            )
+        )
 
-        entries.append(
-            SlideEntry(
-                number=number,
+    return sources
+
+
+def source_order_key(source: SlideSource) -> tuple[int, int, str]:
+    if source.order_number is None:
+        return (1, 10**9, source.path.name)
+    return (0, source.order_number, source.path.name)
+
+
+def find_css_source(source: SlideSource, css_files: list[Path], used: set[Path], final_stem: str) -> Optional[Path]:
+    candidates: list[Path] = []
+
+    # Prefer exact current stem, then same number, then same old slug.
+    exact_old = CSS_SLIDES_DIR / f"{source.path.stem}.css"
+    if exact_old in css_files:
+        candidates.append(exact_old)
+
+    if source.order_number is not None:
+        for css_path in css_files:
+            number, _, _ = parse_numbered_stem(css_path, ".css")
+            if number == source.order_number:
+                candidates.append(css_path)
+
+    for css_path in css_files:
+        _, _, slug = parse_numbered_stem(css_path, ".css")
+        if slug == source.old_slug or slug == source.canonical_slug or css_path.stem == final_stem:
+            candidates.append(css_path)
+
+    for candidate in candidates:
+        if candidate in css_files and candidate not in used:
+            used.add(candidate)
+            return candidate
+
+    return None
+
+
+def build_canonical_deck(number_width: int, create_missing_css: bool = True) -> list[CanonicalSlide]:
+    sources = sorted(load_slide_sources(), key=source_order_key)
+    slugs = unique_slugs(source.canonical_slug for source in sources)
+    css_files = sorted(CSS_SLIDES_DIR.glob("*.css"), key=natural_file_order) if CSS_SLIDES_DIR.exists() else []
+    used_css: set[Path] = set()
+
+    deck: list[CanonicalSlide] = []
+    for index, (source, slug) in enumerate(zip(sources, slugs), start=1):
+        stem = f"{index:0{number_width}d}-{slug}"
+        html_name = f"{stem}.html"
+        css_name = f"{stem}.css"
+        css_source = find_css_source(source, css_files, used_css, stem)
+        css_content = None
+        if css_source is not None:
+            css_content = normalize_newline(read_text(css_source))
+        elif create_missing_css:
+            css_content = f"/* Styles for {html_name} */\n"
+
+        deck.append(
+            CanonicalSlide(
+                index=index,
                 slug=slug,
-                html_path=html_path,
-                css_path=css_path if css_path.exists() else None,
+                html_name=html_name,
+                css_name=css_name,
+                source=source,
+                css_source=css_source,
+                css_content=css_content,
             )
         )
 
-    return sorted(entries, key=lambda entry: entry.number)
+    return deck
 
 
-def current_planned_slides() -> list[PlannedSlide]:
-    entries = read_slide_entries()
-    planned: list[PlannedSlide] = []
-
-    for entry in entries:
-        planned.append(
-            PlannedSlide(
-                slug=entry.slug,
-                html_source_path=entry.html_path,
-                html_content=None,
-                css_source_path=entry.css_path,
-                css_content=None,
-            )
-        )
-
-    return planned
+def import_lines_for_deck(deck: list[CanonicalSlide]) -> list[str]:
+    return [f'@import "./slides/{slide.css_name}";' for slide in deck if slide.css_content is not None]
 
 
-# ---------------------------------------------------------------------
-# Section extraction
-# ---------------------------------------------------------------------
-
-def extract_sections(source_html: Path) -> list[str]:
-    if not source_html.exists():
-        die(f"Input HTML file does not exist: {source_html}")
-
-    content = source_html.read_text(encoding="utf-8")
-    sections = SECTION_RE.findall(content)
-
-    if not sections:
-        die(f"No <section>...</section> blocks found in {source_html}")
-
-    return [format_html_fragment(section) for section in sections]
-
-
-# ---------------------------------------------------------------------
-# CSS manifest handling
-# ---------------------------------------------------------------------
-
-def import_line_for_css(css_name: str) -> str:
-    return f'@import "./slides/{css_name}";'
-
-
-def expected_import_lines_from_files() -> list[str]:
-    css_files = sorted(CSS_SLIDES_DIR.glob("*.css"))
-    return [import_line_for_css(path.name) for path in css_files]
-
-
-def read_manifest() -> str:
-    if not CSS_MANIFEST.exists():
-        return f"{IMPORT_BEGIN}\n{IMPORT_END}\n"
-    return CSS_MANIFEST.read_text(encoding="utf-8")
-
-
-def replace_managed_import_block(content: str, import_lines: list[str]) -> str:
+def clean_manifest(content: str, import_lines: list[str]) -> str:
     block = IMPORT_BEGIN + "\n"
-
     if import_lines:
         block += "\n".join(import_lines) + "\n"
-
     block += IMPORT_END
 
     if IMPORT_BEGIN in content and IMPORT_END in content:
-        pattern = re.compile(
-            re.escape(IMPORT_BEGIN) + r".*?" + re.escape(IMPORT_END),
-            flags=re.S,
-        )
-        return pattern.sub(block, content)
+        content = re.sub(re.escape(IMPORT_BEGIN) + r".*?" + re.escape(IMPORT_END), "", content, flags=re.S)
 
-    prefix = block + "\n\n"
-    return prefix + content.strip() + "\n"
+    # Remove every slide import anywhere in the manifest. Keep non-slide imports/comments.
+    content = ANY_SLIDE_IMPORT_RE.sub("", content).strip()
+    return block + ("\n\n" + content + "\n" if content else "\n")
 
 
-def sync_imports_plan() -> list[FileWrite]:
-    content = read_manifest()
-    synced = replace_managed_import_block(content, expected_import_lines_from_files())
+def plan_rewrite(deck: list[CanonicalSlide]) -> tuple[list[WriteOp], list[DeleteOp]]:
+    desired_html = {SLIDES_DIR / slide.html_name for slide in deck}
+    desired_css = {CSS_SLIDES_DIR / slide.css_name for slide in deck if slide.css_content is not None}
 
-    if synced == content:
-        return []
+    writes: list[WriteOp] = []
+    deletes: list[DeleteOp] = []
 
-    return [make_text_write(CSS_MANIFEST, synced)]
+    for slide in deck:
+        writes.append(WriteOp(SLIDES_DIR / slide.html_name, slide.source.content))
+        if slide.css_content is not None:
+            writes.append(WriteOp(CSS_SLIDES_DIR / slide.css_name, slide.css_content))
 
+    old_manifest = read_text(CSS_MANIFEST) if CSS_MANIFEST.exists() else ""
+    writes.append(WriteOp(CSS_MANIFEST, clean_manifest(old_manifest, import_lines_for_deck(deck))))
 
-def imports_in_manifest() -> list[str]:
-    content = read_manifest()
-    return [match.group("path") for match in IMPORT_RE.finditer(content)]
+    for path in sorted(SLIDES_DIR.glob("*.html"), key=natural_file_order) if SLIDES_DIR.exists() else []:
+        if path not in desired_html:
+            deletes.append(DeleteOp(path))
+
+    for path in sorted(CSS_SLIDES_DIR.glob("*.css"), key=natural_file_order) if CSS_SLIDES_DIR.exists() else []:
+        if path not in desired_css:
+            deletes.append(DeleteOp(path))
+
+    return writes, deletes
 
 
 # ---------------------------------------------------------------------
-# Transaction handling
+# Transaction
 # ---------------------------------------------------------------------
 
-def print_plan(
-    title: str,
-    moves: Optional[list[FileMove]] = None,
-    writes: Optional[list[FileWrite]] = None,
-    deletes: Optional[list[FileDelete]] = None,
-) -> None:
-    moves = moves or []
-    writes = writes or []
-    deletes = deletes or []
+def backup_project() -> Optional[Path]:
+    existing = [p for p in [SLIDES_DIR, CSS_SLIDES_DIR, CSS_MANIFEST] if p.exists()]
+    if not existing:
+        return None
 
+    backup_root = PROJECT_ROOT / ".slide_manager_backups" / dt.datetime.now().strftime("%Y%m%d-%H%M%S")
+    backup_root.mkdir(parents=True, exist_ok=True)
+
+    if SLIDES_DIR.exists():
+        shutil.copytree(SLIDES_DIR, backup_root / "slides")
+    if CSS_SLIDES_DIR.exists():
+        shutil.copytree(CSS_SLIDES_DIR, backup_root / "css" / "slides", dirs_exist_ok=True)
+    if CSS_MANIFEST.exists():
+        (backup_root / "css").mkdir(parents=True, exist_ok=True)
+        shutil.copy2(CSS_MANIFEST, backup_root / "css" / "slides.css")
+
+    return backup_root
+
+
+def print_plan(title: str, writes: list[WriteOp], deletes: list[DeleteOp]) -> None:
     print(f"\n{title}")
-
-    if not moves and not writes and not deletes:
+    if not writes and not deletes:
         print("  No changes.")
         return
 
-    if moves:
-        print("\n  Moves:")
-        for move in moves:
-            print(f"    {move.src} -> {move.dst}")
-
     if writes:
-        print("\n  Writes:")
-        for write in writes:
-            print(f"    {write.path}")
+        print("\n  Write/replace:")
+        for op in writes:
+            print(f"    {op.path}")
 
     if deletes:
-        print("\n  Deletes:")
-        for delete in deletes:
-            print(f"    {delete.path}")
+        print("\n  Delete duplicates/orphans:")
+        for op in deletes:
+            print(f"    {op.path}")
 
 
-def apply_transaction(
-    moves: list[FileMove],
-    writes: list[FileWrite],
-    deletes: list[FileDelete],
-    simulate: bool,
-) -> None:
+def apply_rewrite(writes: list[WriteOp], deletes: list[DeleteOp], simulate: bool, backup: bool) -> None:
     if simulate:
         return
 
     ensure_dirs()
+    backup_path = backup_project() if backup else None
 
-    move_dsts = {move.dst.resolve() for move in moves}
+    # Write canonical files first. Then delete non-canonical files only.
+    for op in writes:
+        op.path.parent.mkdir(parents=True, exist_ok=True)
+        op.path.write_text(normalize_newline(op.content), encoding="utf-8")
 
-    for delete in deletes:
-        if delete.path.resolve() in move_dsts:
-            continue
+    for op in deletes:
+        if op.path.exists():
+            op.path.unlink()
 
-        if delete.path.exists():
-            delete.path.unlink()
-
-    temp_moves: list[FileMove] = []
-    final_moves: list[FileMove] = []
-
-    for index, move in enumerate(moves):
-        if not move.src.exists():
-            continue
-
-        if move.src.resolve() == move.dst.resolve():
-            continue
-
-        temp = move.src.with_name(f".tmp-slide-manager-{index}-{move.src.name}")
-        temp_moves.append(FileMove(move.src, temp))
-        final_moves.append(FileMove(temp, move.dst))
-
-    for move in temp_moves:
-        move.dst.parent.mkdir(parents=True, exist_ok=True)
-        move.src.rename(move.dst)
-
-    for move in final_moves:
-        move.dst.parent.mkdir(parents=True, exist_ok=True)
-        move.dst.unlink(missing_ok=True)
-        move.src.rename(move.dst)
-
-    for write in writes:
-        write.path.parent.mkdir(parents=True, exist_ok=True)
-        write.path.write_text(write.content, encoding="utf-8")
-
-
-# ---------------------------------------------------------------------
-# Rebuild planning
-# ---------------------------------------------------------------------
-
-def plan_rebuild_from_order(
-    planned: list[PlannedSlide],
-    create_missing_css: bool = True,
-) -> tuple[list[FileMove], list[FileWrite], list[FileDelete]]:
-    existing_html = set(SLIDES_DIR.glob("*.html")) if SLIDES_DIR.exists() else set()
-    existing_css = set(CSS_SLIDES_DIR.glob("*.css")) if CSS_SLIDES_DIR.exists() else set()
-
-    moves: list[FileMove] = []
-    writes: list[FileWrite] = []
-
-    desired_html: set[Path] = set()
-    desired_css: set[Path] = set()
-
-    used_slugs = unique_slugs([item.slug for item in planned])
-
-    for index, item in enumerate(planned, start=1):
-        slug = used_slugs[index - 1]
-
-        html_dst = SLIDES_DIR / numbered_name(index, slug, ".html")
-        css_dst = CSS_SLIDES_DIR / numbered_name(index, slug, ".css")
-
-        desired_html.add(html_dst)
-
-        if item.html_source_path is not None:
-            moves.append(FileMove(item.html_source_path, html_dst))
-        elif item.html_content is not None:
-            writes.append(make_html_write(html_dst, item.html_content))
-        else:
-            die("Internal error: planned slide has no HTML source or content.")
-
-        if item.css_source_path is not None:
-            desired_css.add(css_dst)
-            moves.append(FileMove(item.css_source_path, css_dst))
-        elif item.css_content is not None:
-            desired_css.add(css_dst)
-            writes.append(make_text_write(css_dst, item.css_content))
-        elif create_missing_css:
-            desired_css.add(css_dst)
-            writes.append(make_text_write(css_dst, f"/* Styles for {html_dst.name} */"))
-
-    deletes: list[FileDelete] = []
-
-    for path in sorted(existing_html):
-        if path not in desired_html:
-            deletes.append(FileDelete(path))
-
-    for path in sorted(existing_css):
-        if path not in desired_css:
-            deletes.append(FileDelete(path))
-
-    return moves, writes, deletes
+    if backup_path:
+        print(f"\nBackup written to: {backup_path}")
 
 
 # ---------------------------------------------------------------------
 # Commands
 # ---------------------------------------------------------------------
 
-def cmd_list(args: argparse.Namespace) -> None:
-    entries = read_slide_entries()
-
-    if not entries:
-        print("No slide files found.")
-        return
-
-    for entry in entries:
-        css_status = "css" if entry.css_path else "missing-css"
-        print(f"{entry.number:0{NUMBER_WIDTH}d}  {entry.slug}  [{css_status}]")
-
-
-def cmd_check(args: argparse.Namespace) -> None:
-    errors: list[str] = []
-    warnings: list[str] = []
-    format_writes: list[FileWrite] = []
-
-    html_files = sorted(SLIDES_DIR.glob("*.html")) if SLIDES_DIR.exists() else []
-    css_files = sorted(CSS_SLIDES_DIR.glob("*.css")) if CSS_SLIDES_DIR.exists() else []
-
-    parsed_html: list[tuple[int, str, Path]] = []
-
-    for path in html_files:
-        parsed = parse_slide_filename(path)
-
-        if parsed is None:
-            errors.append(f"Invalid slide filename: {path}")
-            continue
-
-        number, slug = parsed
-        parsed_html.append((number, slug, path))
-
-        content = path.read_text(encoding="utf-8")
-        sections = SECTION_RE.findall(content)
-
-        if len(sections) == 0:
-            errors.append(f"{path} contains no <section> block.")
-        elif len(sections) > 1:
-            errors.append(f"{path} contains {len(sections)} <section> blocks.")
-
-        formatted = format_html_fragment(content)
-        if content != formatted:
-            message = f"Bad indentation or formatting in {path}."
-            if args.simulate:
-                warnings.append(message)
-                format_writes.append(FileWrite(path, formatted))
-            else:
-                errors.append(message + " Run: python tools/manage_slides.py format")
-
-        expected_css = CSS_SLIDES_DIR / f"{number:0{NUMBER_WIDTH}d}-{slug}.css"
-        if not expected_css.exists():
-            message = f"Missing matching CSS file for {path}: expected {expected_css}"
-            if args.allow_missing_css:
-                warnings.append(message)
-            else:
-                errors.append(message)
-
-    numbers = [number for number, _, _ in parsed_html]
-
-    for number in sorted(set(numbers)):
-        if numbers.count(number) > 1:
-            errors.append(f"Duplicate slide number: {number:0{NUMBER_WIDTH}d}")
-
-    if numbers:
-        expected_numbers = list(range(1, max(numbers) + 1))
-        missing_numbers = sorted(set(expected_numbers) - set(numbers))
-
-        for number in missing_numbers:
-            errors.append(f"Missing slide number: {number:0{NUMBER_WIDTH}d}")
-
-    html_basenames = {path.stem for _, _, path in parsed_html}
-
-    for css_path in css_files:
-        parsed = parse_css_filename(css_path)
-
-        if parsed is None:
-            warnings.append(f"Invalid slide CSS filename: {css_path}")
-            continue
-
-        if css_path.stem not in html_basenames:
-            warnings.append(f"Orphan CSS file: {css_path}")
-
-    actual_imports = imports_in_manifest()
-    expected_imports = [f"./slides/{path.name}" for path in css_files]
-
-    actual_set = set(actual_imports)
-    expected_set = set(expected_imports)
-
-    for missing_import in sorted(expected_set - actual_set):
-        errors.append(
-            f"Missing import in {CSS_MANIFEST}: "
-            f'@import "{missing_import}";'
-        )
-
-    for stale_import in sorted(actual_set - expected_set):
-        errors.append(
-            f"Stale import in {CSS_MANIFEST}: "
-            f'@import "{stale_import}";'
-        )
-
-    if actual_imports != expected_imports:
-        errors.append(f"Imports in {CSS_MANIFEST} are not synchronized or not in slide order.")
-
-    if args.simulate and format_writes:
-        print_plan("Formatting changes that would be needed", writes=format_writes)
-
-    if warnings:
-        print("\nWarnings:")
-        for warning in warnings:
-            print(f"  - {warning}")
-
-    if errors:
-        print("\nErrors:")
-        for error in errors:
-            print(f"  - {error}")
-        raise SystemExit(1)
-
-    print("Slide structure looks good.")
-
-
 def cmd_format(args: argparse.Namespace) -> None:
-    writes: list[FileWrite] = []
-
-    html_files = sorted(SLIDES_DIR.glob("*.html")) if SLIDES_DIR.exists() else []
-
-    for path in html_files:
-        original = path.read_text(encoding="utf-8")
-        formatted = format_html_fragment(original)
-
-        if original != formatted:
-            writes.append(FileWrite(path, formatted))
-
-    writes.extend(sync_imports_plan())
-
-    print_plan("Format slide files", writes=writes)
-    apply_transaction([], writes, [], simulate=args.simulate)
+    html_paths = list(SLIDES_DIR.glob("*.html")) if SLIDES_DIR.exists() else []
+    number_width = detect_number_width(html_paths, explicit=args.number_width)
+    deck = build_canonical_deck(number_width=number_width, create_missing_css=not args.no_css)
+    writes, deletes = plan_rewrite(deck)
+    print_plan("Canonical format/cleanup", writes, deletes)
+    apply_rewrite(writes, deletes, simulate=args.simulate, backup=not args.no_backup)
 
 
 def cmd_sync_imports(args: argparse.Namespace) -> None:
-    writes = sync_imports_plan()
-
-    print_plan("Sync CSS imports", writes=writes)
-    apply_transaction([], writes, [], simulate=args.simulate)
-
-
-def cmd_renumber(args: argparse.Namespace) -> None:
-    planned = current_planned_slides()
-
-    moves, writes, deletes = plan_rebuild_from_order(
-        planned,
-        create_missing_css=not args.no_css,
-    )
-
-    print_plan("Renumber slides", moves=moves, writes=writes, deletes=deletes)
-
-    if not args.simulate:
-        apply_transaction(moves, writes, deletes, simulate=False)
-        sync_writes = sync_imports_plan()
-        apply_transaction([], sync_writes, [], simulate=False)
-    else:
-        print("\n  Then regenerate css/slides.css imports.")
+    html_paths = list(SLIDES_DIR.glob("*.html")) if SLIDES_DIR.exists() else []
+    number_width = detect_number_width(html_paths, explicit=args.number_width)
+    deck = build_canonical_deck(number_width=number_width, create_missing_css=not args.no_css)
+    old_manifest = read_text(CSS_MANIFEST) if CSS_MANIFEST.exists() else ""
+    write = WriteOp(CSS_MANIFEST, clean_manifest(old_manifest, import_lines_for_deck(deck)))
+    print_plan("Sync CSS manifest", [write], [])
+    apply_rewrite([write], [], simulate=args.simulate, backup=not args.no_backup)
 
 
-def cmd_insert(args: argparse.Namespace) -> None:
-    at = args.at
+def cmd_check(args: argparse.Namespace) -> None:
+    html_paths = list(SLIDES_DIR.glob("*.html")) if SLIDES_DIR.exists() else []
+    number_width = detect_number_width(html_paths, explicit=args.number_width)
+    deck = build_canonical_deck(number_width=number_width, create_missing_css=not args.no_css)
+    writes, deletes = plan_rewrite(deck)
 
-    if at < 1:
-        die("--at must be >= 1")
+    dirty_writes = []
+    for op in writes:
+        if not op.path.exists() or read_text(op.path) != normalize_newline(op.content):
+            dirty_writes.append(op)
 
-    sections = extract_sections(args.source_html)
-    slugs = unique_slugs(
-        slug_from_section(section, index)
-        for index, section in enumerate(sections, start=1)
-    )
+    dirty_deletes = [op for op in deletes if op.path.exists()]
 
-    planned = current_planned_slides()
+    if dirty_writes or dirty_deletes:
+        print_plan("Project is not canonical. Run format to fix", dirty_writes, dirty_deletes)
+        raise SystemExit(1)
 
-    if at > len(planned) + 1:
-        die(f"Cannot insert at {at}; current deck has {len(planned)} slides.")
-
-    new_items = [
-        PlannedSlide(
-            slug=slug,
-            html_source_path=None,
-            html_content=section,
-            css_source_path=None,
-            css_content=None if args.no_css else f"/* Styles for inserted slide: {slug} */",
-        )
-        for slug, section in zip(slugs, sections)
-    ]
-
-    updated = planned[: at - 1] + new_items + planned[at - 1 :]
-
-    moves, writes, deletes = plan_rebuild_from_order(
-        updated,
-        create_missing_css=not args.no_css,
-    )
-
-    print_plan("Insert slides", moves=moves, writes=writes, deletes=deletes)
-
-    if not args.simulate:
-        apply_transaction(moves, writes, deletes, simulate=False)
-        sync_writes = sync_imports_plan()
-        apply_transaction([], sync_writes, [], simulate=False)
-    else:
-        print("\n  Then regenerate css/slides.css imports.")
+    print("Slide structure looks canonical.")
 
 
-def cmd_remove(args: argparse.Namespace) -> None:
-    number = args.number
+def cmd_list(args: argparse.Namespace) -> None:
+    html_paths = list(SLIDES_DIR.glob("*.html")) if SLIDES_DIR.exists() else []
+    number_width = detect_number_width(html_paths, explicit=args.number_width)
+    deck = build_canonical_deck(number_width=number_width, create_missing_css=not args.no_css)
+    if not deck:
+        print("No slides found.")
+        return
+    for slide in deck:
+        print(f"{slide.index:0{number_width}d}  {slide.slug}  {slide.html_name}")
 
-    planned = current_planned_slides()
 
-    if number < 1 or number > len(planned):
-        die(f"Cannot remove slide {number}; current deck has {len(planned)} slides.")
+def renumbered_sources_from_current_order() -> list[SlideSource]:
+    return sorted(load_slide_sources(), key=source_order_key)
 
-    removed = planned[number - 1]
-    updated = planned[: number - 1] + planned[number:]
 
-    moves, writes, deletes = plan_rebuild_from_order(
-        updated,
-        create_missing_css=not args.no_css,
-    )
-
-    if not args.delete:
-        archive_dir = PROJECT_ROOT / "deleted_slides"
-        archive_css_dir = archive_dir / "css"
-
-        removed_html = removed.html_source_path
-        removed_css = removed.css_source_path
-
-        if removed_html is not None and removed_html.exists():
-            moves.append(FileMove(removed_html, archive_dir / removed_html.name))
-
-        if removed_css is not None and removed_css.exists():
-            moves.append(FileMove(removed_css, archive_css_dir / removed_css.name))
-
-        archive_paths = {
-            removed_html,
-            removed_css,
-        }
-
-        deletes = [
-            delete
-            for delete in deletes
-            if delete.path not in archive_paths
-        ]
-
-    print_plan("Remove slide", moves=moves, writes=writes, deletes=deletes)
-
-    if not args.simulate:
-        apply_transaction(moves, writes, deletes, simulate=False)
-        sync_writes = sync_imports_plan()
-        apply_transaction([], sync_writes, [], simulate=False)
-    else:
-        print("\n  Then regenerate css/slides.css imports.")
+def write_temp_sources_for_reorder(sources: list[SlideSource], number_width: int, create_missing_css: bool) -> list[CanonicalSlide]:
+    # Rebuild directly from supplied sources instead of filesystem order.
+    slugs = unique_slugs(source.canonical_slug for source in sources)
+    css_files = sorted(CSS_SLIDES_DIR.glob("*.css"), key=natural_file_order) if CSS_SLIDES_DIR.exists() else []
+    used_css: set[Path] = set()
+    deck: list[CanonicalSlide] = []
+    for index, (source, slug) in enumerate(zip(sources, slugs), start=1):
+        stem = f"{index:0{number_width}d}-{slug}"
+        css_source = find_css_source(source, css_files, used_css, stem)
+        css_content = normalize_newline(read_text(css_source)) if css_source is not None else None
+        if css_content is None and create_missing_css:
+            css_content = f"/* Styles for {stem}.html */\n"
+        deck.append(CanonicalSlide(index, slug, f"{stem}.html", f"{stem}.css", source, css_source, css_content))
+    return deck
 
 
 def cmd_move(args: argparse.Namespace) -> None:
-    from_number = args.from_number
-    to_number = args.to_number
-
-    planned = current_planned_slides()
-    count = len(planned)
-
-    if from_number < 1 or from_number > count:
+    sources = renumbered_sources_from_current_order()
+    count = len(sources)
+    if args.from_number < 1 or args.from_number > count:
         die(f"FROM must be between 1 and {count}.")
-
-    if to_number < 1 or to_number > count:
+    if args.to_number < 1 or args.to_number > count:
         die(f"TO must be between 1 and {count}.")
+    moving = sources.pop(args.from_number - 1)
+    sources.insert(args.to_number - 1, moving)
 
-    if from_number == to_number:
-        print("Source and destination are the same. No changes.")
-        return
+    number_width = detect_number_width([source.path for source in sources], explicit=args.number_width)
+    deck = write_temp_sources_for_reorder(sources, number_width, create_missing_css=not args.no_css)
+    writes, deletes = plan_rewrite(deck)
+    print_plan(f"Move slide {args.from_number} to {args.to_number}", writes, deletes)
+    apply_rewrite(writes, deletes, simulate=args.simulate, backup=not args.no_backup)
 
-    moving = planned[from_number - 1]
-    remaining = planned[: from_number - 1] + planned[from_number:]
 
-    updated = remaining[: to_number - 1] + [moving] + remaining[to_number - 1:]
+def cmd_remove(args: argparse.Namespace) -> None:
+    sources = renumbered_sources_from_current_order()
+    count = len(sources)
+    if args.number < 1 or args.number > count:
+        die(f"Slide number must be between 1 and {count}.")
+    removed = sources.pop(args.number - 1)
 
-    moves, writes, deletes = plan_rebuild_from_order(
-        updated,
-        create_missing_css=not args.no_css,
-    )
+    number_width = detect_number_width([source.path for source in sources] or [removed.path], explicit=args.number_width)
+    deck = write_temp_sources_for_reorder(sources, number_width, create_missing_css=not args.no_css)
+    writes, deletes = plan_rewrite(deck)
 
-    print_plan(
-        f"Move slide {from_number:0{NUMBER_WIDTH}d} to {to_number:0{NUMBER_WIDTH}d}",
-        moves=moves,
-        writes=writes,
-        deletes=deletes,
-    )
+    # The removed source naturally appears in deletes. With backup enabled, deletion is safe.
+    print_plan(f"Remove slide {args.number}", writes, deletes)
+    apply_rewrite(writes, deletes, simulate=args.simulate, backup=not args.no_backup)
 
-    if not args.simulate:
-        apply_transaction(moves, writes, deletes, simulate=False)
-        sync_writes = sync_imports_plan()
-        apply_transaction([], sync_writes, [], simulate=False)
-    else:
-        print("\n  Then regenerate css/slides.css imports.")
+
+def cmd_insert(args: argparse.Namespace) -> None:
+    if args.at < 1:
+        die("--at must be >= 1")
+    if not args.source_html.exists():
+        die(f"Input file does not exist: {args.source_html}")
+
+    content = read_text(args.source_html)
+    sections = SECTION_RE.findall(content)
+    if not sections:
+        die(f"No <section> blocks found in {args.source_html}")
+
+    sources = renumbered_sources_from_current_order()
+    if args.at > len(sources) + 1:
+        die(f"Cannot insert at {args.at}; deck has {len(sources)} slides.")
+
+    inserted: list[SlideSource] = []
+    for idx, section in enumerate(sections, start=1):
+        slug = slug_from_section(section, fallback=f"inserted-{idx}")
+        inserted.append(
+            SlideSource(
+                path=args.source_html,
+                order_number=None,
+                order_width=None,
+                old_slug=slug,
+                content=format_html_fragment(section),
+                section=section,
+                canonical_slug=slug,
+            )
+        )
+
+    sources = sources[: args.at - 1] + inserted + sources[args.at - 1 :]
+    number_width = detect_number_width([source.path for source in sources], explicit=args.number_width)
+    deck = write_temp_sources_for_reorder(sources, number_width, create_missing_css=not args.no_css)
+    writes, deletes = plan_rewrite(deck)
+    print_plan(f"Insert {len(inserted)} slide(s) at {args.at}", writes, deletes)
+    apply_rewrite(writes, deletes, simulate=args.simulate, backup=not args.no_backup)
 
 
 # ---------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------
 
-def add_simulate_arg(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument(
-        "--simulate",
-        action="store_true",
-        help="Show planned changes without modifying files.",
-    )
+def add_common_args(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--simulate", action="store_true", help="Show planned changes without modifying files.")
+    parser.add_argument("--no-backup", action="store_true", help="Do not create a timestamped backup before modifying files.")
+    parser.add_argument("--no-css", action="store_true", help="Do not create missing per-slide CSS files.")
+    parser.add_argument("--number-width", type=int, choices=[2, 3, 4], help="Override detected filename number width.")
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        description="Manage Reveal.js slide ordering and slide CSS imports."
-    )
+    parser = argparse.ArgumentParser(description="Safely manage Reveal.js slide fragments.")
+    sub = parser.add_subparsers(dest="command", required=True)
 
-    subparsers = parser.add_subparsers(dest="command", required=True)
+    p = sub.add_parser("format", help="Canonicalize filenames, indentation, CSS files, and manifest. Idempotent.")
+    add_common_args(p)
+    p.set_defaults(func=cmd_format)
 
-    p_list = subparsers.add_parser(
-        "list",
-        help="List ordered slides.",
-    )
-    p_list.set_defaults(func=cmd_list)
+    p = sub.add_parser("check", help="Check whether the project is already canonical.")
+    add_common_args(p)
+    p.set_defaults(func=cmd_check)
 
-    p_check = subparsers.add_parser(
-        "check",
-        help="Check slide/CSS consistency.",
-    )
-    p_check.add_argument(
-        "--allow-missing-css",
-        action="store_true",
-        help="Treat missing per-slide CSS files as warnings instead of errors.",
-    )
-    add_simulate_arg(p_check)
-    p_check.set_defaults(func=cmd_check)
+    p = sub.add_parser("sync-imports", help="Rebuild only css/slides.css from canonical slide order.")
+    add_common_args(p)
+    p.set_defaults(func=cmd_sync_imports)
 
-    p_format = subparsers.add_parser(
-        "format",
-        help="Format slide HTML files and synchronize css/slides.css imports.",
-    )
-    add_simulate_arg(p_format)
-    p_format.set_defaults(func=cmd_format)
+    p = sub.add_parser("list", help="List canonical slide order and names.")
+    add_common_args(p)
+    p.set_defaults(func=cmd_list)
 
-    p_sync = subparsers.add_parser(
-        "sync-imports",
-        help="Regenerate the managed import block in css/slides.css.",
-    )
-    add_simulate_arg(p_sync)
-    p_sync.set_defaults(func=cmd_sync_imports)
+    p = sub.add_parser("move", help="Move a slide from one position to another, then canonicalize.")
+    p.add_argument("from_number", type=int)
+    p.add_argument("to_number", type=int)
+    add_common_args(p)
+    p.set_defaults(func=cmd_move)
 
-    p_renumber = subparsers.add_parser(
-        "renumber",
-        help="Renumber all slides based on current lexicographical order.",
-    )
-    p_renumber.add_argument(
-        "--no-css",
-        action="store_true",
-        help="Do not create missing CSS files during renumbering.",
-    )
-    add_simulate_arg(p_renumber)
-    p_renumber.set_defaults(func=cmd_renumber)
+    p = sub.add_parser("remove", help="Remove a slide, then canonicalize.")
+    p.add_argument("number", type=int)
+    add_common_args(p)
+    p.set_defaults(func=cmd_remove)
 
-    p_insert = subparsers.add_parser(
-        "insert",
-        help="Extract <section> blocks from an HTML file and insert them.",
-    )
-    p_insert.add_argument("source_html", type=Path)
-    p_insert.add_argument("--at", type=int, required=True)
-    p_insert.add_argument(
-        "--no-css",
-        action="store_true",
-        help="Do not create CSS files for inserted slides.",
-    )
-    add_simulate_arg(p_insert)
-    p_insert.set_defaults(func=cmd_insert)
-
-    p_remove = subparsers.add_parser(
-        "remove",
-        help="Remove one slide and shift following slides down.",
-    )
-    p_remove.add_argument("number", type=int)
-    p_remove.add_argument(
-        "--delete",
-        action="store_true",
-        help="Permanently delete removed slide files instead of archiving them.",
-    )
-    p_remove.add_argument(
-        "--no-css",
-        action="store_true",
-        help="Do not create missing CSS files while rebuilding.",
-    )
-    add_simulate_arg(p_remove)
-    p_remove.set_defaults(func=cmd_remove)
-
-    p_move = subparsers.add_parser(
-        "move",
-        help="Move a slide from one position to another.",
-    )
-    p_move.add_argument("from_number", type=int)
-    p_move.add_argument("to_number", type=int)
-    p_move.add_argument(
-        "--no-css",
-        action="store_true",
-        help="Do not create missing CSS files while rebuilding.",
-    )
-    add_simulate_arg(p_move)
-    p_move.set_defaults(func=cmd_move)
+    p = sub.add_parser("insert", help="Insert section(s) from an HTML file, then canonicalize.")
+    p.add_argument("source_html", type=Path)
+    p.add_argument("--at", type=int, required=True)
+    add_common_args(p)
+    p.set_defaults(func=cmd_insert)
 
     return parser
 
@@ -1046,9 +699,7 @@ def build_parser() -> argparse.ArgumentParser:
 def main() -> None:
     parser = build_parser()
     args = parser.parse_args()
-
     ensure_dirs()
-
     args.func(args)
 
 

@@ -139,3 +139,176 @@
   font-weight: 850;
   text-align: center;
 }
+
+.problem-constraint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-top: 0.28rem;
+  padding: 0.26rem 0.38rem;
+  box-sizing: border-box;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.72);
+  color: rgba(38, 50, 70, 0.88);
+  font-size: 0.58em;
+  font-weight: 800;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.problem-constraint mjx-container,
+.problem-constraint .MathJax {
+  margin: 0 !important;
+}
+
+
+/* Compact fullscreen-safe layout ----------------------------------------- */
+.experimental-setting-slide .experimental-setting-body {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  gap: 0;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.experiment-grid {
+  align-self: center;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(0.34rem, 1.1vh, 0.56rem);
+  min-height: 0;
+}
+
+.experiment-card {
+  padding: clamp(0.44rem, 1.35vh, 0.62rem) clamp(0.58rem, 1.4vw, 0.78rem);
+  border-radius: 20px;
+}
+
+.experiment-card h3 {
+  margin: 0 0 clamp(0.26rem, 0.85vh, 0.38rem);
+  font-size: clamp(0.58em, 1.65vh, 0.76em);
+  line-height: 1.02;
+}
+
+.problem-pair,
+.model-lanes,
+.metric-row {
+  gap: clamp(0.32rem, 0.9vw, 0.48rem);
+}
+
+.metric-row {
+  margin-bottom: clamp(0.24rem, 0.7vh, 0.34rem);
+}
+
+.problem-mini,
+.model-lane,
+.metric-chip {
+  padding: clamp(0.34rem, 1vh, 0.48rem) clamp(0.45rem, 1vw, 0.6rem);
+  border-radius: 16px;
+}
+
+.problem-mini strong,
+.model-lane strong {
+  font-size: clamp(0.42em, 1.3vh, 0.55em);
+  line-height: 1.05;
+}
+
+.problem-mini span,
+.model-lane span {
+  margin: 0.08rem 0 0.14rem;
+  font-size: clamp(0.3em, 0.95vh, 0.38em);
+  line-height: 1.05;
+}
+
+.problem-constraint {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.08em;
+  width: 100%;
+  margin-top: 0.18rem;
+  padding: 0.2rem 0.28rem;
+  box-sizing: border-box;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.72);
+  color: rgba(38, 50, 70, 0.88);
+  font-family: inherit;
+  font-size: clamp(0.44em, 1.25vh, 0.54em);
+  font-weight: 850;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/*.problem-constraint sub {
+  font-size: 0.64em;
+  line-height: 0;
+}
+
+.problem-constraint .sum-symbol {
+  font-size: 1.25em;
+  line-height: 0.75;
+  margin-right: -0.02em;
+}*/
+
+.metric-chip {
+  font-size: clamp(0.36em, 1.08vh, 0.46em);
+  line-height: 1.06;
+}
+
+.evaluation-card p {
+  font-size: clamp(0.34em, 1.02vh, 0.42em);
+  line-height: 1.08;
+}
+
+@media (max-height: 760px) {
+  .experiment-grid {
+    gap: 0.34rem;
+  }
+
+  .experiment-card {
+    padding-top: 0.4rem;
+    padding-bottom: 0.42rem;
+  }
+
+  .problem-mini,
+  .model-lane,
+  .metric-chip {
+    padding-top: 0.32rem;
+    padding-bottom: 0.34rem;
+  }
+}
+
+.problem-constraint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 1.65em;
+  margin-top: 0.18rem;
+  padding: 0.2rem 0.28rem;
+  box-sizing: border-box;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.72);
+  color: rgba(38, 50, 70, 0.88);
+  font-size: clamp(0.44em, 1.25vh, 0.54em);
+  font-weight: 850;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  overflow: visible;
+}
+
+.problem-constraint mjx-container {
+  display: inline-block !important;
+  margin: 0 !important;
+  max-width: 100%;
+  overflow: visible;
+}
+
+.problem-constraint mjx-container svg {
+  overflow: visible;
+}

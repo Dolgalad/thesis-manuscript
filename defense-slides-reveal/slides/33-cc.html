@@ -1,0 +1,95 @@
+<section class="slide denoising-results-slide"
+         data-section="Contribution: MRF-augmented denoising"
+         data-title="Diffusion-inspired denoising results">
+
+  <div class="slide-body denoising-results-body">
+
+    <div class="results-grid">
+      <div class="result-panel fade-up">
+        <p class="result-panel-title">Raw sample feasibility</p>
+        <div class="bar-row"><span>SC-S DDGN</span><div class="bar-track"><i style="width:7.4%"></i></div><b>7.4%</b></div>
+        <div class="bar-row highlight"><span>SC-S DLBP</span><div class="bar-track"><i style="width:88.9%"></i></div><b>88.9%</b></div>
+        <div class="bar-row"><span>SC-S DNMF</span><div class="bar-track"><i style="width:30.7%"></i></div><b>30.7%</b></div>
+        <div class="bar-row highlight"><span>SC-M DLBP</span><div class="bar-track"><i style="width:84.6%"></i></div><b>84.6%</b></div>
+      </div>
+
+      <div class="result-panel fade-up">
+        <p class="result-panel-title">Best GD gap on Set Cover</p>
+        <div class="gap-row"><span>SC-S DDGN</span><b>—</b></div>
+        <div class="gap-row highlight"><span>SC-S DLBP</span><b>0.68%</b></div>
+        <div class="gap-row"><span>SC-S DNMF</span><b>1.86%</b></div>
+        <div class="gap-row highlight"><span>SC-M DLBP</span><b>−0.23%</b></div>
+        <p class="result-note">Negative gap means better than the heuristic reference on average.</p>
+      </div>
+
+      <div class="result-panel result-panel-wide fade-up">
+        <p class="result-panel-title">Problem-dependent behavior</p>
+        <div class="contrast-row">
+          <div>
+            <strong>Set Cover</strong>
+            <span>LBP-based denoising produces feasible samples frequently and low-gap decoded solutions.</span>
+          </div>
+          <div>
+            <strong>MIS</strong>
+            <span>Raw feasibility remains 0%; GD improves DLBP to about 7.0%, but decoding is brittle.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="notes">
+      The table in the manuscript compares DDGN, DLBP and DNMF. For Set Cover, DLBP
+      clearly dominates the direct denoising baseline and the NMF variant. On SC-S it
+      reaches 88.867 percent raw feasibility and a GD gap of 0.680 percent. On SC-M it
+      reaches 84.615 percent raw feasibility and a GD gap of -0.233 percent. For MIS-S,
+      raw feasibility is still zero for all denoising models, but GD reduces the DLBP gap
+      to about 7.015 percent. The main message is that MRF-augmented denoising is useful,
+      but the interaction with decoding depends on the problem structure.
+    </aside>
+
+  </div>
+</section>
+
+<section class="slide denoising-takeaway-slide"
+         data-section="Contribution: MRF-augmented denoising"
+         data-title="Takeaway: learned refinement with MRFs">
+
+
+  <div class="slide-body denoising-takeaway-body">
+
+    <div class="takeaway-statement fade-up">
+      <span>Chapter 5 changes the prediction view:</span>
+      <strong>solution generation becomes a trajectory, not a one-shot score vector.</strong>
+    </div>
+
+    <div class="takeaway-three">
+      <div class="takeaway-item fade-up">
+        <p class="takeaway-number">01</p>
+        <h3>Condition on the current state</h3>
+        <p>The model sees the noisy assignment and the refinement time.</p>
+      </div>
+
+      <div class="takeaway-item fade-up">
+        <p class="takeaway-number">02</p>
+        <h3>Use MRF inference inside refinement</h3>
+        <p>LBP or NMF transforms local predictions into structured marginals.</p>
+      </div>
+
+      <div class="takeaway-item fade-up">
+        <p class="takeaway-number">03</p>
+        <h3>Decode with feasibility in mind</h3>
+        <p>Final quality still depends on the interaction between refinement and decoding.</p>
+      </div>
+    </div>
+
+
+    <aside class="notes">
+      The final takeaway is balanced. MRF-augmented denoising supports the thesis theme:
+      independent variable scores are not enough, and structured inference improves the
+      learned signal. However, refinement is not a replacement for careful decoding. It is
+      especially promising for Set Cover, while MIS remains challenging because early
+      selection mistakes can irreversibly remove useful vertices.
+    </aside>
+
+  </div>
+</section>

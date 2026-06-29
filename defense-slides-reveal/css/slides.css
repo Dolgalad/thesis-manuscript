@@ -13,6 +13,7 @@
 @import "./slides/09-background-bilp.css";
 @import "./slides/10-background-mis.css";
 @import "./slides/11-background-set-cover.css";
+@import "./slides/12-aa-neural-solver.css";
 @import "./slides/12-background-vcg.css";
 @import "./slides/13-background-bilp-energy-model.css";
 @import "./slides/14-background-mrf.css";
@@ -20,6 +21,7 @@
 @import "./slides/16-background-marginal-inference.css";
 @import "./slides/17-background-ml.css";
 @import "./slides/18-background-ml-fitting.css";
+@import "./slides/16-aa-canonical-mrf.css";
 
 
 @import "./slides/18-contrib-1-divider.css";
@@ -39,6 +41,8 @@
 @import "./slides/32-contrib-1-takeaway.css";
 
 @import "./slides/33-aa-contrib-2.css";
+@import "./slides/33-bb-contrib-2-diffusion.css";
+
 
 @import "./slides/33-conclusion-divider.css";
 @import "./slides/34-conclusion-main-findings.css";

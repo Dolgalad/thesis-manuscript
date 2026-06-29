@@ -1,193 +1,100 @@
 <section class="slide mrf-fit-slide"
-         data-section="Background"
+         data-section="Background: MRFs"
          data-title="Fitting Markov Random Fields">
 
   <div class="slide-body mrf-fit-body">
 
-    <div class="mrf-fit-layout">
+    <div class="mrf-fit-layout mrf-fit-simple-layout">
 
-      <div class="mrf-fit-diagram-panel">
-
-        <svg class="mrf-fit-svg" viewBox="0 0 620 430" role="img"
-             aria-label="Fitting learned MRFs with approximate inference">
-
-          <defs>
-            <marker id="mrf-fit-arrowhead"
-                    markerWidth="10" markerHeight="10"
-                    refX="8" refY="3"
-                    orient="auto"
-                    markerUnits="strokeWidth">
-              <path d="M0,0 L0,6 L9,3 z" fill="rgba(71, 85, 105, 0.65)"></path>
-            </marker>
-
-            <marker id="mrf-fit-arrowhead-blue"
-                    markerWidth="10" markerHeight="10"
-                    refX="8" refY="3"
-                    orient="auto"
-                    markerUnits="strokeWidth">
-              <path d="M0,0 L0,6 L9,3 z" fill="rgba(29, 78, 216, 0.75)"></path>
-            </marker>
-          </defs>
-
-          <!-- instance -->
-          <g class="fragment" data-fragment-index="1">
-            <rect class="mrf-fit-input-box" x="35" y="145" width="125" height="92" rx="20"></rect>
-            <text class="mrf-fit-box-title" x="98" y="180">BILP</text>
-            <text class="mrf-fit-box-text" x="98" y="210">instance \(P\)</text>
-          </g>
-
-          <!-- neural parameter predictor -->
-          <g class="fragment" data-fragment-index="2">
-            <rect class="mrf-fit-model-box" x="220" y="118" width="155" height="142" rx="24"></rect>
-            <text class="mrf-fit-box-title" x="298" y="153">GNN</text>
-            <text class="mrf-fit-box-title" x="298" y="183">predicts</text>
-            <text class="mrf-fit-box-text" x="298" y="218">\(\hat\theta(P;\omega)\)</text>
-          </g>
-
-          <!-- MRF -->
-          <g class="fragment" data-fragment-index="3">
-            <rect class="mrf-fit-mrf-box" x="440" y="125" width="135" height="125" rx="24"></rect>
-            <text class="mrf-fit-box-title" x="508" y="160">MRF</text>
-            <text class="mrf-fit-box-text" x="508" y="193">factors</text>
-            <text class="mrf-fit-box-text" x="508" y="220">\(\psi_\alpha\)</text>
-          </g>
-
-          <!-- arrows top -->
-          <g class="fragment" data-fragment-index="2">
-            <path class="mrf-fit-arrow" d="M160 191 L220 191"></path>
-          </g>
-
-          <g class="fragment" data-fragment-index="3">
-            <path class="mrf-fit-arrow" d="M375 191 L440 191"></path>
-          </g>
-
-          <!-- exact NLL path -->
-          <g class="fragment" data-fragment-index="4">
-            <rect class="mrf-fit-bad-box" x="78" y="305" width="185" height="80" rx="20"></rect>
-            <text class="mrf-fit-loss-title" x="171" y="333">exact NLL</text>
-            <text class="mrf-fit-loss-text" x="171" y="360">needs \(\log Z(\hat\theta)\)</text>
-
-            <path class="mrf-fit-blocked-arrow"
-                  d="M465 250 C420 300, 340 340, 263 345"></path>
-            <text class="mrf-fit-cross" x="342" y="322">×</text>
-          </g>
-
-          <!-- approximate inference path -->
-          <g class="fragment" data-fragment-index="5">
-            <rect class="mrf-fit-infer-box" x="343" y="305" width="200" height="80" rx="20"></rect>
-            <text class="mrf-fit-loss-title" x="443" y="333">LBP / NMF</text>
-            <text class="mrf-fit-loss-text" x="443" y="360">approx. marginals</text>
-
-            <path class="mrf-fit-good-arrow"
-                  d="M510 250 C525 280, 500 300, 475 305"></path>
-          </g>
-
-          <!-- target comparison -->
-          <g class="fragment" data-fragment-index="6">
-            <rect class="mrf-fit-target-box" x="238" y="28" width="170" height="65" rx="18"></rect>
-            <text class="mrf-fit-loss-title" x="323" y="54">reference solution</text>
-            <text class="mrf-fit-loss-text" x="323" y="76">local labels \(y_\alpha\)</text>
-
-            <path class="mrf-fit-loss-arrow"
-                  d="M390 93 C460 105, 520 190, 474 305"></path>
-          </g>
-
-          <text class="mrf-fit-caption fragment" data-fragment-index="7" x="310" y="415">
-            train the parameters through unrolled approximate inference
-          </text>
-
-        </svg>
-
+      <div class="mrf-fit-block mrf-fit-main-card mrf-fit-probability-card">
+        <div class="mrf-fit-card-label">MRF distribution</div>
+        \[
+        p_{\theta}(x \mid P)
+        =
+        \frac{1}{Z(\theta)}
+        \exp\!\left(
+          \left\langle \theta(P;\omega), \phi(x) \right\rangle
+        \right)
+        \]
       </div>
 
-      <div class="mrf-fit-formula-panel">
-        <div class="mrf-fit-formula">
+      <div class="mrf-fit-columns">
 
-          <div class="mrf-fit-kicker">From likelihood to surrogate loss</div>
+        <div class="mrf-fit-panel mrf-fit-exact-panel">
+          <div class="mrf-fit-kicker">Exact likelihood objective</div>
 
-          <div class="fragment mrf-fit-block mrf-fit-main-card" data-fragment-index="1">
+          <div class="mrf-fit-block mrf-fit-nll-block">
             \[
-            p_{\hat\theta}(x \mid P)
-            =
-            \frac{1}{Z(\hat\theta)}
-            \exp\!\left(
-              \langle \hat\theta(P;\omega), \phi(x) \rangle
-            \right)
-            \]
-          </div>
-
-          <div class="fragment mrf-fit-block" data-fragment-index="2">
-            \[
+            \begin{aligned}
             \mathcal{L}_{\mathrm{NLL}}(\omega)
-            =
-            -\log p_{\hat\theta(P;\omega)}(y)
-            =
-            \log Z(\hat\theta)
+            &=
+            -\log p_{\theta(P;\omega)}(y \mid P)
+            \\
+            &=
+            \log Z(\theta)
             -
-            \langle \hat\theta, \phi(y) \rangle
+            \left\langle \theta(P;\omega), \phi(y) \right\rangle
+            \end{aligned}
             \]
           </div>
 
-          <div class="fragment mrf-fit-text mrf-fit-warning" data-fragment-index="3">
-            The problem: evaluating \(Z(\hat\theta)\) requires summing over all binary assignments.
-          </div>
-
-          <div class="fragment mrf-fit-block mrf-fit-main-card" data-fragment-index="5">
+          <div class="mrf-fit-text mrf-fit-warning">
+            Computing \(Z(\theta)\) requires summing over all assignments:
             \[
-            \mathcal{L}^{(i)}_{\mathrm{LBP}}(\omega)
-            =
-            -
-            \frac{1}{|\mathcal{F}_i|}
-            \sum_{\alpha \in \mathcal{F}_i}
-            \log
-            \mu^{(i)}_{\alpha}(y_{i,\alpha})
+            Z(\theta)=\sum_{x'\in\mathcal{X}}
+            \exp\!\left(\left\langle\theta,\phi(x')\right\rangle\right)
             \]
+            <strong>Intractable for loopy, high-dimensional MRFs.</strong>
           </div>
-
-          <div class="fragment mrf-fit-text" data-fragment-index="6">
-            LBP returns factor beliefs, so each factor becomes a local multi-class prediction over its configurations.
-          </div>
-
-          <div class="fragment mrf-fit-block" data-fragment-index="7">
-            \[
-            \mathcal{L}^{(i)}_{\mathrm{NMF}}(\omega)
-            =
-            -
-            \frac{1}{|\mathcal{V}_i|}
-            \sum_{v \in \mathcal{V}_i}
-            \log
-            \mu^{(i)}_{v}(y_{i,v})
-            \]
-          </div>
-
-          <div class="fragment mrf-fit-text mrf-fit-final" data-fragment-index="8">
-            This is not exact maximum likelihood: it trains local approximate marginals to match the reference solution.
-          </div>
-
         </div>
-      </div>
 
-      <div class="mrf-fit-bottom-bridge fragment" data-fragment-index="9">
-        <span class="mrf-fit-bridge-prefix">Key idea:</span>
-        avoid global normalization
-        <span class="mrf-fit-bridge-arrow">→</span>
-        <strong>fit the MRF through approximate marginal inference</strong>
+        <div class="fragment mrf-fit-panel mrf-fit-approx-panel"
+             data-fragment-index="4">
+          <div class="mrf-fit-kicker">Approximation strategy</div>
+
+          <div class="mrf-fit-approx-list">
+            <div class="mrf-fit-approx-item">
+              <span class="mrf-fit-approx-title">Partition function</span>
+              <span class="mrf-fit-approx-text">
+                approximate \(\log Z(\theta)\) with the Bethe free energy.
+              </span>
+            </div>
+
+            <div class="fragment mrf-fit-approx-item" data-fragment-index="4">
+              <span class="mrf-fit-approx-title">Variable marginals</span>
+              <span class="mrf-fit-approx-text">
+                train \(\mu_v(y_v)\) as binary classification targets.
+              </span>
+            </div>
+
+            <div class="fragment mrf-fit-approx-item" data-fragment-index="4">
+              <span class="mrf-fit-approx-title">Factor marginals</span>
+              <span class="mrf-fit-approx-text">
+                train \(\mu_\alpha(y_\alpha)\) as multi-class classification over local configurations.
+              </span>
+            </div>
+          </div>
+	  <div class="mrf-fit-approx-note">
+            Bethe/BP and surrogate learning
+            <span data-cite="yedidia_understanding_2003"></span>
+            <span data-cite="domke_learning_2013"></span>.
+          </div>
+        </div>
+
       </div>
 
     </div>
 
     <aside class="notes">
-      This slide transitions from standard supervised loss to fitting learned MRFs.
-      The natural probabilistic objective is the negative log-likelihood of the
-      reference solution under the predicted MRF. But evaluating this likelihood
-      requires the log-partition function, which is intractable for the loopy factor
-      graphs used here. Instead, Chapter 4 uses supervised marginal-likelihood
-      surrogates. With LBP, the model returns approximate factor marginals, so the
-      loss averages the negative log-probability of the reference local factor
-      configuration. With NMF, the approximation is fully factorized and only
-      variable marginals are available, so the loss becomes a variable-wise surrogate.
-      The important message is that the network is trained through the approximate
-      inference procedure, not by exact maximum likelihood of the full MRF.
+      This slide simplifies the transition from standard neural network training
+      to fitting an MRF. The natural objective is the negative log-likelihood of
+      the reference assignment under the MRF distribution. This objective contains
+      the log-partition function, which requires summing over all possible binary
+      assignments and is therefore intractable for the loopy high-dimensional
+      factor graphs used in the thesis. The practical alternative is to replace
+      exact likelihood quantities by approximate inference quantities: the Bethe
+      free energy gives an approximation to the partition function, while
+      variable and factor marginals give local supervised classification targets.
     </aside>
 
   </div>

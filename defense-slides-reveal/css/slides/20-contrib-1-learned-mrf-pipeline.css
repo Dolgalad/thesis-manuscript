@@ -1,21 +1,188 @@
-/* src/styles/slides/14-learned-mrf-pipeline.css */
+/* src/styles/slides/20-contrib-1-learned-mrf-pipeline.css */
+
+/* Shared slide layout */
+
+.learned-mrf-pipeline-slide {
+  --learned-mrf-width: min(100%, 1180px);
+  --learned-mrf-gap: clamp(0.7rem, 1.6vh, 1.25rem);
+}
+
+.learned-mrf-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: var(--learned-mrf-gap);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Pipeline */
 
 .learned-mrf-compact-pipeline {
-  grid-template-columns: 1fr auto 1.08fr auto 1fr auto 1fr;
-  gap: 0.8rem;
-  height: min(64vh, 520px);
+  width: var(--learned-mrf-width);
+  max-width: var(--learned-mrf-width);
+
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    auto
+    minmax(0, 1.08fr)
+    auto
+    minmax(0, 1fr)
+    auto
+    minmax(0, 1fr);
+
+  gap: clamp(0.45rem, 0.85vw, 0.8rem);
+  align-items: stretch;
+
+  height: min(58vh, 480px);
+  box-sizing: border-box;
 }
 
 .learned-mrf-pipeline-slide .learning-step {
-  padding: 0.9rem 0.9rem;
-  border-radius: 24px;
+  min-width: 0;
+  height: 100%;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: clamp(0.55rem, 1vw, 0.9rem);
+  border-radius: clamp(18px, 1.7vw, 24px);
+
+  text-align: center;
+}
+
+.learned-mrf-pipeline-slide .learning-svg {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  max-height: min(34vh, 285px);
+
+  flex: 1 1 auto;
+  display: block;
 }
 
 .learned-mrf-pipeline-slide .learning-step h3 {
-  font-size: clamp(0.68em, 1vw, 0.9em);
+  margin: clamp(0.35rem, 0.7vh, 0.55rem) 0 0;
+
+  font-size: clamp(0.74rem, 1.05vw, 1rem);
+  line-height: 1.08;
+  text-align: center;
 }
 
-.learned-mrf-pipeline-slide .learning-step p {
+.learned-mrf-pipeline-slide .learning-label {
+  margin: 0 0 clamp(0.28rem, 0.65vh, 0.5rem);
+
+  font-size: clamp(0.52rem, 0.72vw, 0.7rem);
+  line-height: 1;
+  text-align: center;
+}
+
+.learned-mrf-pipeline-slide .learning-arrow {
+  align-self: center;
+
+  font-size: clamp(1.05rem, 1.8vw, 1.45rem);
+  line-height: 1;
+}
+
+/* Caption strip */
+
+.learned-mrf-caption-strip {
+  width: var(--learned-mrf-width);
+  max-width: var(--learned-mrf-width);
+  box-sizing: border-box;
+
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+
+  column-gap: clamp(0.45rem, 0.9vw, 0.8rem);
+  row-gap: clamp(0.35rem, 0.8vh, 0.55rem);
+
+  margin: clamp(0.35rem, 1.1vh, 0.8rem) auto 0;
+  padding: clamp(0.6rem, 1.15vh, 0.85rem) clamp(0.85rem, 1.6vw, 1.4rem);
+
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.76);
+  border: 1px solid rgba(40, 50, 70, 0.12);
+  box-shadow: 0 14px 34px rgba(20, 30, 50, 0.08);
+
+  text-align: center;
+}
+
+.learned-mrf-caption {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+
+  padding: 0.28rem 0.55rem;
+  border-radius: 999px;
+
+  background: rgba(240, 247, 255, 0.72);
+  border: 1px solid rgba(45, 80, 150, 0.12);
+
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+
+  font-size: clamp(0.72rem, 1vw, 0.95rem);
+  font-weight: 800;
+  line-height: 1.18;
+  color: rgba(38, 50, 70, 0.74);
+}
+
+/* Do not fade previous caption fragments after they have appeared. */
+.learned-mrf-caption.fragment.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Compact vertical layouts */
+
+@media (max-height: 780px) {
+  .learned-mrf-compact-pipeline {
+    height: min(54vh, 430px);
+  }
+
+  .learned-mrf-pipeline-slide .learning-svg {
+    max-height: min(30vh, 245px);
+  }
+
+  .learned-mrf-caption-strip {
+    margin-top: 0.45rem;
+    padding-block: 0.5rem;
+  }
+
+  .learned-mrf-caption {
+    font-size: clamp(0.66rem, 0.9vw, 0.84rem);
+    padding-block: 0.22rem;
+  }
+}
+
+/* src/styles/slides/14-learned-mrf-pipeline.css */
+
+/*.learned-mrf-compact-pipeline {
+  grid-template-columns: 1fr auto 1.08fr auto 1fr auto 1fr;
+  gap: 0.8rem;
+  height: min(64vh, 520px);
+}*/
+
+/*.learned-mrf-pipeline-slide .learning-step {
+  padding: 0.9rem 0.9rem;
+  border-radius: 24px;
+}*/
+
+/*.learned-mrf-pipeline-slide .learning-step p {
   font-size: clamp(0.44em, 0.7vw, 0.58em);
 }
 
@@ -25,7 +192,7 @@
 
 .learned-mrf-pipeline-slide .learning-arrow {
   font-size: 1.45em;
-}
+}*/
 
 /* MRF parameter prediction block */
 
@@ -304,7 +471,95 @@
   fill: rgba(22, 101, 52, 0.76);
 }
 
-.learned-mrf-takeaway {
-  background: rgba(240, 253, 244, 0.96);
-  border: 1px solid rgba(22, 101, 52, 0.18);
+.learned-mrf-compact-pipeline {
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1.08fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: clamp(0.45rem, 0.9vw, 0.8rem);
+  height: min(61vh, 500px);
+  height: 50%;
+  align-items: stretch;
+}
+
+.learned-mrf-pipeline-slide .learning-step {
+  min-width: 0;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: clamp(0.55rem, 1.2vw, 0.9rem);
+  border-radius: clamp(18px, 1.8vw, 24px);
+
+  text-align: center;
+}
+
+.learned-mrf-pipeline-slide .learning-svg {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  max-height: min(36vh, 300px);
+  flex: 1 1 auto;
+}
+
+.learned-mrf-pipeline-slide .learning-step h3 {
+  margin: clamp(0.35rem, 0.8vh, 0.6rem) 0 0;
+  font-size: clamp(0.78rem, 1.15vw, 1.05rem);
+  line-height: 1.08;
+}
+
+.learned-mrf-pipeline-slide .learning-label {
+  margin: 0 0 clamp(0.3rem, 0.7vh, 0.5rem);
+  font-size: clamp(0.54rem, 0.72vw, 0.72rem);
+  line-height: 1;
+}
+
+.learned-mrf-pipeline-slide .learning-arrow {
+  align-self: center;
+  font-size: clamp(1.1rem, 2vw, 1.55rem);
+}
+
+/*.learned-mrf-caption-strip {
+  width: min(92vw, 1180px);
+  min-height: clamp(2.2rem, 5vh, 3.4rem);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin: 0 auto;
+  padding: clamp(0.5rem, 1vh, 0.75rem) clamp(1rem, 2vw, 1.6rem);
+
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.76);
+  border: 1px solid rgba(40, 50, 70, 0.12);
+  box-shadow: 0 14px 34px rgba(20, 30, 50, 0.08);
+
+  text-align: center;
+}*/
+
+/*.learned-mrf-caption {
+  font-size: clamp(0.82rem, 1.25vw, 1.15rem);
+  font-weight: 850;
+  line-height: 1.18;
+  color: rgba(38, 50, 70, 0.76);
+}*/
+
+/*.learned-mrf-caption.current-fragment {
+  display: block;
+}*/
+
+@media (max-height: 780px) {
+  .learned-mrf-compact-pipeline {
+    height: min(58vh, 455px);
+  }
+
+  .learned-mrf-pipeline-slide .learning-svg {
+    max-height: min(32vh, 260px);
+  }
+
+  .learned-mrf-caption-strip {
+    min-height: 2.2rem;
+    padding-block: 0.45rem;
+  }
 }

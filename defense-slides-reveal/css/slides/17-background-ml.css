@@ -73,6 +73,31 @@
   border-radius: 16px;
   background: rgba(248, 250, 252, 0.95);
   border: 1px solid rgba(148, 163, 184, 0.28);
+  border-color: rgba(29, 78, 216, 0.55);
+  border-width: 3px;
+  background: rgba(239, 246, 255, 0.95);
+}
+
+.training-block-prediction {
+  padding: 0.32em 0.5em;
+  margin-bottom: 0.48em;
+  border-radius: 16px;
+  background: rgba(248, 250, 252, 0.95);
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  border-color: rgba(20, 184, 166, 0.55);
+  border-width: 3px;
+  background: rgba(240, 253, 250, 0.95);
+}
+
+.training-block-loss {
+  padding: 0.32em 0.5em;
+  margin-bottom: 0.48em;
+  border-radius: 16px;
+  background: rgba(248, 250, 252, 0.95);
+  border: 1px solid rgba(220, 38, 38, 0.42);
+  border-color: rgba(220, 38, 38, 0.42);
+  border-width: 3px;
+  background: rgba(254, 242, 242, 0.96);
 }
 
 .training-main-card {

@@ -1,16 +1,15 @@
 <section class="slide canonical-vs-learned-mrf-slide"
-         data-section="Contribution 1"
-         data-title="Canonical MRF vs learned MRF">
+         data-section="Contribution: Differentiable MRF inference for BILPs"
+         data-title="From canonical to learned MRFs">
 
   <div class="slide-body canonical-learned-body">
 
     <!-- Shared input -->
-    <div class="shared-bilp-card fragment fade-up">
+    <div class="shared-bilp-card fade-up">
       <div class="shared-bilp-copy">
-        <p class="learning-label">Shared input</p>
         <h3>Same BILP structure</h3>
         <p>
-          Both parameterizations use the same variable-constraint graph and the same MRF factor scopes.
+          The variable-constraint graph still defines the MRF factor scopes.
         </p>
       </div>
 
@@ -55,123 +54,76 @@
       </svg>
     </div>
 
-    <div class="mrf-compare-grid">
+    <!-- Main contrast -->
+    <div class="mrf-compare-grid simplified-mrf-compare">
 
       <!-- Canonical MRF -->
-      <div class="learning-step cmrf-panel fragment fade-up">
-        <p class="learning-label">Canonical MRF</p>
-        <h3>Hand-designed feasibility-cost parameters</h3>
+      <div class="learning-step cmrf-panel fade-up" data-fragment-index="1">
+        <p class="learning-label">Background construction</p>
+        <h3>Canonical MRF</h3>
 
-        <div class="theta-decomposition canonical-theta">
-          <div class="theta-lhs">
-            \(\bar{\theta}(P)=\)
+        <div class="simple-theta-card canonical-theta-card">
+          <div class="simple-theta-symbol">
+            \[
+              \bar{\theta}(P)
+            \]
           </div>
 
-
-          <div class="theta-blocks">
-            <div class="theta-param-card unary-param">
-              <div class="theta-param-title">unary parameters</div>
-              <div class="theta-param-main">
-                \(\{\bar{\theta}_i\}_{i\in V}\)
-              </div>
-              <div class="theta-param-sub">
-                variable costs
-              </div>
-              <div class="theta-param-formula">
-                \[
-                  \bar{\theta}_i(x_i)=c_i x_i
-                \]
-              </div>
-            </div>
-
-            <div class="theta-param-card factor-param">
-              <div class="theta-param-title">constraint factor parameters</div>
-              <div class="theta-param-main">
-                \(\{\bar{\theta}_{\alpha}\}_{\alpha\in F}\)
-              </div>
-              <div class="theta-param-sub">
-                local feasibility table
-              </div>
-              <div class="theta-param-formula feasibility-formula">
-                \[
-                  \bar{\theta}_{\alpha}(x_{\alpha}) =
-                  \begin{cases}
-                    0, & x_{\alpha}\in\mathcal{F}_{\alpha},\\
-                    -M, & \text{otherwise}.
-                  \end{cases}
-                \]
-              </div>
-            </div>
+          <div class="simple-theta-caption">
+            fixed by the optimization problem
           </div>
-
         </div>
 
-        <p>
-          The parameters are fixed by the BILP objective and by hand-coded local
-          feasibility penalties.
-        </p>
+        <ul class="mrf-simple-list">
+          <li>objective coefficients define unary terms</li>
+          <li>constraints define hand-coded feasibility penalties</li>
+          <li>parameters are not learned</li>
+        </ul>
       </div>
 
       <!-- Learned MRF -->
-      <div class="learning-step lmrf-panel fragment fade-up">
-        <p class="learning-label">Learned MRF</p>
-        <h3>Predicted factor parameters</h3>
+      <div class="learning-step lmrf-panel fade-up" data-fragment-index="2">
+        <p class="learning-label">Contribution</p>
+        <h3>Learned MRF</h3>
 
-        <div class="theta-decomposition learned-theta">
-          <div class="theta-lhs">
-            \(\hat{\theta}(P;\omega)=\)
+        <div class="simple-theta-card learned-theta-card">
+          <div class="simple-theta-symbol">
+            \[
+              \hat{\theta}(P;\omega)
+            \]
           </div>
 
-
-          <div class="theta-blocks">
-            <div class="theta-param-card unary-param">
-              <div class="theta-param-title">unary parameters</div>
-              <div class="theta-param-main">
-                \(\{\hat{\theta}_i\}_{i\in V}\)
-              </div>
-              <div class="theta-param-sub">
-                variable head
-              </div>
-              <div class="theta-param-formula">
-                \[
-                  \hat{\theta}_i = h_V(\nu_i)
-                \]
-              </div>
-            </div>
-
-            <div class="theta-param-card factor-param">
-              <div class="theta-param-title">constraint factor parameters</div>
-              <div class="theta-param-main">
-                \(\{\hat{\theta}_{\alpha}\}_{\alpha\in F}\)
-              </div>
-              <div class="theta-param-sub">
-                constraint / factor head
-              </div>
-              <div class="theta-param-formula">
-                \[
-                  \hat{\theta}_{\alpha}=h_F(\nu_{\alpha})
-                \]
-              </div>
-            </div>
+          <div class="simple-theta-caption">
+            predicted from graph embeddings
           </div>
-
         </div>
 
-        <p>
-          The scopes are still induced by the BILP, but the log-potential tables are
-          predicted from GNN embeddings.
-        </p>
+        <div class="learned-head-equations">
+          \[
+            \hat{\theta}_i = h_V(\nu_i),
+            \qquad
+            \hat{\theta}_{\alpha}=h_F(\nu_{\alpha})
+          \]
+        </div>
+
+        <ul class="mrf-simple-list">
+          <li>same BILP-induced factor scopes</li>
+          <li>GNN embeddings summarize variables and constraints</li>
+          <li>parameter heads learn the log-potential tables</li>
+        </ul>
       </div>
 
     </div>
 
     <aside class="notes">
-      The important contrast is not the input graph: both models see the same BILP
-      and use the same factor scopes. The canonical MRF uses fixed parameters:
-      unary terms encode the objective and constraint factors encode feasibility by
-      assigning zero to locally feasible assignments and a large negative value to
-      infeasible ones. The learned MRF replaces this hand-designed construction by
-      learned parameter heads applied to GNN embeddings.
+      At this point the canonical overcomplete parameterization has already been
+      introduced in the MRF background section. This slide should therefore avoid
+      re-deriving the canonical construction. The message is that the factor scopes
+      are unchanged: they still come from the BILP variable-constraint graph. What
+      changes is the source of the parameters. In the canonical MRF, parameters are
+      fixed by the objective and by hand-coded feasibility penalties. In the learned
+      MRF, the same parameter tables are predicted from GNN embeddings using variable
+      and factor heads.
     </aside>
 
   </div>

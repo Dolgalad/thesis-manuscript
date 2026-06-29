@@ -1,0 +1,167 @@
+<section class="slide background-canonical-mrf-slide"
+         data-section="Background: MRFs"
+         data-title="Canonical MRF parameterization">
+
+  <div class="slide-body background-canonical-mrf-body">
+
+    <div class="bcmrf-layout">
+
+      <!-- Left: factor graph and overcomplete assignment table -->
+      <div class="bcmrf-graph-panel">
+        <div class="bcmrf-graph-wrap">
+
+          <svg class="bcmrf-svg" viewBox="0 0 620 430" role="img"
+               aria-label="Factor graph with variable nodes and factor nodes">
+
+            <!-- edges -->
+            <g>
+              <line class="bcmrf-edge" x1="170" y1="105" x2="450" y2="145" />
+              <line class="bcmrf-edge" x1="170" y1="215" x2="450" y2="145" />
+              <line class="bcmrf-edge" x1="170" y1="215" x2="450" y2="285" />
+              <line class="bcmrf-edge" x1="170" y1="325" x2="450" y2="285" />
+            </g>
+
+            <!-- variables -->
+            <g>
+              <g class="bcmrf-var-node" transform="translate(170 105)">
+                <circle r="34"></circle>
+                <text y="8">x₁</text>
+              </g>
+
+              <g class="bcmrf-var-node" transform="translate(170 215)">
+                <circle r="34"></circle>
+                <text y="8">x₂</text>
+              </g>
+
+              <g class="bcmrf-var-node" transform="translate(170 325)">
+                <circle r="34"></circle>
+                <text y="8">x₃</text>
+              </g>
+            </g>
+
+            <!-- factors -->
+            <g>
+              <g class="bcmrf-factor-node" transform="translate(450 145)">
+                <rect x="-52" y="-30" width="104" height="60" rx="16"></rect>
+                <text y="8">α₁</text>
+              </g>
+
+              <g class="bcmrf-factor-node" transform="translate(450 285)">
+                <rect x="-52" y="-30" width="104" height="60" rx="16"></rect>
+                <text y="8">α₂</text>
+              </g>
+            </g>
+
+            <text class="bcmrf-side-label" x="170" y="45">variables</text>
+            <text class="bcmrf-side-label" x="450" y="45">factors</text>
+          </svg>
+        </div>
+
+        <div class="bcmrf-assignment-table-card " data-fragment-index="1">
+          <div class="bcmrf-table-title">
+            Factor \(\alpha_1\): assignments over \(x_1,x_2\)
+          </div>
+
+          <table class="bcmrf-assignment-table">
+            <thead>
+              <tr>
+                <th>\(x_1\)</th>
+                <th>\(x_2\)</th>
+                <th>\(\theta_{\alpha_1}\)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>0</td>
+                <td>0</td>
+                <td>\(\theta_{\alpha_1,00}\)</td>
+              </tr>
+              <tr>
+                <td>0</td>
+                <td>1</td>
+                <td>\(\theta_{\alpha_1,01}\)</td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>\(\theta_{\alpha_1,10}\)</td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>1</td>
+                <td>\(\theta_{\alpha_1,11}\)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Right: canonical MRF parameterization -->
+      <div class="bcmrf-canonical-panel fragment fade-up" data-fragment-index="2">
+        <div class="bcmrf-kicker">Canonical MRF for a BILP</div>
+        <h3>Fixed parameters from the problem data</h3>
+
+        <div class="bcmrf-theta-decomposition">
+          <div class="bcmrf-theta-lhs">
+            \(\bar{\theta}(P)=\)
+          </div>
+
+          <div class="bcmrf-theta-blocks">
+            <div class="bcmrf-theta-param-card bcmrf-unary-param">
+              <div class="bcmrf-theta-param-title">unary parameters</div>
+              <div class="bcmrf-theta-param-main">
+                \(\{\bar{\theta}_i\}_{i\in V}\)
+              </div>
+              <div class="bcmrf-theta-param-sub">
+                variable costs
+              </div>
+              <div class="bcmrf-theta-param-formula">
+                \[
+                  \bar{\theta}_i(x_i)=c_i x_i
+                \]
+              </div>
+            </div>
+
+            <div class="bcmrf-theta-param-card bcmrf-factor-param">
+              <div class="bcmrf-theta-param-title">constraint factor parameters</div>
+              <div class="bcmrf-theta-param-main">
+                \(\{\bar{\theta}_{\alpha}\}_{\alpha\in F}\)
+              </div>
+              <div class="bcmrf-theta-param-sub">
+                local feasibility table
+              </div>
+              <div class="bcmrf-theta-param-formula bcmrf-feasibility-formula">
+                \[
+                  \bar{\theta}_{\alpha}(x_{\alpha}) =
+                  \begin{cases}
+                    0, & x_{\alpha}\in\mathcal{F}_{\alpha},\\
+                    -M, & \text{otherwise}.
+                  \end{cases}
+                \]
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bcmrf-summary-card fragment fade-up" data-fragment-index="3">
+          <span class="bcmrf-summary-prefix">Takeaway:</span>
+          canonical MRFs encode the objective and constraints directly, but high-arity
+          constraint factors require exponentially large assignment tables.
+        </div>
+      </div>
+
+    </div>
+
+    <aside class="notes">
+      This slide moves the canonical parameterization to the MRF background. The
+      left side recalls the overcomplete factor representation: each assignment of
+      a factor has its own parameter. The right side specializes this to BILPs.
+      Unary factors encode the linear objective coefficients. Constraint factors
+      encode local feasibility by assigning zero to feasible assignments and a
+      large negative penalty to infeasible assignments. This construction is fixed
+      by the input problem and contrasts later with the learned MRF, where these
+      tables are predicted from GNN embeddings.
+    </aside>
+
+  </div>
+</section>

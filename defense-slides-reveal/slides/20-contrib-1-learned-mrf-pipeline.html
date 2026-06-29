@@ -1,13 +1,13 @@
 <section class="slide learned-mrf-pipeline-slide"
-         data-section="Background"
-         data-title="Proposed pipeline: learned MRF predictor">
+         data-section="Contribution: Differentiable MRF Inference for BILPs"
+         data-title="Learned MRF predictor">
 
   <div class="slide-body learning-context-body learned-mrf-body">
 
     <div class="learning-pipeline learned-mrf-compact-pipeline">
 
       <!-- Step 1: encoded BILP graph -->
-      <div class="learning-step fragment fade-up">
+      <div class="learning-step fade-up">
         <p class="learning-label">Encoded input</p>
 
         <svg class="learning-svg" viewBox="0 0 500 280" role="img"
@@ -44,20 +44,16 @@
           <rect class="lc-feature-box" x="360" y="82" width="105" height="128" rx="18" />
           <text class="lc-feature-text" x="412" y="116">GNN</text>
           <text class="lc-feature-text small" x="412" y="148">embeddings</text>
-          <text class="lc-feature-text small" x="412" y="178">\(\nu_x,\nu_c\)</text>
+          <text class="lc-feature-text small" x="412" y="178">(νₓ, νc)</text>
         </svg>
 
         <h3>Variable-constraint graph</h3>
-
-        <p>
-          A GNN encodes variables and constraints into node embeddings.
-        </p>
       </div>
 
-      <div class="learning-arrow fragment fade-up" aria-hidden="true">→</div>
+      <div class="learning-arrow fragment fade-up" aria-hidden="true" data-fragment-index="1">→</div>
 
       <!-- Step 2: MRF parameter prediction -->
-      <div class="learning-step mrf-head-step fragment fade-up">
+      <div class="learning-step mrf-head-step fragment fade-up" data-fragment-index="1">
         <p class="learning-label">MRF parameter head</p>
 
         <svg class="learning-svg mrf-mapping-svg" viewBox="0 0 500 280" role="img"
@@ -68,13 +64,13 @@
           <!-- left: embeddings -->
           <g transform="translate(52 54)">
             <circle class="mrf-embed var" cx="40" cy="38" r="23" />
-            <text class="mrf-mini-text" x="40" y="45">\(\nu_{x_1}\)</text>
+            <text class="mrf-mini-text" x="40" y="45">ν₁</text>
 
             <circle class="mrf-embed var" cx="40" cy="98" r="23" />
-            <text class="mrf-mini-text" x="40" y="105">\(\nu_{x_2}\)</text>
+            <text class="mrf-mini-text" x="40" y="105">ν₂</text>
 
             <rect class="mrf-embed cons" x="16" y="145" width="48" height="40" rx="10" />
-            <text class="mrf-mini-text" x="40" y="170">\(\nu_{c_1}\)</text>
+            <text class="mrf-mini-text" x="40" y="170">νc₁</text>
           </g>
 
           <!-- middle: heads -->
@@ -97,14 +93,12 @@
           <!-- right: parameters -->
           <g transform="translate(345 54)">
             <rect class="theta-table unary" x="0" y="0" width="112" height="64" rx="15" />
-            <text class="theta-text" x="56" y="25">\(\hat{\theta}_{i}\)</text>
+            <text class="theta-text" x="56" y="25">θ̂ᵢ</text>
             <text class="theta-text small" x="56" y="47">unary</text>
 
             <rect class="theta-table factor" x="0" y="102" width="112" height="92" rx="15" />
-            <text class="theta-text" x="56" y="24">\(\hat{\theta}_{\alpha}\)</text>
-            <text class="theta-text small" x="56" y="46">non-unary</text>
-            <text class="theta-grid" x="34" y="72">00</text>
-            <text class="theta-grid" x="78" y="72">11</text>
+            <text class="theta-text" x="56" y="144">θ̂α</text>
+            <text class="theta-text small" x="56" y="166">non-unary</text>
           </g>
 
           <!-- arrows to parameter tables -->
@@ -118,15 +112,12 @@
 
         <h3>Predict MRF parameters</h3>
 
-        <p>
-          Variable embeddings give unary factors; constraint embeddings give interaction factors.
-        </p>
       </div>
 
-      <div class="learning-arrow fragment fade-up" aria-hidden="true">→</div>
+      <div class="learning-arrow fragment fade-up" aria-hidden="true" data-fragment-index="2">→</div>
 
       <!-- Step 3: LBP / NMF inference -->
-      <div class="learning-step inference-step fragment fade-up">
+      <div class="learning-step inference-step fragment fade-up" data-fragment-index="2">
         <p class="learning-label">Approximate inference</p>
 
         <svg class="learning-svg inference-svg" viewBox="0 0 500 280" role="img"
@@ -192,15 +183,12 @@
 
         <h3>Infer marginals</h3>
 
-        <p>
-          LBP or NMF converts learned potentials into structured beliefs.
-        </p>
       </div>
 
-      <div class="learning-arrow fragment fade-up" aria-hidden="true">→</div>
+      <div class="learning-arrow fragment fade-up" aria-hidden="true" data-fragment-index="3">→</div>
 
       <!-- Step 4: marginal-guided decoding -->
-      <div class="learning-step decoding-step fragment fade-up">
+      <div class="learning-step decoding-step fragment fade-up" data-fragment-index="3">
         <p class="learning-label">Decoding</p>
 
         <svg class="learning-svg decoding-svg" viewBox="0 0 500 280" role="img"
@@ -229,7 +217,7 @@
           <path class="decode-flow-arrow" d="M238 136 C266 136, 282 136, 310 136" />
 
           <!-- conditional decoding panel -->
-          <g transform="translate(318 70)">
+          <g transform="translate(294 70)">
             <circle class="repair-on selected" cx="36" cy="40" r="23" />
             <text class="lc-label" x="36" y="48">1</text>
 
@@ -251,16 +239,31 @@
 
         <h3>Decode with beliefs</h3>
 
-        <p>
-          Decoding can use marginals, then recompute conditional marginals after fixings.
-        </p>
       </div>
 
     </div>
 
-    <div class="learning-context-takeaway learned-mrf-takeaway fragment fade-up">
-      Proposed idea: predict factor potentials, infer marginals, then decode with structured information.
-    </div>
+    <div class="learned-mrf-caption-strip">
+
+      <span class="learned-mrf-caption"
+            data-fragment-index="0">
+        Encode the BILP.
+      </span>
+    
+      <span class="learned-mrf-caption fragment"
+            data-fragment-index="1">
+        Predict MRF factors.
+      </span>
+    
+      <span class="learned-mrf-caption fragment"
+            data-fragment-index="2">
+        Infer marginals.
+      </span>
+    
+      <span class="learned-mrf-caption fragment"
+            data-fragment-index="3">
+        Decode with beliefs.
+      </span>
 
     <aside class="notes">
       This slide contrasts with the factorized baseline. The GNN encoder is still

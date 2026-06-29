@@ -1,0 +1,336 @@
+/* src/styles/slides/16-background-canonical-mrf-parameterization.css */
+
+.background-canonical-mrf-body {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.bcmrf-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  gap: 1rem;
+  width: 100%;
+  height: 100%;
+  max-height: 560px;
+  align-items: stretch;
+}
+
+.bcmrf-graph-panel,
+.bcmrf-canonical-panel {
+  min-height: 0;
+  height: 100%;
+  box-sizing: border-box;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  box-shadow: 0 12px 26px rgba(15, 23, 42, 0.08);
+}
+
+.bcmrf-graph-panel {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0.55em;
+}
+
+.bcmrf-graph-wrap {
+  width: 100%;
+  height: 72%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(0);
+  transition: transform 650ms ease, height 650ms ease;
+}
+
+.bcmrf-svg {
+  width: 100%;
+  height: 100%;
+  max-height: 430px;
+  display: block;
+}
+
+.background-canonical-mrf-slide:has(.bcmrf-assignment-table-card.visible) .bcmrf-graph-panel {
+  justify-content: flex-start;
+}
+
+.background-canonical-mrf-slide:has(.bcmrf-assignment-table-card.visible) .bcmrf-graph-wrap {
+  height: 56%;
+  transform: translateY(-0.2em);
+}
+
+.bcmrf-edge {
+  stroke: rgba(71, 85, 105, 0.55);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.bcmrf-var-node circle {
+  fill: rgba(219, 234, 254, 0.95);
+  stroke: rgba(29, 78, 216, 0.8);
+  stroke-width: 4;
+}
+
+.bcmrf-factor-node rect {
+  fill: rgba(255, 237, 213, 0.95);
+  stroke: rgba(194, 65, 12, 0.75);
+  stroke-width: 4;
+}
+
+.bcmrf-var-node text,
+.bcmrf-factor-node text {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 28px;
+  font-weight: 800;
+  fill: #0f172a;
+}
+
+.bcmrf-side-label {
+  text-anchor: middle;
+  font-size: 22px;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  fill: rgba(71, 85, 105, 0.82);
+}
+
+.bcmrf-assignment-table-card {
+  margin-top: 0.35em;
+  padding: 0.45em 0.55em;
+  border-radius: 16px;
+  background: rgba(239, 246, 255, 0.95);
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  box-sizing: border-box;
+  font-size: 0.36em;
+  color: #0f172a;
+}
+
+.bcmrf-assignment-table-card.fragment {
+  opacity: 0;
+  visibility: hidden;
+  max-height: 0;
+  margin-top: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  overflow: hidden;
+  transition:
+    opacity 450ms ease,
+    max-height 650ms ease,
+    margin-top 650ms ease,
+    padding-top 650ms ease,
+    padding-bottom 650ms ease;
+}
+
+.bcmrf-assignment-table-card.fragment.visible {
+  opacity: 1;
+  visibility: visible;
+  max-height: 13em;
+  margin-top: 0.35em;
+  padding-top: 0.45em;
+  padding-bottom: 0.45em;
+}
+
+.bcmrf-table-title {
+  margin-bottom: 0.25em;
+  text-align: center;
+  font-size: 0.92em;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+  color: rgba(30, 41, 59, 0.9);
+}
+
+.bcmrf-assignment-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.bcmrf-assignment-table th,
+.bcmrf-assignment-table td {
+  padding: 0.18em 0.25em;
+  text-align: center;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.28);
+  white-space: nowrap;
+}
+
+.bcmrf-assignment-table th {
+  font-weight: 850;
+  color: rgba(71, 85, 105, 0.92);
+}
+
+.bcmrf-assignment-table td {
+  font-weight: 650;
+}
+
+.bcmrf-assignment-table tr:last-child td {
+  border-bottom: none;
+}
+
+.bcmrf-canonical-panel {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  gap: 0.48rem;
+  padding: 0.72rem 0.8rem 0.8rem;
+  background: rgba(255, 247, 237, 0.92);
+  border-color: rgba(160, 105, 35, 0.24);
+}
+
+.bcmrf-kicker {
+  color: rgba(120, 70, 30, 0.76);
+  font-size: clamp(0.36em, 0.56vw, 0.46em);
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.bcmrf-canonical-panel h3 {
+  margin: 0;
+  color: rgba(38, 50, 70, 0.88);
+  font-size: clamp(0.7em, 1vw, 0.88em);
+  font-weight: 850;
+  line-height: 1.02;
+}
+
+.bcmrf-theta-decomposition {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.36rem;
+  min-width: 0;
+  min-height: 0;
+}
+
+.bcmrf-theta-lhs {
+  color: rgba(38, 50, 70, 0.86);
+  font-size: clamp(0.58em, 0.95vw, 0.82em);
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.bcmrf-theta-blocks {
+  display: grid;
+  grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
+  gap: 0.46rem;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+.bcmrf-theta-param-card {
+  min-width: 0;
+  max-width: 100%;
+  padding: 0.58rem 0.46rem;
+  border-radius: 17px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2.5px solid rgba(38, 50, 70, 0.14);
+  box-shadow: 0 10px 22px rgba(38, 50, 70, 0.045);
+  display: grid;
+  gap: 0.16rem;
+  align-content: start;
+  justify-items: center;
+  text-align: center;
+  overflow: hidden;
+}
+
+.bcmrf-unary-param {
+  border-color: rgba(45, 80, 150, 0.36);
+}
+
+.bcmrf-factor-param {
+  border-color: rgba(160, 105, 35, 0.45);
+}
+
+.bcmrf-theta-param-title {
+  color: rgba(38, 50, 70, 0.58);
+  font-size: clamp(0.34em, 0.52vw, 0.44em);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.bcmrf-theta-param-main {
+  color: rgba(38, 50, 70, 0.86);
+  font-size: clamp(0.5em, 0.74vw, 0.64em);
+  font-weight: 850;
+  line-height: 1.05;
+}
+
+.bcmrf-theta-param-sub {
+  color: rgba(38, 50, 70, 0.56);
+  font-size: clamp(0.34em, 0.5vw, 0.42em);
+  font-weight: 760;
+  line-height: 1.08;
+}
+
+.bcmrf-theta-param-formula {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  color: rgba(38, 50, 70, 0.84);
+  font-size: clamp(0.36em, 0.52vw, 0.46em);
+  font-weight: 800;
+  line-height: 1.05;
+  overflow: hidden;
+}
+
+.bcmrf-theta-param-formula .MathJax,
+.bcmrf-theta-param-formula mjx-container {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 auto !important;
+  overflow: visible !important;
+  text-align: center !important;
+}
+
+.bcmrf-theta-param-formula mjx-container[jax="SVG"] > svg,
+.bcmrf-theta-param-formula .MathJax svg {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+.bcmrf-feasibility-formula {
+  font-size: clamp(0.29em, 0.43vw, 0.38em);
+}
+
+.bcmrf-summary-card {
+  align-self: end;
+  padding: 0.55em 0.75em;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(160, 105, 35, 0.22);
+  color: rgba(30, 41, 59, 0.92);
+  font-size: clamp(0.39em, 0.6vw, 0.48em);
+  font-weight: 700;
+  line-height: 1.22;
+}
+
+.bcmrf-summary-prefix {
+  color: rgba(194, 65, 12, 0.9);
+  font-weight: 900;
+}
+
+@media (max-height: 760px) {
+  .bcmrf-layout {
+    gap: 0.75rem;
+  }
+
+  .bcmrf-canonical-panel {
+    padding-top: 0.58rem;
+    padding-bottom: 0.62rem;
+    gap: 0.34rem;
+  }
+
+  .bcmrf-theta-param-card {
+    padding: 0.42rem 0.36rem;
+    gap: 0.11rem;
+  }
+
+  .bcmrf-summary-card {
+    padding-top: 0.45em;
+    padding-bottom: 0.45em;
+  }
+}

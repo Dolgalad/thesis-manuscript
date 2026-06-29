@@ -1,5 +1,5 @@
 <section class="slide experimental-setting-slide"
-         data-section="Contribution 1"
+         data-section="Contribution: Differentiable MRF inference for BILPs"
          data-title="Experimental setting">
 
   <div class="slide-body experimental-setting-body">
@@ -7,27 +7,25 @@
     <div class="experiment-grid">
 
       <div class="experiment-card problem-card fragment fade-up">
-        <p class="learning-label">Representative BILP families</p>
-        <h3>Two complementary constraint structures</h3>
+        <h3>Representative BILP families</h3>
 
         <div class="problem-pair">
           <div class="problem-mini mis-mini">
             <strong>MIS</strong>
             <span>pairwise exclusion</span>
-            <code>\(x_i+x_j\le 1\)</code>
+            <div class="problem-constraint">\(x_i + x_j \le 1\)</div>
           </div>
 
           <div class="problem-mini sc-mini">
             <strong>Set Cover</strong>
             <span>higher-arity coverage</span>
-            <code>\(\sum_{j:s_j\in S_i}x_j\ge 1\)</code>
+            <div class="problem-constraint">\(\sum_{j:\,s_j\in S_i} x_j \ge 1\)</div>
           </div>
         </div>
       </div>
 
       <div class="experiment-card model-card fragment fade-up">
-        <p class="learning-label">Compared predictors</p>
-        <h3>From independent scores to structured beliefs</h3>
+        <h3>Compared predictors</h3>
 
         <div class="model-lanes">
           <div class="model-lane baseline-lane">
@@ -48,8 +46,7 @@
       </div>
 
       <div class="experiment-card evaluation-card fragment fade-up">
-        <p class="learning-label">Evaluation</p>
-        <h3>Quality–runtime trade-off</h3>
+        <h3>Evaluation</h3>
 
         <div class="metric-row">
           <div class="metric-chip">optimality gap</div>
@@ -63,10 +60,6 @@
         </p>
       </div>
 
-    </div>
-
-    <div class="experiment-takeaway fragment fade-up">
-      Goal: test whether explicit MRF inference gives better decoding signals than independent variable scores.
     </div>
 
     <aside class="notes">
