@@ -12,6 +12,7 @@ import '../js/bibliography.js';
 
 Reveal.initialize({
   hash: false,
+  history: false,
   slideNumber: true,
   transition: 'slide',
   overview: true,
