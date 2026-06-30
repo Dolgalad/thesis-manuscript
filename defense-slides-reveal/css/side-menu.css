@@ -2,28 +2,30 @@
 
 .slide-menu-toggle {
   position: fixed;
-  top: calc(var(--deck-header-h) + 14px);
-  right: 14px;
+  top: calc(var(--deck-header-h) / 2);
+  right: var(--deck-pad-x);
+  transform: translateY(-50%);
   z-index: 45;
 
-  width: 44px;
-  height: 44px;
+  width: min(3.2dvh, 36px);
+  height: min(3.2dvh, 36px);
   border: none;
   border-radius: 999px;
 
-  background: rgba(15, 23, 42, 0.86);
-  color: white;
+  background: rgba(15, 23, 42, 0.08);
+  color: rgba(15, 23, 42, 0.78);
 
-  font-size: 24px;
-  font-weight: 800;
+  font-size: min(2.2dvh, 22px);
+  font-weight: 700;
   line-height: 1;
 
   cursor: pointer;
-  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.22);
+  box-shadow: none;
 }
 
 .slide-menu-toggle:hover {
   background: rgba(15, 23, 42, 0.96);
+  color: rgba(15, 23, 42, 0.95);
 }
 
 .slide-menu {
@@ -67,6 +69,8 @@ body.slide-menu-open .slide-menu {
 .slide-menu-header strong {
   font-size: 22px;
   font-weight: 800;
+  font-size: clamp(1rem, 1.25vw, 1.25rem);
+  font-weight: 650;
 }
 
 .slide-menu-close {
@@ -95,15 +99,15 @@ body.slide-menu-open .slide-menu {
 }
 
 .slide-menu-section {
-  margin-top: 14px;
-  padding: 10px 12px 6px;
+  margin: 18px 8px 6px;
+  padding: 0 8px 6px;
 
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: clamp(0.72rem, 0.85vw, 0.92rem);
+  font-weight: 650;
+  line-height: 1.2;
 
-  color: rgba(15, 23, 42, 0.58);
+  color: rgba(15, 23, 42, 0.72);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.12);
 }
 
 .slide-menu-link {
@@ -134,16 +138,16 @@ body.slide-menu-open .slide-menu {
 }
 
 .slide-menu-number {
-  font-size: 13px;
-  font-weight: 800;
+  font-size: clamp(0.68rem, 0.75vw, 0.85rem);
+  font-weight: 650;
   font-variant-numeric: tabular-nums;
-  opacity: 0.72;
+  opacity: 0.58;
 }
 
 .slide-menu-title {
   min-width: 0;
-  font-size: 15px;
-  font-weight: 650;
+  font-size: clamp(0.78rem, 0.9vw, 1rem);
+  font-weight: 500;
   line-height: 1.25;
 }
 
