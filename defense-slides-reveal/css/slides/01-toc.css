@@ -1,24 +1,34 @@
 .reveal .toc-slide .slide-body {
   justify-content: center;
+  min-height: 0;
 }
 
 .reveal .toc-list {
   list-style: none;
   padding: 0;
   margin: 0 auto;
-  width: min(100%, 980px);
+
+  width: fit-content;
+  max-width: min(100%, 980px);
+  max-height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  overflow: hidden;
 }
 
 .reveal .toc-list li {
   display: grid;
-  grid-template-columns: 3.6em 1fr;
+  grid-template-columns: clamp(2.4rem, 4.2vw, 3.6rem) auto;
   align-items: center;
-  column-gap: 1em;
+  column-gap: clamp(0.55rem, 1.2vw, 1rem);
 
-  font-size: 0.82em;
-  line-height: 1.2;
+  font-size: clamp(0.72rem, 1.35vw, 1.15rem);
+  line-height: 1.18;
 
-  padding: 0.55em 0.2em;
+  padding: clamp(0.32rem, 0.9dvh, 0.62rem) 0.2em;
   border-bottom: 1px solid var(--rule-soft);
 }
 
@@ -27,8 +37,8 @@
 }
 
 .reveal .toc-number {
-  width: 2.35em;
-  height: 2.35em;
+  width: clamp(1.8rem, 3.2dvh, 2.45rem);
+  height: clamp(1.8rem, 3.2dvh, 2.45rem);
   border-radius: 50%;
 
   display: inline-flex;
@@ -36,24 +46,29 @@
   justify-content: center;
 
   font-weight: 800;
-  font-size: 0.72em;
+  font-size: clamp(0.62rem, 1.05vw, 0.82rem);
   line-height: 1;
   font-variant-numeric: tabular-nums;
 
   color: #ffffff;
   background: var(--accent, #2563eb);
   border: 2px solid rgba(15, 23, 42, 0.12);
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.16);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.14);
 }
 
 .reveal .toc-text {
+  min-width: 0;
+  max-width: min(70vw, 820px);
+
   font-weight: 650;
   color: #0f172a;
   letter-spacing: -0.01em;
+
+  overflow-wrap: normal;
 }
 
 .reveal .toc-list li:hover .toc-number {
-  transform: scale(1.06);
+  transform: scale(1.04);
 }
 
 .reveal .toc-list li:hover .toc-text {
