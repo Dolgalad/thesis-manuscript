@@ -59,8 +59,35 @@
         </button>
       </div>
     </div>
-
   </div>
+
+  <button
+    class="slide-menu-toggle"
+    id="slide-menu-toggle"
+    type="button"
+    aria-label="Open slide menu"
+    aria-expanded="false"
+  >
+    ☰
+  </button>
+  
+  <aside class="slide-menu" id="slide-menu" aria-hidden="true">
+    <div class="slide-menu-header">
+      <strong>Slides</strong>
+      <button
+        class="slide-menu-close"
+        id="slide-menu-close"
+        type="button"
+        aria-label="Close slide menu"
+      >
+        ×
+      </button>
+    </div>
+  
+    <nav class="slide-menu-list" id="slide-menu-list"></nav>
+  </aside>
+  
+  <div class="slide-menu-backdrop" id="slide-menu-backdrop"></div>
 
   <!-- Reveal.js scripts -->
   <script type="module" src="/src/main.js"></script>

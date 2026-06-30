@@ -21,6 +21,8 @@ Reveal.initialize({
   plugins: [RevealNotes, RevealMath.KaTeX, RevealHighlight],
 });
 
+setupSlideMenu(Reveal);
+
 // -----------------------------
 // Slide chrome: banner + footer
 // -----------------------------
@@ -424,3 +426,119 @@ Reveal.on("slidechanged", (event) => {
     unlockFooterNav("slidechanged-timeout");
   }, 300);
 });
+
+function setupSlideMenu(Reveal) {
+  const toggle = document.getElementById("slide-menu-toggle");
+  const close = document.getElementById("slide-menu-close");
+  const menu = document.getElementById("slide-menu");
+  const backdrop = document.getElementById("slide-menu-backdrop");
+  const list = document.getElementById("slide-menu-list");
+
+  if (!toggle || !close || !menu || !backdrop || !list) return;
+
+  function openMenu() {
+    document.body.classList.add("slide-menu-open");
+    toggle.setAttribute("aria-expanded", "true");
+    menu.setAttribute("aria-hidden", "false");
+  }
+
+  function closeMenu() {
+    document.body.classList.remove("slide-menu-open");
+    toggle.setAttribute("aria-expanded", "false");
+    menu.setAttribute("aria-hidden", "true");
+  }
+
+  function getSlideTitle(section, index) {
+    const dataTitle = section.dataset.title;
+    if (dataTitle) return dataTitle;
+
+    const heading = section.querySelector("h1, h2, h3");
+    if (heading && heading.textContent.trim()) {
+      return heading.textContent.trim();
+    }
+
+    return `Slide ${String(index + 1).padStart(2, "0")}`;
+  }
+
+  function buildMenu() {
+    const sections = Array.from(
+      document.querySelectorAll(".reveal .slides > section")
+    );
+
+    list.innerHTML = "";
+
+    let previousSection = null;
+
+    sections.forEach((section, index) => {
+      const sectionName =
+        section.dataset.section ||
+        (section.classList.contains("title-slide") ? "Title" : "Other");
+
+      const title = getSlideTitle(section, index);
+
+      if (sectionName !== previousSection) {
+        const sectionHeader = document.createElement("div");
+        sectionHeader.className = "slide-menu-section";
+        sectionHeader.textContent = sectionName;
+        list.appendChild(sectionHeader);
+        previousSection = sectionName;
+      }
+
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "slide-menu-link";
+      button.dataset.slideIndex = String(index);
+
+      button.innerHTML = `
+        <span class="slide-menu-number">${String(index + 1).padStart(2, "0")}</span>
+        <span class="slide-menu-title"></span>
+      `;
+
+      button.querySelector(".slide-menu-title").textContent = title;
+
+      button.addEventListener("click", () => {
+        Reveal.slide(index);
+        closeMenu();
+      });
+
+      list.appendChild(button);
+    });
+  }
+
+  function updateActiveItem() {
+    const current = Reveal.getIndices().h;
+
+    document.querySelectorAll(".slide-menu-link").forEach((button) => {
+      button.classList.toggle(
+        "is-active",
+        Number(button.dataset.slideIndex) === current
+      );
+    });
+  }
+
+  toggle.addEventListener("click", () => {
+    if (document.body.classList.contains("slide-menu-open")) {
+      closeMenu();
+    } else {
+      openMenu();
+      updateActiveItem();
+    }
+  });
+
+  close.addEventListener("click", closeMenu);
+  backdrop.addEventListener("click", closeMenu);
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeMenu();
+  });
+
+  Reveal.on("ready", () => {
+    buildMenu();
+    updateActiveItem();
+  });
+
+  Reveal.on("slidechanged", updateActiveItem);
+
+  buildMenu();
+  updateActiveItem();
+}
