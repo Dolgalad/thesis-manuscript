@@ -1,0 +1,130 @@
+.reveal .title-slide {
+  height: 100%;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.reveal .title-slide .title-top {
+  font-size: 0.55em;
+  line-height: 1.2;
+  opacity: 0.85;
+}
+
+.reveal .title-slide .institution {
+  font-weight: 600;
+  margin-bottom: 0.15em;
+}
+
+.reveal .title-slide .school {
+  margin-top: 0;
+}
+
+.reveal .title-slide .title-main {
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+}
+
+.reveal .title-slide h1 {
+  font-size: 1.55em;
+  line-height: 1.08;
+  max-width: 1050px;
+  margin-left: auto;
+  margin-right: auto;
+  text-transform: none;
+}
+
+.reveal .title-slide h2 {
+  font-size: 0.78em;
+  line-height: 1.25;
+  font-weight: 400;
+  max-width: 950px;
+  margin: 0.7em auto 0.6em auto;
+  text-transform: none;
+  opacity: 0.9;
+}
+
+.reveal .title-slide .defense-type {
+  font-size: 0.65em;
+  font-weight: 600;
+  margin-top: 0.5em;
+}
+
+.reveal .title-slide .title-meta {
+  font-size: 0.58em;
+  line-height: 1.25;
+}
+
+.reveal .title-slide .title-meta p {
+  margin: 0.15em 0;
+}
+
+.reveal .title-slide .author {
+  font-weight: 600;
+}
+
+.reveal .title-slide .jury {
+  margin-top: 0.4em;
+  font-size: 0.45em;
+}
+
+.reveal .title-slide .jury-title {
+  font-weight: 600;
+  margin-bottom: 0.35em;
+}
+
+.reveal .title-slide .jury-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.25em 1.2em;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+}
+
+.reveal .title-slide .jury-member {
+  display: flex;
+  justify-content: space-between;
+  gap: 1em;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  padding-bottom: 0.12em;
+}
+
+.reveal .title-slide .jury-name {
+  font-weight: 500;
+}
+
+.reveal .title-slide .jury-role {
+  opacity: 0.7;
+  white-space: nowrap;
+}
+
+.reveal .title-slide .logo-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.4em;
+  margin-bottom: 0.7em;
+}
+
+.reveal .title-slide .logo-row img {
+  max-height: clamp(38px, 6dvh, 64px);
+  max-width: clamp(120px, 13vw, 180px);
+  object-fit: contain;
+}
+
+.reveal .title-slide .logo-row img[src*="logo_uspn"],
+.reveal .title-slide .logo-row img[src*="logo_institut_galilee"] {
+  max-height: clamp(34px, 5.5dvh, 58px);
+}
+
+.reveal .title-slide .logo-row img[src*="logo_lipn"] {
+  max-height: clamp(38px, 6dvh, 64px);
+}
+
+.reveal .toc-slide .slide-body {
+  justify-content: center;
+}
+

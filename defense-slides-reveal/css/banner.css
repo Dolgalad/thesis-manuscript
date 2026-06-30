@@ -1,0 +1,50 @@
+.section-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: var(--deck-header-h);
+  min-height: var(--deck-header-h);
+  max-height: var(--deck-header-h);
+
+  z-index: 20;
+  display: flex;
+  align-items: center;
+
+  padding: 0 var(--deck-pad-x);
+  box-sizing: border-box;
+
+  background: white;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  pointer-events: none;
+}
+
+.section-banner-inner {
+  min-width: 0;
+}
+
+.section-banner-inner p {
+  margin: 0;
+  font-size: clamp(0.45rem, 0.95dvh, 0.9rem);
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.65;
+}
+
+.section-banner-inner h2 {
+  margin: 0.12em 0 0;
+  font-size: clamp(0.65rem, 1.45dvh, 1.35rem);
+  line-height: 1;
+  font-weight: 600;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Hide banner on title slide */
+body.hide-slide-footer .section-banner {
+  display: none;
+}

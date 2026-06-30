@@ -1,4 +1,10 @@
 @import "./custom.css";
+@import "./banner.css";
+@import "./footer.css";
+@import "./side-menu.css";
+
+@import "./title-slide.css";
+
 
 @import "./slides/01-toc.css";
 @import "./slides/02-core-idea.css";
