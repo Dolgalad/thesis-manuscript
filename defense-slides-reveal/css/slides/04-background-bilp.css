@@ -1,0 +1,334 @@
+/* src/styles/slides/09-background-bilp.css */
+
+.bilp-structured-slide .bilp-structured-body {
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  gap: 2rem;
+}
+
+/* Hard split: left half and right half */
+
+.bilp-left-column {
+  width: 45%;
+  height: 100%;
+
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.bilp-right-column {
+  width: 45%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.65rem;
+}
+
+/* Left equation card */
+
+.bilp-problem-block {
+  width: fit-content;
+  max-width: 420px;
+  height: fit-content;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+
+  padding: 0.8rem 1rem;
+  border-radius: 16px;
+
+  background: rgba(245, 247, 252, 0.96);
+  border: 1px solid rgba(40, 50, 70, 0.13);
+  box-shadow: 0 10px 28px rgba(20, 30, 50, 0.06);
+
+  text-align: left;
+
+  transition:
+    transform 420ms ease,
+    padding 420ms ease;
+}
+
+/*
+  Before the figure appears, the whole card is vertically centered by
+  .bilp-left-column { align-items: center; }.
+
+  When the figure appears, the illustration expands from 0 height to its
+  natural height. The card grows continuously, and this small translation
+  keeps the larger card visually balanced.
+*/
+
+.bilp-structured-body:has(.bilp-feasible-illustration.visible) .bilp-problem-block {
+  transform: translateY(-0.45rem);
+}
+
+/* HTML-structured equation */
+
+.bilp-equation {
+  width: fit-content;
+  line-height: 1;
+}
+
+.bilp-equation-rows {
+  display: grid;
+  row-gap: 0.45rem;
+
+  font-size: 0.68em;
+  line-height: 1.15;
+}
+
+.bilp-eq-row {
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 0.85rem;
+  align-items: baseline;
+}
+
+.bilp-eq-left {
+  min-width: 4.5rem;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.bilp-eq-right {
+  text-align: left;
+  white-space: nowrap;
+}
+
+.bilp-eq-op {
+  font-family: var(--r-main-font, inherit);
+  font-weight: 500;
+}
+
+/* Make the HTML subscript look like a math subscript */
+
+.bilp-eq-left sub {
+  position: relative;
+  bottom: -0.25em;
+
+  margin-left: 0.06em;
+  font-size: 0.72em;
+  line-height: 0;
+}
+
+/* Keep inline MathJax compact */
+
+.bilp-equation mjx-container {
+  display: inline-block !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  margin: 0 !important;
+  text-align: left !important;
+}
+
+/* Right fragments */
+
+.bilp-point {
+  width: 100%;
+  max-width: 520px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+
+  padding: 0.55rem 0.75rem;
+  border-radius: 15px;
+
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(40, 50, 70, 0.12);
+  box-shadow: 0 10px 24px rgba(20, 30, 50, 0.05);
+
+  font-size: 0.56em;
+  line-height: 1.18;
+}
+
+.bilp-point strong {
+  color: rgba(45, 80, 150, 0.95);
+  font-weight: 800;
+}
+
+.bilp-point span {
+  color: rgba(30, 40, 60, 0.86);
+}
+
+.bilp-point mjx-container {
+  display: inline-block !important;
+  margin: 0 !important;
+  font-size: 88% !important;
+}
+
+.bilp-matrix-dimensions {
+  margin-top: 0.08rem;
+  opacity: 0.9;
+}
+
+/* Equation highlight base state */
+
+.bilp-equation .eq-part {
+  opacity: 0.62;
+
+  transition:
+    color 180ms ease,
+    opacity 180ms ease,
+    filter 180ms ease;
+}
+
+/* Highlight active equation object */
+
+.bilp-structured-body:has(.bilp-point[data-fragment-index="0"].current-fragment)
+  .bilp-equation .eq-vars,
+.bilp-structured-body:has(.bilp-point[data-fragment-index="1"].current-fragment)
+  .bilp-equation .eq-cost,
+.bilp-structured-body:has(.bilp-point[data-fragment-index="2"].current-fragment)
+  .bilp-equation .eq-constraints,
+.bilp-structured-body:has(.bilp-point[data-fragment-index="3"].current-fragment)
+  .bilp-equation .eq-domain,
+.bilp-structured-body:has(.bilp-point[data-fragment-index="3"].current-fragment)
+  .bilp-equation .eq-constraints {
+  opacity: 1;
+  color: rgb(37, 99, 235);
+}
+
+/* Emphasize the active explanatory card */
+
+.bilp-point.current-fragment {
+  border-color: rgba(37, 99, 235, 0.35);
+  box-shadow: 0 14px 30px rgba(37, 99, 235, 0.12);
+}
+
+/* Optional: once a fragment has appeared, keep it readable but visually secondary */
+
+.bilp-point.visible:not(.current-fragment) {
+  opacity: 0.78;
+}
+
+/* Feasible set illustration */
+
+/*
+  Important:
+  Do not use display: none here.
+  display cannot animate.
+
+  Instead, the illustration is a CSS grid whose single row goes from
+  0fr to 1fr. The inner wrapper has overflow hidden, so the SVG is
+  clipped while the row expands.
+*/
+
+.bilp-feasible-illustration {
+  width: min(100%, 360px);
+
+  display: grid !important;
+  grid-template-rows: 0fr;
+
+  margin-top: 0;
+  opacity: 0;
+  visibility: visible !important;
+  overflow: hidden;
+
+  transform: translateY(-0.25rem);
+
+  transition:
+    grid-template-rows 420ms ease,
+    margin-top 420ms ease,
+    opacity 300ms ease,
+    transform 420ms ease;
+}
+
+.bilp-feasible-illustration.visible {
+  grid-template-rows: 1fr;
+
+  margin-top: 0.85rem;
+  opacity: 1;
+
+  transform: translateY(0);
+}
+
+.bilp-feasible-illustration-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.bilp-feasible-illustration svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.bilp-plot-bg {
+  fill: rgba(255, 255, 255, 0.68);
+  stroke: rgba(40, 50, 70, 0.12);
+  stroke-width: 1.5;
+}
+
+.bilp-feasible-region {
+  fill: rgba(37, 99, 235, 0.14);
+  stroke: rgba(37, 99, 235, 0.24);
+  stroke-width: 1.5;
+}
+
+.bilp-grid-lines line {
+  stroke: rgba(40, 50, 70, 0.12);
+  stroke-width: 1;
+}
+
+.bilp-boundary {
+  stroke: rgba(37, 99, 235, 0.65);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.bilp-axis {
+  stroke: rgba(30, 40, 60, 0.58);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.bilp-axis-label {
+  font-size: 15px;
+  font-weight: 700;
+  fill: rgba(30, 40, 60, 0.82);
+}
+
+.bilp-axis-label mjx-container {
+  display: inline-block !important;
+  margin: 0 !important;
+}
+
+.bilp-discrete-points.feasible circle {
+  fill: rgb(37, 99, 235);
+  stroke: #ffffff;
+  stroke-width: 1.6;
+}
+
+.bilp-discrete-points.infeasible circle {
+  fill: rgba(30, 40, 60, 0.22);
+  stroke: rgba(30, 40, 60, 0.28);
+  stroke-width: 1.2;
+}
+
+.bilp-legend {
+  font-size: 11px;
+  font-weight: 650;
+  fill: rgba(30, 40, 60, 0.72);
+}
+
+.bilp-legend .legend-feasible {
+  fill: rgb(37, 99, 235);
+  stroke: #ffffff;
+  stroke-width: 1.4;
+}
+
+.bilp-legend .legend-infeasible {
+  fill: rgba(30, 40, 60, 0.24);
+  stroke: rgba(30, 40, 60, 0.3);
+  stroke-width: 1.1;
+}

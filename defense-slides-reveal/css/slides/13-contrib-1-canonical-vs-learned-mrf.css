@@ -1,0 +1,414 @@
+/* src/styles/slides/13-contrib-1-canonical-vs-learned-mrf.css */
+
+.canonical-vs-learned-mrf-slide .canonical-learned-body {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  gap: clamp(0.45rem, 1.1vh, 0.75rem);
+
+  height: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+}
+
+/* Header ---------------------------------------------------------------- */
+
+.mrf-shift-header {
+  display: grid;
+  gap: 0.16rem;
+
+  max-width: min(100%, 1120px);
+  justify-self: center;
+
+  text-align: center;
+}
+
+.mrf-shift-header h2 {
+  margin: 0;
+
+  color: rgba(38, 50, 70, 0.9);
+  font-size: clamp(1.05rem, 2.05vw, 2rem);
+  font-weight: 900;
+  line-height: 1.04;
+}
+
+.mrf-shift-header p {
+  margin: 0 auto;
+  max-width: 920px;
+
+  color: rgba(38, 50, 70, 0.62);
+  font-size: clamp(0.5rem, 0.86vw, 0.78rem);
+  font-weight: 650;
+  line-height: 1.18;
+}
+
+/* Shared SVG graph primitives ------------------------------------------ */
+
+.canonical-vs-learned-mrf-slide .lc-variable {
+  fill: rgba(219, 234, 254, 0.96);
+  stroke: rgba(45, 80, 150, 0.72);
+  stroke-width: 3;
+}
+
+.canonical-vs-learned-mrf-slide .lc-constraint {
+  fill: rgba(255, 240, 220, 0.96);
+  stroke: rgba(160, 105, 35, 0.72);
+  stroke-width: 3;
+}
+
+.canonical-vs-learned-mrf-slide .lc-edge {
+  stroke: rgba(45, 80, 150, 0.34);
+  stroke-width: 3.8;
+  stroke-linecap: round;
+}
+
+.canonical-vs-learned-mrf-slide .lc-label {
+  text-anchor: middle;
+  dominant-baseline: middle;
+
+  font-size: 15px;
+  font-weight: 850;
+  fill: #263246;
+}
+
+/* Shared BILP input ------------------------------------------------------ */
+
+.shared-bilp-card {
+  display: grid;
+  grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.42fr);
+  align-items: center;
+  gap: clamp(0.55rem, 1.1vw, 0.9rem);
+
+  width: min(100%, 1120px);
+  justify-self: center;
+
+  padding: clamp(0.38rem, 0.75vh, 0.55rem) clamp(0.65rem, 1.25vw, 0.95rem);
+  border-radius: 20px;
+
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(38, 50, 70, 0.1);
+  box-shadow: 0 12px 28px rgba(38, 50, 70, 0.05);
+
+  box-sizing: border-box;
+}
+
+.shared-bilp-copy {
+  display: grid;
+  gap: 0.12rem;
+  min-width: 0;
+}
+
+.shared-bilp-copy .learning-label {
+  margin: 0;
+
+  color: rgba(45, 80, 150, 0.74);
+  font-size: clamp(0.36rem, 0.58vw, 0.48rem);
+  font-weight: 900;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.shared-bilp-copy h3 {
+  margin: 0;
+
+  color: rgba(38, 50, 70, 0.88);
+  font-size: clamp(0.68rem, 1vw, 0.92rem);
+  font-weight: 900;
+  line-height: 1.04;
+}
+
+.shared-bilp-copy p:not(.learning-label) {
+  margin: 0;
+
+  color: rgba(38, 50, 70, 0.62);
+  font-size: clamp(0.44rem, 0.68vw, 0.6rem);
+  font-weight: 650;
+  line-height: 1.16;
+}
+
+.shared-bilp-svg {
+  width: 100%;
+  height: clamp(82px, 12vh, 112px);
+  overflow: visible;
+}
+
+.shared-graph-title,
+.shared-caption {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-weight: 850;
+}
+
+.shared-graph-title {
+  font-size: 16px;
+  fill: rgba(38, 50, 70, 0.72);
+}
+
+.shared-caption {
+  font-size: 12px;
+}
+
+.shared-caption.blue {
+  fill: rgba(45, 80, 150, 0.68);
+}
+
+.shared-caption.orange {
+  fill: rgba(160, 105, 35, 0.72);
+}
+
+/* Comparison ------------------------------------------------------------- */
+
+.simplified-mrf-compare {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    clamp(2rem, 4vw, 3.5rem)
+    minmax(0, 1fr);
+  align-items: stretch;
+  gap: clamp(0.5rem, 1vw, 0.85rem);
+
+  width: min(100%, 1120px);
+  min-height: 0;
+  justify-self: center;
+}
+
+.canonical-vs-learned-mrf-slide .learning-step {
+  min-width: 0;
+  min-height: 0;
+
+  display: grid;
+  grid-template-rows: auto auto auto minmax(0, 1fr);
+  align-content: start;
+  gap: clamp(0.3rem, 0.75vh, 0.48rem);
+
+  padding: clamp(0.62rem, 1.25vh, 0.88rem) clamp(0.7rem, 1.35vw, 1rem);
+  border-radius: 22px;
+  border: 1px solid transparent;
+
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.canonical-vs-learned-mrf-slide .learning-step .learning-label {
+  margin: 0;
+
+  font-size: clamp(0.36rem, 0.58vw, 0.48rem);
+  font-weight: 900;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.canonical-vs-learned-mrf-slide .learning-step h3 {
+  margin: 0;
+
+  color: rgba(38, 50, 70, 0.9);
+  font-size: clamp(0.82rem, 1.3vw, 1.12rem);
+  font-weight: 900;
+  line-height: 1.04;
+}
+
+.cmrf-panel {
+  background: rgba(255, 247, 237, 0.92);
+  border-color: rgba(160, 105, 35, 0.24);
+}
+
+.cmrf-panel .learning-label {
+  color: rgba(160, 105, 35, 0.76);
+}
+
+.lmrf-panel {
+  background: rgba(240, 247, 255, 0.92);
+  border-color: rgba(45, 80, 150, 0.24);
+}
+
+.lmrf-panel .learning-label {
+  color: rgba(45, 80, 150, 0.76);
+}
+
+/* Center arrow ----------------------------------------------------------- */
+
+.mrf-shift-arrow {
+  align-self: center;
+  justify-self: center;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: clamp(2rem, 4vw, 3.5rem);
+  height: clamp(2rem, 4vw, 3.5rem);
+  border-radius: 999px;
+
+  color: rgba(45, 80, 150, 0.78);
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(45, 80, 150, 0.14);
+  box-shadow: 0 12px 24px rgba(38, 50, 70, 0.06);
+
+  font-size: clamp(1.15rem, 2.4vw, 2.1rem);
+  font-weight: 900;
+  line-height: 1;
+
+  pointer-events: none;
+}
+
+/* Theta cards ------------------------------------------------------------ */
+
+.simple-theta-card {
+  display: grid;
+  gap: 0.18rem;
+  align-items: center;
+  justify-items: center;
+
+  min-width: 0;
+  padding: clamp(0.55rem, 1.1vh, 0.78rem) clamp(0.62rem, 1.2vw, 0.9rem);
+  border-radius: 20px;
+
+  background: rgba(255, 255, 255, 0.9);
+  border: 2.5px solid rgba(38, 50, 70, 0.14);
+  box-shadow: 0 12px 24px rgba(38, 50, 70, 0.05);
+
+  box-sizing: border-box;
+}
+
+.canonical-theta-card {
+  border-color: rgba(160, 105, 35, 0.36);
+}
+
+.learned-theta-card {
+  border-color: rgba(45, 80, 150, 0.36);
+}
+
+.simple-theta-symbol {
+  width: 100%;
+  min-width: 0;
+
+  color: rgba(38, 50, 70, 0.88);
+  font-size: clamp(0.78rem, 1.35vw, 1.16rem);
+  font-weight: 900;
+  line-height: 1;
+}
+
+.simple-theta-symbol mjx-container {
+  margin: 0 auto !important;
+}
+
+.simple-theta-caption {
+  color: rgba(38, 50, 70, 0.58);
+  font-size: clamp(0.42rem, 0.64vw, 0.54rem);
+  font-weight: 820;
+  line-height: 1.1;
+}
+
+/* Learned equations ------------------------------------------------------ */
+
+.learned-head-equations {
+  width: 100%;
+  min-width: 0;
+
+  padding: clamp(0.38rem, 0.8vh, 0.56rem) clamp(0.5rem, 1vw, 0.7rem);
+  border-radius: 17px;
+
+  color: rgba(38, 50, 70, 0.84);
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(45, 80, 150, 0.16);
+
+  font-size: clamp(0.46rem, 0.76vw, 0.64rem);
+  font-weight: 850;
+  line-height: 1.05;
+
+  box-sizing: border-box;
+}
+
+.learned-head-equations mjx-container {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 auto !important;
+  overflow: visible !important;
+  text-align: center !important;
+}
+
+.learned-head-equations mjx-container[jax="SVG"] > svg,
+.learned-head-equations .MathJax svg {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+/* Panel summary ---------------------------------------------------------- */
+
+.mrf-panel-summary {
+  margin: 0;
+
+  color: rgba(38, 50, 70, 0.68);
+  font-size: clamp(0.48rem, 0.72vw, 0.62rem);
+  font-weight: 700;
+  line-height: 1.22;
+}
+
+/* Takeaway --------------------------------------------------------------- */
+
+.mrf-shift-takeaway {
+  justify-self: center;
+
+  max-width: min(100%, 1050px);
+  padding: clamp(0.42rem, 0.85vh, 0.58rem) clamp(0.8rem, 1.6vw, 1.1rem);
+  border-radius: 999px;
+
+  color: rgba(38, 50, 70, 0.78);
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(38, 50, 70, 0.1);
+  box-shadow: 0 12px 26px rgba(38, 50, 70, 0.06);
+
+  font-size: clamp(0.48rem, 0.74vw, 0.62rem);
+  font-weight: 760;
+  line-height: 1.18;
+  text-align: center;
+}
+
+.mrf-shift-prefix {
+  color: rgba(45, 80, 150, 0.86);
+  font-weight: 950;
+}
+
+/* Small-screen safety ---------------------------------------------------- */
+
+@media (max-height: 760px) {
+  .canonical-vs-learned-mrf-slide .canonical-learned-body {
+    gap: 0.38rem;
+  }
+
+  .mrf-shift-header p {
+    display: none;
+  }
+
+  .shared-bilp-card {
+    padding-top: 0.32rem;
+    padding-bottom: 0.32rem;
+  }
+
+  .shared-bilp-svg {
+    height: 76px;
+  }
+
+  .canonical-vs-learned-mrf-slide .learning-step {
+    padding-top: 0.52rem;
+    padding-bottom: 0.56rem;
+    gap: 0.26rem;
+  }
+
+  .simple-theta-card {
+    padding-top: 0.42rem;
+    padding-bottom: 0.46rem;
+  }
+
+  .learned-head-equations {
+    padding-top: 0.32rem;
+    padding-bottom: 0.34rem;
+  }
+
+  .mrf-shift-takeaway {
+    padding-top: 0.36rem;
+    padding-bottom: 0.36rem;
+  }
+}

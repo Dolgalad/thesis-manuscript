@@ -1,0 +1,162 @@
+<section class="slide bilp-structured-slide"
+         data-section="Background: BILPs"
+         data-title="Binary Integer Linear Programs">
+
+  <div class="slide-body bilp-structured-body">
+
+    <div class="bilp-left-column">
+      <div class="bilp-problem-block">
+
+        <div class="bilp-equation bilp-equation-rows" aria-label="Binary integer linear program">
+          <div class="bilp-eq-row">
+            <span class="bilp-eq-left">
+              <span class="bilp-eq-op">max</span><sub class="eq-part eq-vars">\(x\)</sub>
+            </span>
+            <span class="bilp-eq-right eq-part eq-cost">\(c^\top x\)</span>
+          </div>
+
+          <div class="bilp-eq-row">
+            <span class="bilp-eq-left">\(\text{s.t.}\)</span>
+            <span class="bilp-eq-right eq-part eq-constraints">\(Ax \leq b\)</span>
+          </div>
+
+          <div class="bilp-eq-row">
+            <span class="bilp-eq-left"></span>
+            <span class="bilp-eq-right eq-part eq-domain">\(x \in \{0,1\}^n\)</span>
+          </div>
+        </div>
+
+        <div class="bilp-feasible-illustration fragment"
+             data-fragment-index="3"
+             aria-label="LP feasible region and feasible discrete points">
+
+          <div class="bilp-feasible-illustration-inner">
+            <svg viewBox="0 0 360 245" role="img">
+              <!-- background -->
+              <rect class="bilp-plot-bg" x="34" y="18" width="292" height="190" rx="10" />
+
+              <!-- shaded continuous LP feasible region -->
+              <polygon class="bilp-feasible-region"
+                       points="58,188 58,78 110,58 210,72 292,138 292,188" />
+
+              <!-- grid lines -->
+              <g class="bilp-grid-lines">
+                <line x1="58" y1="188" x2="292" y2="188" />
+                <line x1="58" y1="151" x2="292" y2="151" />
+                <line x1="58" y1="114" x2="292" y2="114" />
+                <line x1="58" y1="77"  x2="292" y2="77" />
+                <line x1="58" y1="40"  x2="292" y2="40" />
+
+                <line x1="58"  y1="188" x2="58"  y2="40" />
+                <line x1="105" y1="188" x2="105" y2="40" />
+                <line x1="152" y1="188" x2="152" y2="40" />
+                <line x1="199" y1="188" x2="199" y2="40" />
+                <line x1="246" y1="188" x2="246" y2="40" />
+                <line x1="293" y1="188" x2="293" y2="40" />
+              </g>
+
+              <!-- constraint boundary lines -->
+              <line class="bilp-boundary" x1="58" y1="78" x2="110" y2="58" />
+              <line class="bilp-boundary" x1="110" y1="58" x2="210" y2="72" />
+              <line class="bilp-boundary" x1="210" y1="72" x2="292" y2="138" />
+
+              <!-- axes -->
+              <line class="bilp-axis" x1="58" y1="188" x2="310" y2="188" />
+              <line class="bilp-axis" x1="58" y1="188" x2="58" y2="32" />
+
+              <text class="bilp-axis-label" x="314" y="193">\(x_1\)</text>
+              <text class="bilp-axis-label" x="48" y="28">\(x_2\)</text>
+
+              <!-- infeasible discrete points -->
+              <g class="bilp-discrete-points infeasible">
+                <circle cx="58"  cy="40" r="5" />
+                <circle cx="105" cy="40" r="5" />
+                <circle cx="152" cy="40" r="5" />
+                <circle cx="199" cy="40" r="5" />
+                <circle cx="246" cy="40" r="5" />
+                <circle cx="293" cy="40" r="5" />
+
+                <circle cx="246" cy="77" r="5" />
+                <circle cx="293" cy="77" r="5" />
+
+                <circle cx="293" cy="114" r="5" />
+              </g>
+
+              <!-- feasible discrete points -->
+              <g class="bilp-discrete-points feasible">
+                <circle cx="58"  cy="188" r="5.8" />
+                <circle cx="105" cy="188" r="5.8" />
+                <circle cx="152" cy="188" r="5.8" />
+                <circle cx="199" cy="188" r="5.8" />
+                <circle cx="246" cy="188" r="5.8" />
+                <circle cx="293" cy="188" r="5.8" />
+
+                <circle cx="58"  cy="151" r="5.8" />
+                <circle cx="105" cy="151" r="5.8" />
+                <circle cx="152" cy="151" r="5.8" />
+                <circle cx="199" cy="151" r="5.8" />
+                <circle cx="246" cy="151" r="5.8" />
+                <circle cx="293" cy="151" r="5.8" />
+
+                <circle cx="58"  cy="114" r="5.8" />
+                <circle cx="105" cy="114" r="5.8" />
+                <circle cx="152" cy="114" r="5.8" />
+                <circle cx="199" cy="114" r="5.8" />
+                <circle cx="246" cy="114" r="5.8" />
+
+                <circle cx="58"  cy="77" r="5.8" />
+                <circle cx="105" cy="77" r="5.8" />
+                <circle cx="152" cy="77" r="5.8" />
+                <circle cx="199" cy="77" r="5.8" />
+              </g>
+
+              <!-- legend -->
+              <g class="bilp-legend">
+                <circle class="legend-feasible" cx="72" cy="224" r="5" />
+                <text x="84" y="228">feasible integer points</text>
+
+                <circle class="legend-infeasible" cx="218" cy="224" r="5" />
+                <text x="230" y="228">infeasible</text>
+              </g>
+            </svg>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <div class="bilp-right-column">
+
+      <div class="bilp-point fragment fade-up" data-fragment-index="0">
+        <strong>Decision variables</strong>
+        <span>\(x_i \in \{0,1\}\)</span>
+      </div>
+
+      <div class="bilp-point fragment fade-up" data-fragment-index="1">
+        <strong>Cost function</strong>
+        <span>\(c^\top x\)</span>
+      </div>
+
+      <div class="bilp-point fragment fade-up" data-fragment-index="2">
+        <strong>Constraints</strong>
+        <span>\(Ax \leq b\) couples variables.</span>
+        <span class="bilp-matrix-dimensions">\(A \in \mathbb{R}^{m \times n},\quad b \in \mathbb{R}^m\)</span>
+      </div>
+
+      <div class="bilp-point fragment fade-up" data-fragment-index="3">
+        <strong>Feasible set</strong>
+        <span>\(\mathcal X = \{x \in \{0,1\}^n : Ax \leq b\}\)</span>
+      </div>
+
+    </div>
+
+    <aside class="notes">
+      This slide introduces the basic structured prediction view of binary ILPs.
+      The BILP defines binary variables, a linear objective, and linear constraints.
+      The constraints define a feasible set, so the prediction is a complete binary
+      assignment rather than independent labels.
+    </aside>
+
+  </div>
+</section>

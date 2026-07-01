@@ -1,0 +1,518 @@
+/* src/styles/slides/12-contrib-1-learned-mrf-pipeline.css */
+
+/* Shared slide layout */
+
+.learned-mrf-pipeline-slide {
+  --learned-mrf-width: min(100%, 1180px);
+  --learned-mrf-gap: clamp(0.7rem, 1.6vh, 1.25rem);
+  --learned-mrf-arrow-col: clamp(1.1rem, 2vw, 1.65rem);
+}
+
+.learned-mrf-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: var(--learned-mrf-gap);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Pipeline */
+
+.learned-mrf-compact-pipeline {
+  width: var(--learned-mrf-width);
+  max-width: var(--learned-mrf-width);
+
+  display: grid;
+
+  /*
+    Four content columns and three narrow arrow columns.
+    Fixed arrow columns prevent a Reveal fragment/auto-column interaction
+    from letting an arrow consume excessive horizontal space.
+  */
+  grid-template-columns:
+    minmax(0, 1fr)
+    var(--learned-mrf-arrow-col)
+    minmax(0, 1.08fr)
+    var(--learned-mrf-arrow-col)
+    minmax(0, 1fr)
+    var(--learned-mrf-arrow-col)
+    minmax(0, 1fr);
+
+  column-gap: clamp(0.35rem, 0.65vw, 0.65rem);
+  row-gap: 0;
+
+  align-items: stretch;
+  height: min(58vh, 480px);
+  box-sizing: border-box;
+}
+
+.learned-mrf-pipeline-slide .learning-step {
+  min-width: 0;
+  height: 100%;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: clamp(0.55rem, 1vw, 0.9rem);
+  border-radius: clamp(18px, 1.7vw, 24px);
+
+  text-align: center;
+}
+
+.learned-mrf-pipeline-slide .learning-svg {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  max-height: min(34vh, 285px);
+
+  flex: 1 1 auto;
+  display: block;
+}
+
+.learned-mrf-pipeline-slide .learning-step h3 {
+  margin: clamp(0.35rem, 0.7vh, 0.55rem) 0 0;
+
+  font-size: clamp(0.74rem, 1.05vw, 1rem);
+  line-height: 1.08;
+  text-align: center;
+}
+
+.learned-mrf-pipeline-slide .learning-label {
+  margin: 0 0 clamp(0.28rem, 0.65vh, 0.5rem);
+
+  font-size: clamp(0.52rem, 0.72vw, 0.7rem);
+  line-height: 1;
+  text-align: center;
+}
+
+.learned-mrf-pipeline-slide .learning-arrow {
+  width: 100%;
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  align-self: center;
+  justify-self: stretch;
+
+  font-size: clamp(1.05rem, 1.8vw, 1.45rem);
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* Caption strip */
+
+.learned-mrf-caption-strip {
+  width: var(--learned-mrf-width);
+  max-width: var(--learned-mrf-width);
+  box-sizing: border-box;
+
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+
+  column-gap: clamp(0.45rem, 0.9vw, 0.8rem);
+  row-gap: clamp(0.35rem, 0.8vh, 0.55rem);
+
+  margin: clamp(0.35rem, 1.1vh, 0.8rem) auto 0;
+  padding: clamp(0.6rem, 1.15vh, 0.85rem) clamp(0.85rem, 1.6vw, 1.4rem);
+
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.76);
+  border: 1px solid rgba(40, 50, 70, 0.12);
+  box-shadow: 0 14px 34px rgba(20, 30, 50, 0.08);
+
+  text-align: center;
+}
+
+.learned-mrf-caption {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+
+  padding: 0.28rem 0.55rem;
+  border-radius: 999px;
+
+  background: rgba(240, 247, 255, 0.72);
+  border: 1px solid rgba(45, 80, 150, 0.12);
+
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+
+  font-size: clamp(0.72rem, 1vw, 0.95rem);
+  font-weight: 800;
+  line-height: 1.18;
+  color: rgba(38, 50, 70, 0.74);
+}
+
+/* Do not fade previous caption fragments after they have appeared. */
+.learned-mrf-caption.fragment.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Shared SVG graph primitives */
+
+.lc-variable {
+  fill: rgba(219, 234, 254, 0.96);
+  stroke: rgba(45, 80, 150, 0.72);
+  stroke-width: 4;
+}
+
+.lc-constraint {
+  fill: rgba(255, 240, 220, 0.96);
+  stroke: rgba(160, 105, 35, 0.72);
+  stroke-width: 4;
+}
+
+.lc-edge {
+  stroke: rgba(45, 80, 150, 0.38);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.lc-label {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 18px;
+  font-weight: 850;
+  fill: #263246;
+}
+
+.lc-feature-box {
+  fill: rgba(255, 255, 255, 0.92);
+  stroke: rgba(45, 80, 150, 0.28);
+  stroke-width: 3.5;
+}
+
+.lc-feature-text {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 22px;
+  font-weight: 900;
+  fill: rgba(38, 50, 70, 0.82);
+}
+
+.lc-feature-text.small {
+  font-size: 16px;
+  font-weight: 800;
+  fill: rgba(38, 50, 70, 0.62);
+}
+
+.repair-off {
+  fill: rgba(255, 255, 255, 0.88);
+  stroke: rgba(22, 101, 52, 0.26);
+  stroke-width: 3.5;
+}
+
+/* MRF parameter prediction block */
+
+.mrf-head-step {
+  background: rgba(240, 247, 255, 0.92);
+  border-color: rgba(45, 80, 150, 0.24);
+}
+
+.mrf-head-title,
+.inference-title,
+.decode-title {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 19px;
+  font-weight: 850;
+  fill: rgba(38, 50, 70, 0.82);
+}
+
+.mrf-embed.var {
+  fill: rgba(219, 234, 254, 0.96);
+  stroke: rgba(45, 80, 150, 0.72);
+  stroke-width: 4;
+}
+
+.mrf-embed.cons {
+  fill: rgba(255, 240, 220, 0.96);
+  stroke: rgba(160, 105, 35, 0.72);
+  stroke-width: 4;
+}
+
+.mrf-mini-text {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 13px;
+  font-weight: 800;
+  fill: #263246;
+}
+
+.mrf-head-box {
+  fill: rgba(255, 255, 255, 0.88);
+  stroke-width: 3.5;
+}
+
+.mrf-head-box.unary {
+  stroke: rgba(45, 80, 150, 0.52);
+}
+
+.mrf-head-box.factor {
+  stroke: rgba(160, 105, 35, 0.56);
+}
+
+.mrf-box-text,
+.theta-text {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 17px;
+  font-weight: 850;
+  fill: #263246;
+}
+
+.mrf-box-text.small,
+.theta-text.small {
+  font-size: 14px;
+  fill: rgba(38, 50, 70, 0.66);
+}
+
+.mrf-param-arrow {
+  fill: none;
+  stroke: rgba(45, 80, 150, 0.42);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.mrf-param-arrow.constraint-map {
+  stroke: rgba(160, 105, 35, 0.46);
+}
+
+.theta-table {
+  fill: rgba(255, 255, 255, 0.92);
+  stroke-width: 3.5;
+}
+
+.theta-table.unary {
+  stroke: rgba(45, 80, 150, 0.5);
+}
+
+.theta-table.factor {
+  stroke: rgba(160, 105, 35, 0.56);
+}
+
+.theta-grid {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 14px;
+  font-weight: 800;
+  fill: rgba(38, 50, 70, 0.76);
+}
+
+.mrf-assembled {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 17px;
+  font-weight: 850;
+  fill: rgba(38, 50, 70, 0.82);
+}
+
+/* Inference block */
+
+.inference-step {
+  background: rgba(245, 243, 255, 0.9);
+  border-color: rgba(109, 40, 217, 0.18);
+}
+
+.fg-var {
+  fill: rgba(219, 234, 254, 0.96);
+  stroke: rgba(45, 80, 150, 0.72);
+  stroke-width: 4;
+}
+
+.fg-factor {
+  fill: rgba(255, 240, 220, 0.96);
+  stroke: rgba(160, 105, 35, 0.72);
+  stroke-width: 4;
+}
+
+.unary-factor {
+  fill: rgba(219, 234, 254, 0.7);
+  stroke: rgba(45, 80, 150, 0.58);
+}
+
+.factor-symbol {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 13px;
+  font-weight: 850;
+  fill: #263246;
+}
+
+.fg-edge {
+  fill: none;
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.fg-edge.blue {
+  stroke: rgba(45, 80, 150, 0.46);
+}
+
+.inf-dot.blue {
+  fill: rgba(45, 80, 150, 0.9);
+}
+
+.inf-dot.orange {
+  fill: rgba(160, 105, 35, 0.9);
+}
+
+.inference-method {
+  fill: rgba(255, 255, 255, 0.9);
+  stroke: rgba(109, 40, 217, 0.34);
+  stroke-width: 3.5;
+}
+
+.method-text {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 22px;
+  font-weight: 900;
+  fill: rgba(76, 29, 149, 0.82);
+}
+
+.method-or {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 16px;
+  font-weight: 800;
+  fill: rgba(76, 29, 149, 0.48);
+}
+
+.marginal-text {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 22px;
+  font-weight: 900;
+  fill: rgba(38, 50, 70, 0.86);
+}
+
+.marginal-subtext {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 15px;
+  font-weight: 800;
+  fill: rgba(38, 50, 70, 0.58);
+}
+
+/* Decoding block */
+
+.decoding-step {
+  background: rgba(240, 253, 244, 0.9);
+  border-color: rgba(22, 101, 52, 0.2);
+}
+
+.decode-score-box {
+  fill: rgba(255, 255, 255, 0.9);
+  stroke: rgba(22, 101, 52, 0.24);
+  stroke-width: 3.5;
+}
+
+.decode-score-title {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 20px;
+  font-weight: 900;
+  fill: rgba(22, 101, 52, 0.76);
+}
+
+.decode-score-line {
+  stroke: rgba(38, 50, 70, 0.2);
+  stroke-width: 7;
+  stroke-linecap: round;
+}
+
+.decode-score-dot {
+  fill: rgba(45, 80, 150, 0.72);
+}
+
+.decode-score-dot.selected {
+  fill: rgba(22, 101, 52, 0.86);
+}
+
+.decode-score-label {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 15px;
+  font-weight: 850;
+  fill: rgba(38, 50, 70, 0.72);
+}
+
+.decode-flow-arrow {
+  fill: none;
+  stroke: rgba(22, 101, 52, 0.36);
+  stroke-width: 7;
+  stroke-linecap: round;
+}
+
+.repair-on.selected {
+  fill: rgba(220, 252, 231, 0.96);
+  stroke: rgba(22, 101, 52, 0.72);
+}
+
+.decode-fix-text,
+.decode-fix-subtext,
+.decode-cond-text,
+.decode-footer {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-weight: 850;
+}
+
+.decode-fix-text {
+  font-size: 17px;
+  fill: rgba(38, 50, 70, 0.72);
+}
+
+.decode-fix-subtext {
+  font-size: 15px;
+  fill: rgba(22, 101, 52, 0.68);
+}
+
+.decode-cond-text {
+  font-size: 18px;
+  fill: rgba(22, 101, 52, 0.78);
+}
+
+.decode-footer {
+  font-size: 17px;
+  fill: rgba(22, 101, 52, 0.76);
+}
+
+/* Compact vertical layouts */
+
+@media (max-height: 780px) {
+  .learned-mrf-compact-pipeline {
+    height: min(54vh, 430px);
+  }
+
+  .learned-mrf-pipeline-slide .learning-svg {
+    max-height: min(30vh, 245px);
+  }
+
+  .learned-mrf-caption-strip {
+    margin-top: 0.45rem;
+    padding-block: 0.5rem;
+  }
+
+  .learned-mrf-caption {
+    font-size: clamp(0.66rem, 0.9vw, 0.84rem);
+    padding-block: 0.22rem;
+  }
+}

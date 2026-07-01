@@ -1,0 +1,74 @@
+<section class="slide diff-inference-layer-slide"
+         data-section="Learning with approximate MRF inference"
+         data-title="Differentiable inference layer">
+
+  <div class="slide-body diff-inference-body">
+
+    <div class="diff-layer-main fade-up">
+
+      <div class="diff-layer-input">
+        <p class="learning-label">MRF parameters</p>
+        <div class="theta-chip">\(\theta\)</div>
+        <p>Unary and factor log-potentials</p>
+      </div>
+
+      <div class="diff-arrow">→</div>
+
+      <div class="diff-unrolled-block">
+        <p class="learning-label">Fixed inference budget</p>
+
+        <div class="inference-choice">
+          <span>LBP</span>
+          <small>or</small>
+          <span>NMF</span>
+        </div>
+
+        <div class="unrolled-steps">
+          <div class="iter-card">iter. 1</div>
+          <div class="iter-card">iter. 2</div>
+          <div class="iter-card muted">…</div>
+          <div class="iter-card">iter. T</div>
+        </div>
+
+        <p class="diff-note">
+          Inference is unrolled for a fixed number of iterations.
+        </p>
+      </div>
+
+      <div class="diff-arrow">→</div>
+
+      <div class="diff-layer-output">
+        <p class="learning-label">Approximate beliefs</p>
+        <div class="theta-chip beliefs">\(\mu_i,\mu_\alpha\)</div>
+        <p>Marginals used for training and decoding</p>
+      </div>
+
+    </div>
+
+    <div class="backprop-strip fade-up">
+      <div class="loss-box">
+        <span class="loss-title">loss</span>
+        <span class="loss-math">\(\mathcal{L}(\mu, y^\star)\)</span>
+      </div>
+
+      <div class="backprop-arrow">← gradients flow through inference ←</div>
+
+      <div class="param-box">
+        update neural parameters \(\omega\)
+      </div>
+    </div>
+
+    <div class="diff-layer-takeaway fade-up">
+      Approximate inference becomes a differentiable layer between predicted MRF parameters and the training objective.
+    </div>
+
+    <aside class="notes">
+      The key message is that LBP or NMF is not only used after training.
+      We run a fixed number of inference iterations inside the model, treat the
+      iterations as differentiable computations, and backpropagate through them.
+      This allows the parameter predictor to be trained for the marginals produced
+      by approximate inference, rather than only for raw local potentials.
+    </aside>
+
+  </div>
+</section>

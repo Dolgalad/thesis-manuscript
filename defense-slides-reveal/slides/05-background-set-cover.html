@@ -1,0 +1,201 @@
+<section class="slide set-cover-slide"
+         data-section="Background: BILPs"
+         data-title="BILP Example: Set Cover">
+
+  <div class="slide-body set-cover-body">
+
+    <div class="set-cover-layout">
+
+      <div class="set-cover-first-fragment">
+
+        <div class="set-cover-figure-panel">
+
+          <svg class="set-cover-svg" viewBox="0 0 660 470" role="img"
+               aria-label="Set cover example with five elements and four sets">
+
+            <!-- Sets as translucent ellipses -->
+
+            <ellipse class="set-ellipse set-s1 selected"
+                     cx="205" cy="210" rx="185" ry="130"
+                     transform="rotate(25 205 210)" />
+
+            <ellipse class="set-ellipse set-s2"
+                     cx="390" cy="130" rx="150" ry="72"
+                     transform="rotate(8 390 130)" />
+
+            <ellipse class="set-ellipse set-s3"
+                     cx="280" cy="325" rx="155" ry="72"
+                     transform="rotate(2 280 325)" />
+
+            <ellipse class="set-ellipse set-s4 selected"
+                     cx="455" cy="260" rx="155" ry="70"
+                     transform="rotate(-47 455 260)" />
+
+            <!-- Fragment overlays for the example solution.
+                 These appear at the same time as the solution text.
+                 Colors are defined inline so SVG never falls back to black. -->
+
+            <g class="set-cover-example-overlay fragment fade-in"
+               data-fragment-index="1"
+               aria-hidden="true">
+
+              <!-- White masks over unused sets S2 and S3 -->
+              <ellipse class="unused-set-mask"
+                       cx="390" cy="130" rx="154" ry="76"
+                       transform="rotate(8 390 130)"
+                       fill="rgba(255,255,255,0.78)"
+                       stroke="rgba(255,255,255,0.9)"
+                       stroke-width="7" />
+
+              <ellipse class="unused-set-mask"
+                       cx="280" cy="325" rx="159" ry="76"
+                       transform="rotate(2 280 325)"
+                       fill="rgba(255,255,255,0.78)"
+                       stroke="rgba(255,255,255,0.9)"
+                       stroke-width="7" />
+
+              <!-- Emphasis outlines for selected sets S1 and S4 -->
+              <ellipse class="selected-set-emphasis selected-set-emphasis-s1"
+                       cx="205" cy="210" rx="185" ry="130"
+                       transform="rotate(25 205 210)"
+                       fill="none"
+                       stroke="rgba(29,78,216,0.88)"
+                       stroke-width="8" />
+
+              <ellipse class="selected-set-emphasis selected-set-emphasis-s4"
+                       cx="455" cy="260" rx="155" ry="70"
+                       transform="rotate(-47 455 260)"
+                       fill="none"
+                       stroke="rgba(194,65,12,0.88)"
+                       stroke-width="8" />
+
+              <!-- Light masks over unused labels S2 and S3 -->
+              <rect class="unused-label-mask"
+                    x="352" y="18" width="135" height="36" rx="10"
+                    fill="rgba(255,255,255,0.82)" />
+
+              <rect class="unused-label-mask"
+                    x="102" y="378" width="135" height="36" rx="10"
+                    fill="rgba(255,255,255,0.82)" />
+
+            </g>
+
+            <!-- Set labels -->
+
+            <text class="set-label set-label-s1" x="60" y="90">
+              S₁ = {1,2,4}
+            </text>
+
+            <text class="set-label set-label-s2" x="365" y="45">
+              S₂ = {2,3}
+            </text>
+
+            <text class="set-label set-label-s3" x="115" y="405">
+              S₃ = {4,5}
+            </text>
+
+            <text class="set-label set-label-s4" x="492" y="385">
+              S₄ = {3,5}
+            </text>
+
+            <!-- Element nodes with local hover tooltips -->
+
+            <g class="element-group">
+              <circle class="element-hit" cx="105" cy="165" r="42" />
+              <circle class="element-node" cx="105" cy="165" r="28" />
+              <text class="element-label" x="105" y="175">1</text>
+
+              <g class="element-tooltip" transform="translate(105 105)">
+                <rect x="-100" y="-39" width="200" height="46" rx="13" />
+                <text y="-11">y₁ ≥ 1</text>
+              </g>
+            </g>
+
+            <g class="element-group">
+              <circle class="element-hit" cx="300" cy="165" r="42" />
+              <circle class="element-node" cx="300" cy="165" r="28" />
+              <text class="element-label" x="300" y="175">2</text>
+
+              <g class="element-tooltip" transform="translate(300 105)">
+                <rect x="-112" y="-39" width="224" height="46" rx="13" />
+                <text y="-11">y₁ + y₂ ≥ 1</text>
+              </g>
+            </g>
+
+            <g class="element-group">
+              <circle class="element-hit" cx="500" cy="165" r="42" />
+              <circle class="element-node" cx="500" cy="165" r="28" />
+              <text class="element-label" x="500" y="175">3</text>
+
+              <g class="element-tooltip" transform="translate(500 105)">
+                <rect x="-112" y="-39" width="224" height="46" rx="13" />
+                <text y="-11">y₂ + y₄ ≥ 1</text>
+              </g>
+            </g>
+
+            <g class="element-group">
+              <circle class="element-hit" cx="205" cy="315" r="42" />
+              <circle class="element-node" cx="205" cy="315" r="28" />
+              <text class="element-label" x="205" y="325">4</text>
+
+              <g class="element-tooltip" transform="translate(205 255)">
+                <rect x="-112" y="-39" width="224" height="46" rx="13" />
+                <text y="-11">y₁ + y₃ ≥ 1</text>
+              </g>
+            </g>
+
+            <g class="element-group">
+              <circle class="element-hit" cx="405" cy="315" r="42" />
+              <circle class="element-node" cx="405" cy="315" r="28" />
+              <text class="element-label" x="405" y="325">5</text>
+
+              <g class="element-tooltip" transform="translate(405 255)">
+                <rect x="-112" y="-39" width="224" height="46" rx="13" />
+                <text y="-11">y₃ + y₄ ≥ 1</text>
+              </g>
+            </g>
+
+          </svg>
+
+        </div>
+
+        <div class="set-cover-intro-panel">
+          <p class="set-cover-definition">
+            Given a universe \(U = \{1,\dots,m\}\) and subsets \(S_1,\dots,S_n\), choose as few subsets as possible
+            so that every element is covered.
+          </p>
+
+          <p class="set-cover-solution fragment fade-in" data-fragment-index="1">
+            Example minimum cover:
+            \[
+              \{S_1,S_4\}
+            \]
+          </p>
+        </div>
+
+      </div>
+
+      <div class="set-cover-bilp-panel fragment fade-in" data-fragment-index="2">
+
+        \[
+          \begin{aligned}
+          \min_{x} \quad
+            & \sum_{i=1}^{n} x_i \\
+          \text{s.t.} \quad
+            & \sum_{i : j \in S_i} x_i \geq 1,
+            && \forall j \in U, \\
+            & x_i \in \{0,1\},
+            && \forall i \in \{1,\dots,n\}.
+          \end{aligned}
+        \]
+
+        <p>
+          \(x_i = 1\) means subset \(S_i\) is selected.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+</section>

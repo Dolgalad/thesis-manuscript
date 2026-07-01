@@ -1,0 +1,127 @@
+<section class="slide marginals-use-slide"
+         data-section="Contribution: Differentiable MRF inference for BILPs"
+         data-title="Decoding with conditional marginals">
+
+  <div class="slide-body marginals-use-body">
+
+    <div class="marginals-header fade-up">
+      <h2>Marginals are beliefs, not solutions</h2>
+      <p>
+        They summarize inference in the learned MRF, then guide a decoding procedure
+        that builds a hard assignment.
+      </p>
+    </div>
+
+    <div class="merged-decoding-grid">
+
+      <!-- Marginals as beliefs -->
+      <div class="merged-card belief-card fade-up" data-fragment-index="1">
+        <p class="learning-label">Inference output</p>
+        <h3>Soft structured beliefs</h3>
+
+        <div class="belief-symbol">
+          \[
+            \mu_i(0),\;\mu_i(1)
+          \]
+        </div>
+
+        <div class="belief-bars">
+          <div class="belief-row">
+            <span>\(x_1\)</span>
+            <div class="belief-track">
+              <div class="belief-fill wide"></div>
+            </div>
+            <strong>likely 1</strong>
+          </div>
+
+          <div class="belief-row">
+            <span>\(x_2\)</span>
+            <div class="belief-track">
+              <div class="belief-fill narrow"></div>
+            </div>
+            <strong>likely 0</strong>
+          </div>
+
+          <div class="belief-row">
+            <span>\(x_3\)</span>
+            <div class="belief-track">
+              <div class="belief-fill mid"></div>
+            </div>
+            <strong>uncertain</strong>
+          </div>
+        </div>
+
+        <p>
+          These are not independent classifier outputs: they reflect messages
+          propagated through neighboring constraints.
+        </p>
+      </div>
+
+      <!-- Not directly a solution -->
+      <div class="merged-card warning-card fade-up" data-fragment-index="2">
+        <p class="learning-label">Decoder motivation</p>
+        <h3>Not yet a feasible assignment</h3>
+
+        <div class="not-solution">
+          <span class="soft-values">\((0.91,\;0.18,\;0.54,\ldots)\)</span>
+          <span class="not-equal">\(\neq\)</span>
+          <span class="hard-solution">feasible \(x\)</span>
+        </div>
+
+        <p>
+          Marginals are local soft beliefs. They can guide decisions, but they do
+          not by themselves guarantee integrality or feasibility.
+        </p>
+
+        <div class="egg-baseline">
+          <strong>Simple baseline:</strong>
+          fix variables greedily from the current marginal confidence.
+        </div>
+      </div>
+
+      <!-- Guided decimation -->
+      <div class="merged-card gd-card fade-up" data-fragment-index="3">
+        <p class="learning-label">Guided decimation</p>
+        <h3>Decode with conditional marginals</h3>
+
+        <div class="gd-timeline">
+          <div class="gd-step selected">fix</div>
+          <div class="gd-arrow">→</div>
+          <div class="gd-step infer">condition + infer</div>
+          <div class="gd-arrow">→</div>
+          <div class="gd-step selected">fix</div>
+          <div class="gd-arrow">→</div>
+          <div class="gd-step muted">…</div>
+        </div>
+
+        <div class="conditional-belief">
+          \[
+            \mu_i(\cdot \mid x_A)
+          \]
+        </div>
+
+        <p>
+          After fixing a partial assignment \(x_A\), rerun inference on the
+          conditioned MRF and use updated beliefs for the remaining variables.
+        </p>
+      </div>
+
+    </div>
+
+
+    <aside class="notes">
+      This slide merges the previous marginal-usage slide and the decoding-strategy
+      slide. The important message is that marginals are not independent classifier
+      probabilities and they are not directly solutions. They are soft beliefs
+      produced by inference in the MRF, so they already reflect neighboring
+      constraints through message passing or mean-field updates. However, because
+      they are soft local quantities, we still need a decoder. Entropy-guided greedy
+      decoding can be mentioned as a simple baseline: it fixes variables according
+      to confidence under the current marginals. The main method is guided
+      decimation: after fixing some variables, condition the MRF on the partial
+      assignment and rerun inference to obtain conditional marginals for the
+      remaining variables.
+    </aside>
+
+  </div>
+</section>

@@ -1,6 +1,6 @@
 <section class="slide fg-slide"
          data-section="Background: MRFs"
-         data-title="Factor graphs and overcomplete parameterization">
+         data-title="Canonical overcomplete representation">
 
   <div class="slide-body fg-body">
 
@@ -78,22 +78,22 @@
             <tr>
               <td>0</td>
               <td>0</td>
-              <td>\(\theta_{\alpha_1,00}\)</td>
+              <td>\(\theta_{1}\)</td>
             </tr>
             <tr>
               <td>0</td>
               <td>1</td>
-              <td>\(\theta_{\alpha_1,01}\)</td>
+              <td>\(\theta_{2}\)</td>
             </tr>
             <tr>
               <td>1</td>
               <td>0</td>
-              <td>\(\theta_{\alpha_1,10}\)</td>
+              <td>\(\theta_{3}\)</td>
             </tr>
             <tr>
               <td>1</td>
               <td>1</td>
-              <td>\(\theta_{\alpha_1,11}\)</td>
+              <td>\(\theta_{4}\)</td>
             </tr>
           </tbody>
         </table>
@@ -106,42 +106,36 @@
 
           <div class="fg-kicker">Canonical overcomplete exponential family</div>
 
-          <!--<div class="fragment fg-block" data-fragment-index="3">
-            \[
-            p_\theta(x)
-            =
-            \frac{1}{Z(\theta)}
-            \exp\left(
-              \sum_{F \in \mathcal{F}}
-              \langle \theta_F, \phi_F(x_F) \rangle
-            \right)
-            \]
-	  </div>-->
-
           <div class="fg-block fg-assignment-card">
             <div class="fg-label">One feature per factor assignment</div>
             \[
-            \phi_{F,z}(x_F)
+	    \phi_{\alpha,z}(x_{\alpha})
             =
-            \mathbf{1}[x_F = z],
+	    \mathbf{1}[x_{\alpha} = z],
             \qquad
-            z \in \{0,1\}^{|F|}
+            z \in \{0,1\}^{|\alpha|}
             \]
           </div>
 
           <div class="fg-block">
             \[
-            \langle \theta_F, \phi_F(x_F) \rangle
+	    \langle \theta_{\alpha}, \phi_{\alpha}(x_{\alpha}) \rangle
             =
-            \sum_{z \in \{0,1\}^{|F|}}
-            \theta_{F,z}
-            \mathbf{1}[x_F = z]
+            \sum_{z \in \{0,1\}^{|\alpha|}}
+            \theta_{\alpha,z}
+	    \mathbf{1}[x_{\alpha} = z]
             \]
           </div>
 
-          <div class="fragment fg-warning" data-fragment-index="6">
-            <span class="fg-warning-prefix">Limitation:</span>
-            a factor of arity \(d\) requires \(2^d\) parameters.
+          <div class="fragment fg-block fg-potential-card" data-fragment-index="6">
+            <div class="fg-label">Factor potential</div>
+            \[
+            \psi_{\alpha}(x_{\alpha})
+            =
+            \exp\!\left(
+            \langle \theta_{\alpha}, \phi_{\alpha}(x_{\alpha}) \rangle
+            \right)
+            \]
           </div>
 
         </div>

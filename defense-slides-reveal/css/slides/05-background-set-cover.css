@@ -67,7 +67,11 @@
   font-size: 0.49em;
   color: #334155;
   text-align: center;
-  transition: font-size 420ms ease, padding 420ms ease;
+  transition:
+    font-size 420ms ease,
+    padding 420ms ease,
+    opacity 240ms ease,
+    transform 240ms ease;
 }
 
 .set-cover-definition strong {
@@ -82,12 +86,24 @@
   transition:
     font-size 420ms ease,
     padding 420ms ease,
-    border 420ms ease;
+    border 420ms ease,
+    opacity 240ms ease,
+    transform 240ms ease;
 }
 
 .set-cover-solution .katex-display {
   margin: 0.2em 0 0;
   font-size: 0.95em;
+}
+
+.set-cover-solution.fragment:not(.visible) {
+  opacity: 0;
+  transform: translateY(0.25em);
+}
+
+.set-cover-solution.fragment.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .set-cover-bilp-panel.fragment:not(.visible) {
@@ -213,6 +229,30 @@
   fill: #c2410c;
 }
 
+/* Example-solution overlay */
+
+.set-cover-example-overlay {
+  pointer-events: none;
+}
+
+.set-cover-example-overlay.fragment:not(.visible) {
+  opacity: 0;
+}
+
+.set-cover-example-overlay.fragment.visible {
+  opacity: 1;
+}
+
+.unused-set-mask,
+.unused-label-mask,
+.selected-set-emphasis {
+  pointer-events: none;
+}
+
+.selected-set-emphasis {
+  filter: drop-shadow(0 8px 12px rgba(15, 23, 42, 0.16));
+}
+
 .element-hit {
   fill: transparent;
   cursor: help;
@@ -240,7 +280,9 @@
 .element-tooltip {
   opacity: 0;
   pointer-events: none;
-  transition: opacity 140ms ease, transform 140ms ease;
+  transition:
+    opacity 140ms ease,
+    transform 140ms ease;
 }
 
 .element-group:hover .element-tooltip {

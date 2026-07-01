@@ -1,0 +1,356 @@
+<section class="slide vcg-pipeline-slide"
+         data-section="Background: Neural ILP solvers"
+         data-title="Variable-constraint graph and GNNs">
+
+  <div class="slide-body vcg-pipeline-body">
+    <div class="vcg-pipeline-stage">
+
+      <!-- ========================================================= -->
+      <!-- SVG SYMBOL BANK                                           -->
+      <!-- Reusable graph pieces. Hidden, but referenced with <use>. -->
+      <!-- ========================================================= -->
+
+      <svg class="vcg-symbol-bank" aria-hidden="true" focusable="false">
+        <defs>
+
+          <symbol id="vcg-basic-edges" viewBox="0 0 620 430">
+            <line class="vcg-edge" x1="180" y1="95" x2="440" y2="95" />
+            <line class="vcg-edge" x1="180" y1="95" x2="440" y2="215" />
+
+            <line class="vcg-edge" x1="180" y1="215" x2="440" y2="95" />
+            <line class="vcg-edge" x1="180" y1="215" x2="440" y2="215" />
+            <line class="vcg-edge" x1="180" y1="215" x2="440" y2="335" />
+
+            <line class="vcg-edge" x1="180" y1="335" x2="440" y2="215" />
+            <line class="vcg-edge" x1="180" y1="335" x2="440" y2="335" />
+          </symbol>
+
+          <symbol id="vcg-variable-nodes" viewBox="0 0 620 430">
+            <g class="vcg-var-node" transform="translate(180 95)">
+              <circle r="34"></circle>
+              <text y="8">x₁</text>
+            </g>
+
+            <g class="vcg-var-node" transform="translate(180 215)">
+              <circle r="34"></circle>
+              <text y="8">x₂</text>
+            </g>
+
+            <g class="vcg-var-node" transform="translate(180 335)">
+              <circle r="34"></circle>
+              <text y="8">x₃</text>
+            </g>
+          </symbol>
+
+          <symbol id="vcg-constraint-nodes" viewBox="0 0 620 430">
+            <g class="vcg-cons-node" transform="translate(440 95)">
+              <rect x="-42" y="-28" width="84" height="56" rx="14"></rect>
+              <text y="8">a₁</text>
+            </g>
+
+            <g class="vcg-cons-node" transform="translate(440 215)">
+              <rect x="-42" y="-28" width="84" height="56" rx="14"></rect>
+              <text y="8">a₂</text>
+            </g>
+
+            <g class="vcg-cons-node" transform="translate(440 335)">
+              <rect x="-42" y="-28" width="84" height="56" rx="14"></rect>
+              <text y="8">a₃</text>
+            </g>
+          </symbol>
+
+          <symbol id="vcg-edge-features" viewBox="0 0 620 430">
+            <g class="vcg-edge-features">
+              <text x="300" y="80">2</text>
+              <text x="298" y="145">1</text>
+              <text x="298" y="120">1</text>
+              <text x="305" y="210">3</text>
+              <text x="302" y="275">2</text>
+              <text x="300" y="300">1</text>
+              <text x="302" y="355">4</text>
+            </g>
+          </symbol>
+
+          <symbol id="vcg-variable-features" viewBox="0 0 620 430">
+            <g class="vcg-feature-labels">
+              <text class="vcg-feature" x="180" y="47">c₁=4</text>
+              <text class="vcg-feature" x="180" y="167">c₂=2</text>
+              <text class="vcg-feature" x="180" y="287">c₃=3</text>
+            </g>
+          </symbol>
+
+          <symbol id="vcg-constraint-features" viewBox="0 0 620 430">
+            <g class="vcg-feature-labels">
+              <text class="vcg-feature" x="440" y="51">b₁=4</text>
+              <text class="vcg-feature" x="440" y="171">b₂=5</text>
+              <text class="vcg-feature" x="440" y="291">b₃=6</text>
+            </g>
+          </symbol>
+
+          <symbol id="vcg-variable-label" viewBox="0 0 620 430">
+            <text class="vcg-side-label" x="180" y="30">variables</text>
+          </symbol>
+
+          <symbol id="vcg-constraint-label" viewBox="0 0 620 430">
+            <text class="vcg-side-label" x="440" y="30">constraints</text>
+          </symbol>
+
+        </defs>
+      </svg>
+
+      <!-- ========================================================= -->
+      <!-- BACKGROUND PIPELINE                                      -->
+      <!-- Stable pipeline layer. Blocks appear progressively.       -->
+      <!-- ========================================================= -->
+
+      <div class="pipeline-bg" aria-hidden="true">
+
+        <div class="pipeline-block pipeline-input-block">
+          <div class="pipeline-block-label">Input representation</div>
+
+          <svg class="pipeline-vcg-svg" viewBox="0 0 620 430" role="img"
+               aria-label="Compact variable-constraint bipartite graph">
+            <use href="#vcg-basic-edges"></use>
+            <use href="#vcg-variable-nodes"></use>
+            <use href="#vcg-constraint-nodes"></use>
+          </svg>
+
+          <h3>Variable-constraint graph</h3>
+        </div>
+
+        <div class="pipeline-arrow pipeline-arrow-1">→</div>
+
+        <div class="pipeline-block pipeline-gnn-block">
+          <div class="pipeline-block-label">Neural predictor</div>
+
+          <svg class="pipeline-vcg-svg pipeline-message-svg" viewBox="0 0 620 430" role="img"
+               aria-label="Message passing over variable-constraint graph">
+
+            <use href="#vcg-basic-edges"></use>
+
+            <g class="message-passing-layer">
+              <line class="mp-message mp-message-1" x1="180" y1="95" x2="440" y2="95" />
+              <line class="mp-message mp-message-2" x1="440" y1="215" x2="180" y2="95" />
+              <line class="mp-message mp-message-3" x1="180" y1="215" x2="440" y2="215" />
+              <line class="mp-message mp-message-4" x1="440" y1="335" x2="180" y2="215" />
+              <line class="mp-message mp-message-5" x1="180" y1="335" x2="440" y2="335" />
+            </g>
+
+            <use href="#vcg-variable-nodes"></use>
+            <use href="#vcg-constraint-nodes"></use>
+          </svg>
+
+          <h3>GNN</h3>
+        </div>
+
+        <div class="pipeline-arrow pipeline-arrow-2">→</div>
+
+        <div class="pipeline-block pipeline-decode-block">
+          <div class="pipeline-block-label">Prediction and decoding</div>
+
+          <div class="factorized-output compact-output">
+            <p class="factorized-title">Factorized prediction</p>
+            <p class="factorized-equation">
+              \(p_\theta(x) = \prod_i p_\theta(x_i)\)
+            </p>
+
+            <div class="factorized-bars">
+              <div class="bar-row">
+                <span>\(x_1\)</span>
+                <i style="--p: 76%;"></i>
+              </div>
+
+              <div class="bar-row">
+                <span>\(x_2\)</span>
+                <i style="--p: 38%;"></i>
+              </div>
+
+              <div class="bar-row">
+                <span>\(x_3\)</span>
+                <i style="--p: 63%;"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="decode-methods">
+            <div class="decode-method">Greedy</div>
+            <div class="decode-method">Repair</div>
+            <div class="decode-method">Solver</div>
+          </div>
+
+          <h3>Decode a feasible solution</h3>
+        </div>
+
+      </div>
+
+      <!-- ========================================================= -->
+      <!-- INTRO OVERLAY                                             -->
+      <!-- Original variable-constraint graph teaching view.          -->
+      <!-- ========================================================= -->
+
+      <div class="intro-overlay">
+
+        <p class="vcg-overlay-citation gasse-citation fragment" data-fragment-index="1">
+          Variable-constraint bipartite graph representation introduced by
+          <span data-cite="gasse_exact_2019"></span>.
+        </p>
+
+        <div class="intro-lp-panel">
+          <div class="vcg-lp-formula">
+
+            <div class="lp-line">
+              <span>\(\max_x\)</span>
+              <span>\(4\)</span><span class="lp-var lp-var-1">\(x_1\)</span>
+              <span>\(+2\)</span><span class="lp-var lp-var-2">\(x_2\)</span>
+              <span>\(+3\)</span><span class="lp-var lp-var-3">\(x_3\)</span>
+            </div>
+
+            <div class="lp-line lp-constraint lp-cons-1">
+              \(2x_1 + x_2 \leq 4\)
+            </div>
+
+            <div class="lp-line lp-constraint lp-cons-2">
+              \(x_1 + 3x_2 + x_3 \leq 5\)
+            </div>
+
+            <div class="lp-line lp-constraint lp-cons-3">
+              \(2x_2 + 4x_3 \leq 6\)
+            </div>
+
+            <div class="lp-line">
+              \(x \in \{0,1\}^3\)
+            </div>
+          </div>
+        </div>
+
+        <div class="intro-graph-panel">
+
+          <svg class="vcg-svg" viewBox="0 0 620 430" role="img"
+               aria-label="Variable-constraint graph for a binary linear program">
+
+            <g class="fragment" data-fragment-index="3">
+              <use href="#vcg-basic-edges"></use>
+            </g>
+
+            <g class="fragment" data-fragment-index="1">
+              <use href="#vcg-variable-nodes"></use>
+            </g>
+
+            <g class="fragment" data-fragment-index="2">
+              <use href="#vcg-constraint-nodes"></use>
+            </g>
+
+            <g class="fragment" data-fragment-index="4">
+              <use href="#vcg-edge-features"></use>
+            </g>
+
+            <g class="fragment" data-fragment-index="4">
+              <use href="#vcg-variable-features"></use>
+            </g>
+
+            <g class="fragment" data-fragment-index="4">
+              <use href="#vcg-constraint-features"></use>
+            </g>
+
+            <g class="fragment" data-fragment-index="1">
+              <use href="#vcg-variable-label"></use>
+            </g>
+
+            <g class="fragment" data-fragment-index="2">
+              <use href="#vcg-constraint-label"></use>
+            </g>
+
+          </svg>
+
+        </div>
+
+      </div>
+
+      <!-- ========================================================= -->
+      <!-- MESSAGE-PASSING FOCUS OVERLAY                             -->
+      <!-- Appears temporarily above the pipeline.                    -->
+      <!-- Messages are over edges and under nodes.                   -->
+      <!-- ========================================================= -->
+
+      <div class="message-focus-overlay">
+
+        <div class="message-focus-card">
+
+          <p class="vcg-overlay-citation scarselli-citation">
+            Graph neural networks
+            <span data-cite="scarselli_graph_2009"></span>.
+          </p>
+
+          <div class="message-focus-left">
+            <h3>Message passing over the VCG</h3>
+
+            <svg class="focus-message-svg" viewBox="0 0 620 430" role="img"
+                 aria-label="Animated messages traveling along graph edges">
+
+              <use href="#vcg-basic-edges"></use>
+
+              <g class="message-passing-layer">
+                <line class="mp-message mp-message-1" x1="180" y1="95" x2="440" y2="95" />
+                <line class="mp-message mp-message-2" x1="440" y1="215" x2="180" y2="95" />
+                <line class="mp-message mp-message-3" x1="180" y1="215" x2="440" y2="215" />
+                <line class="mp-message mp-message-4" x1="440" y1="335" x2="180" y2="215" />
+                <line class="mp-message mp-message-5" x1="180" y1="335" x2="440" y2="335" />
+              </g>
+
+              <use href="#vcg-variable-nodes"></use>
+              <use href="#vcg-constraint-nodes"></use>
+            </svg>
+          </div>
+
+          <div class="message-focus-right">
+            <h3>Factorized prediction</h3>
+
+            <div class="factorized-output large-output">
+              <p class="factorized-title">Per-variable probabilities</p>
+              <p class="factorized-equation">
+                \(p_\theta(x) = \prod_i p_\theta(x_i)\)
+              </p>
+
+              <div class="factorized-bars">
+                <div class="bar-row">
+                  <span>\(p(x_1=1)\)</span>
+                  <i style="--p: 76%;"></i>
+                </div>
+
+                <div class="bar-row">
+                  <span>\(p(x_2=1)\)</span>
+                  <i style="--p: 38%;"></i>
+                </div>
+
+                <div class="bar-row">
+                  <span>\(p(x_3=1)\)</span>
+                  <i style="--p: 63%;"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ========================================================= -->
+      <!-- INVISIBLE CONTROL FRAGMENTS                               -->
+      <!-- ========================================================= -->
+
+      <span class="pipeline-input-trigger fragment" data-fragment-index="5" aria-hidden="true"></span>
+      <span class="message-focus-trigger fragment" data-fragment-index="6" aria-hidden="true"></span>
+      <span class="pipeline-gnn-trigger fragment" data-fragment-index="7" aria-hidden="true"></span>
+      <span class="pipeline-decode-trigger fragment" data-fragment-index="8" aria-hidden="true"></span>
+
+    </div>
+
+    <aside class="notes">
+      First, introduce the variable-constraint graph as a bipartite graph.
+      Then clear the explanatory overlay and reveal the first pipeline block.
+      Use a temporary focus overlay to explain message passing and factorized predictions.
+      Then commit the message-passing block into the pipeline and continue with decoding.
+    </aside>
+
+  </div>
+</section>

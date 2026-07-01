@@ -1,6 +1,6 @@
 <section class="slide learned-mrf-pipeline-slide"
-         data-section="Contribution: Differentiable MRF Inference for BILPs"
-         data-title="Learned MRF predictor">
+         data-section="Learning with approximate MRF inference"
+         data-title="From variable scores to learned MRFs">
 
   <div class="slide-body learning-context-body learned-mrf-body">
 
@@ -50,7 +50,11 @@
         <h3>Variable-constraint graph</h3>
       </div>
 
-      <div class="learning-arrow fragment fade-up" aria-hidden="true" data-fragment-index="1">→</div>
+      <div class="learning-arrow fragment fade-up"
+           aria-hidden="true"
+           data-fragment-index="1">
+        →
+      </div>
 
       <!-- Step 2: MRF parameter prediction -->
       <div class="learning-step mrf-head-step fragment fade-up" data-fragment-index="1">
@@ -87,7 +91,6 @@
           <!-- arrows into heads -->
           <path class="mrf-param-arrow" d="M115 92 C145 90, 157 86, 177 85" />
           <path class="mrf-param-arrow" d="M115 152 C145 140, 158 112, 177 85" />
-
           <path class="mrf-param-arrow constraint-map" d="M116 219 C145 219, 158 194, 177 193" />
 
           <!-- right: parameters -->
@@ -111,10 +114,13 @@
         </svg>
 
         <h3>Predict MRF parameters</h3>
-
       </div>
 
-      <div class="learning-arrow fragment fade-up" aria-hidden="true" data-fragment-index="2">→</div>
+      <div class="learning-arrow fragment fade-up"
+           aria-hidden="true"
+           data-fragment-index="2">
+        →
+      </div>
 
       <!-- Step 3: LBP / NMF inference -->
       <div class="learning-step inference-step fragment fade-up" data-fragment-index="2">
@@ -182,10 +188,13 @@
         </svg>
 
         <h3>Infer marginals</h3>
-
       </div>
 
-      <div class="learning-arrow fragment fade-up" aria-hidden="true" data-fragment-index="3">→</div>
+      <div class="learning-arrow fragment fade-up"
+           aria-hidden="true"
+           data-fragment-index="3">
+        →
+      </div>
 
       <!-- Step 4: marginal-guided decoding -->
       <div class="learning-step decoding-step fragment fade-up" data-fragment-index="3">
@@ -238,32 +247,10 @@
         </svg>
 
         <h3>Decode with beliefs</h3>
-
       </div>
 
     </div>
 
-    <div class="learned-mrf-caption-strip">
-
-      <span class="learned-mrf-caption"
-            data-fragment-index="0">
-        Encode the BILP.
-      </span>
-    
-      <span class="learned-mrf-caption fragment"
-            data-fragment-index="1">
-        Predict MRF factors.
-      </span>
-    
-      <span class="learned-mrf-caption fragment"
-            data-fragment-index="2">
-        Infer marginals.
-      </span>
-    
-      <span class="learned-mrf-caption fragment"
-            data-fragment-index="3">
-        Decode with beliefs.
-      </span>
 
     <aside class="notes">
       This slide contrasts with the factorized baseline. The GNN encoder is still

@@ -1,0 +1,138 @@
+<section class="slide mrf-slide"
+         data-section="Background: MRFs"
+         data-title="Markov random fields">
+
+  <div class="slide-body mrf-body">
+    <p class="mrf-top-citation fragment" data-fragment-index="1">
+      Introduction to Markov Random Fields and factor graphs
+      <span data-cite="wainwright_graphical_2007"></span>.
+    </p>
+
+    <div class="mrf-layout">
+
+      <div class="mrf-definition-panel">
+        <div class="mrf-definition">
+
+	  <div class="mrf-block mrf-variable-block">
+            <div class="mrf-exp-label">Random variables</div>
+
+            \[
+            X = (X_i)_{1 \leq i \leq n},
+            \qquad X_i \in \{0,1\}
+            \]
+          </div>
+
+          <div class="mrf-block">
+
+            <div class="mrf-exp-label">Factor graph</div>
+
+            \[
+            G_F = (\mathcal{V} \cup \mathcal{F}, \mathcal{E}_F)
+            \]
+            <div class="mrf-small-text">
+              variables \(i \in \mathcal{V}\), factors \(\alpha \in \mathcal{F}\)
+            </div>
+          </div>
+
+          <div class="fragment mrf-block mrf-main-equation" data-fragment-index="1">
+            \[
+            p(x)
+            =
+            \frac{1}{Z}
+            \prod_{\alpha \in \mathcal{F}}
+            \psi_{\alpha}\!\left(x_{N(\alpha)}\right)
+            \]
+          </div>
+
+          <div class="fragment mrf-block mrf-normalizer" data-fragment-index="2">
+            \[
+            Z = \sum_x \prod_{\alpha \in \mathcal{F}}
+            \psi_{\alpha}\!\left(x_{N(\alpha)}\right)
+            \]
+          </div>
+        </div>
+      </div>
+
+      <div class="mrf-exp-panel">
+        <div class="mrf-exp-content">
+
+          <div class="mrf-kicker">Example factorization</div>
+
+          <svg class="mrf-svg" viewBox="0 0 620 430" role="img"
+               aria-label="Factor graph with three variables and three factor nodes">
+
+            <line class="mrf-edge" x1="180" y1="95"  x2="440" y2="95" />
+            <line class="mrf-edge" x1="180" y1="95"  x2="440" y2="215" />
+
+            <line class="mrf-edge" x1="180" y1="215" x2="440" y2="95" />
+            <line class="mrf-edge" x1="180" y1="215" x2="440" y2="215" />
+            <line class="mrf-edge" x1="180" y1="215" x2="440" y2="335" />
+
+            <line class="mrf-edge" x1="180" y1="335" x2="440" y2="215" />
+            <line class="mrf-edge" x1="180" y1="335" x2="440" y2="335" />
+
+            <g class="mrf-var-node" transform="translate(180 95)">
+              <circle r="34"></circle>
+              <text y="8">x₁</text>
+            </g>
+
+            <g class="mrf-var-node" transform="translate(180 215)">
+              <circle r="34"></circle>
+              <text y="8">x₂</text>
+            </g>
+
+            <g class="mrf-var-node" transform="translate(180 335)">
+              <circle r="34"></circle>
+              <text y="8">x₃</text>
+            </g>
+
+            <g class="mrf-factor-node" transform="translate(440 95)">
+              <rect x="-48" y="-30" width="96" height="60" rx="14"></rect>
+              <text y="8">α₁</text>
+            </g>
+
+            <g class="mrf-factor-node" transform="translate(440 215)">
+              <rect x="-48" y="-30" width="96" height="60" rx="14"></rect>
+              <text y="8">α₂</text>
+            </g>
+
+            <g class="mrf-factor-node" transform="translate(440 335)">
+              <rect x="-48" y="-30" width="96" height="60" rx="14"></rect>
+              <text y="8">α₃</text>
+            </g>
+
+            <text class="mrf-side-label" x="180" y="38">variables</text>
+            <text class="mrf-side-label" x="440" y="38">factors</text>
+          </svg>
+
+          <div class="fragment mrf-exp-card mrf-factorization-card" data-fragment-index="2">
+            <div class="mrf-exp-label">Product of local potentials</div>
+	    \[
+            \begin{aligned}
+            p(x_1,x_2,x_3)
+            &=
+            \frac{1}{Z}
+            \psi_{\alpha_1}(x_1,x_2) \\
+            &\quad
+            \psi_{\alpha_2}(x_1,x_2,x_3) \\
+	    &\quad
+            \psi_{\alpha_3}(x_2,x_3)
+            \end{aligned}
+            \]
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <aside class="notes">
+      This slide introduces Markov random fields through factor graphs.
+      Avoid discussing exponential-family parametrizations here. The key point
+      is the factorization: the joint distribution is a normalized product of
+      local potentials, each attached to a factor node and depending only on its
+      neighboring variables.
+    </aside>
+
+  </div>
+</section>

@@ -334,3 +334,12 @@
     padding-bottom: 0.45em;
   }
 }
+
+.bcmrf-assignment-table tr.fg-infeasible-row {
+  background: rgba(254, 226, 226, 0.95);
+}
+
+.bcmrf-assignment-table tr.fg-infeasible-row td {
+  color: rgba(127, 29, 29, 0.98);
+  font-weight: 850;
+}

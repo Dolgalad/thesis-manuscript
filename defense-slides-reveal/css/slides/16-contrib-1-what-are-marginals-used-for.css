@@ -1,0 +1,400 @@
+/* src/styles/slides/16-contrib-1-what-are-marginals-used-for.css */
+
+.marginals-use-slide .marginals-use-body {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: clamp(0.55rem, 1.2vh, 0.9rem);
+
+  height: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+}
+
+/* Header ---------------------------------------------------------------- */
+
+.marginals-header {
+  display: grid;
+  gap: 0.16rem;
+
+  max-width: min(100%, 1120px);
+  justify-self: center;
+
+  text-align: center;
+}
+
+.marginals-header h2 {
+  margin: 0;
+
+  color: rgba(38, 50, 70, 0.9);
+  font-size: clamp(1.05rem, 2.05vw, 2rem);
+  font-weight: 900;
+  line-height: 1.04;
+}
+
+.marginals-header p {
+  margin: 0 auto;
+  max-width: 880px;
+
+  color: rgba(38, 50, 70, 0.62);
+  font-size: clamp(0.5rem, 0.86vw, 0.78rem);
+  font-weight: 650;
+  line-height: 1.18;
+}
+
+/* Main merged layout ----------------------------------------------------- */
+
+.merged-decoding-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.12fr);
+  gap: clamp(0.55rem, 1.05vw, 0.95rem);
+
+  width: min(100%, 1180px);
+  min-height: 0;
+  justify-self: center;
+}
+
+.merged-card {
+  min-width: 0;
+  min-height: 0;
+
+  display: grid;
+  grid-template-rows: auto auto minmax(0, auto) auto;
+  align-content: start;
+  gap: clamp(0.36rem, 0.8vh, 0.55rem);
+
+  padding: clamp(0.65rem, 1.25vh, 0.9rem) clamp(0.68rem, 1.25vw, 0.95rem);
+  border-radius: 24px;
+
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(38, 50, 70, 0.12);
+  box-shadow: 0 16px 36px rgba(38, 50, 70, 0.055);
+
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.belief-card {
+  background: rgba(240, 247, 255, 0.92);
+  border-color: rgba(45, 80, 150, 0.2);
+}
+
+.warning-card {
+  background: rgba(255, 247, 237, 0.92);
+  border-color: rgba(160, 105, 35, 0.22);
+}
+
+.gd-card {
+  background: rgba(240, 253, 244, 0.92);
+  border-color: rgba(22, 101, 52, 0.2);
+}
+
+.merged-card .learning-label {
+  margin: 0;
+
+  font-size: clamp(0.36rem, 0.58vw, 0.48rem);
+  font-weight: 900;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.belief-card .learning-label {
+  color: rgba(45, 80, 150, 0.76);
+}
+
+.warning-card .learning-label {
+  color: rgba(160, 105, 35, 0.78);
+}
+
+.gd-card .learning-label {
+  color: rgba(22, 101, 52, 0.78);
+}
+
+.merged-card h3 {
+  margin: 0;
+
+  color: rgba(38, 50, 70, 0.9);
+  font-size: clamp(0.78rem, 1.15vw, 1.05rem);
+  font-weight: 900;
+  line-height: 1.04;
+}
+
+.merged-card p:not(.learning-label) {
+  margin: 0;
+
+  color: rgba(38, 50, 70, 0.64);
+  font-size: clamp(0.46rem, 0.68vw, 0.58rem);
+  font-weight: 670;
+  line-height: 1.18;
+}
+
+/* Belief card ------------------------------------------------------------ */
+
+.belief-symbol {
+  display: grid;
+  place-items: center;
+
+  min-height: clamp(2.4rem, 5.4vh, 3.4rem);
+  padding: 0.3rem 0.8rem;
+  border-radius: 18px;
+
+  background: rgba(255, 255, 255, 0.92);
+  border: 2.5px solid rgba(45, 80, 150, 0.26);
+
+  color: rgba(38, 50, 70, 0.88);
+  font-size: clamp(0.72rem, 1.05vw, 0.95rem);
+  font-weight: 900;
+}
+
+.belief-symbol mjx-container {
+  margin: 0 !important;
+}
+
+.belief-bars {
+  display: grid;
+  gap: clamp(0.3rem, 0.7vh, 0.48rem);
+}
+
+.belief-row {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr) 4.4rem;
+  align-items: center;
+  gap: 0.42rem;
+
+  text-align: left;
+}
+
+.belief-row span,
+.belief-row strong {
+  color: rgba(38, 50, 70, 0.76);
+  font-size: clamp(0.42rem, 0.62vw, 0.52rem);
+  font-weight: 850;
+}
+
+.belief-row strong {
+  color: rgba(45, 80, 150, 0.72);
+}
+
+.belief-track {
+  height: 0.52rem;
+  border-radius: 999px;
+
+  background: rgba(38, 50, 70, 0.12);
+  overflow: hidden;
+}
+
+.belief-fill {
+  height: 100%;
+  border-radius: 999px;
+
+  background: rgba(45, 80, 150, 0.68);
+}
+
+.belief-fill.wide {
+  width: 88%;
+}
+
+.belief-fill.narrow {
+  width: 22%;
+}
+
+.belief-fill.mid {
+  width: 54%;
+}
+
+/* Not-solution card ------------------------------------------------------ */
+
+.not-solution {
+  display: grid;
+  gap: clamp(0.24rem, 0.62vh, 0.38rem);
+  justify-items: center;
+}
+
+.soft-values,
+.hard-solution {
+  max-width: 100%;
+
+  padding: 0.35rem 0.55rem;
+  border-radius: 15px;
+
+  background: rgba(255, 255, 255, 0.92);
+  border: 2px solid rgba(160, 105, 35, 0.22);
+
+  color: rgba(38, 50, 70, 0.78);
+  font-size: clamp(0.46rem, 0.68vw, 0.58rem);
+  font-weight: 850;
+  line-height: 1.1;
+}
+
+.not-equal {
+  color: rgba(185, 28, 28, 0.68);
+  font-size: clamp(0.72rem, 1.1vw, 0.96rem);
+  font-weight: 900;
+  line-height: 1;
+}
+
+.egg-baseline {
+  align-self: end;
+
+  padding: 0.46rem 0.62rem;
+  border-radius: 17px;
+
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(160, 105, 35, 0.18);
+
+  color: rgba(38, 50, 70, 0.64);
+  font-size: clamp(0.44rem, 0.66vw, 0.56rem);
+  font-weight: 700;
+  line-height: 1.16;
+}
+
+.egg-baseline strong {
+  color: rgba(160, 105, 35, 0.82);
+  font-weight: 950;
+}
+
+/* Guided decimation card ------------------------------------------------- */
+
+.gd-timeline {
+  display: grid;
+  grid-template-columns: minmax(0, 0.72fr) auto minmax(0, 1.2fr) auto minmax(0, 0.72fr) auto minmax(0, 0.5fr);
+  align-items: center;
+  gap: 0.28rem;
+
+  margin-top: 0.1rem;
+}
+
+.gd-step {
+  min-width: 0;
+
+  padding: 0.52rem 0.28rem;
+  border-radius: 16px;
+
+  text-align: center;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid rgba(22, 101, 52, 0.18);
+
+  color: rgba(38, 50, 70, 0.72);
+  font-size: clamp(0.4rem, 0.62vw, 0.52rem);
+  font-weight: 900;
+  line-height: 1.05;
+}
+
+.gd-step.selected {
+  background: rgba(220, 252, 231, 0.92);
+  border-color: rgba(22, 101, 52, 0.3);
+  color: rgba(22, 101, 52, 0.78);
+}
+
+.gd-step.infer {
+  background: rgba(245, 243, 255, 0.92);
+  border-color: rgba(109, 40, 217, 0.22);
+  color: rgba(76, 29, 149, 0.76);
+}
+
+.gd-step.muted {
+  color: rgba(38, 50, 70, 0.42);
+}
+
+.gd-arrow {
+  color: rgba(38, 50, 70, 0.34);
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.conditional-belief {
+  display: grid;
+  place-items: center;
+
+  margin: 0.1rem auto;
+  padding: 0.28rem 0.78rem;
+  border-radius: 18px;
+
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid rgba(22, 101, 52, 0.2);
+
+  color: rgba(22, 101, 52, 0.78);
+  font-size: clamp(0.62rem, 0.9vw, 0.82rem);
+  font-weight: 900;
+}
+
+.conditional-belief .MathJax,
+.conditional-belief mjx-container {
+  margin: 0 !important;
+}
+
+/* Takeaway --------------------------------------------------------------- */
+
+.decoding-takeaway {
+  justify-self: center;
+
+  max-width: min(100%, 1080px);
+  padding: clamp(0.42rem, 0.85vh, 0.58rem) clamp(0.8rem, 1.6vw, 1.1rem);
+  border-radius: 999px;
+
+  color: rgba(38, 50, 70, 0.78);
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(38, 50, 70, 0.1);
+  box-shadow: 0 12px 26px rgba(38, 50, 70, 0.06);
+
+  font-size: clamp(0.48rem, 0.74vw, 0.62rem);
+  font-weight: 760;
+  line-height: 1.18;
+  text-align: center;
+}
+
+.decoding-takeaway strong {
+  color: rgba(22, 101, 52, 0.84);
+  font-weight: 950;
+}
+
+/* Small-screen safety ---------------------------------------------------- */
+
+@media (max-height: 760px) {
+  .marginals-use-slide .marginals-use-body {
+    gap: 0.38rem;
+  }
+
+  .marginals-header p {
+    display: none;
+  }
+
+  .merged-card {
+    padding-top: 0.54rem;
+    padding-bottom: 0.58rem;
+    gap: 0.28rem;
+  }
+
+  .belief-symbol {
+    min-height: 2.35rem;
+  }
+
+  .belief-bars {
+    gap: 0.24rem;
+  }
+
+  .gd-step {
+    padding-top: 0.42rem;
+    padding-bottom: 0.42rem;
+  }
+
+  .conditional-belief {
+    padding-top: 0.22rem;
+    padding-bottom: 0.22rem;
+  }
+
+  .decoding-takeaway {
+    padding-top: 0.34rem;
+    padding-bottom: 0.34rem;
+  }
+}
+
+@media (max-width: 980px) {
+  .merged-decoding-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .merged-card {
+    min-height: auto;
+  }
+}

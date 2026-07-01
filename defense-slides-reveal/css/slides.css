@@ -7,35 +7,49 @@
 
 
 @import "./slides/01-toc.css";
-@import "./slides/02-core-idea.css";
-@import "./slides/03-why-ilps.css"; 
-@import "./slides/04-key-difficulty.css";
-@import "./slides/05-learning-context.css";
+
+@import "./slides/02-background-divider.css";
+@import "./slides/03-core-idea.css";
+@import "./slides/04-background-bilp.css";
+/*@import "./slides/05-background-mis.css";*/
+@import "./slides/05-background-set-cover.css";
+@import "./slides/06-background-neural-solver.css";
+@import "./slides/07-background-mrf.css";
+@import "./slides/08-background-map-vs-marginal-inference.css";
+@import "./slides/09-background-mrf-overcomplete.css";
+@import "./slides/10-background-bilp-mrf.css";
+
+
+@import "./slides/11-contrib-1-divider.css";
+@import "./slides/12-contrib-1-learned-mrf-pipeline.css";
+@import "./slides/13-contrib-1-canonical-vs-learned-mrf.css";
+@import "./slides/14-contrib-1-differentiable-inference-layer.css";
+@import "./slides/15-contrib-1-ml-fitting.css";
+@import "./slides/16-contrib-1-what-are-marginals-used-for.css";
+@import "./slides/17-contrib-1-guided-decimation-intuition.css";
+
+
+
+
+/*@import "./slides/03-why-ilps.css"; */
+/*@import "./slides/04-key-difficulty.css";*/
+/*@import "./slides/05-learning-context.css";
 @import "./slides/06-thesis-idea.css";
 @import "./slides/07-roadmap-contributions.css";
 
-@import "./slides/08-background-divider.css";
 
-@import "./slides/09-background-bilp.css";
-@import "./slides/10-background-mis.css";
-@import "./slides/11-background-set-cover.css";
-@import "./slides/12-aa-neural-solver.css";
-@import "./slides/12-background-vcg.css";
 @import "./slides/13-background-bilp-energy-model.css";
-@import "./slides/14-background-mrf.css";
-@import "./slides/15-background-factor-graph-overcomplete.css";
 @import "./slides/16-background-marginal-inference.css";
 @import "./slides/17-background-ml.css";
 @import "./slides/18-background-ml-fitting.css";
-@import "./slides/16-aa-canonical-mrf.css";
 
 
 @import "./slides/18-contrib-1-divider.css";
-@import "./slides/19-contrib-1-baseline.css";
-@import "./slides/20-contrib-1-learned-mrf-pipeline.css";
-@import "./slides/21-contrib-1-canonical-vs-learned-mrf.css";
+@import "./slides/19-contrib-1-baseline.css";*/
+/*@import "./slides/20-contrib-1-learned-mrf-pipeline.css";*/
+/*@import "./slides/21-contrib-1-canonical-vs-le0arned-mrf.css";*/
 @import "./slides/22-contrib-1-differentiable-inference-layer.css";
-@import "./slides/23-contrib-1-what-are-marginals-used-for.css";
+/*@import "./slides/23-contrib-1-what-are-marginals-used-for.css";*/
 @import "./slides/24-contrib-1-decoding-strategies.css";
 @import "./slides/25-contrib-1-guided-decimation-intuition.css";
 @import "./slides/26-contrib-1-experimental-setting.css";

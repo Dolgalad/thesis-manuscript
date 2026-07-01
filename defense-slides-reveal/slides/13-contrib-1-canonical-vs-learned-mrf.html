@@ -1,15 +1,25 @@
 <section class="slide canonical-vs-learned-mrf-slide"
-         data-section="Contribution: Differentiable MRF inference for BILPs"
-         data-title="From canonical to learned MRFs">
+         data-section="Learning with approximate MRF inference"
+         data-title="What changes: the factor scopes stay, the parameters are learned">
 
   <div class="slide-body canonical-learned-body">
 
-    <!-- Shared input -->
+    <!-- Slide headline -->
+    <div class="mrf-shift-header fade-up">
+      <h2>What changes: the factor scopes stay, the parameters are learned</h2>
+      <p>
+        We keep the BILP-induced MRF structure, but replace fixed canonical
+        parameters with learned parameter tables.
+      </p>
+    </div>
+
+    <!-- Shared structure -->
     <div class="shared-bilp-card fade-up">
       <div class="shared-bilp-copy">
-        <h3>Same BILP structure</h3>
+        <p class="learning-label">Same graphical structure</p>
+        <h3>BILP variable-constraint graph</h3>
         <p>
-          The variable-constraint graph still defines the MRF factor scopes.
+          Variables and constraints define the factor graph.
         </p>
       </div>
 
@@ -35,10 +45,10 @@
 
         <!-- constraints -->
         <rect class="lc-constraint" x="335" y="48" width="60" height="36" rx="10" />
-        <text class="lc-label" x="365" y="72">c₁</text>
+        <text class="lc-label" x="365" y="72">a₁</text>
 
         <rect class="lc-constraint" x="335" y="102" width="60" height="36" rx="10" />
-        <text class="lc-label" x="365" y="126">c₂</text>
+        <text class="lc-label" x="365" y="126">a₂</text>
 
         <!-- incidence edges -->
         <line class="lc-edge" x1="100" y1="46"  x2="335" y2="66" />
@@ -49,17 +59,17 @@
         <line class="lc-edge" x1="100" y1="130" x2="335" y2="120" />
         <line class="lc-edge" x1="196" y1="90"  x2="335" y2="120" />
 
-        <text class="shared-caption blue" x="145" y="27">decision variables</text>
-        <text class="shared-caption orange" x="470" y="88">linear constraints</text>
+        <text class="shared-caption blue" x="145" y="27">variables</text>
+        <text class="shared-caption orange" x="470" y="88">constraints</text>
       </svg>
     </div>
 
     <!-- Main contrast -->
-    <div class="mrf-compare-grid simplified-mrf-compare">
+    <div class="simplified-mrf-compare">
 
       <!-- Canonical MRF -->
       <div class="learning-step cmrf-panel fade-up" data-fragment-index="1">
-        <p class="learning-label">Background construction</p>
+        <p class="learning-label">Background</p>
         <h3>Canonical MRF</h3>
 
         <div class="simple-theta-card canonical-theta-card">
@@ -70,15 +80,19 @@
           </div>
 
           <div class="simple-theta-caption">
-            fixed by the optimization problem
+            fixed directly from the problem
           </div>
         </div>
 
-        <ul class="mrf-simple-list">
-          <li>objective coefficients define unary terms</li>
-          <li>constraints define hand-coded feasibility penalties</li>
-          <li>parameters are not learned</li>
-        </ul>
+        <p class="mrf-panel-summary">
+          The factor scopes come from the BILP, and the parameters are fixed by
+          a hand-designed canonical mapping.
+        </p>
+      </div>
+
+      <!-- Arrow / conceptual shift -->
+      <div class="mrf-shift-arrow fade-up" data-fragment-index="2" aria-hidden="true">
+        →
       </div>
 
       <!-- Learned MRF -->
@@ -94,7 +108,7 @@
           </div>
 
           <div class="simple-theta-caption">
-            predicted from graph embeddings
+            predicted from learned embeddings
           </div>
         </div>
 
@@ -106,24 +120,23 @@
           \]
         </div>
 
-        <ul class="mrf-simple-list">
-          <li>same BILP-induced factor scopes</li>
-          <li>GNN embeddings summarize variables and constraints</li>
-          <li>parameter heads learn the log-potential tables</li>
-        </ul>
+        <p class="mrf-panel-summary">
+          The factor scopes are unchanged, but the parameter tables are
+          learned from data.
+        </p>
       </div>
 
     </div>
 
+
     <aside class="notes">
-      At this point the canonical overcomplete parameterization has already been
-      introduced in the MRF background section. This slide should therefore avoid
-      re-deriving the canonical construction. The message is that the factor scopes
-      are unchanged: they still come from the BILP variable-constraint graph. What
-      changes is the source of the parameters. In the canonical MRF, parameters are
-      fixed by the objective and by hand-coded feasibility penalties. In the learned
-      MRF, the same parameter tables are predicted from GNN embeddings using variable
-      and factor heads.
+      The canonical overcomplete construction has already been introduced in the
+      background. This slide should not re-derive it. The point is simply that the
+      factor scopes stay fixed: they are induced by the BILP variable-constraint
+      graph. What changes is the source of the parameters. In the canonical MRF,
+      the parameters are fixed by a hand-designed mapping from the problem. In the
+      learned MRF, the same types of parameter tables are predicted from GNN
+      embeddings using variable and factor heads.
     </aside>
 
   </div>

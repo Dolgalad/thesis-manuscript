@@ -1,54 +1,53 @@
-<section class="slide bp-slide"
+<section class="slide bp-slide inference-task-slide"
          data-section="Background: MRFs"
-         data-title="Belief propagation">
+         data-title="Inference tasks: MAP assignments and marginals">
 
   <div class="slide-body bp-body">
 
     <div class="bp-layout">
 
       <div class="bp-formula-panel">
-        <div class="bp-formula">
+        <div class="bp-formula bp-task-stack">
 
-          <div class="bp-kicker">Marginal inference</div>
+          <div class="bp-kicker">Inference tasks</div>
 
-          <div class="bp-block bp-main-card">
-            \[
-            \mu_i(x_i)
-            =
-            p(X_i = x_i)
-            =
-            \sum_{x_{V \setminus \{i\}}}
-            p(x)
-            \]
+          <div class="bp-block bp-task-card bp-map-card">
+            <div class="bp-card-heading">MAP inference</div>
+            <div class="bp-card-main">find one best assignment</div>
+            <div class="bp-task-equation">
+              \[
+              x^\star \in \arg\max_x p(x)
+              \]
+            </div>
           </div>
 
-          <div class="fragment bp-block" data-fragment-index="3">
-            \[
-            m_{i \to F}(x_i)
-            \propto
-            \prod_{G \in \mathcal{N}(i) \setminus \{F\}}
-            m_{G \to i}(x_i)
-            \]
+          <div class="fragment bp-block bp-task-card bp-marginal-card" data-fragment-index="1">
+            <div class="bp-card-heading">Marginal inference</div>
+            <div class="bp-card-main">estimate local beliefs</div>
+            <div class="bp-card-secondary">
+              variable beliefs \(\mu_i(x_i)\), factor beliefs \(\mu_\alpha(x_\alpha)\)
+            </div>
+            <div class="bp-task-equation">
+              \[
+              \mu_i(x_i)
+              =
+              p(X_i=x_i)
+              =
+              \sum_{x_{V\setminus\{i\}}} p(x)
+              \]
+            </div>
           </div>
 
-          <div class="fragment bp-block bp-f2v-card" data-fragment-index="4">
-            \[
-            m_{F \to i}(x_i)
-            \propto
-            \sum_{x_{F \setminus \{i\}}}
-            \psi_F(x_F)
-            \prod_{j \in \mathcal{N}(F) \setminus \{i\}}
-            m_{j \to F}(x_j)
-            \]
+          <div class="fragment bp-block bp-task-card bp-conditional-card" data-fragment-index="2">
+            <div class="bp-card-heading">Conditional marginal inference</div>
+            <div class="bp-card-main">recompute beliefs after fixing part of the assignment</div>
           </div>
 
-          <div class="fragment bp-block bp-main-card" data-fragment-index="5">
-            \[
-            \mu_i(x_i)
-            \propto
-            \prod_{F \in \mathcal{N}(i)}
-            m_{F \to i}(x_i)
-            \]
+          <div class="fragment bp-block bp-task-card bp-bp-statement" data-fragment-index="3">
+            <div class="bp-card-heading">Belief propagation</div>
+            <div class="bp-card-main">
+              computes marginals exactly on trees and approximately on loopy graphs
+            </div>
           </div>
 
         </div>
@@ -116,7 +115,7 @@
           </g>
 
           <!-- factor-to-variable messages: middle layer -->
-          <g class="fragment bp-message-layer" data-fragment-index="4">
+          <g class="fragment bp-message-layer" data-fragment-index="3">
 
             <path id="bp-f2v-1" class="bp-message-path bp-message-f2v" d="M455 105 L160 95" />
             <path id="bp-f2v-2" class="bp-message-path bp-message-f2v" d="M455 105 L160 185" />
@@ -197,30 +196,18 @@
           </g>
 
         </svg>
-	<div class="fragment bp-exact-loopy-row" data-fragment-index="5">
-          <div class="bp-exact-loopy-card bp-exact-html-card">
-            <div class="bp-card-title">Tree-structured</div>
-            <div class="bp-card-text">BP is exact</div>
-          </div>
-        
-          <div class="bp-exact-loopy-card bp-loopy-html-card">
-            <div class="bp-card-title">Graphs with cycles</div>
-            <div class="bp-card-text">Loopy BP is approximate</div>
-          </div>
-        </div>
 
       </div>
 
     </div>
 
     <aside class="notes">
-      This slide introduces inference in Markov random fields, focusing on marginal
-      inference. The goal is to compute the marginal distribution of each variable.
-      Belief propagation does this by passing messages on the factor graph. On
-      tree-structured factor graphs, belief propagation gives exact marginals.
-      When the graph contains cycles, the same message updates can still be iterated,
-      but the method is then called loopy belief propagation and gives approximate
-      marginals. This is the relevant case for our ILP-induced graphical models.
+      This slide bridges inference tasks before introducing belief propagation.
+      MAP inference searches for a single best assignment. Marginal inference
+      estimates local beliefs over variables and factors. Conditional marginal
+      inference recomputes those beliefs after part of the assignment has been
+      fixed. Belief propagation is then introduced as the algorithmic mechanism
+      for computing marginals exactly on trees and approximately on loopy graphs.
     </aside>
 
   </div>
