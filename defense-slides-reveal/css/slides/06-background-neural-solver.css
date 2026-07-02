@@ -589,6 +589,10 @@
   color: rgba(38, 50, 70, 0.68);
 }
 
+.bar-row > span {
+  font-size: calc(var(--slide-small-size, 0.75rem) * 0.68);
+}
+
 .compact-output .bar-row {
   grid-template-columns: 2.3rem 1fr;
 }
