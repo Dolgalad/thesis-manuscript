@@ -1,0 +1,79 @@
+<section class="slide contrib2-takeaway-slide"
+         data-section="MRF-augmented diffusion models"
+         data-title="Takeaway">
+
+  <div class="slide-body contrib2-takeaway-body">
+
+    <div class="contrib2-takeaway-hero fade-up">
+      <p class="learning-label">Takeaway</p>
+      <h3>MRF inference helps denoising under partial information</h3>
+
+      <div class="takeaway-formula-row">
+        <div class="formula-block direct-block">
+          <span class="formula-label">Direct denoising</span>
+          <span class="formula-text">predict from the noisy state</span>
+        </div>
+
+        <div class="formula-arrow">→</div>
+
+        <div class="formula-block structured-block">
+          <span class="formula-label">MRF-augmented denoising</span>
+          <span class="formula-text">structure the refinement with inference</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="contrib2-takeaway-grid">
+
+      <div class="takeaway-card advantage-card fade-up">
+        <div class="takeaway-icon">1</div>
+        <div class="takeaway-content">
+          <h4>Constraint-aware refinement</h4>
+          <p>
+            MRF inference turns local denoising predictions into beliefs that account
+            for coupled variables.
+          </p>
+        </div>
+      </div>
+
+      <div class="takeaway-card setcover-card fade-up">
+        <div class="takeaway-icon">2</div>
+        <div class="takeaway-content">
+          <h4>Clear gain on Set Cover</h4>
+          <p>
+            LBP-based denoising improves raw feasibility and gives the strongest
+            decoded gaps.
+          </p>
+        </div>
+      </div>
+
+      <div class="takeaway-card limitation-card fade-up">
+        <div class="takeaway-icon">3</div>
+        <div class="takeaway-content">
+          <h4>Decoding still matters</h4>
+          <p>
+            Refinement does not guarantee feasibility; the final solution remains
+            problem- and decoder-dependent.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="contrib2-final-message fade-up">
+      <span class="final-label">Bottom line</span>
+      <span>
+        MRFs improve the denoising signal, but they do not replace problem-specific decoding.
+      </span>
+    </div>
+
+    <aside class="notes">
+      Keep this slide short. The point is that MRF inference is useful in diffusion-style
+      denoising because the corrupted state is partial information about the target. On Set Cover,
+      LBP-based denoising gives the clearest improvement in feasibility and decoded objective
+      value. The limitation is that refinement alone does not guarantee feasible solutions: the
+      final quality still depends on the decoder and on the problem structure.
+    </aside>
+
+  </div>
+</section>

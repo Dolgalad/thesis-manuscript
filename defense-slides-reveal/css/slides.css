@@ -27,8 +27,20 @@
 @import "./slides/15-contrib-1-ml-fitting.css";
 @import "./slides/16-contrib-1-what-are-marginals-used-for.css";
 @import "./slides/17-contrib-1-guided-decimation-intuition.css";
+@import "./slides/18-contrib-1-main-results.css";
+@import "./slides/19-contrib-1-guided-decimation-analysis.css";
+@import "./slides/20-contrib-1-takeaway.css";
 
+@import "./slides/21-contrib-2-divider.css";
+@import "./slides/22-contrib-2-diffusion.css";
+@import "./slides/23-contrib-2-mrf-denoising.css";
+@import "./slides/24-contrib-2-main-results.css";
+@import "./slides/25-contrib-2-takeaway.css";
 
+@import "./slides/27-contrib-3-large-factor-arities.css";
+
+@import "./slides/29-conclusion-main-findings.css";
+@import "./slides/30-conclusion-final-takeaway.css";
 
 
 /*@import "./slides/03-why-ilps.css"; */
@@ -48,10 +60,9 @@
 @import "./slides/19-contrib-1-baseline.css";*/
 /*@import "./slides/20-contrib-1-learned-mrf-pipeline.css";*/
 /*@import "./slides/21-contrib-1-canonical-vs-le0arned-mrf.css";*/
-@import "./slides/22-contrib-1-differentiable-inference-layer.css";
 /*@import "./slides/23-contrib-1-what-are-marginals-used-for.css";*/
 @import "./slides/24-contrib-1-decoding-strategies.css";
-@import "./slides/25-contrib-1-guided-decimation-intuition.css";
+/*@import "./slides/25-contrib-1-guided-decimation-intuition.css";*/
 @import "./slides/26-contrib-1-experimental-setting.css";
 @import "./slides/27-contrib-1-main-results-learned-inference.css";
 @import "./slides/28-contrib-1-guided-decimation-analysis.css";

@@ -1,0 +1,205 @@
+/* src/styles/slides/27-contrib-3-large-factor-arities.css */
+
+.large-factor-slide .large-factor-body {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 0.72rem;
+  height: 100%;
+  min-height: 0;
+}
+
+.large-factor-header {
+  padding: 0.68rem 0.9rem;
+  border-radius: 26px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 247, 237, 0.96),
+    rgba(240, 247, 255, 0.92)
+  );
+  border: 1px solid rgba(160, 105, 35, 0.18);
+  box-shadow: 0 16px 36px rgba(38, 50, 70, 0.055);
+  text-align: center;
+}
+
+.large-factor-header h2 {
+  margin: 0;
+  color: rgba(38, 50, 70, 0.9);
+  font-size: clamp(0.82em, 1.12vw, 1em);
+  font-weight: 950;
+  line-height: 1.05;
+}
+
+.large-factor-header p {
+  margin: 0.26rem 0 0;
+  color: rgba(38, 50, 70, 0.58);
+  font-size: clamp(0.36em, 0.54vw, 0.44em);
+  font-weight: 720;
+  line-height: 1.2;
+}
+
+.large-factor-graph-card {
+  min-height: 0;
+  padding: 0.72rem 0.82rem;
+  border-radius: 26px;
+  background: rgba(240, 247, 255, 0.92);
+  border: 1px solid rgba(45, 80, 150, 0.18);
+  box-shadow: 0 16px 36px rgba(38, 50, 70, 0.055);
+}
+
+.large-factor-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 365px;
+  max-height: 430px;
+  overflow: visible;
+}
+
+.large-factor-side-label {
+  fill: rgba(38, 50, 70, 0.68);
+  font-family: inherit;
+  font-size: 24px;
+  font-weight: 950;
+  text-anchor: middle;
+}
+
+.large-factor-edges line {
+  stroke: rgba(38, 50, 70, 0.24);
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.large-factor-graph:first-of-type .large-factor-edges line {
+  stroke: rgba(160, 105, 35, 0.32);
+  stroke-width: 4.3;
+}
+
+.large-factor-var-node circle {
+  stroke-width: 4;
+  filter: drop-shadow(0 8px 14px rgba(38, 50, 70, 0.10));
+}
+
+.large-factor-var-node text {
+  fill: rgba(38, 50, 70, 0.86);
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 950;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.large-factor-var-1 circle {
+  fill: rgba(219, 234, 254, 0.98);
+  stroke: rgba(45, 80, 150, 0.62);
+}
+
+.large-factor-var-2 circle {
+  fill: rgba(245, 243, 255, 0.98);
+  stroke: rgba(109, 40, 217, 0.50);
+}
+
+.large-factor-var-3 circle {
+  fill: rgba(220, 252, 231, 0.98);
+  stroke: rgba(22, 101, 52, 0.45);
+}
+
+.large-factor-var-4 circle {
+  fill: rgba(255, 247, 237, 0.98);
+  stroke: rgba(160, 105, 35, 0.52);
+}
+
+.large-factor-factor-node rect {
+  fill: rgba(255, 255, 255, 0.94);
+  stroke: rgba(160, 105, 35, 0.58);
+  stroke-width: 4;
+  filter: drop-shadow(0 8px 14px rgba(38, 50, 70, 0.08));
+}
+
+.large-factor-graph:last-of-type .large-factor-factor-node rect {
+  stroke: rgba(45, 80, 150, 0.54);
+}
+
+.large-factor-arrow-group marker path {
+  fill: rgba(109, 40, 217, 0.76);
+}
+
+.large-factor-main-arrow {
+  fill: none;
+  stroke: rgba(109, 40, 217, 0.66);
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.large-factor-arrow-label {
+  fill: rgba(109, 40, 217, 0.74);
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 900;
+  text-anchor: middle;
+}
+
+.large-factor-takeaway {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.72rem;
+}
+
+.large-factor-takeaway div {
+  padding: 0.54rem 0.68rem;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(38, 50, 70, 0.12);
+  box-shadow: 0 14px 30px rgba(38, 50, 70, 0.05);
+  color: rgba(38, 50, 70, 0.62);
+  font-size: clamp(0.34em, 0.52vw, 0.42em);
+  font-weight: 700;
+  line-height: 1.18;
+  text-align: center;
+}
+
+.large-factor-takeaway div:first-child {
+  background: rgba(255, 247, 237, 0.92);
+  border-color: rgba(160, 105, 35, 0.2);
+}
+
+.large-factor-takeaway div:nth-child(2) {
+  background: rgba(240, 247, 255, 0.92);
+  border-color: rgba(45, 80, 150, 0.2);
+}
+
+.large-factor-takeaway div:last-child {
+  background: rgba(245, 243, 255, 0.92);
+  border-color: rgba(109, 40, 217, 0.18);
+}
+
+.large-factor-takeaway strong {
+  color: rgba(38, 50, 70, 0.86);
+  font-weight: 950;
+}
+
+.large-factor-takeaway .math {
+  color: rgba(76, 29, 149, 0.86);
+  font-weight: 950;
+}
+
+@media (max-height: 760px) {
+  .large-factor-slide .large-factor-body {
+    gap: 0.5rem;
+  }
+
+  .large-factor-header {
+    padding: 0.52rem 0.72rem;
+  }
+
+  .large-factor-graph-card {
+    padding: 0.5rem 0.64rem;
+  }
+
+  .large-factor-svg {
+    min-height: 315px;
+  }
+
+  .large-factor-takeaway div {
+    padding: 0.42rem 0.52rem;
+  }
+}

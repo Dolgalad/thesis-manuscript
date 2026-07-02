@@ -1,0 +1,11 @@
+/* Contribution 2 divider: follows the shared section-divider layout */
+
+.contribution-2-divider-content {
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(40, 50, 70, 0.14);
+  box-shadow: 0 24px 60px rgba(20, 30, 50, 0.1);
+}
+
+.contribution-2-divider-slide .section-divider-subtitle {
+  max-width: 740px;
+}

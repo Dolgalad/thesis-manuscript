@@ -1,0 +1,74 @@
+<section class="slide contrib1-takeaway-slide"
+         data-section="Learning with approximate MRF inference"
+         data-title="Takeaway">
+
+  <div class="slide-body contrib1-takeaway-body">
+
+    <div class="contrib1-takeaway-hero fade-up">
+      <p class="learning-label">Takeaway</p>
+      <h3>Marginals are useful under partial information</h3>
+
+      <div class="takeaway-formula-row">
+        <div class="formula-block independent-block">
+          <span class="formula-label">Independent scoring</span>
+          <span class="formula-text">score each variable separately</span>
+        </div>
+
+        <div class="formula-arrow">→</div>
+
+        <div class="formula-block structured-block">
+          <span class="formula-label">MRF inference</span>
+          <span class="formula-text">reason over coupled assignments</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="contrib1-takeaway-grid">
+
+      <div class="takeaway-card dependency-card fade-up">
+        <div class="takeaway-icon">1</div>
+        <div class="takeaway-content">
+          <h4>Output dependencies matter</h4>
+          <p>
+            ILP constraints couple decision variables, so predicting each variable
+            independently loses useful combinatorial structure.
+          </p>
+        </div>
+      </div>
+
+      <div class="takeaway-card inference-card fade-up">
+        <div class="takeaway-icon">2</div>
+        <div class="takeaway-content">
+          <h4>Marginals give stronger decoding signals</h4>
+          <p>
+            Approximate MRF inference turns learned factor parameters into beliefs
+            that summarize local compatibility with the remaining problem.
+          </p>
+        </div>
+      </div>
+
+      <div class="takeaway-card decimation-card fade-up">
+        <div class="takeaway-icon">3</div>
+        <div class="takeaway-content">
+          <h4>Conditioning makes decoding adaptive</h4>
+          <p>
+            Guided decimation fixes part of the solution, recomputes marginals, and
+            uses the updated context to choose the next variables.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <aside class="notes">
+      This is the closing slide for Contribution 1. The key message is that marginals
+      are useful when we only have partial information. In the MRF setting, partial
+      information comes from guided decimation: once some variables are fixed, inference
+      recomputes beliefs for the remaining variables. This works because constraints
+      create dependencies between output variables. The same idea will appear again
+      in the diffusion contribution, where a corrupted solution can be interpreted as
+      partial information about the clean solution we want to recover.
+    </aside>
+
+  </div>
+</section>

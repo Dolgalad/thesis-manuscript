@@ -1,0 +1,81 @@
+<section class="slide main-findings-slide"
+         data-section="Conclusion"
+         data-title="Main findings">
+
+  <div class="slide-body main-findings-body">
+
+    <div class="main-findings-header fade-up">
+      <p class="learning-label">Conclusion · Main findings</p>
+      <h3>Structured inference improves solution prediction</h3>
+      <p>
+        Across the thesis, the same pattern appears: learned scores are more useful when
+        they are interpreted through the constraints of the optimization problem.
+      </p>
+    </div>
+
+    <div class="main-findings-grid">
+
+      <article class="finding-card finding-dependencies fade-up">
+        <div class="finding-index">01</div>
+        <div class="finding-content">
+          <h4>Output dependencies matter</h4>
+          <p>
+            BILP variables are coupled by constraints, so independent predictions miss
+            important combinatorial structure.
+          </p>
+        </div>
+      </article>
+
+      <article class="finding-card finding-inference fade-up">
+        <div class="finding-index">02</div>
+        <div class="finding-content">
+          <h4>MRF inference gives useful beliefs</h4>
+          <p>
+            Approximate inference turns learned local potentials into marginals informed
+            by objectives and constraints.
+          </p>
+        </div>
+      </article>
+
+      <article class="finding-card finding-decoding fade-up">
+        <div class="finding-index">03</div>
+        <div class="finding-content">
+          <h4>Conditioning improves decoding</h4>
+          <p>
+            Guided decimation benefits from recomputing beliefs after partial assignments,
+            making decisions adaptive.
+          </p>
+        </div>
+      </article>
+
+      <article class="finding-card finding-refinement fade-up">
+        <div class="finding-index">04</div>
+        <div class="finding-content">
+          <h4>Refinement is promising but problem-dependent</h4>
+          <p>
+            MRF-augmented refinement improves Set Cover results, while MIS highlights the
+            need for careful decoding.
+          </p>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="main-findings-takeaway fade-up">
+      <span class="takeaway-label">Takeaway</span>
+      <span>
+        The useful learned object is not just a score vector, but a <strong>structured signal</strong>
+        that can guide decoding under constraints.
+      </span>
+    </div>
+
+    <aside class="notes">
+      This slide replaces the longer conclusion sequence. The main findings are: output
+      dependencies matter; MRF inference provides useful constraint-aware beliefs; guided
+      decimation benefits from conditioning; and refinement is useful but remains dependent
+      on the problem and decoder. The goal is to summarize the scientific contribution without
+      spending too much time on limitations and future work.
+    </aside>
+
+  </div>
+</section>

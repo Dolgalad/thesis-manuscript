@@ -1,5 +1,5 @@
 <section class="slide guided-decimation-slide"
-         data-section="Contribution: Differentiable MRF inference for BILPs"
+         data-section="Learning with approximate MRF inference"
          data-title="Guided decimation: fix, condition, recompute">
 
   <div class="slide-body guided-decimation-body">
@@ -172,7 +172,7 @@
 
         <div class="gd-state-layers">
 
-          <!-- Fragment 1 -->
+          <!-- Fragment 1: initial homogeneous state -->
           <div class="gd-state-box gd-state-1 fragment fade-in-then-out" data-fragment-index="0">
             <div class="gd-state-header">
               <span>1 · before decimation</span>
@@ -180,138 +180,111 @@
             </div>
 
             <div class="partial-solution">
-              \(A=\varnothing\), all assignments are equally plausible.
+              \(A=\varnothing\). Every assignment is equally plausible.
             </div>
 
             <div class="score-caption">
-              Initial set marginals are homogeneous.
+              Initial marginals are homogeneous.
             </div>
 
             <div class="score-table">
               <div class="score-row selected-score">
-                <span>\(S_1\)</span>
+                <span>\(x_1\)</span>
                 <div class="score-track"><div class="score-fill score-33"></div></div>
-                <strong>\(\mu_1(1)=.33\)</strong>
+                <strong>\(\mu(x_1\mid A)=.33\)</strong>
               </div>
 
               <div class="score-row">
-                <span>\(S_2\)</span>
+                <span>\(x_2\)</span>
                 <div class="score-track"><div class="score-fill score-33"></div></div>
-                <strong>\(\mu_2(1)=.33\)</strong>
+                <strong>\(\mu(x_2\mid A)=.33\)</strong>
               </div>
 
               <div class="score-row">
-                <span>\(S_3\)</span>
+                <span>\(x_3\)</span>
                 <div class="score-track"><div class="score-fill score-33"></div></div>
-                <strong>\(\mu_3(1)=.33\)</strong>
+                <strong>\(\mu(x_3\mid A)=.33\)</strong>
               </div>
 
               <div class="score-row">
-                <span>\(S_4\)</span>
+                <span>\(x_4\)</span>
                 <div class="score-track"><div class="score-fill score-33"></div></div>
-                <strong>\(\mu_4(1)=.33\)</strong>
+                <strong>\(\mu(x_4\mid A)=.33\)</strong>
               </div>
 
               <div class="score-row">
-                <span>\(S_5\)</span>
+                <span>\(x_5\)</span>
                 <div class="score-track"><div class="score-fill score-33"></div></div>
-                <strong>\(\mu_5(1)=.33\)</strong>
+                <strong>\(\mu(x_5\mid A)=.33\)</strong>
               </div>
 
               <div class="score-row">
-                <span>\(S_6\)</span>
+                <span>\(x_6\)</span>
                 <div class="score-track"><div class="score-fill score-33"></div></div>
-                <strong>\(\mu_6(1)=.33\)</strong>
+                <strong>\(\mu(x_6\mid A)=.33\)</strong>
               </div>
             </div>
 
             <div class="decision-chip">
-              break symmetry: commit \(S_1 \leftarrow 1\)
+              commit \(x_1 = 1\), i.e. select \(S_1\)
             </div>
           </div>
 
-          <!-- Fragment 2 -->
-          <div class="gd-state-box gd-state-2 fragment fade-in-then-out" data-fragment-index="1">
+          <!-- Fragment 2: committed state + conditional marginals -->
+          <div class="gd-state-box gd-state-2 fragment fade-in" data-fragment-index="1">
             <div class="gd-state-header">
-              <span>2 · commit decision</span>
-              <strong>residual problem changes</strong>
+              <span>2 · after conditioning</span>
+              <strong>marginals become compatible</strong>
             </div>
 
             <div class="partial-solution selected-partial">
-              \(A=\{S_1\}\), covered \(=\{a,b,c\}\)
-            </div>
-
-            <div class="candidate-update-grid">
-              <div class="update-card selected-update">
-                <span>fixed</span>
-                <strong>\(S_1=\{a,b,c\}\)</strong>
-              </div>
-
-              <div class="update-card candidate-update">
-                <span>remaining uncovered</span>
-                <strong>\(U_{\mathrm{rem}}=\{d,e,f\}\)</strong>
-              </div>
-
-              <div class="update-card warning-update">
-                <span>without reinference</span>
-                <strong>old scores still treat all sets as equally plausible</strong>
-              </div>
-            </div>
-
-            <div class="condition-chip">
-              condition the MRF on \(S_1=1\)
-            </div>
-          </div>
-
-          <!-- Fragment 3 -->
-          <div class="gd-state-box gd-state-3 fragment fade-in" data-fragment-index="2">
-            <div class="gd-state-header">
-              <span>3 · after reinference</span>
-              <strong>compatible continuation emerges</strong>
-            </div>
-
-            <div class="partial-solution conditioned-partial">
-              \(S_2=\{d,e,f\}\) exactly covers what remains.
+              \(A=\{x_1=1\}\), covered \(=\{a,b,c\}\), remaining \(=\{d,e,f\}\)
             </div>
 
             <div class="score-caption">
-              Conditional marginals shift toward the set compatible with \(S_1\).
+              Reinference increases the marginal of the complementary set.
             </div>
 
             <div class="score-table">
+              <div class="score-row fixed-score">
+                <span>\(x_1\)</span>
+                <div class="score-track"><div class="score-fill score-100"></div></div>
+                <strong>\(\mu(x_1\mid A)=1\)</strong>
+              </div>
+
               <div class="score-row boosted-score">
-                <span>\(S_2\)</span>
+                <span>\(x_2\)</span>
                 <div class="score-track"><div class="score-fill score-92"></div></div>
-                <strong>\(\mu_2(1\mid S_1)=.92\)</strong>
+                <strong>\(\mu(x_2\mid A)=.92\)</strong>
               </div>
 
               <div class="score-row faded-score">
-                <span>\(S_3\)</span>
+                <span>\(x_3\)</span>
                 <div class="score-track"><div class="score-fill score-24"></div></div>
-                <strong>\(\mu_3(1\mid S_1)=.24\)</strong>
+                <strong>\(\mu(x_3\mid A)=.24\)</strong>
               </div>
 
               <div class="score-row faded-score">
-                <span>\(S_4\)</span>
+                <span>\(x_4\)</span>
                 <div class="score-track"><div class="score-fill score-24"></div></div>
-                <strong>\(\mu_4(1\mid S_1)=.24\)</strong>
+                <strong>\(\mu(x_4\mid A)=.24\)</strong>
               </div>
 
               <div class="score-row faded-score">
-                <span>\(S_5\)</span>
+                <span>\(x_5\)</span>
                 <div class="score-track"><div class="score-fill score-24"></div></div>
-                <strong>\(\mu_5(1\mid S_1)=.24\)</strong>
+                <strong>\(\mu(x_5\mid A)=.24\)</strong>
               </div>
 
               <div class="score-row faded-score">
-                <span>\(S_6\)</span>
+                <span>\(x_6\)</span>
                 <div class="score-track"><div class="score-fill score-24"></div></div>
-                <strong>\(\mu_6(1\mid S_1)=.24\)</strong>
+                <strong>\(\mu(x_6\mid A)=.24\)</strong>
               </div>
             </div>
 
             <div class="decision-chip conditioned-chip">
-              next decision becomes \(S_2 \leftarrow 1\)
+              next decision becomes \(x_2=1\), i.e. select \(S_2\)
             </div>
           </div>
 
@@ -320,22 +293,23 @@
 
     </div>
 
-    <div class="gd-takeaway fragment fade-up" data-fragment-index="3">
-      Guided decimation uses reinference to make marginals <strong>compatible with the partial solution</strong>,
+    <div class="gd-takeaway fragment fade-up" data-fragment-index="2">
+      Guided decimation uses reinference to make marginals
+      <strong>compatible with the partial solution</strong>,
       instead of reusing scores from the initial global mixture.
     </div>
 
     <aside class="notes">
-      This example is designed so that the initial marginals are homogeneous. There
-      are three symmetric optimal covers of size two: S1 with S2, S3 with S4, and S5
-      with S6. Before any decision, each set can belong to an optimal cover, so the
-      marginal scores are similar. Once we commit to S1, the remaining uncovered
-      elements are d, e, and f. If we keep using the original marginals, the decoder
-      has no reason to prefer the compatible completion S2 over the other sets.
-      Reinference conditions the MRF on the partial assignment S1 equals one. The
-      conditional marginal of S2 increases because S2 covers exactly the residual
-      uncovered elements. This is the key purpose of guided decimation: each new
-      decision should be made in the context of the partial solution already built.
+      This example is designed so that the initial marginals are homogeneous.
+      There are three symmetric optimal covers of size two: S1 with S2, S3 with S4,
+      and S5 with S6. Before any decision, each set can belong to an optimal cover,
+      so the marginal scores are identical. The decoder breaks symmetry by fixing
+      x1, corresponding to selecting S1. Once S1 is fixed, the remaining uncovered
+      elements are d, e, and f. Reinference conditions the MRF on the partial
+      assignment A={x1=1}. The conditional marginal of x2 increases because S2
+      covers exactly the residual uncovered elements. This illustrates the purpose
+      of guided decimation: each new decision should be made in the context of the
+      partial solution already built.
     </aside>
 
   </div>

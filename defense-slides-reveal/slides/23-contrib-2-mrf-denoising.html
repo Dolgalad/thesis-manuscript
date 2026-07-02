@@ -1,0 +1,93 @@
+<section class="slide mrf-denoising-pipeline-slide"
+         data-section="MRF-augmented diffusion models"
+         data-title="MRF-augmented denoising">
+
+  <div class="slide-body mrf-denoising-pipeline-body">
+
+    <div class="mrf-pipeline-header fade-up">
+      <h2>MRF-augmented denoising</h2>
+      <p>
+        Use the corrupted assignment as partial evidence, then propagate structure through
+        an inferred graphical model before decoding a cleaner solution.
+      </p>
+    </div>
+
+    <div class="mrf-pipeline-card fade-up">
+      <div class="mrf-pipeline-flow" aria-label="MRF-augmented denoising pipeline">
+
+        <div class="mrf-pipeline-step pipeline-input fragment fade-up" data-fragment-index="1">
+          <div class="pipeline-step-index">01</div>
+          <p class="pipeline-step-label">Input</p>
+          <h3>Corrupted problem state</h3>
+          <div class="pipeline-formula">
+            <span>problem <b>P</b></span>
+            <span>corrupted assignment <b>x<sub>t</sub></b></span>
+            <span>time <b>t</b></span>
+          </div>
+        </div>
+
+        <div class="pipeline-arrow fragment fade-up" data-fragment-index="2">→</div>
+
+        <div class="mrf-pipeline-step pipeline-denoiser fragment fade-up" data-fragment-index="2">
+          <div class="pipeline-step-index">02</div>
+          <p class="pipeline-step-label">GNN / denoiser</p>
+          <h3>Predict MRF parameters</h3>
+          <div class="pipeline-equation">
+            θ<sub>t</sub> = f<sub>ω</sub>(P, x<sub>t</sub>, t)
+          </div>
+          <p class="pipeline-step-note">
+            The network does not directly commit to each variable independently.
+          </p>
+        </div>
+
+        <div class="pipeline-arrow fragment fade-up" data-fragment-index="3">→</div>
+
+        <div class="mrf-pipeline-step pipeline-inference fragment fade-up" data-fragment-index="3">
+          <div class="pipeline-step-index">03</div>
+          <p class="pipeline-step-label">Inference</p>
+          <h3>Compute marginals</h3>
+          <div class="pipeline-equation">
+            BP / NMF → μ<sub>t</sub>
+          </div>
+          <p class="pipeline-step-note">
+            Marginal inference propagates constraint-aware information through the MRF.
+          </p>
+        </div>
+
+        <div class="pipeline-arrow fragment fade-up" data-fragment-index="4">→</div>
+
+        <div class="mrf-pipeline-step pipeline-output fragment fade-up" data-fragment-index="4">
+          <div class="pipeline-step-index">04</div>
+          <p class="pipeline-step-label">Output</p>
+          <h3>Denoising prediction</h3>
+          <div class="pipeline-formula">
+            <span>estimate clean assignment <b>x<sub>0</sub></b></span>
+            <span>or denoising distribution</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="mrf-pipeline-message fragment fade-up" data-fragment-index="5">
+      <span>Main idea</span>
+      <strong>
+        x<sub>t</sub> and t provide partial information about x<sub>0</sub>.
+        Instead of correcting variables independently, the model predicts an MRF and uses
+        marginal inference to propagate structure before denoising.
+      </strong>
+    </div>
+
+    <aside class="notes">
+      This slide answers the method question for contribution 2. Start from the problem P,
+      a corrupted assignment x_t, and the diffusion time t. The denoising network predicts
+      the parameters of an MRF for this particular corrupted state. Then BP or naive mean
+      field computes marginals. These marginals are used to estimate the clean assignment
+      x_0, or more generally a denoising distribution. The key oral message is that x_t and
+      t are partial information about x_0. The model should not correct variables in isolation:
+      MRF inference lets information propagate through the structure of the problem before
+      producing the denoising prediction.
+    </aside>
+
+  </div>
+</section>

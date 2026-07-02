@@ -1,0 +1,104 @@
+<section class="slide large-factor-slide"
+         data-section="Dealing with large factor arities"
+         data-title="Scaling issue">
+  <div class="slide-body large-factor-body">
+
+    <div class="large-factor-header fade-up">
+      <h2>Scaling issue: large factor arities</h2>
+      <p>Additional direction: scalable MRF parameterizations for high-arity constraints.</p>
+    </div>
+
+    <div class="large-factor-graph-card fade-up">
+      <svg class="large-factor-svg" viewBox="0 0 1120 430" role="img"
+           aria-label="Original high-arity factor graph mapped to an approximate low-arity factor graph">
+        <defs>
+          <marker id="large-factor-arrow-head" viewBox="0 0 10 10" refX="8" refY="5"
+                  markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" />
+          </marker>
+        </defs>
+
+        <text class="large-factor-side-label" x="270" y="38">Original factor graph</text>
+        <text class="large-factor-side-label" x="850" y="38">Approximate factor graph</text>
+
+        <g class="large-factor-graph" transform="translate(90,78)">
+          <g class="large-factor-edges">
+            <line x1="98" y1="44"  x2="295" y2="44" />
+            <line x1="98" y1="44"  x2="295" y2="106" />
+            <line x1="98" y1="44"  x2="295" y2="168" />
+            <line x1="98" y1="44"  x2="295" y2="230" />
+            <line x1="98" y1="106" x2="295" y2="44" />
+            <line x1="98" y1="106" x2="295" y2="106" />
+            <line x1="98" y1="106" x2="295" y2="168" />
+            <line x1="98" y1="106" x2="295" y2="230" />
+            <line x1="98" y1="168" x2="295" y2="44" />
+            <line x1="98" y1="168" x2="295" y2="106" />
+            <line x1="98" y1="168" x2="295" y2="168" />
+            <line x1="98" y1="168" x2="295" y2="230" />
+            <line x1="98" y1="230" x2="295" y2="44" />
+            <line x1="98" y1="230" x2="295" y2="106" />
+            <line x1="98" y1="230" x2="295" y2="168" />
+            <line x1="98" y1="230" x2="295" y2="230" />
+          </g>
+
+          <g class="large-factor-var-node large-factor-var-1"><circle cx="98" cy="44" r="22" /><text x="98" y="44">x₁</text></g>
+          <g class="large-factor-var-node large-factor-var-2"><circle cx="98" cy="106" r="22" /><text x="98" y="106">x₂</text></g>
+          <g class="large-factor-var-node large-factor-var-3"><circle cx="98" cy="168" r="22" /><text x="98" y="168">x₃</text></g>
+          <g class="large-factor-var-node large-factor-var-4"><circle cx="98" cy="230" r="22" /><text x="98" y="230">x₄</text></g>
+
+          <g class="large-factor-factor-node"><rect x="295" y="19" width="52" height="50" rx="0" /></g>
+          <g class="large-factor-factor-node"><rect x="295" y="81" width="52" height="50" rx="0" /></g>
+          <g class="large-factor-factor-node"><rect x="295" y="143" width="52" height="50" rx="0" /></g>
+          <g class="large-factor-factor-node"><rect x="295" y="205" width="52" height="50" rx="0" /></g>
+        </g>
+
+        <g class="large-factor-arrow-group">
+          <path class="large-factor-main-arrow" d="M 505 220 L 615 220" marker-end="url(#large-factor-arrow-head)" />
+          <text class="large-factor-arrow-label" x="560" y="193">compact mapping</text>
+        </g>
+
+        <g class="large-factor-graph" transform="translate(650,56)">
+          <g class="large-factor-edges">
+            <line x1="98" y1="66"  x2="295" y2="36" />
+            <line x1="98" y1="66"  x2="295" y2="92" />
+            <line x1="98" y1="66"  x2="295" y2="148" />
+            <line x1="98" y1="128" x2="295" y2="92" />
+            <line x1="98" y1="128" x2="295" y2="148" />
+            <line x1="98" y1="128" x2="295" y2="204" />
+            <line x1="98" y1="190" x2="295" y2="148" />
+            <line x1="98" y1="190" x2="295" y2="204" />
+            <line x1="98" y1="190" x2="295" y2="260" />
+            <line x1="98" y1="252" x2="295" y2="204" />
+            <line x1="98" y1="252" x2="295" y2="260" />
+            <line x1="98" y1="252" x2="295" y2="316" />
+          </g>
+
+          <g class="large-factor-var-node large-factor-var-1"><circle cx="98" cy="66" r="22" /><text x="98" y="66">x₁</text></g>
+          <g class="large-factor-var-node large-factor-var-2"><circle cx="98" cy="128" r="22" /><text x="98" y="128">x₂</text></g>
+          <g class="large-factor-var-node large-factor-var-3"><circle cx="98" cy="190" r="22" /><text x="98" y="190">x₃</text></g>
+          <g class="large-factor-var-node large-factor-var-4"><circle cx="98" cy="252" r="22" /><text x="98" y="252">x₄</text></g>
+
+          <g class="large-factor-factor-node"><rect x="295" y="11" width="52" height="50" rx="0" /></g>
+          <g class="large-factor-factor-node"><rect x="295" y="67" width="52" height="50" rx="0" /></g>
+          <g class="large-factor-factor-node"><rect x="295" y="123" width="52" height="50" rx="0" /></g>
+          <g class="large-factor-factor-node"><rect x="295" y="179" width="52" height="50" rx="0" /></g>
+          <g class="large-factor-factor-node"><rect x="295" y="235" width="52" height="50" rx="0" /></g>
+          <g class="large-factor-factor-node"><rect x="295" y="291" width="52" height="50" rx="0" /></g>
+        </g>
+      </svg>
+    </div>
+
+    <div class="large-factor-takeaway fade-up">
+      <div><strong>Problem:</strong> a constraint over <span class="math">d</span> binary variables induces <span class="math">2<sup>d</sup></span> parameters.</div>
+      <div><strong>Idea:</strong> replace large factors by a compact approximate factor graph.</div>
+      <div><strong>Tradeoff:</strong> less expressive, but scalable.</div>
+    </div>
+
+    <aside class="notes">
+      Keep this short. This is not presented as a full third contribution with results.
+      It is an additional direction motivated by the exponential cost of high-arity
+      factor tables, especially for constraints such as Set Cover.
+    </aside>
+
+  </div>
+</section>

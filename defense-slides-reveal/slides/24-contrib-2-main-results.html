@@ -1,0 +1,134 @@
+<section class="slide main-result-slide diffusion-result-slide"
+         data-section="MRF-augmented diffusion models"
+         data-title="Main results">
+
+  <div class="slide-body main-result-body">
+
+    <div class="result-headline fade-up">
+      <strong>MRF-augmented denoising improves Set Cover feasibility</strong>
+      <span>LBP inference turns noisy diffusion outputs into much more feasible Set Cover solutions.</span>
+    </div>
+
+    <div class="result-grid fade-up">
+
+      <div class="result-table-card">
+        <p class="learning-label">Diffusion results on Set Cover ↓</p>
+
+        <table class="result-table result-table-detailed diffusion-table">
+          <thead>
+            <tr>
+              <th rowspan="2">Dataset</th>
+              <th rowspan="2">Method</th>
+              <th rowspan="2">Feas.<br><span>(%) ↑</span></th>
+              <th colspan="2" class="decoder-group">EGG</th>
+              <th colspan="2" class="decoder-group">GD</th>
+            </tr>
+            <tr>
+              <th>Rel. gap<br><span>(%) ↓</span></th>
+              <th>t<br><span>(s) ↓</span></th>
+              <th>Rel. gap<br><span>(%) ↓</span></th>
+              <th>t<br><span>(s) ↓</span></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr class="dataset-start">
+              <td rowspan="2" class="dataset-cell">SC-S</td>
+              <td class="method-cell">Direct denoising</td>
+              <td class="warning">7.400</td>
+              <td>8.311 ± 7.175</td>
+              <td class="fastest">0.144 ± 0.387</td>
+              <td>–</td>
+              <td>–</td>
+            </tr>
+
+            <tr class="highlight-method">
+              <td class="method-cell">Diffusion + LBP</td>
+              <td class="best">88.867</td>
+              <td class="best">3.639 ± 5.283</td>
+              <td>0.439 ± 0.363</td>
+              <td class="best">0.680 ± 3.341</td>
+              <td>1.269 ± 0.385</td>
+            </tr>
+
+            <tr class="dataset-start">
+              <td rowspan="2" class="dataset-cell">SC-M</td>
+              <td class="method-cell">Direct denoising</td>
+              <td class="warning">0.000</td>
+              <td>10.505 ± 4.090</td>
+              <td class="fastest">0.600 ± 0.367</td>
+              <td>–</td>
+              <td>–</td>
+            </tr>
+
+            <tr class="highlight-method">
+              <td class="method-cell">Diffusion + LBP</td>
+              <td class="best">84.615</td>
+              <td class="best">4.543 ± 3.989</td>
+              <td>2.692 ± 2.798</td>
+              <td class="best">−0.233 ± 2.181</td>
+              <td>5.452 ± 2.950</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p class="result-caption">
+          EGG: greedy decoding from denoised scores. GD: guided decimation with conditional reinference.
+        </p>
+
+        <div class="dataset-legend">
+          <div>
+            <strong>SC-S</strong>
+            <span>$n=50$, $m=50$, $k=5$</span>
+          </div>
+          <div>
+            <strong>SC-M</strong>
+            <span>$n \sim U[150,180]$, $m \sim U[150,250]$, $k=5$</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="result-reading-card">
+        <p class="learning-label">How to read it</p>
+
+        <div class="reading-stack">
+
+          <div class="reading-item baseline-item">
+            <span>Baseline</span>
+            <strong>Direct denoising</strong>
+            <p>
+              The diffusion model outputs solution scores directly, then EGG decodes them once.
+            </p>
+          </div>
+
+          <div class="reading-item learned-item">
+            <span>MRF augmentation</span>
+            <strong>Diffusion + LBP</strong>
+            <p>
+              Denoising is followed by loopy belief propagation, producing feasibility-aware marginals.
+            </p>
+          </div>
+
+          <div class="reading-item canonical-item">
+            <span>Main effect</span>
+            <strong>Feasibility jumps</strong>
+            <p>
+              On both SC-S and SC-M, LBP makes most decoded samples feasible, unlike direct denoising.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <aside class="notes">
+      The important comparison is not the acronym but the decoding signal. Direct denoising
+      gives scores that are often infeasible: only 7.4 percent feasible on SC-S and zero on SC-M.
+      Adding LBP inference after diffusion changes the denoising output into feasibility-aware
+      marginals, raising feasibility to 88.867 percent on SC-S and 84.615 percent on SC-M.
+      The relative gaps also improve, especially when guided decimation is used. For the defense,
+      I would mention MIS only as a caveat orally, because the main story of this slide is Set Cover.
+    </aside>
+
+  </div>
+</section>

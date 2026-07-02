@@ -1,0 +1,176 @@
+<section class="slide main-result-slide"
+         data-section="Learning with approximate MRF inference"
+         data-title="Learned MRFs improve solution quality">
+
+  <div class="slide-body main-result-body">
+
+    <div class="result-headline fade-up">
+      <strong>Learned MRFs improve solution quality</strong>
+      <span>especially when LBP marginals are used inside Guided Decimation.</span>
+    </div>
+
+    <div class="result-grid fade-up">
+
+      <div class="result-table-card">
+        <p class="learning-label">Main results on Set Cover ↓</p>
+
+        <table class="result-table result-table-detailed">
+          <thead>
+            <tr>
+              <th rowspan="2">Dataset</th>
+              <th rowspan="2">Method</th>
+              <th colspan="3" class="decoder-group">EGG</th>
+              <th colspan="3" class="decoder-group">GD</th>
+            </tr>
+            <tr>
+              <th>Rel. gap<br><span>(%) ↓</span></th>
+              <th>Best<br><span>(%) ↓</span></th>
+              <th>t<br><span>(s) ↓</span></th>
+              <th>Rel. gap<br><span>(%) ↓</span></th>
+              <th>Best<br><span>(%) ↓</span></th>
+              <th>t<br><span>(s) ↓</span></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr class="dataset-start">
+              <td rowspan="3" class="dataset-cell">SC-S</td>
+              <td class="method-cell">CMRF-LBP</td>
+              <td>13.239 ± 8.130</td>
+              <td>–</td>
+              <td>0.348 ± 0.077</td>
+              <td>3.425 ± 5.376</td>
+              <td>–</td>
+              <td>0.482 ± 0.078</td>
+            </tr>
+
+            <tr>
+              <td class="method-cell">DGN</td>
+              <td>7.800 ± 6.941</td>
+              <td>7.613</td>
+              <td class="fastest">0.128 ± 0.073</td>
+              <td>–</td>
+              <td>–</td>
+              <td>–</td>
+            </tr>
+
+            <tr class="highlight-method">
+              <td class="method-cell">LMRF-LBP</td>
+              <td>3.748 ± 5.617</td>
+              <td>3.695</td>
+              <td>0.319 ± 0.080</td>
+              <td class="best">1.003 ± 3.717</td>
+              <td class="best">0.888</td>
+              <td>0.936 ± 0.139</td>
+            </tr>
+
+            <tr class="dataset-start">
+              <td rowspan="3" class="dataset-cell">SC-M</td>
+              <td class="method-cell">CMRF-LBP</td>
+              <td>15.490 ± 4.401</td>
+              <td>–</td>
+              <td>1.235 ± 0.184</td>
+              <td>3.919 ± 3.164</td>
+              <td>–</td>
+              <td>1.725 ± 0.222</td>
+            </tr>
+
+
+            <tr>
+              <td class="method-cell">DGN</td>
+              <td>10.320 ± 3.971</td>
+              <td>10.247</td>
+              <td class="fastest">0.590 ± 0.140</td>
+              <td>–</td>
+              <td>–</td>
+              <td>–</td>
+            </tr>
+
+            <tr class="highlight-method">
+              <td class="method-cell">LMRF-LBP</td>
+              <td>5.042 ± 3.248</td>
+              <td>4.992</td>
+              <td>1.156 ± 0.178</td>
+              <td class="best">0.274 ± 2.248</td>
+              <td class="best">0.215</td>
+              <td>3.839 ± 0.540</td>
+            </tr>
+
+          </tbody>
+        </table>
+
+        <p class="result-caption">
+          EGG: greedy decoding from fixed scores. GD: guided decimation with reinference.
+        </p>
+
+        <div class="dataset-legend">
+          <div>
+            <strong>SC-S</strong>
+            <span>$n=50$, $m=50$, $k=5$</span>
+          </div>
+          <div>
+            <strong>SC-M</strong>
+            <span>$n \sim U[150,180]$, $m \sim U[150,250]$, $k=5$</span>
+          </div>
+        </div>
+
+      </div>
+
+
+
+      <div class="result-reading-card">
+        <p class="learning-label">Models</p>
+
+        <div class="reading-stack">
+
+          <div class="reading-item baseline-item">
+            <span>Factorized baseline</span>
+            <strong>DGN + EGG</strong>
+            <p>
+              Independent learned scores decoded by score-driven greedy selection.
+            </p>
+          </div>
+
+          <div class="reading-item canonical-item">
+            <span>Structured baseline</span>
+            <strong>CMRF + inference</strong>
+            <p>
+              Hand-crafted feasibility potentials already improve decoded solutions.
+            </p>
+          </div>
+
+          <div class="reading-item learned-item">
+            <span>Learned structured model</span>
+            <strong>LMRF + inference</strong>
+            <p>
+              Learned factor potentials give stronger scores and better gaps.
+            </p>
+          </div>
+
+          <div class="reading-item caution-item">
+            <span>Decoder distinction</span>
+            <strong>EGG vs GD</strong>
+            <p>
+              EGG uses fixed scores once; GD conditions on decisions and recomputes marginals.
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <aside class="notes">
+      This slide should be read as a hierarchy of comparisons. First, the factorized
+      DGN baseline gives independent variable scores and is decoded with EGG. EGG is
+      the no-reinference decoder: it uses one fixed set of scores greedily. The canonical
+      MRF, even though hand-crafted, already improves substantially because feasibility
+      is represented inside the inference model. The learned MRF improves further,
+      especially with LBP and Guided Decimation. GD repeatedly conditions on the partial
+      solution and recomputes beliefs before making the next decision. The main message
+      is that learned MRFs improve solution quality, and reinference through guided
+      decimation makes the learned marginals more useful during decoding.
+    </aside>
+
+  </div>
+</section>

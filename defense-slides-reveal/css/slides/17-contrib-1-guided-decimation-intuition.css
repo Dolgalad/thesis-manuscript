@@ -1,4 +1,4 @@
-/* src/styles/slides/17-contrib-1-guided-decimation-intuition.css */
+/* src/styles/slides/25-contrib-1-guided-decimation-intuition.css */
 
 .guided-decimation-slide .guided-decimation-body {
   display: grid;
@@ -165,14 +165,13 @@
 
 /* From state 2 onward, show selected S1 and covered elements. */
 .guided-decimation-slide:has(.gd-state-2.current-fragment) .gd-colored-state,
-.guided-decimation-slide:has(.gd-state-3.current-fragment) .gd-colored-state,
-.guided-decimation-slide:has(.gd-state-3.visible) .gd-colored-state {
+.guided-decimation-slide:has(.gd-state-2.visible) .gd-colored-state {
   opacity: 1;
 }
 
-/* From state 3 onward, show S2 as the compatible continuation. */
-.guided-decimation-slide:has(.gd-state-3.current-fragment) .gd-reinfer-state,
-.guided-decimation-slide:has(.gd-state-3.visible) .gd-reinfer-state {
+/* From state 2 onward, also show S2 as the compatible continuation. */
+.guided-decimation-slide:has(.gd-state-2.current-fragment) .gd-reinfer-state,
+.guided-decimation-slide:has(.gd-state-2.visible) .gd-reinfer-state {
   opacity: 1;
 }
 
@@ -198,11 +197,6 @@
 }
 
 .gd-state-2 {
-  background: rgba(255, 247, 237, 0.94);
-  border-color: rgba(160, 105, 35, 0.24);
-}
-
-.gd-state-3 {
   background: rgba(245, 243, 255, 0.94);
   border-color: rgba(109, 40, 217, 0.22);
 }
@@ -223,10 +217,6 @@
 }
 
 .gd-state-2 .gd-state-header span {
-  color: rgba(160, 105, 35, 0.78);
-}
-
-.gd-state-3 .gd-state-header span {
   color: rgba(76, 29, 149, 0.72);
 }
 
@@ -247,11 +237,6 @@
 }
 
 .selected-partial {
-  background: rgba(220, 252, 231, 0.86);
-  color: rgba(22, 101, 52, 0.82);
-}
-
-.conditioned-partial {
   background: rgba(255, 255, 255, 0.76);
   color: rgba(76, 29, 149, 0.78);
 }
@@ -274,7 +259,7 @@
 
 .score-row {
   display: grid;
-  grid-template-columns: 2rem minmax(0, 1fr) 8.4rem;
+  grid-template-columns: 2rem minmax(0, 1fr) 8.7rem;
   align-items: center;
   gap: 0.36rem;
   padding: 0.25rem 0.34rem;
@@ -288,6 +273,11 @@
   background: rgba(220, 252, 231, 0.7);
 }
 
+.score-row.fixed-score {
+  border-color: rgba(22, 101, 52, 0.34);
+  background: rgba(220, 252, 231, 0.72);
+}
+
 .score-row.boosted-score {
   border-color: rgba(109, 40, 217, 0.34);
   background: rgba(245, 243, 255, 0.82);
@@ -297,8 +287,8 @@
   opacity: 0.78;
 }
 
-.score-row span,
-.score-row strong {
+.score-row > span,
+.score-row > strong {
   color: rgba(38, 50, 70, 0.78);
   font-size: clamp(0.32em, 0.49vw, 0.4em);
   font-weight: 850;
@@ -311,6 +301,10 @@
 
 .boosted-score strong {
   color: rgba(76, 29, 149, 0.78);
+}
+
+.fixed-score strong {
+  color: rgba(22, 101, 52, 0.78);
 }
 
 .score-track {
@@ -346,66 +340,8 @@
   width: 92%;
 }
 
-/* Commit update --------------------------------------------------------- */
-
-.candidate-update-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.42rem;
-  align-content: center;
-  min-height: 0;
-}
-
-.update-card {
-  display: grid;
-  gap: 0.14rem;
-  padding: 0.5rem 0.6rem;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.86);
-  border: 2px solid rgba(160, 105, 35, 0.18);
-  text-align: center;
-}
-
-.update-card span {
-  color: rgba(38, 50, 70, 0.54);
-  font-size: clamp(0.32em, 0.48vw, 0.4em);
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.update-card strong {
-  color: rgba(38, 50, 70, 0.76);
-  font-size: clamp(0.42em, 0.62vw, 0.52em);
-  font-weight: 900;
-  line-height: 1.1;
-}
-
-.selected-update {
-  border-color: rgba(22, 101, 52, 0.3);
-  background: rgba(220, 252, 231, 0.74);
-}
-
-.selected-update strong {
-  color: rgba(22, 101, 52, 0.82);
-}
-
-.candidate-update {
-  border-color: rgba(45, 80, 150, 0.2);
-  background: rgba(240, 247, 255, 0.8);
-}
-
-.candidate-update strong {
-  color: rgba(45, 80, 150, 0.78);
-}
-
-.warning-update {
-  border-color: rgba(160, 105, 35, 0.24);
-  background: rgba(255, 247, 237, 0.84);
-}
-
-.warning-update strong {
-  color: rgba(160, 105, 35, 0.78);
+.score-100 {
+  width: 100%;
 }
 
 /* Chips ---------------------------------------------------------------- */
@@ -421,12 +357,6 @@
   font-size: clamp(0.33em, 0.5vw, 0.42em);
   font-weight: 900;
   text-align: center;
-}
-
-.condition-chip {
-  background: rgba(255, 255, 255, 0.82);
-  border-color: rgba(160, 105, 35, 0.22);
-  color: rgba(160, 105, 35, 0.78);
 }
 
 .conditioned-chip {
@@ -484,18 +414,15 @@
     padding-bottom: 0.18rem;
   }
 
-  .candidate-update-grid {
-    gap: 0.3rem;
-  }
-
-  .update-card {
-    padding: 0.4rem 0.5rem;
-  }
-
   .partial-solution,
   .decision-chip,
   .condition-chip {
     padding-top: 0.26rem;
     padding-bottom: 0.26rem;
   }
+}
+
+.score-row span {
+  justify-self: start;
+  white-space: nowrap;
 }

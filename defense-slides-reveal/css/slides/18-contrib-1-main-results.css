@@ -1,0 +1,322 @@
+.main-result-slide .main-result-body {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 0.72rem;
+  height: 100%;
+  min-height: 0;
+}
+
+.result-headline,
+.result-takeaway {
+  padding: 0.56rem 0.85rem;
+  border-radius: 22px;
+  text-align: center;
+}
+
+.result-headline {
+  background: rgba(240, 253, 244, 0.94);
+  border: 1px solid rgba(22, 101, 52, 0.18);
+}
+
+.result-headline strong {
+  color: rgba(22, 101, 52, 0.82);
+  font-size: clamp(0.58em, 0.9vw, 0.74em);
+  font-weight: 950;
+}
+
+.result-headline span {
+  color: rgba(38, 50, 70, 0.68);
+  font-size: clamp(0.42em, 0.64vw, 0.52em);
+  font-weight: 760;
+}
+
+.result-grid {
+  display: grid;
+  grid-template-columns: 1.75fr 0.55fr;
+  gap: 0.72rem;
+  min-height: 0;
+}
+
+.result-table-card,
+.result-reading-card {
+  min-height: 0;
+  padding: 0.68rem 0.74rem;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(38, 50, 70, 0.12);
+  box-shadow: 0 16px 36px rgba(38, 50, 70, 0.055);
+}
+
+.result-table-card {
+  background: rgba(240, 247, 255, 0.92);
+  border-color: rgba(45, 80, 150, 0.2);
+}
+
+.result-reading-card {
+  background: rgba(255, 247, 237, 0.92);
+  border-color: rgba(160, 105, 35, 0.2);
+}
+
+.result-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 0.28rem;
+}
+
+.result-table th {
+  color: rgba(38, 50, 70, 0.54);
+  font-size: clamp(0.27em, 0.41vw, 0.34em);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  text-align: center;
+  line-height: 1.05;
+}
+
+.result-table th span {
+  color: rgba(38, 50, 70, 0.42);
+  font-size: 0.88em;
+  font-weight: 850;
+}
+
+.result-table td {
+  padding: 0.34rem 0.22rem;
+  background: rgba(255, 255, 255, 0.88);
+  color: rgba(38, 50, 70, 0.76);
+  font-size: clamp(0.31em, 0.48vw, 0.4em);
+  font-weight: 820;
+  text-align: center;
+}
+
+.result-table td:first-child {
+  border-radius: 13px 0 0 13px;
+  font-weight: 950;
+  color: rgba(45, 80, 150, 0.78);
+}
+
+.result-table td:last-child {
+  border-radius: 0 13px 13px 0;
+}
+
+.result-table .best {
+  color: rgba(22, 101, 52, 0.9);
+  background: rgba(220, 252, 231, 0.82);
+  font-weight: 950;
+}
+
+.result-table .warning {
+  color: rgba(185, 28, 28, 0.78);
+  background: rgba(254, 242, 242, 0.78);
+  font-weight: 900;
+}
+
+.result-caption {
+  margin: 0.34rem 0 0;
+  color: rgba(38, 50, 70, 0.62);
+  font-size: clamp(0.32em, 0.48vw, 0.4em);
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Detailed grouped result table ---------------------------------------- */
+
+.result-table-detailed {
+  border-spacing: 0 0.18rem;
+}
+
+.result-table-detailed th {
+  padding: 0.18rem 0.12rem;
+  font-size: clamp(0.22em, 0.34vw, 0.29em);
+  line-height: 1.02;
+  vertical-align: middle;
+}
+
+.result-table-detailed td {
+  padding: 0.23rem 0.12rem;
+  font-size: clamp(0.23em, 0.36vw, 0.3em);
+  line-height: 1.05;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.result-table-detailed .decoder-group {
+  color: rgba(45, 80, 150, 0.74);
+  background: rgba(219, 234, 254, 0.58);
+  border-radius: 10px 10px 0 0;
+}
+
+.result-table-detailed .dataset-cell {
+  color: rgba(45, 80, 150, 0.86);
+  background: rgba(219, 234, 254, 0.68);
+  font-weight: 950;
+  vertical-align: middle;
+  border-radius: 13px 0 0 13px;
+}
+
+.result-table-detailed .method-cell {
+  color: rgba(38, 50, 70, 0.78);
+  font-weight: 920;
+  text-align: left;
+  padding-left: 0.28rem;
+}
+
+.result-table-detailed .dataset-start td {
+  border-top: 2px solid rgba(45, 80, 150, 0.18);
+}
+
+.result-table-detailed .highlight-method td {
+  background: rgba(240, 253, 244, 0.62);
+}
+
+.result-table-detailed .highlight-method .method-cell {
+  color: rgba(22, 101, 52, 0.82);
+}
+
+.result-table-detailed .best {
+  color: rgba(22, 101, 52, 0.92);
+  background: rgba(220, 252, 231, 0.9);
+  font-weight: 950;
+}
+
+.result-table-detailed .fastest {
+  color: rgba(45, 80, 150, 0.9);
+  background: rgba(219, 234, 254, 0.82);
+  font-weight: 950;
+}
+
+/* Reading card ---------------------------------------------------------- */
+
+.reading-stack {
+  display: grid;
+  gap: 0.32rem;
+  min-height: 0;
+}
+
+.reading-item {
+  padding: 0.36rem 0.45rem;
+  border-radius: 17px;
+  background: rgba(255, 255, 255, 0.86);
+  border: 2px solid rgba(38, 50, 70, 0.1);
+}
+
+.reading-item span {
+  display: block;
+  color: rgba(38, 50, 70, 0.52);
+  font-size: clamp(0.28em, 0.42vw, 0.35em);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.reading-item strong {
+  display: block;
+  margin: 0.08rem 0 0.12rem;
+  color: rgba(38, 50, 70, 0.82);
+  font-size: clamp(0.38em, 0.56vw, 0.48em);
+  font-weight: 950;
+}
+
+.reading-item p {
+  margin: 0;
+  color: rgba(38, 50, 70, 0.62);
+  font-size: clamp(0.29em, 0.44vw, 0.37em);
+  font-weight: 680;
+  line-height: 1.1;
+}
+
+.baseline-item {
+  border-color: rgba(45, 80, 150, 0.2);
+}
+
+.canonical-item {
+  border-color: rgba(160, 105, 35, 0.25);
+}
+
+.learned-item {
+  border-color: rgba(22, 101, 52, 0.28);
+}
+
+.caution-item {
+  border-color: rgba(109, 40, 217, 0.22);
+  background: rgba(245, 243, 255, 0.82);
+}
+
+/* Bottom takeaway, kept for compatibility if re-added ------------------- */
+
+.result-takeaway {
+  background: rgba(245, 243, 255, 0.94);
+  border: 1px solid rgba(109, 40, 217, 0.18);
+  color: rgba(76, 29, 149, 0.78);
+  font-size: clamp(0.4em, 0.62vw, 0.5em);
+  font-weight: 850;
+}
+
+.result-takeaway strong {
+  color: rgba(76, 29, 149, 0.9);
+  font-weight: 950;
+}
+
+/* Runtime classes kept for backup slides -------------------------------- */
+
+.runtime-title {
+  margin-top: 0.48rem;
+  color: rgba(160, 105, 35, 0.78);
+  font-weight: 900;
+}
+
+.runtime-table td {
+  padding-top: 0.26rem;
+  padding-bottom: 0.26rem;
+}
+
+.runtime-table .fastest {
+  color: rgba(45, 80, 150, 0.86);
+  background: rgba(219, 234, 254, 0.78);
+  font-weight: 950;
+}
+
+.dataset-legend {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.12rem;
+  margin-top: 0.22rem;
+  padding: 0.18rem 0.34rem;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.58);
+  border: 1px solid rgba(45, 80, 150, 0.12);
+}
+
+.dataset-legend div {
+  display: grid;
+  grid-template-columns: 2.2rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.24rem;
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+
+.dataset-legend div > strong {
+  color: rgba(45, 80, 50, 0.78);
+  font-size: clamp(0.38em, 0.28vw, 0.24em);
+  font-weight: 950;
+  white-space: nowrap;
+}
+
+.dataset-legend div > span {
+  color: rgba(38, 50, 70, 0.76);
+  font-size: clamp(0.38em, 0.28vw, 0.24em);
+  font-weight: 650;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+.dataset-legend .katex {
+  font-size: 1em;
+  color: inherit;
+  white-space: nowrap;
+}
+
+.dataset-legend .katex * {
+  color: inherit;
+}

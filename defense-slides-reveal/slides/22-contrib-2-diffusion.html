@@ -1,0 +1,181 @@
+<section class="slide denoising-training-slide"
+         data-section="MRF-augmented diffusion models"
+         data-title="Diffusion models">
+
+  <div class="slide-body denoising-training-body">
+
+    <div class="diffusion-training-card fade-up">
+      <div class="diffusion-card-head">
+        <p class="denoise-label">Diffusion-style training signal</p>
+        <h3>Learn the inverse of a known corruption kernel</h3>
+        <p>
+          The forward process is fixed and stochastic: it samples a more corrupted state
+          from \(q(x_{t+1}\mid x_t)\). The learned model approximates the reverse transition
+	  \(p_{\theta}(x_t\mid x_{t+1})\). <span data-cite="sun_difusco_2023"></span><span data-cite="li_fast_2025"></span>.
+
+        </p>
+      </div>
+
+      <svg class="diffusion-process-svg"
+           viewBox="0 0 1120 430"
+           role="img"
+           aria-label="Forward corruption q from x t to x t plus one and learned reverse reconstruction p theta from x t plus one to x t">
+        <defs>
+          <marker id="diffusion-arrow-purple" viewBox="0 0 10 10" refX="8.5" refY="5"
+                  markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" class="diffusion-marker-purple"/>
+          </marker>
+
+          <marker id="diffusion-arrow-blue" viewBox="0 0 10 10" refX="8.5" refY="5"
+                  markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" class="diffusion-marker-blue"/>
+          </marker>
+        </defs>
+
+        <line class="diffusion-axis" x1="105" y1="395" x2="1015" y2="395"/>
+        <path class="diffusion-axis-head" d="M 1015 395 L 999 386 L 999 404 Z"/>
+        <text class="diffusion-axis-label" x="1028" y="401">time</text>
+        <text class="diffusion-tick-label" x="128" y="423">0</text>
+        <text class="diffusion-tick-label" x="392" y="423">t</text>
+        <text class="diffusion-tick-label" x="660" y="423">t + 1</text>
+        <text class="diffusion-tick-label" x="958" y="423">T</text>
+
+        <g class="diffusion-forward fragment fade-up" data-fragment-index="1">
+          <text class="diffusion-row-title" x="84" y="48">Forward process: fixed random corruption</text>
+
+          <g class="state-node state-clean" transform="translate(128 102)">
+            <rect x="-74" y="-42" width="148" height="84" rx="20"/>
+            <text class="state-label" y="-20">clean sample</text>
+            <text class="state-symbol" y="7">x<tspan baseline-shift="sub" font-size="13">0</tspan></text>
+            <g class="bit-row" transform="translate(-43 26)">
+              <circle cx="0" cy="0" r="6"/><circle cx="22" cy="0" r="6"/><circle cx="44" cy="0" r="6"/>
+              <circle cx="66" cy="0" r="6"/><circle cx="88" cy="0" r="6"/>
+            </g>
+          </g>
+
+          <g class="state-node state-mid" transform="translate(392 102)">
+            <rect x="-74" y="-42" width="148" height="84" rx="20"/>
+            <text class="state-label" y="-20">partial state</text>
+            <text class="state-symbol" y="7">x<tspan baseline-shift="sub" font-size="13">t</tspan></text>
+            <g class="bit-row bit-row-partial" transform="translate(-43 26)">
+              <circle cx="0" cy="0" r="6"/><circle cx="22" cy="0" r="6"/><circle cx="44" cy="0" r="6"/>
+              <text x="66" y="5">?</text><circle cx="88" cy="0" r="6"/>
+            </g>
+          </g>
+
+          <g class="fragment fade-up" data-fragment-index="2">
+            <g class="state-node state-more-noisy" transform="translate(660 102)">
+              <rect x="-74" y="-42" width="148" height="84" rx="20"/>
+              <text class="state-label" y="-20">more corrupted</text>
+              <text class="state-symbol" y="7">x<tspan baseline-shift="sub" font-size="13">t+1</tspan></text>
+              <g class="bit-row bit-row-corrupt" transform="translate(-43 26)">
+                <circle cx="0" cy="0" r="6"/><text x="22" y="5">?</text><circle cx="44" cy="0" r="6"/>
+                <text x="66" y="5">?</text><circle cx="88" cy="0" r="6"/>
+              </g>
+            </g>
+          </g>
+
+          <g class="fragment fade-up" data-fragment-index="2">
+            <g class="state-node state-noise" transform="translate(958 102)">
+              <rect x="-74" y="-42" width="148" height="84" rx="20"/>
+              <text class="state-label" y="-20">noise prior</text>
+              <text class="state-symbol" y="7">x<tspan baseline-shift="sub" font-size="13">T</tspan></text>
+              <g class="noise-cloud">
+                <circle cx="-40" cy="11" r="4"/><circle cx="-19" cy="20" r="5"/><circle cx="4" cy="9" r="4"/>
+                <circle cx="25" cy="21" r="6"/><circle cx="45" cy="10" r="4"/><circle cx="10" cy="26" r="3"/>
+              </g>
+            </g>
+          </g>
+
+          <path class="diffusion-path diffusion-path-forward" d="M 208 102 C 250 78, 292 78, 334 102" marker-end="url(#diffusion-arrow-purple)"/>
+          <path class="diffusion-path diffusion-path-forward fragment fade-up" data-fragment-index="2" d="M 472 102 C 512 78, 556 78, 600 102" marker-end="url(#diffusion-arrow-purple)"/>
+          <path class="diffusion-path diffusion-path-forward fragment fade-up" data-fragment-index="2" d="M 740 102 C 790 78, 836 78, 878 102" marker-end="url(#diffusion-arrow-purple)"/>
+
+          <g class="fragment fade-up" data-fragment-index="2">
+            <g class="transition-label transition-forward" transform="translate(536 164)">
+              <rect x="-122" y="-20" width="244" height="40" rx="15"/>
+              <text y="6">q(x<tspan baseline-shift="sub" font-size="13">t+1</tspan> | x<tspan baseline-shift="sub" font-size="13">t</tspan>)</text>
+            </g>
+          </g>
+        </g>
+
+        <g class="diffusion-reverse fragment fade-up" data-fragment-index="3">
+          <text class="diffusion-row-title" x="84" y="212">Reverse process: learned reconstruction transition</text>
+
+          <g class="state-node state-more-noisy" transform="translate(660 302)">
+            <rect x="-74" y="-42" width="148" height="84" rx="20"/>
+            <text class="state-label" y="-20">given corrupted state</text>
+            <text class="state-symbol" y="7">x<tspan baseline-shift="sub" font-size="13">t+1</tspan></text>
+            <g class="bit-row bit-row-corrupt" transform="translate(-43 26)">
+              <circle cx="0" cy="0" r="6"/><text x="22" y="5">?</text><circle cx="44" cy="0" r="6"/>
+              <text x="66" y="5">?</text><circle cx="88" cy="0" r="6"/>
+            </g>
+          </g>
+
+          <g class="fragment fade-up" data-fragment-index="4">
+            <g class="state-node state-mid" transform="translate(392 302)">
+              <rect x="-74" y="-42" width="148" height="84" rx="20"/>
+              <text class="state-label" y="-20">denoised estimate</text>
+              <text class="state-symbol" y="7">x<tspan baseline-shift="sub" font-size="13">t</tspan></text>
+              <g class="bit-row bit-row-partial" transform="translate(-43 26)">
+                <circle cx="0" cy="0" r="6"/><circle cx="22" cy="0" r="6"/><circle cx="44" cy="0" r="6"/>
+                <text x="66" y="5">?</text><circle cx="88" cy="0" r="6"/>
+              </g>
+            </g>
+          </g>
+
+          <g class="fragment fade-up" data-fragment-index="5">
+            <g class="state-node state-clean" transform="translate(128 302)">
+              <rect x="-74" y="-42" width="148" height="84" rx="20"/>
+              <text class="state-label" y="-20">recovered sample</text>
+              <text class="state-symbol" y="7">x<tspan baseline-shift="sub" font-size="13">0</tspan></text>
+              <g class="bit-row" transform="translate(-43 26)">
+                <circle cx="0" cy="0" r="6"/><circle cx="22" cy="0" r="6"/><circle cx="44" cy="0" r="6"/>
+                <circle cx="66" cy="0" r="6"/><circle cx="88" cy="0" r="6"/>
+              </g>
+            </g>
+          </g>
+
+          <path class="diffusion-path diffusion-path-reverse" d="M 580 302 C 538 326, 494 326, 452 302" marker-end="url(#diffusion-arrow-blue)"/>
+          <path class="diffusion-path diffusion-path-reverse fragment fade-up" data-fragment-index="5" d="M 312 302 C 270 326, 226 326, 184 302" marker-end="url(#diffusion-arrow-blue)"/>
+
+          <g class="fragment fade-up" data-fragment-index="4">
+            <g class="transition-label transition-reverse" transform="translate(526 364)">
+              <rect x="-134" y="-20" width="268" height="40" rx="15"/>
+              <text y="6">p<tspan baseline-shift="sub" font-size="13">θ</tspan>(x<tspan baseline-shift="sub" font-size="13">t</tspan> | x<tspan baseline-shift="sub" font-size="13">t+1</tspan>)</text>
+            </g>
+          </g>
+
+          <g class="fragment fade-up" data-fragment-index="4">
+            <g class="denoise-model-callout" transform="translate(407 225)">
+              <rect x="0" y="0" width="238" height="58" rx="18"/>
+              <text x="110" y="22" class="callout-title">Neural denoiser</text>
+              <text x="119" y="42" class="callout-text">conditioned on x<tspan baseline-shift="sub" font-size="11">t+1</tspan> and t</text>
+            </g>
+          </g>
+        </g>
+      </svg>
+    </div>
+
+    <div class="denoise-equation diffusion-insight fragment fade-up" data-fragment-index="5">
+      <span>MRF connection</span>
+      <strong>
+        Each corrupted sample is partial information about the target: reverse denoising is conditional inference.
+      </strong>
+      <small>
+        Instead of correcting variables independently, an MRF layer can propagate constraint-aware information through the partially observed solution.
+      </small>
+    </div>
+
+    <aside class="notes">
+      Present the forward process as a fixed Markov corruption kernel: from x_t we sample
+      x_{t+1} according to q(x_{t+1} | x_t). This is not learned. It progressively removes
+      or randomizes information until the state is close to noise. The reverse process is the
+      learned direction: the model approximates p_theta(x_t | x_{t+1}) and reconstructs a
+      cleaner solution one step at a time. This gives the bridge to MRFs: a corrupted solution
+      is partial information, so reverse denoising can be viewed as conditional inference under
+      structural constraints.
+    </aside>
+
+  </div>
+</section>
